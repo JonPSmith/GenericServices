@@ -9,7 +9,7 @@ using Tests.DataClasses.Concrete;
 using Tests.DTOs.Concrete;
 using Tests.Helpers;
 
-namespace Tests.UnitTests.Group2Services
+namespace Tests.UnitTests.Group02Services
 {
     class Test03PostsViaSimpleDto
     {

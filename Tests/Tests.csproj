@@ -73,9 +73,9 @@
     <Compile Include="UnitTests\Group01DataClasses\Tests01Setup.cs" />
     <Compile Include="UnitTests\Group01DataClasses\Tests02Validation.cs" />
     <Compile Include="UnitTests\Group01DataClasses\Tests04ReadWrite.cs" />
-    <Compile Include="UnitTests\Group2Services\Test02PostsDirect.cs" />
-    <Compile Include="UnitTests\Group2Services\Test03PostsViaSimpleDto.cs" />
-    <Compile Include="UnitTests\Group2Services\Test05PostsViaDetailDto.cs" />
+    <Compile Include="UnitTests\Group02Services\Test02PostsDirect.cs" />
+    <Compile Include="UnitTests\Group02Services\Test03PostsViaSimpleDto.cs" />
+    <Compile Include="UnitTests\Group02Services\Test05PostsViaDetailDto.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
