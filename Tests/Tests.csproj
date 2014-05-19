@@ -36,6 +36,9 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\packages\Moq.4.2.1402.2112\lib\net40\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.3\lib\nunit.framework.dll</HintPath>
     </Reference>
@@ -49,15 +52,41 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataClasses\Concrete\Blog.cs" />
+    <Compile Include="DataClasses\Concrete\Helpers\TrackUpdate.cs" />
+    <Compile Include="DataClasses\Concrete\Post.cs" />
+    <Compile Include="DataClasses\Concrete\PostTagLink.cs" />
+    <Compile Include="DataClasses\Concrete\Tag.cs" />
+    <Compile Include="DataClasses\DataLayerInitialise.cs" />
+    <Compile Include="DataClasses\TemplateWebAppDb.cs" />
+    <Compile Include="DTOs\Concrete\DetailPostDto.cs" />
+    <Compile Include="DTOs\IDetailPostDto.cs" />
+    <Compile Include="DTOs\IPostSetupService.cs" />
+    <Compile Include="DTOs\ISimplePostDto.cs" />
+    <Compile Include="DTOs\Concrete\PostSetupService.cs" />
+    <Compile Include="DTOs\Concrete\SimplePostDto.cs" />
+    <Compile Include="Helpers\DbSnapShot.cs" />
+    <Compile Include="Helpers\ExtendAsserts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UiHelpers\DropDownListType.cs" />
+    <Compile Include="UiHelpers\MultiSelectListType.cs" />
+    <Compile Include="UnitTests\Group01DataClasses\Tests01Setup.cs" />
+    <Compile Include="UnitTests\Group01DataClasses\Tests02Validation.cs" />
+    <Compile Include="UnitTests\Group01DataClasses\Tests04ReadWrite.cs" />
+    <Compile Include="UnitTests\Group2Services\Test02PostsDirect.cs" />
+    <Compile Include="UnitTests\Group2Services\Test03PostsViaSimpleDto.cs" />
+    <Compile Include="UnitTests\Group2Services\Test05PostsViaDetailDto.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Helpers\" />
-    <Folder Include="UnitTests\" />
+    <ProjectReference Include="..\GenericServices\GenericServices.csproj">
+      <Project>{92f121b3-2f0d-48c3-b150-7dca84b7f8e1}</Project>
+      <Name>GenericServices</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
