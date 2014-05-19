@@ -52,6 +52,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Concrete\CreateService.cs" />
+    <Compile Include="Concrete\DeleteService.cs" />
+    <Compile Include="Concrete\DetailService.cs" />
+    <Compile Include="Concrete\EfGenericDto.cs" />
+    <Compile Include="Concrete\ListService.cs" />
+    <Compile Include="Concrete\SuccessOrErrors.cs" />
+    <Compile Include="Concrete\UpdateService.cs" />
+    <Compile Include="ICreateService.cs" />
+    <Compile Include="IDbContextWithValidation.cs" />
+    <Compile Include="IDeleteService.cs" />
+    <Compile Include="IDetailService.cs" />
+    <Compile Include="IEfGenericDto.cs" />
+    <Compile Include="IListService.cs" />
+    <Compile Include="ISuccessOrErrors.cs" />
+    <Compile Include="IUpdateService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
