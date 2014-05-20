@@ -13,10 +13,14 @@ namespace Tests.DataClasses
 
     public class TemplateWebAppDb : DbContext, IDbContextWithValidation
     {
-        public DbSet<Blog> Blogs { get; set; }
-        public DbSet<Post> Posts { get; set; }
-        public DbSet<Tag> Tags { get; set; }
-        public DbSet<PostTagLink> PostTagLinks { get; set; }
+        //********************************************************************
+        // Have used IDbSet below to ensure code is compatible with EF 5
+        // Note: code its build with EF 6.1 and has not been tested with EF 5
+        //********************************************************************
+        public IDbSet<Blog> Blogs { get; set; }
+        public IDbSet<Post> Posts { get; set; }
+        public IDbSet<Tag> Tags { get; set; }
+        public IDbSet<PostTagLink> PostTagLinks { get; set; }
 
         public ISuccessOrErrors SaveChangesWithValidation()
         {

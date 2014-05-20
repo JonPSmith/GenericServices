@@ -22,10 +22,10 @@ namespace Tests.DataClasses
 
             if (context.Blogs.Any())
             {
-                context.PostTagLinks.RemoveRange(context.PostTagLinks);
-                context.Posts.RemoveRange(context.Posts);
-                context.Tags.RemoveRange(context.Tags);
-                context.Blogs.RemoveRange(context.Blogs);
+                context.PostTagLinks.ToList().ForEach(x => context.PostTagLinks.Remove(x));
+                context.Posts.ToList().ForEach(x => context.Posts.Remove(x));
+                context.Tags.ToList().ForEach(x => context.Tags.Remove(x));
+                context.Blogs.ToList().ForEach(x => context.Blogs.Remove(x));
                 context.SaveChanges();
             }
 

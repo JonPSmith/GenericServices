@@ -161,8 +161,13 @@ namespace Tests.DTOs.Concrete
             AllocatedTags.AddRange(tagLinksToAdd);
 
             //secondly we get the PostTagLinks entries right (must come second)
-            db.PostTagLinks.RemoveRange(tagLinksToDelete);
-            db.PostTagLinks.AddRange(tagLinksToAdd);
+            tagLinksToDelete.ForEach( x => db.PostTagLinks.Remove(x));
+            tagLinksToAdd.ForEach(x => db.PostTagLinks.Add(x));
+            //********************************************************************
+            //If using EF 6 you could use the more efficent RemoveRange. See below
+            //db.PostTagLinks.RemoveRange(tagLinksToDelete);
+            //db.PostTagLinks.AddRange(tagLinksToAdd);
+            //********************************************************************
 
             return null;
         }
