@@ -79,7 +79,6 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\GenericServices\GenericServices.csproj">
       <Project>{92f121b3-2f0d-48c3-b150-7dca84b7f8e1}</Project>

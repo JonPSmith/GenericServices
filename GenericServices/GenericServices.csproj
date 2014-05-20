@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Concrete\CreateService.cs" />
+    <Compile Include="IEfGenericDto.cs" />
     <Compile Include="IUpdateSetupService.cs" />
     <Compile Include="Concrete\UpdateSetupService.cs" />
     <Compile Include="Concrete\CreateSetupService.cs" />

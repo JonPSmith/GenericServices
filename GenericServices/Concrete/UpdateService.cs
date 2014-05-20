@@ -44,7 +44,7 @@ namespace GenericServices.Concrete
         public ISuccessOrErrors Update(TDto dto)
         {
             ISuccessOrErrors result = new SuccessOrErrors();
-            if (!dto.SupportedFunctions.HasFlag(CrudFunctions.Update))
+            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.Update))
                 return result.AddSingleError("Delete of a {0} is not supported in this mode.", dto.DataItemName);
 
             var itemToUpdate = dto.FindItemTracked(_db);
@@ -60,11 +60,10 @@ namespace GenericServices.Concrete
                 result.SetSuccessMessage("Successfully updated {0}.", dto.DataItemName);
 
             //otherwise there are errors
-            if (!dto.SupportedFunctions.HasFlag(CrudFunctions.DoesNotNeedSetup))
+            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
                 //we reset any secondary data as we expect the view to be reshown with the errors
                 dto.SetupSecondaryData(_db, dto);
             return result;
-
         }
 
     }

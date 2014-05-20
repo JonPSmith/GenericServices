@@ -33,7 +33,7 @@ namespace Tests.UnitTests.Group02Services
 
             //ATTEMPT
             ICreateService<Post, SimplePostDto> createService = new CreateService<Post, SimplePostDto>(null);
-            IDetailService<Post, SimplePostDto> detailService = new DetailService<Post, SimplePostDto>(null);
+            IDetailService<Post, SimplePostDto> detailService = new DetailService<Post, SimplePostDto>(null, null);
             IListService<Post, SimplePostDto> listService = new ListService<Post, SimplePostDto>(null);
             IUpdateService<Post, SimplePostDto> updateService = new UpdateService<Post, SimplePostDto>(null);
 
@@ -69,7 +69,7 @@ namespace Tests.UnitTests.Group02Services
             using (var db = new TemplateWebAppDb())
             {
                 //SETUP
-                var service = new DetailService<Post, SimplePostDto>(db);
+                var service = new DetailService<Post, SimplePostDto>(db, new SimplePostDto());
                 var firstPost = db.Posts.Include(x => x.AllocatedTags).AsNoTracking().First();
 
                 //ATTEMPT
@@ -132,7 +132,7 @@ namespace Tests.UnitTests.Group02Services
             using (var db = new TemplateWebAppDb())
             {
                 //SETUP
-                var service = new UpdateSetupService<Post, SimplePostDto>(db);
+                var service = new UpdateSetupService<Post, SimplePostDto>(db, new SimplePostDto());
                 var firstPost = db.Posts.Include(x => x.AllocatedTags).AsNoTracking().First();
 
                 //ATTEMPT
@@ -156,7 +156,7 @@ namespace Tests.UnitTests.Group02Services
                 var snap = new DbSnapShot(db);
                 var firstPost = db.Posts.Include(x => x.AllocatedTags).AsNoTracking().First();
                 var service = new UpdateService<Post, SimplePostDto>(db);
-                var setupService = new UpdateSetupService<Post, SimplePostDto>(db);
+                var setupService = new UpdateSetupService<Post, SimplePostDto>(db, new SimplePostDto());
 
                 //ATTEMPT
                 var dto = setupService.GetOriginal(x => x.PostId == firstPost.PostId);
@@ -179,7 +179,7 @@ namespace Tests.UnitTests.Group02Services
                 //SETUP
                 var firstPost = db.Posts.Include(x => x.AllocatedTags).AsNoTracking().First();
                 var service = new UpdateService<Post, SimplePostDto>(db);
-                var setupService = new UpdateSetupService<Post, SimplePostDto>(db);
+                var setupService = new UpdateSetupService<Post, SimplePostDto>(db, new SimplePostDto());
 
                 //ATTEMPT
                 var dto = setupService.GetOriginal(x => x.PostId == firstPost.PostId);

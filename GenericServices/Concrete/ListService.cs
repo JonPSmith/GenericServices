@@ -43,7 +43,7 @@ namespace GenericServices.Concrete
         public IQueryable<TDto> GetList()
         {
             var tDto = new TDto();
-            if (!tDto.SupportedFunctions.HasFlag(CrudFunctions.List))
+            if (!tDto.SupportedFunctions.HasFlag(ServiceFunctions.List))
                 throw new InvalidOperationException("This DTO does not support listings.");
 
             return tDto.BuildListQueryUntracked(_db);

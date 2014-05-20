@@ -1,13 +1,15 @@
 ﻿namespace GenericServices.Concrete
 {
     internal class CreateSetupService<TData, TDto> : ICreateSetupService<TData, TDto> where TData : class
-        where TDto : EfGenericDto<TData, TDto>, new()
+        where TDto : EfGenericDto<TData, TDto>
     {
         private readonly IDbContextWithValidation _db;
+        private readonly TDto _tDto;
 
-        public CreateSetupService(IDbContextWithValidation db)
+        public CreateSetupService(IDbContextWithValidation db, TDto tDto)
         {
             _db = db;
+            _tDto = tDto;
         }
 
         /// <summary>
@@ -16,10 +18,9 @@
         /// <returns>A TDto which has had the SetupSecondaryData method called on it</returns>
         public TDto GetDto()
         {
-            var tDto = new TDto();
-            tDto.SetupSecondaryData(_db, tDto);
+            _tDto.SetupSecondaryData(_db, _tDto);
 
-            return tDto;
+            return _tDto;
         }
     }
 }

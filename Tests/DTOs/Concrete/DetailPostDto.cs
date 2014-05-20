@@ -79,9 +79,9 @@ namespace Tests.DTOs.Concrete
         //----------------------------------------------
         //overridden methods
 
-        internal protected override CrudFunctions SupportedFunctions
+        internal protected override ServiceFunctions SupportedFunctions
         {
-            get { return CrudFunctions.All; }
+            get { return ServiceFunctions.All; }
         }
 
         /// <summary>

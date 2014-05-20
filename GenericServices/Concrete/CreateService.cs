@@ -38,7 +38,7 @@
         public ISuccessOrErrors Create(TDto dto)
         {
             ISuccessOrErrors result = new SuccessOrErrors();
-            if (!dto.SupportedFunctions.HasFlag(CrudFunctions.Create))
+            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.Create))
                 return result.AddSingleError("Create of a new {0} is not supported in this mode.", dto.DataItemName);
             
             var tData = new TData();
@@ -52,7 +52,7 @@
                 result.SetSuccessMessage("Successfully created {0}.", dto.DataItemName);
 
             //otherwise there are errors
-            if (!dto.SupportedFunctions.HasFlag(CrudFunctions.DoesNotNeedSetup))
+            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
                 //we reset any secondary data as we expect the view to be reshown with the errors
                 dto.SetupSecondaryData(_db, dto);
             return result;

@@ -16,7 +16,7 @@ namespace GenericServices
 
     public interface IDetailService<TData, out TDto>
         where TData : class
-        where TDto : EfGenericDto<TData, TDto>, new()
+        where TDto : EfGenericDto<TData, TDto>
     {
         /// <summary>
         /// This gets a single entry using the lambda expression as a where part

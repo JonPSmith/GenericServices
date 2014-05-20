@@ -13,27 +13,14 @@ using AutoMapper.QueryableExtensions;
 
 namespace GenericServices.Concrete
 {
-    [Flags]
-    public enum CrudFunctions
-    {
-        None = 0,
-        List = 1,
-        Detail = 2,
-        Create = 4,
-        Update = 8,
-        DoesNotNeedSetup = 128,                         //if this flag is NOT set then expects dto to override SetupForeignKeys
-        AllButCreate = List | Detail | Update,
-        AllButList = Detail | Create | Update,
-        All = List | Detail | Create | Update 
-    }
 
-    public abstract class EfGenericDto<TData, TDto> where TData : class
+    public abstract class EfGenericDto<TData, TDto> : IEfGenericDto<TData, TDto> where TData : class
         where TDto : EfGenericDto<TData, TDto>
     {
         /// <summary>
         /// This must be overridden to say that the dto supports the create function
         /// </summary>
-        internal protected abstract CrudFunctions SupportedFunctions { get; }
+        internal protected abstract ServiceFunctions SupportedFunctions { get; }
 
         /// <summary>
         /// This provides the name of the name of the data item to display in success or error messages.
@@ -51,8 +38,8 @@ namespace GenericServices.Concrete
         /// <returns></returns>
         internal protected virtual void SetupSecondaryData(IDbContextWithValidation db, TDto dto)
         {
-            if (!SupportedFunctions.HasFlag(CrudFunctions.DoesNotNeedSetup))
-                throw new InvalidOperationException("You stated that the dto needed to set up foreign keys but did not override this method");
+            if (!SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
+                throw new InvalidOperationException("SupportedFunctions flags say that setup of secondary data is needed, but did not override the SetupSecondaryData method.");
         }
 
         /// <summary>

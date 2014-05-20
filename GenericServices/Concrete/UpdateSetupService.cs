@@ -4,13 +4,15 @@ using System.Linq.Expressions;
 namespace GenericServices.Concrete
 {
     internal class UpdateSetupService<TData, TDto> : IUpdateSetupService<TData, TDto> where TData : class
-        where TDto : EfGenericDto<TData, TDto>, new()
+        where TDto : EfGenericDto<TData, TDto>
     {
         private readonly IDbContextWithValidation _db;
+        private TDto _tDto;
 
-        public UpdateSetupService(IDbContextWithValidation db)
+        public UpdateSetupService(IDbContextWithValidation db, TDto tDto)
         {
             _db = db;
+            _tDto = tDto;
         }
 
         /// <summary>
@@ -21,13 +23,12 @@ namespace GenericServices.Concrete
         /// <returns>TDto type with properties copyed over and SetupSecondaryData called to set secondary data</returns>
         public TDto GetOriginal(Expression<Func<TData, bool>> whereExpression)
         {
-            var tDto = new TDto();
-            if (!tDto.SupportedFunctions.HasFlag(CrudFunctions.Detail))
+            if (!_tDto.SupportedFunctions.HasFlag(ServiceFunctions.Detail))
                 throw new InvalidOperationException("This DTO does not support a detailed view.");
 
-            tDto = tDto.CreateDtoAndCopyDataIn(_db, whereExpression);
-            tDto.SetupSecondaryData(_db, tDto);
-            return tDto;
+            _tDto = _tDto.CreateDtoAndCopyDataIn(_db, whereExpression);
+            _tDto.SetupSecondaryData(_db, _tDto);
+            return _tDto;
         }
     }
 }
