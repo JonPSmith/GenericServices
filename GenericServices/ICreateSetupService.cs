@@ -2,7 +2,7 @@ using GenericServices.Concrete;
 
 namespace GenericServices
 {
-    internal interface ICreateSetupService<TData, out TDto> where TData : class
+    public interface ICreateSetupService<TData, out TDto> where TData : class
         where TDto : EfGenericDto<TData, TDto>
     {
         /// <summary>

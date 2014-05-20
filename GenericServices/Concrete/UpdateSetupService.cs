@@ -3,7 +3,7 @@ using System.Linq.Expressions;
 
 namespace GenericServices.Concrete
 {
-    internal class UpdateSetupService<TData, TDto> : IUpdateSetupService<TData, TDto> where TData : class
+    public class UpdateSetupService<TData, TDto> : IUpdateSetupService<TData, TDto> where TData : class
         where TDto : EfGenericDto<TData, TDto>
     {
         private readonly IDbContextWithValidation _db;

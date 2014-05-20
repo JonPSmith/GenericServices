@@ -4,7 +4,7 @@ using GenericServices.Concrete;
 
 namespace GenericServices
 {
-    internal interface IUpdateSetupService<TData, out TDto>
+    public interface IUpdateSetupService<TData, out TDto>
         where TData : class
         where TDto : EfGenericDto<TData, TDto>
     {
