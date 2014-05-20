@@ -66,6 +66,20 @@ namespace GenericServices.Concrete
             return result;
         }
 
+        /// <summary>
+        /// This is available to reset any secondary data in the dto. Call this if the ModelState was invalid and
+        /// you need to display the view again with errors
+        /// </summary>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        public TDto ResetDto(TDto dto)
+        {
+            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
+                //we reset any secondary data as we expect the view to be reshown with the errors
+                dto.SetupSecondaryData(_db, dto);
+
+            return dto;
+        }
     }
 
 }

@@ -160,6 +160,25 @@ namespace Tests.UnitTests.Group02Services
         }
 
         [Test]
+        public void Check13CreateServiceResetWorksOk()
+        {
+
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var service = new CreateService<Post, DetailPostDto>(db);
+
+                //ATTEMPT
+                var dto = new DetailPostDto();
+                service.ResetDto(dto);
+
+                //VERIFY
+                dto.Bloggers.KeyValueList.Count.ShouldEqual(db.Blogs.Count() + 1);
+                dto.UserChosenTags.AllPossibleOptions.Count.ShouldEqual(db.Tags.Count());
+            }
+        }
+
+        [Test]
         public void Check15DtoCopyPropertiesOk()
         {
             using (var db = new SampleWebAppDb())
@@ -334,5 +353,23 @@ namespace Tests.UnitTests.Group02Services
             }
         }
 
+        [Test]
+        public void Check26UpdateServiceResetWorksOk()
+        {
+
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var service = new UpdateService<Post, DetailPostDto>(db);
+
+                //ATTEMPT
+                var dto = new DetailPostDto();
+                service.ResetDto(dto);
+
+                //VERIFY
+                dto.Bloggers.KeyValueList.Count.ShouldEqual(db.Blogs.Count() + 1);
+                dto.UserChosenTags.AllPossibleOptions.Count.ShouldEqual(db.Tags.Count());
+            }
+        }
     }
 }
