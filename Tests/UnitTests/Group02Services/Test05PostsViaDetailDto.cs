@@ -87,17 +87,16 @@ namespace Tests.UnitTests.Group02Services
         }
 
         [Test]
-        public void Check05PostSetupServiceOk()
+        public void Check10CreateSetupServiceOk()
         {
 
             using (var db = new TemplateWebAppDb())
             {
                 //SETUP
-                var service = new PostSetupService(db);
+                var service = new CreateSetupService<Post, DetailPostDto>(db);
 
                 //ATTEMPT
-                var dto = new DetailPostDto();
-                service.SetupDropDownLists(dto);
+                var dto = service.GetDto();
 
                 //VERIFY
                 dto.Bloggers.KeyValueList.Count.ShouldEqual( db.Blogs.Count()+1);
@@ -115,9 +114,10 @@ namespace Tests.UnitTests.Group02Services
                 //SETUP
                 var snap = new DbSnapShot(db);
                 var service = new CreateService<Post, DetailPostDto>(db);
+                var setupService = new CreateSetupService<Post, DetailPostDto>(db);
 
                 //ATTEMPT
-                var dto = new DetailPostDto();
+                var dto = setupService.GetDto();
                 dto.Title = Guid.NewGuid().ToString();
                 dto.Content = "something to fill it as can't be empty";
                 dto.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
@@ -134,64 +134,107 @@ namespace Tests.UnitTests.Group02Services
             }
         }
 
-        //[Test]
-        //public void Check15DtoCopyPropertiesOk()
-        //{
-        //    using (var db = new TemplateWebAppDb())
-        //    {
-        //        //SETUP
-        //        var firstPost = db.Posts.First();
-        //        var setupService = new PostSetupService(db);
-        //        var dto = new DetailPostDto
-        //        {
-        //            PostId = firstPost.PostId,
-        //            BloggerName = "Should copy this blogger name",
-        //            BlogId = 333,
-        //            Title = "Should copy this title",
-        //            Content = "Should copy this content",
-        //            AllocatedTags = firstPost.AllocatedTags,
-        //            LastUpdated = new DateTime(2000, 1, 1)
-        //        };
-        //        setupService.SetupDropDownLists(dto);
+        [Test]
+        public void Check12CreateFailRunsSetupSecondaryDataAgainOk()
+        {
 
-        //        //ATTEMPT
-        //        var newData = new Post()
-        //        {
-        //            Blogger = new Blog { Name = "Original Blog Name" },
-        //            BlogId = 777,
-        //            Content = "Original Content"
-        //        };
+            using (var db = new TemplateWebAppDb())
+            {
+                //SETUP
+                var service = new CreateService<Post, DetailPostDto>(db);
+                var setupService = new CreateSetupService<Post, DetailPostDto>(db);
 
-        //        dto.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
-        //        dto.UserChosenTags.FinalSelection =
-        //            db.Tags.Take(2).ToList().Select(x => x.TagId.ToString("D")).ToArray();
-        //        var status = dto.CopyDtoToData(db, dto, newData);
+                //ATTEMPT
+                var dto = setupService.GetDto();
+                dto.Title = Guid.NewGuid().ToString();
+                dto.Content = null;                                 //this will fail 
+                dto.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
+                dto.UserChosenTags.FinalSelection = db.Tags.Take(2).ToList().Select(x => x.TagId.ToString("D")).ToArray();
+                var status = service.Create(dto);
 
-        //        //VERIFY
-        //        status.IsValid.ShouldEqual(true, status.Errors);
-        //        newData.PostId.ShouldEqual(firstPost.PostId);
-        //        newData.Title.ShouldEqual("Should copy this title");
-
-        //        newData.BlogId.ShouldEqual(db.Blogs.First().BlogId);
-        //        newData.Content.ShouldEqual("Should copy this content");
-        //        //Can't check tags as that is written to database
-        //    }
-        //}
+                //VERIFY
+                status.IsValid.ShouldEqual(false);
+                dto.Bloggers.KeyValueList.Count.ShouldEqual(db.Blogs.Count() + 1);
+                dto.UserChosenTags.AllPossibleOptions.Count.ShouldEqual(db.Tags.Count());
+            }
+        }
 
         [Test]
-        public void Check16UpdatePostLeaveTagSameOk()
+        public void Check15DtoCopyPropertiesOk()
+        {
+            using (var db = new TemplateWebAppDb())
+            {
+                //SETUP
+                var firstPost = db.Posts.First();
+                var setupService = new CreateSetupService<Post, DetailPostDto>(db);
+                var dto = setupService.GetDto();
+
+                dto.PostId = firstPost.PostId;
+                dto.BloggerName = "Should copy this blogger name";
+                dto.BlogId = 333;
+                dto.Title = "Should copy this title";
+                dto.Content = "Should copy this content";
+                dto.AllocatedTags = firstPost.AllocatedTags;
+                dto.LastUpdated = new DateTime(2000, 1, 1);  
+
+                //ATTEMPT
+                var newData = new Post()
+                {
+                    Blogger = new Blog { Name = "Original Blog Name" },
+                    BlogId = 777,
+                    Content = "Original Content"
+                };
+
+                dto.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
+                dto.UserChosenTags.FinalSelection =
+                    db.Tags.Take(2).ToList().Select(x => x.TagId.ToString("D")).ToArray();
+                var status = dto.CopyDtoToData(db, dto, newData);
+
+                //VERIFY
+                status.IsValid.ShouldEqual(true, status.Errors);
+                newData.PostId.ShouldEqual(firstPost.PostId);
+                newData.Title.ShouldEqual("Should copy this title");
+
+                newData.BlogId.ShouldEqual(db.Blogs.First().BlogId);
+                newData.Content.ShouldEqual("Should copy this content");
+                //Can't check tags as that is written to database
+            }
+        }
+
+
+        [Test]
+        public void Check16UpdateSetupServiceOk()
+        {
+
+            using (var db = new TemplateWebAppDb())
+            {
+                //SETUP
+                var setupService = new UpdateSetupService<Post, DetailPostDto>(db);
+                var firstPost = db.Posts.First();
+
+                //ATTEMPT
+                var dto = setupService.GetOriginal(x => x.PostId == firstPost.PostId);
+
+                //VERIFY
+                dto.Bloggers.KeyValueList.Count.ShouldEqual(db.Blogs.Count() + 1);
+                dto.UserChosenTags.AllPossibleOptions.Count.ShouldEqual(db.Tags.Count());
+            }
+        }
+
+        [Test]
+        public void Check20UpdatePostLeaveTagSameOk()
         {
 
             using (var db = new TemplateWebAppDb())
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
-                var detailService = new DetailService<Post, DetailPostDto>(db);
+                var setupService = new UpdateSetupService<Post, DetailPostDto>(db);
                 var updateService = new UpdateService<Post, DetailPostDto>(db);
                 var firstPost = db.Posts.First();
 
                 //ATTEMPT
-                var dto = detailService.GetDetail(x => x.PostId == firstPost.PostId);
+                var dto = setupService.GetOriginal(x => x.PostId == firstPost.PostId);
                 dto.Title = Guid.NewGuid().ToString();
                 dto.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
                 dto.UserChosenTags.FinalSelection = db.Tags.Take(2).ToList().Select(x => x.TagId.ToString("D")).ToArray();
@@ -209,19 +252,19 @@ namespace Tests.UnitTests.Group02Services
 
 
         [Test]
-        public void Check17UpdatePostRemoveTagOk()
+        public void Check21UpdatePostRemoveTagOk()
         {
 
             using (var db = new TemplateWebAppDb())
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
-                var detailService = new DetailService<Post, DetailPostDto>(db);
+                var setupService = new UpdateSetupService<Post, DetailPostDto>(db);
                 var updateService = new UpdateService<Post, DetailPostDto>(db);
                 var firstPost = db.Posts.First();
 
                 //ATTEMPT
-                var dto = detailService.GetDetail(x => x.PostId == firstPost.PostId);
+                var dto = setupService.GetOriginal(x => x.PostId == firstPost.PostId);
                 dto.Title = Guid.NewGuid().ToString();
                 dto.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
                 dto.UserChosenTags.FinalSelection = db.Tags.Take(1).ToList().Select(x => x.TagId.ToString("D")).ToArray();
@@ -238,19 +281,19 @@ namespace Tests.UnitTests.Group02Services
         }
 
         [Test]
-        public void Check18UpdatePostAddTagOk()
+        public void Check22UpdatePostAddTagOk()
         {
 
             using (var db = new TemplateWebAppDb())
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
-                var detailService = new DetailService<Post, DetailPostDto>(db);
+                var setupService = new UpdateSetupService<Post, DetailPostDto>(db);
                 var updateService = new UpdateService<Post, DetailPostDto>(db);
                 var firstPost = db.Posts.First();
 
                 //ATTEMPT
-                var dto = detailService.GetDetail(x => x.PostId == firstPost.PostId);
+                var dto = setupService.GetOriginal(x => x.PostId == firstPost.PostId);
                 dto.Title = Guid.NewGuid().ToString();
                 dto.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
                 dto.UserChosenTags.FinalSelection = db.Tags.Take(3).ToList().Select(x => x.TagId.ToString("D")).ToArray();
@@ -263,6 +306,31 @@ namespace Tests.UnitTests.Group02Services
                 post.Title.ShouldEqual(dto.Title);
                 post.BlogId.ShouldEqual(db.Blogs.First().BlogId);
                 CollectionAssert.AreEquivalent(db.Tags.Take(3).Select(x => x.TagId), post.AllocatedTags.Select(x => x.TagId));
+            }
+        }
+
+        [Test]
+        public void Check25UpdatePostFailRunsSetupSecondaryDataAgainOk()
+        {
+
+            using (var db = new TemplateWebAppDb())
+            {
+                //SETUP
+                var setupService = new UpdateSetupService<Post, DetailPostDto>(db);
+                var updateService = new UpdateService<Post, DetailPostDto>(db);
+                var firstPost = db.Posts.First();
+
+                //ATTEMPT
+                var dto = setupService.GetOriginal(x => x.PostId == firstPost.PostId);
+                dto.Title = null;                   //that will fail
+                dto.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
+                dto.UserChosenTags.FinalSelection = db.Tags.Take(3).ToList().Select(x => x.TagId.ToString("D")).ToArray();
+                var status = updateService.Update(dto);
+
+                //VERIFY
+                status.IsValid.ShouldEqual(false);
+                dto.Bloggers.KeyValueList.Count.ShouldEqual(db.Blogs.Count() + 1);
+                dto.UserChosenTags.AllPossibleOptions.Count.ShouldEqual(db.Tags.Count());
             }
         }
 

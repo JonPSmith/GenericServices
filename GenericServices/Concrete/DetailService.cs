@@ -53,7 +53,7 @@ namespace GenericServices.Concrete
             if (!tDto.SupportedFunctions.HasFlag(CrudFunctions.Detail))
                 throw new InvalidOperationException("This DTO does not support a detailed view.");
 
-            return tDto.CopyDataToDto(_db, whereExpression);
+            return tDto.CreateDtoAndCopyDataIn(_db, whereExpression);
         }
     }
 }

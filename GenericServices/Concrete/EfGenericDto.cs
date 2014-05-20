@@ -5,13 +5,29 @@ using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 
+[assembly: InternalsVisibleTo("Tests")]
+
 namespace GenericServices.Concrete
 {
+    [Flags]
+    public enum CrudFunctions
+    {
+        None = 0,
+        List = 1,
+        Detail = 2,
+        Create = 4,
+        Update = 8,
+        DoesNotNeedSetup = 128,                         //if this flag is NOT set then expects dto to override SetupForeignKeys
+        AllButCreate = List | Detail | Update,
+        AllButList = Detail | Create | Update,
+        All = List | Detail | Create | Update 
+    }
 
-    public abstract class EfGenericDto<TData, TDto> : IEfGenericDto where TData : class
+    public abstract class EfGenericDto<TData, TDto> where TData : class
         where TDto : EfGenericDto<TData, TDto>
     {
         /// <summary>
@@ -24,6 +40,20 @@ namespace GenericServices.Concrete
         /// Override if you want a more user friendly name
         /// </summary>
         internal protected virtual string DataItemName { get { return typeof (TData).Name; }}
+
+        /// <summary>
+        /// This function will be called at the end of CreateSetupService and UpdateSetupService to setup any
+        /// additional data in the dto used to display dropdownlists etc. 
+        /// It is also called at the end of the CreateService or UpdateService if there are errors, so that
+        /// the data is available if the form needs to be reshown.
+        /// This function should be overridden if the dto needs additional data setup 
+        /// </summary>
+        /// <returns></returns>
+        internal protected virtual void SetupSecondaryData(IDbContextWithValidation db, TDto dto)
+        {
+            if (!SupportedFunctions.HasFlag(CrudFunctions.DoesNotNeedSetup))
+                throw new InvalidOperationException("You stated that the dto needed to set up foreign keys but did not override this method");
+        }
 
         /// <summary>
         /// This returns the TData item that fits the key(s) in the DTO.
@@ -48,7 +78,7 @@ namespace GenericServices.Concrete
         }
 
         /// <summary>
-        /// This copies only the properties in TDto that have a internal protected setter into the TData
+        /// This copies only the properties in TDto that have public setter into the TData
         /// You can override this if you need a more complex copy
         /// </summary>
         /// <param name="context"></param>
@@ -66,10 +96,11 @@ namespace GenericServices.Concrete
         //helper methods
 
         /// <summary>
-        /// This copies an existing TData into the dto using a Lambda expression to define the where clause
+        /// This copies an existing TData into a new the dto using a Lambda expression to define the where clause
+        /// It copies TData properties into all TDto properties that have accessable setters, i.e. not private
         /// </summary>
         /// <returns>dto, or null if not found</returns>
-        internal protected TDto CopyDataToDto(IDbContextWithValidation context, Expression<Func<TData, bool>> predicate)
+        internal protected TDto CreateDtoAndCopyDataIn(IDbContextWithValidation context, Expression<Func<TData, bool>> predicate)
         {
             Mapper.CreateMap<TData, TDto>();
             var dto = context.Set<TData>().Where(predicate).Project().To<TDto>().AsNoTracking().SingleOrDefault();
@@ -78,7 +109,6 @@ namespace GenericServices.Concrete
 
             return dto;
         }
-
 
         //---------------------------------------------------------------
         //private methods

@@ -79,12 +79,41 @@ namespace Tests.DTOs.Concrete
         //----------------------------------------------
         //overridden methods
 
-        protected override CrudFunctions SupportedFunctions
+        internal protected override CrudFunctions SupportedFunctions
         {
             get { return CrudFunctions.All; }
         }
 
-        protected override ISuccessOrErrors CopyDtoToData(IDbContextWithValidation context, DetailPostDto dto, Post post)
+        /// <summary>
+        /// This sets up the dropdownlist for the possible bloggers and the MultiSelectList of tags
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="dto"></param>
+        internal protected override void SetupSecondaryData(IDbContextWithValidation context, DetailPostDto dto)
+        {
+
+            dto.Bloggers.SetupDropDownListContent(
+                context.Set<Blog>()
+                    .ToList()
+                    .Select(x => new KeyValuePair<string, string>(x.Name, x.BlogId.ToString("D"))),
+                "--- choose blogger ---");
+            if (dto.PostId != 0)
+                //there is an entry, so set the selected value to that
+                dto.Bloggers.SetSelectedValue( dto.BlogId.ToString("D"));
+
+            var preselectedTags = dto.PostId == 0
+                ? new List<KeyValuePair<string, int>>()
+                : context.Set<PostTagLink>()
+                    .Where(x => x.PostId == dto.PostId)
+                    .Select( x => new { Key = x.HasTag.Name, Value = x.TagId})
+                    .ToList()
+                    .Select(x => new KeyValuePair<string, int>(x.Key, x.Value))
+                    .ToList();
+            dto.UserChosenTags.SetupMultiSelectList(
+                context.Set<Tag>().ToList().Select(x => new KeyValuePair<string, int>(x.Name, x.TagId)), preselectedTags);
+        }
+
+        internal protected override ISuccessOrErrors CopyDtoToData(IDbContextWithValidation context, DetailPostDto dto, Post post)
         {
 
             var db = context as TemplateWebAppDb;

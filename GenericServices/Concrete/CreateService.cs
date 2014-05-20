@@ -51,6 +51,10 @@
             if (result.IsValid)
                 result.SetSuccessMessage("Successfully created {0}.", dto.DataItemName);
 
+            //otherwise there are errors
+            if (!dto.SupportedFunctions.HasFlag(CrudFunctions.DoesNotNeedSetup))
+                //we reset any secondary data as we expect the view to be reshown with the errors
+                dto.SetupSecondaryData(_db, dto);
             return result;
 
         }
