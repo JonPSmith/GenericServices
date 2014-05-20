@@ -60,8 +60,7 @@
     <Compile Include="DataClasses\DataLayerInitialise.cs" />
     <Compile Include="DataClasses\TemplateWebAppDb.cs" />
     <Compile Include="DTOs\Concrete\DetailPostDto.cs" />
-    <Compile Include="DTOs\IDetailPostDto.cs" />
-    <Compile Include="DTOs\ISimplePostDto.cs" />
+    <Compile Include="DTOs\Concrete\SimpleBlogWithPostsDto.cs" />
     <Compile Include="DTOs\Concrete\SimplePostDto.cs" />
     <Compile Include="Helpers\DbSnapShot.cs" />
     <Compile Include="Helpers\ExtendAsserts.cs" />
@@ -74,6 +73,7 @@
     <Compile Include="UnitTests\Group02Services\Test02PostsDirect.cs" />
     <Compile Include="UnitTests\Group02Services\Test03PostsViaSimpleDto.cs" />
     <Compile Include="UnitTests\Group02Services\Test05PostsViaDetailDto.cs" />
+    <Compile Include="UnitTests\Group02Services\Test07BlogsViaDetailDto.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

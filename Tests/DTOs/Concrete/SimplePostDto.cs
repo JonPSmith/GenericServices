@@ -11,7 +11,7 @@ using Tests.DataClasses.Concrete;
 
 namespace Tests.DTOs.Concrete
 {
-    public class SimplePostDto : EfGenericDto<Post, SimplePostDto>, ISimplePostDto
+    public class SimplePostDto : EfGenericDto<Post, SimplePostDto>
     {
 
         [UIHint("HiddenInput")]

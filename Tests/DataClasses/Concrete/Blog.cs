@@ -15,7 +15,7 @@ namespace Tests.DataClasses.Concrete
         [Required]
         public string EmailAddress { get; set; }
 
-        public virtual List<Post> Posts { get; set; }
+        public List<Post> Posts { get; set; }
 
         public override string ToString()
         {

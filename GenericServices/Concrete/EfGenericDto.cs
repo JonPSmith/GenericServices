@@ -27,6 +27,16 @@ namespace GenericServices.Concrete
         /// Override if you want a more user friendly name
         /// </summary>
         internal protected virtual string DataItemName { get { return typeof (TData).Name; }}
+        
+        /// <summary>
+        /// This method is called to get the data table. Can be overridden if include statements are needed.
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns>returns an IQueryable of the table TData as Untracked</returns>
+        internal protected virtual IQueryable<TData> GetDataUntracked(IDbContextWithValidation context)
+        {
+            return context.Set<TData>().AsNoTracking();
+        }
 
         /// <summary>
         /// This function will be called at the end of CreateSetupService and UpdateSetupService to setup any
@@ -61,7 +71,7 @@ namespace GenericServices.Concrete
         internal protected virtual IQueryable<TDto> BuildListQueryUntracked(IDbContextWithValidation context)
         {
             Mapper.CreateMap<TData, TDto>();
-            return context.Set<TData>().AsNoTracking().Project().To<TDto>();
+            return GetDataUntracked(context).Project().To<TDto>();
         }
 
         /// <summary>
@@ -90,7 +100,7 @@ namespace GenericServices.Concrete
         internal protected TDto CreateDtoAndCopyDataIn(IDbContextWithValidation context, Expression<Func<TData, bool>> predicate)
         {
             Mapper.CreateMap<TData, TDto>();
-            var dto = context.Set<TData>().Where(predicate).Project().To<TDto>().AsNoTracking().SingleOrDefault();
+            var dto = GetDataUntracked(context).Where(predicate).Project().To<TDto>().SingleOrDefault();
             if (dto == null)
                 throw new ArgumentException("We could not find an entry using the given predicate");
 

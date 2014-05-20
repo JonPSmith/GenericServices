@@ -24,7 +24,7 @@ namespace Tests.UnitTests.Group01DataClasses
         }
 
         [Test]
-        public void Check01ReadBlogsVirtualPostsOk()
+        public void Check01ReadBlogsNoPostsOk()
         {
             using (var db = new TemplateWebAppDb())
             {
@@ -35,8 +35,23 @@ namespace Tests.UnitTests.Group01DataClasses
 
                 //VERIFY
                 blogs.Count.ShouldEqual(2);
-                blogs.All( x => x.Posts != null).ShouldEqual(true);
-                blogs.All(x => x.Posts.All( y => y.AllocatedTags == null)).ShouldEqual(true);
+                blogs.All( x => x.Posts == null).ShouldEqual(true);
+            }
+        }
+
+        public void Check01ReadBlogsWithPostsOk()
+        {
+            using (var db = new TemplateWebAppDb())
+            {
+                //SETUP
+
+                //ATTEMPT
+                var blogs = db.Blogs.Include( x => x.Posts).ToList();
+
+                //VERIFY
+                blogs.Count.ShouldEqual(2);
+                blogs.All(x => x.Posts != null).ShouldEqual(true);
+                blogs.All(x => x.Posts.All(y => y.AllocatedTags == null)).ShouldEqual(true);
             }
         }
 
@@ -201,7 +216,7 @@ namespace Tests.UnitTests.Group01DataClasses
 
                 //ATTEMPT
                 var badTag = db.Tags.Single(x => x.Slug == "bad");
-                var jonBlogger = db.Blogs.First();
+                var jonBlogger = db.Blogs.Include( x => x.Posts).First();
                 var firstPost = jonBlogger.Posts.First();
                 db.Entry(firstPost).Collection( x => x.AllocatedTags).Load();
                 firstPost.AllocatedTags.Add( new PostTagLink { InPost = firstPost, HasTag = badTag});
