@@ -17,7 +17,7 @@ namespace Tests.UnitTests.Group02Services
         [SetUp]
         public void SetUp()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 DataLayerInitialise.InitialiseThis();
                 DataLayerInitialise.ResetDatabaseToTestData(db);
@@ -44,7 +44,7 @@ namespace Tests.UnitTests.Group02Services
         [Test]
         public void Check02ListPostOk()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var service = new ListService<Post, DetailPostDto>(db);
@@ -67,7 +67,7 @@ namespace Tests.UnitTests.Group02Services
         [Test]
         public void Check03DetailPostOk()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var service = new DetailService<Post, DetailPostDto>(db, new DetailPostDto());
@@ -90,7 +90,7 @@ namespace Tests.UnitTests.Group02Services
         public void Check10CreateSetupServiceOk()
         {
 
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var service = new CreateSetupService<Post, DetailPostDto>(db, new DetailPostDto());
@@ -109,7 +109,7 @@ namespace Tests.UnitTests.Group02Services
         public void Check11CreatePostOk()
         {
 
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
@@ -138,7 +138,7 @@ namespace Tests.UnitTests.Group02Services
         public void Check12CreateFailRunsSetupSecondaryDataAgainOk()
         {
 
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var service = new CreateService<Post, DetailPostDto>(db);
@@ -162,7 +162,7 @@ namespace Tests.UnitTests.Group02Services
         [Test]
         public void Check15DtoCopyPropertiesOk()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var firstPost = db.Posts.First();
@@ -206,7 +206,7 @@ namespace Tests.UnitTests.Group02Services
         public void Check16UpdateSetupServiceOk()
         {
 
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var setupService = new UpdateSetupService<Post, DetailPostDto>(db, new DetailPostDto());
@@ -225,7 +225,7 @@ namespace Tests.UnitTests.Group02Services
         public void Check20UpdatePostLeaveTagSameOk()
         {
 
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
@@ -255,7 +255,7 @@ namespace Tests.UnitTests.Group02Services
         public void Check21UpdatePostRemoveTagOk()
         {
 
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
@@ -284,7 +284,7 @@ namespace Tests.UnitTests.Group02Services
         public void Check22UpdatePostAddTagOk()
         {
 
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
@@ -313,7 +313,7 @@ namespace Tests.UnitTests.Group02Services
         public void Check25UpdatePostFailRunsSetupSecondaryDataAgainOk()
         {
 
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var setupService = new UpdateSetupService<Post, DetailPostDto>(db, new DetailPostDto());

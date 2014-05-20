@@ -16,7 +16,7 @@ namespace Tests.UnitTests.Group01DataClasses
         [SetUp]
         public void SetUp()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 DataLayerInitialise.InitialiseThis();
                 DataLayerInitialise.ResetDatabaseToTestData(db);
@@ -26,7 +26,7 @@ namespace Tests.UnitTests.Group01DataClasses
         [Test]
         public void Check01ReadBlogsNoPostsOk()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
 
@@ -41,7 +41,7 @@ namespace Tests.UnitTests.Group01DataClasses
 
         public void Check01ReadBlogsWithPostsOk()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
 
@@ -58,7 +58,7 @@ namespace Tests.UnitTests.Group01DataClasses
         [Test]
         public void Check02ReadBlogsWithPostTagsOk()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
 
@@ -76,7 +76,7 @@ namespace Tests.UnitTests.Group01DataClasses
         [Test]
         public void Check05ReadPostsOk()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
 
@@ -94,7 +94,7 @@ namespace Tests.UnitTests.Group01DataClasses
         [Test]
         public void Check06ReadPostsWithTagsOk()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
 
@@ -111,7 +111,7 @@ namespace Tests.UnitTests.Group01DataClasses
         [Test]
         public void Check10ReadTAllocatedTagsWithUglySlugOk()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
 
@@ -129,7 +129,7 @@ namespace Tests.UnitTests.Group01DataClasses
         [Test]
         public void Check20AddPostOk()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
@@ -165,7 +165,7 @@ namespace Tests.UnitTests.Group01DataClasses
         [Test]
         public void Check21CheckUpdateSimpleOk()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
@@ -187,7 +187,7 @@ namespace Tests.UnitTests.Group01DataClasses
         [Test]
         public void Check22CheckUpdateLastUpdatedOk()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
@@ -209,7 +209,7 @@ namespace Tests.UnitTests.Group01DataClasses
         [Test]
         public void Check25UpdatePostToAddTagOk()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var snap = new DbSnapShot(db);

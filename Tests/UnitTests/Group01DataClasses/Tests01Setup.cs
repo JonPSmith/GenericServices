@@ -10,7 +10,7 @@ namespace Tests.UnitTests.Group01DataClasses
         [Test]
         public void Check01DatabaseResetOk()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 DataLayerInitialise.InitialiseThis();

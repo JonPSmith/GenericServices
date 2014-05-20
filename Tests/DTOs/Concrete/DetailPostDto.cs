@@ -116,7 +116,7 @@ namespace Tests.DTOs.Concrete
         internal protected override ISuccessOrErrors CopyDtoToData(IDbContextWithValidation context, DetailPostDto dto, Post post)
         {
 
-            var db = context as TemplateWebAppDb;
+            var db = context as SampleWebAppDb;
             if (db == null)
                 throw new NullReferenceException("The IDbContextWithValidation must be linked to TemplateWebAppDb.");
 
@@ -144,7 +144,7 @@ namespace Tests.DTOs.Concrete
         //---------------------------------------------------
         //private helpers
 
-        private string SetupBloggerIdFromDropDownList(TemplateWebAppDb db, Post post)
+        private string SetupBloggerIdFromDropDownList(SampleWebAppDb db, Post post)
         {
             
             var blogId = Bloggers.SelectedValueAsInt;
@@ -163,7 +163,7 @@ namespace Tests.DTOs.Concrete
             return null;
         }
 
-        private string ChangeTagsBasedOnMultiSelectList(TemplateWebAppDb db, Post post)
+        private string ChangeTagsBasedOnMultiSelectList(SampleWebAppDb db, Post post)
         {
             var requiredTagIds = UserChosenTags.GetFinalSelectionAsInts();
             if (!requiredTagIds.Any())

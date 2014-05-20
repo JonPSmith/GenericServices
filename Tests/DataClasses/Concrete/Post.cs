@@ -32,7 +32,7 @@ namespace Tests.DataClasses.Concrete
         {
             //Note that Tags may be null if the read din't include them, in which case we can't check them
             if (AllocatedTags != null && !AllocatedTags.Any())
-                yield return new ValidationResult("The post must have at least one Tag", new[] { "AllocatedTags" });
+                yield return new ValidationResult("The post must have at least one Tag.", new[] { "AllocatedTags" });
 
             if (Title.Contains("!"))
                 yield return new ValidationResult( "Sorry, but you can't get too excited and include a ! in the title.", new [] { "Title"});

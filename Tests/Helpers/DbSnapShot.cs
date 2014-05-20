@@ -14,7 +14,7 @@ namespace Tests.Helpers
 
         public int NumTags { get; private set; }
 
-        public DbSnapShot(TemplateWebAppDb db)
+        public DbSnapShot(SampleWebAppDb db)
         {
             NumBlogs = db.Blogs.Count();
             NumPostTagLinks = db.PostTagLinks.Count();
@@ -22,7 +22,7 @@ namespace Tests.Helpers
             NumTags = db.Tags.Count();
         }
 
-        public void CheckSnapShot(TemplateWebAppDb db, int postsChange = 0, int postTagLinkChange = 0, int blogsChange = 0, int tagsChange = 0)
+        public void CheckSnapShot(SampleWebAppDb db, int postsChange = 0, int postTagLinkChange = 0, int blogsChange = 0, int tagsChange = 0)
         {
             var newSnap = new DbSnapShot(db);
 

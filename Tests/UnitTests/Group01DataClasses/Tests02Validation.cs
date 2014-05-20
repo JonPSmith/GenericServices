@@ -14,7 +14,7 @@ namespace Tests.UnitTests.Group01DataClasses
         [TestFixtureSetUp]
         public void SetUpFixture()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 DataLayerInitialise.InitialiseThis();
                 DataLayerInitialise.ResetDatabaseToTestData(db);
@@ -24,7 +24,7 @@ namespace Tests.UnitTests.Group01DataClasses
         [Test]
         public void Check01ValidateTagOk()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
@@ -43,7 +43,7 @@ namespace Tests.UnitTests.Group01DataClasses
         [Test]
         public void Check02ValidateTagError()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var existingTag = db.Tags.First();
@@ -63,7 +63,7 @@ namespace Tests.UnitTests.Group01DataClasses
         [Test]
         public void Check10ValidatePostOk()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
@@ -94,7 +94,7 @@ namespace Tests.UnitTests.Group01DataClasses
         [Test]
         public void Check15ValidatePostTitleError()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var existingTag = db.Tags.First();
@@ -124,7 +124,7 @@ namespace Tests.UnitTests.Group01DataClasses
         [Test]
         public void Check16ValidatePostTitleError()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var existingTag = db.Tags.First();
@@ -154,7 +154,7 @@ namespace Tests.UnitTests.Group01DataClasses
         [Test]
         public void Check20ValidatePostContentOneError()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var existingTag = db.Tags.First();
@@ -185,7 +185,7 @@ namespace Tests.UnitTests.Group01DataClasses
         [Test]
         public void Check21ValidatePostContentTwoErrors()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var existingTag = db.Tags.First();

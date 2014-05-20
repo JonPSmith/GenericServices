@@ -11,7 +11,7 @@ using Tests.DataClasses.Concrete.Helpers;
 namespace Tests.DataClasses
 {
 
-    public class TemplateWebAppDb : DbContext, IDbContextWithValidation
+    public class SampleWebAppDb : DbContext, IDbContextWithValidation
     {
         //********************************************************************
         // Have used IDbSet below to ensure code is compatible with EF 5

@@ -16,7 +16,7 @@ namespace Tests.UnitTests.Group02Services
         [SetUp]
         public void SetUp()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 DataLayerInitialise.InitialiseThis();
                 DataLayerInitialise.ResetDatabaseToTestData(db);
@@ -40,7 +40,7 @@ namespace Tests.UnitTests.Group02Services
         [Test]
         public void Check02ListBlogsCheckIncludesPostsOk()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var service = new ListService<Blog, SimpleBlogWithPostsDto>(db);

@@ -16,7 +16,7 @@ namespace Tests.UnitTests.Group02Services
         [TestFixtureSetUp]
         public void SetUpFixture()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 DataLayerInitialise.InitialiseThis();
                 DataLayerInitialise.ResetDatabaseToTestData(db);
@@ -42,7 +42,7 @@ namespace Tests.UnitTests.Group02Services
         [Test]
         public void Check02ListDirectPostOk()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var service = new ListService<Post>(db);
@@ -63,7 +63,7 @@ namespace Tests.UnitTests.Group02Services
         [Test]
         public void Check06UpdateDirectOk()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
@@ -85,7 +85,7 @@ namespace Tests.UnitTests.Group02Services
         [Test]
         public void Check07UpdateDirectPostCorrectOk()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
@@ -113,7 +113,7 @@ namespace Tests.UnitTests.Group02Services
         [Test]
         public void Check08UpdateWithListDtoBad()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var firstPostUntracked = db.Posts.AsNoTracking().First();
@@ -134,7 +134,7 @@ namespace Tests.UnitTests.Group02Services
         [Test]
         public void Check08CreateDirectOk()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
@@ -161,7 +161,7 @@ namespace Tests.UnitTests.Group02Services
         [Test]
         public void Check10DeleteDirectOk()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var snap = new DbSnapShot(db);

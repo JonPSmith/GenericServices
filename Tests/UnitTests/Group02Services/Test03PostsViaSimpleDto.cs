@@ -18,7 +18,7 @@ namespace Tests.UnitTests.Group02Services
         [TestFixtureSetUp]
         public void SetUpFixture()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 DataLayerInitialise.InitialiseThis();
                 DataLayerInitialise.ResetDatabaseToTestData(db);
@@ -44,7 +44,7 @@ namespace Tests.UnitTests.Group02Services
         [Test]
         public void Check02ListPostOk()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var service = new ListService<Post, SimplePostDto>(db);
@@ -66,7 +66,7 @@ namespace Tests.UnitTests.Group02Services
         [Test]
         public void Check03DetailPostOk()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var service = new DetailService<Post, SimplePostDto>(db, new SimplePostDto());
@@ -129,7 +129,7 @@ namespace Tests.UnitTests.Group02Services
         [Test]
         public void Check05UpdateSetupOk()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var service = new UpdateSetupService<Post, SimplePostDto>(db, new SimplePostDto());
@@ -150,7 +150,7 @@ namespace Tests.UnitTests.Group02Services
         [Test]
         public void Check06UpdateWithListDtoOk()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
@@ -174,7 +174,7 @@ namespace Tests.UnitTests.Group02Services
         [Test]
         public void Check07UpdateWithListDtoCorrectOk()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var firstPost = db.Posts.Include(x => x.AllocatedTags).AsNoTracking().First();
@@ -199,7 +199,7 @@ namespace Tests.UnitTests.Group02Services
         [Test]
         public void Check08UpdateWithListDtoBad()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var listService = new ListService<Post, SimplePostDto>(db);
@@ -221,7 +221,7 @@ namespace Tests.UnitTests.Group02Services
         [Test]
         public void Check08CreateWithListDtoBad()
         {
-            using (var db = new TemplateWebAppDb())
+            using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var service = new CreateService<Post, SimplePostDto>(db);

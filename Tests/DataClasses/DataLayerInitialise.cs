@@ -14,10 +14,10 @@ namespace Tests.DataClasses
         public static void InitialiseThis()
         {
             //Initialise the database
-            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<TemplateWebAppDb>());
+            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<SampleWebAppDb>());
         }
 
-        public static void ResetDatabaseToTestData(TemplateWebAppDb context)
+        public static void ResetDatabaseToTestData(SampleWebAppDb context)
         {
 
             if (context.Blogs.Any())
