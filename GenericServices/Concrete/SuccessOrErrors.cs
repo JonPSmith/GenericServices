@@ -65,9 +65,26 @@ namespace GenericServices.Concrete
         }
 
         /// <summary>
+        /// This adds an error for a specific, named parameter
+        /// </summary>
+        /// <param name="parameterName"></param>
+        /// <param name="errorformat"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public ISuccessOrErrors AddNamedParameterError(string parameterName, string errorformat, params object[] args)
+        {
+            if (_errors == null)
+                _errors = new List<ValidationResult>();
+            _errors.Add(new ValidationResult(string.Format(errorformat, args), new[] { parameterName }));
+            SuccessMessage = string.Empty;
+            return this;
+        }
+
+        /// <summary>
         /// This sets a success message and sets the IsValid flag to true
         /// </summary>
         /// <param name="successformat"></param>
+        /// <param name="args"></param>
         public ISuccessOrErrors SetSuccessMessage(string successformat, params object [] args)
         {
             _errors = new List<ValidationResult>();         //empty list means its been validated and its Valid

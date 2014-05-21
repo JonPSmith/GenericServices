@@ -52,12 +52,12 @@ namespace GenericServices.Concrete
                 return result.AddSingleError("Could not find the {0} you requested.", dto.DataItemName);
 
             result = dto.CopyDtoToData(_db, dto, itemToUpdate); //update those properties we want to change
-            if (!result.IsValid)
-                return result;
-
-            result = _db.SaveChangesWithValidation();
             if (result.IsValid)
-                result.SetSuccessMessage("Successfully updated {0}.", dto.DataItemName);
+            {
+                result = _db.SaveChangesWithValidation();
+                if (result.IsValid)
+                    result.SetSuccessMessage("Successfully updated {0}.", dto.DataItemName);
+            }
 
             //otherwise there are errors
             if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))

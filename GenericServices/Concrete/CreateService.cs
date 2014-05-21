@@ -43,13 +43,13 @@
             
             var tData = new TData();
             result = dto.CopyDtoToData(_db, dto, tData);    //update those properties we want to change
-            if (!result.IsValid)
-                return result;
-
-            _db.Set<TData>().Add(tData);
-            result = _db.SaveChangesWithValidation();
             if (result.IsValid)
-                result.SetSuccessMessage("Successfully created {0}.", dto.DataItemName);
+            {
+                _db.Set<TData>().Add(tData);
+                result = _db.SaveChangesWithValidation();
+                if (result.IsValid)
+                    result.SetSuccessMessage("Successfully created {0}.", dto.DataItemName);
+            }
 
             //otherwise there are errors
             if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))

@@ -3,7 +3,7 @@ using AutoMapper;
 using NUnit.Framework;
 using Tests.Helpers;
 
-namespace Tests.UnitTests.Group02Services
+namespace Tests.UnitTests.Group04Services
 {
     class Test01AutoMapper
     {

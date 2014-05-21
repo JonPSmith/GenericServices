@@ -40,6 +40,15 @@ namespace GenericServices
         ISuccessOrErrors AddSingleError(string errorformat, params object[] args);
 
         /// <summary>
+        /// This adds an error for a specific, named parameter
+        /// </summary>
+        /// <param name="parameterName"></param>
+        /// <param name="errorformat"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        ISuccessOrErrors AddNamedParameterError(string parameterName, string errorformat, params object[] args);
+
+        /// <summary>
         /// This sets a success message and sets the IsValid flag to true
         /// </summary>
         /// <param name="successformat"></param>

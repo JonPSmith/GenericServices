@@ -7,11 +7,10 @@ using GenericServices.Concrete;
 using NUnit.Framework;
 using Tests.DataClasses;
 using Tests.DataClasses.Concrete;
-using Tests.DTOs;
 using Tests.DTOs.Concrete;
 using Tests.Helpers;
 
-namespace Tests.UnitTests.Group02Services
+namespace Tests.UnitTests.Group04Services
 {
     class Test03PostsViaSimpleDto
     {

@@ -43,11 +43,11 @@ namespace Tests.UiHelpers
         /// <returns></returns>
         public int[] GetFinalSelectionAsInts()
         {
-            if (FinalSelection == null)
-                throw new NullReferenceException(
-                    "FinalSelection of the MultiSelectList is null. Did you forget to set it in the view?");
-
             var result = new List<int>();
+            if (FinalSelection == null)
+                //the FinalSelection can be null if no item has been selected, so return empty array
+                return result.ToArray();
+
             foreach (var intAsString in FinalSelection)
             {
                 int id;

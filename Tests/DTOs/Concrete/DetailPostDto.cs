@@ -126,12 +126,12 @@ namespace Tests.DTOs.Concrete
             //now we sort out the blogger
             var errMsg = SetupBloggerIdFromDropDownList(db, post);
             if (errMsg != null)
-                status.AddSingleError(errMsg);
+                status.AddNamedParameterError("Bloggers", errMsg);
 
             //now we sort out the tags
             errMsg = ChangeTagsBasedOnMultiSelectList(db, post);
             if (errMsg != null)
-                status.AddSingleError(errMsg);
+                status.AddNamedParameterError("UserChosenTags", errMsg);
 
             if (status.IsValid)
                 //now we copy the items to the right place
