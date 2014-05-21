@@ -20,7 +20,7 @@ namespace Tests.DataClasses.Concrete
         public int BlogId { get; set; }
         public virtual Blog Blogger { get; set; }
 
-        public List<PostTagLink> AllocatedTags { get; set; }
+        public ICollection<PostTagLink> AllocatedTags { get; set; }
 
         public override string ToString()
         {

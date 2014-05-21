@@ -23,7 +23,7 @@ namespace Tests.DTOs
         [UIHint("HiddenInput")]
         int BlogId { get; set; }
 
-        List<PostTagLink> AllocatedTags { get; set; }
+        ICollection<PostTagLink> AllocatedTags { get; set; }
         string BloggerName { get; }
 
         /// <summary>

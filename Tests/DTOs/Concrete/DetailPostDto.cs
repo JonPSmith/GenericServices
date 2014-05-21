@@ -37,7 +37,7 @@ namespace Tests.DTOs.Concrete
         [UIHint("HiddenInput")]
         public int BlogId { get; set; }
 
-        public List<PostTagLink> AllocatedTags { get;  set; }            //this must be copied back
+        public ICollection<PostTagLink> AllocatedTags { get; set; }            //this must be copied back
 
         //------------------------------------------
         //Item set up if update
@@ -187,7 +187,7 @@ namespace Tests.DTOs.Concrete
                 .Where( x => !tagLinksToDelete.Any(y => y.TagId == x.TagId))               //then we remove any we don't want any more      
                 .ToList();
             //Then add any new ones
-            AllocatedTags.AddRange(tagLinksToAdd);
+            tagLinksToAdd.ForEach(x => AllocatedTags.Add( x));
 
             //secondly we get the PostTagLinks entries right (must come second)
             tagLinksToDelete.ForEach( x => db.PostTagLinks.Remove(x));
