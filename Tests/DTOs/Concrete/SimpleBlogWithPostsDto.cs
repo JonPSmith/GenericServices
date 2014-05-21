@@ -8,7 +8,7 @@ using Tests.DataClasses.Concrete;
 
 namespace Tests.DTOs.Concrete
 {
-    public class SimpleBlogWithPostsDto : EfGenericDto<Blog, SimpleBlogWithPostsDto>
+    public class SimpleBlogWithPostsDto : EfGenericDto<Blog, SimpleBlogWithPostsDto>, ISimpleBlogWithPostsDto
     {
         [Key]
         public int BlogId { get; set; }

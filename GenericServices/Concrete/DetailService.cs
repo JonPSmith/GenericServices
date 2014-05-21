@@ -32,15 +32,13 @@ namespace GenericServices.Concrete
 
     public class DetailService<TData, TDto> : IDetailService<TData, TDto>
         where TData : class
-        where TDto : EfGenericDto<TData, TDto>
+        where TDto : EfGenericDto<TData, TDto>, new()
     {
         private readonly IDbContextWithValidation _db;
-        private readonly TDto _tDto;
 
-        public DetailService(IDbContextWithValidation db, TDto tDto)
+        public DetailService(IDbContextWithValidation db)
         {
             _db = db;
-            _tDto = tDto;
         }
 
         /// <summary>
@@ -50,11 +48,11 @@ namespace GenericServices.Concrete
         /// <returns>TDto type with properties copyed over</returns>
         public TDto GetDetail(Expression<Func<TData, bool>> whereExpression)
         {
-
-            if (!_tDto.SupportedFunctions.HasFlag(ServiceFunctions.Detail))
+            var dto = new TDto();
+            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.Detail))
                 throw new InvalidOperationException("This DTO does not support a detailed view.");
 
-            return _tDto.CreateDtoAndCopyDataIn(_db, whereExpression);
+            return dto.CreateDtoAndCopyDataIn(_db, whereExpression);
         }
     }
 }

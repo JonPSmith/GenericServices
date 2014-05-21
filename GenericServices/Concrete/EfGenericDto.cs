@@ -14,8 +14,8 @@ using AutoMapper.QueryableExtensions;
 namespace GenericServices.Concrete
 {
 
-    public abstract class EfGenericDto<TData, TDto> : IEfGenericDto<TData, TDto> where TData : class
-        where TDto : EfGenericDto<TData, TDto>
+    public abstract class EfGenericDto<TData, TDto> where TData : class
+        where TDto : EfGenericDto<TData,TDto>
     {
         /// <summary>
         /// This must be overridden to say that the dto supports the create function

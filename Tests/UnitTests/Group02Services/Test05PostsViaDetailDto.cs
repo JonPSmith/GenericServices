@@ -33,7 +33,7 @@ namespace Tests.UnitTests.Group02Services
 
             //ATTEMPT
             ICreateService<Post, DetailPostDto> createService = new CreateService<Post, DetailPostDto>(null);
-            IDetailService<Post, DetailPostDto> detailService = new DetailService<Post, DetailPostDto>(null, null);
+            IDetailService<Post, DetailPostDto> detailService = new DetailService<Post, DetailPostDto>(null);
             IListService<Post, DetailPostDto> listService = new ListService<Post, DetailPostDto>(null);
             IUpdateService<Post, DetailPostDto> updateService = new UpdateService<Post, DetailPostDto>(null);
 
@@ -70,7 +70,7 @@ namespace Tests.UnitTests.Group02Services
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
-                var service = new DetailService<Post, DetailPostDto>(db, new DetailPostDto());
+                var service = new DetailService<Post, DetailPostDto>(db);
                 var firstPost = db.Posts.Include( x => x.AllocatedTags).AsNoTracking().First();
 
                 //ATTEMPT
@@ -93,7 +93,7 @@ namespace Tests.UnitTests.Group02Services
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
-                var service = new CreateSetupService<Post, DetailPostDto>(db, new DetailPostDto());
+                var service = new CreateSetupService<Post, DetailPostDto>(db);
 
                 //ATTEMPT
                 var dto = service.GetDto();
@@ -114,7 +114,7 @@ namespace Tests.UnitTests.Group02Services
                 //SETUP
                 var snap = new DbSnapShot(db);
                 var service = new CreateService<Post, DetailPostDto>(db);
-                var setupService = new CreateSetupService<Post, DetailPostDto>(db, new DetailPostDto());
+                var setupService = new CreateSetupService<Post, DetailPostDto>(db);
 
                 //ATTEMPT
                 var dto = setupService.GetDto();
@@ -142,7 +142,7 @@ namespace Tests.UnitTests.Group02Services
             {
                 //SETUP
                 var service = new CreateService<Post, DetailPostDto>(db);
-                var setupService = new CreateSetupService<Post, DetailPostDto>(db, new DetailPostDto());
+                var setupService = new CreateSetupService<Post, DetailPostDto>(db);
 
                 //ATTEMPT
                 var dto = setupService.GetDto();
@@ -185,7 +185,7 @@ namespace Tests.UnitTests.Group02Services
             {
                 //SETUP
                 var firstPost = db.Posts.First();
-                var setupService = new CreateSetupService<Post, DetailPostDto>(db, new DetailPostDto());
+                var setupService = new CreateSetupService<Post, DetailPostDto>(db);
                 var dto = setupService.GetDto();
 
                 dto.PostId = firstPost.PostId;
@@ -228,7 +228,7 @@ namespace Tests.UnitTests.Group02Services
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
-                var setupService = new UpdateSetupService<Post, DetailPostDto>(db, new DetailPostDto());
+                var setupService = new UpdateSetupService<Post, DetailPostDto>(db);
                 var firstPost = db.Posts.First();
 
                 //ATTEMPT
@@ -248,7 +248,7 @@ namespace Tests.UnitTests.Group02Services
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
-                var setupService = new UpdateSetupService<Post, DetailPostDto>(db, new DetailPostDto());
+                var setupService = new UpdateSetupService<Post, DetailPostDto>(db);
                 var updateService = new UpdateService<Post, DetailPostDto>(db);
                 var firstPost = db.Posts.First();
 
@@ -278,7 +278,7 @@ namespace Tests.UnitTests.Group02Services
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
-                var setupService = new UpdateSetupService<Post, DetailPostDto>(db, new DetailPostDto());
+                var setupService = new UpdateSetupService<Post, DetailPostDto>(db);
                 var updateService = new UpdateService<Post, DetailPostDto>(db);
                 var firstPost = db.Posts.First();
 
@@ -307,7 +307,7 @@ namespace Tests.UnitTests.Group02Services
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
-                var setupService = new UpdateSetupService<Post, DetailPostDto>(db, new DetailPostDto());
+                var setupService = new UpdateSetupService<Post, DetailPostDto>(db);
                 var updateService = new UpdateService<Post, DetailPostDto>(db);
                 var firstPost = db.Posts.First();
 
@@ -335,7 +335,7 @@ namespace Tests.UnitTests.Group02Services
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
-                var setupService = new UpdateSetupService<Post, DetailPostDto>(db, new DetailPostDto());
+                var setupService = new UpdateSetupService<Post, DetailPostDto>(db);
                 var updateService = new UpdateService<Post, DetailPostDto>(db);
                 var firstPost = db.Posts.First();
 

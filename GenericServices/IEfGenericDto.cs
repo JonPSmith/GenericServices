@@ -19,8 +19,6 @@ namespace GenericServices
         All = List | Detail | Create | Update
     }
 
-    public interface IEfGenericDto<TData, TDto> where TData : class
-        where TDto : EfGenericDto<TData, TDto>
-    {}
+    //public interface IEfGenericDto {}
 
 }

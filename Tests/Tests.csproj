@@ -67,6 +67,9 @@
     <Compile Include="DataClasses\DataLayerInitialise.cs" />
     <Compile Include="DataClasses\SampleWebAppDb.cs" />
     <Compile Include="DTOs\Concrete\DetailPostDto.cs" />
+    <Compile Include="DTOs\IDetailPostDto.cs" />
+    <Compile Include="DTOs\ISimpleBlogWithPostsDto.cs" />
+    <Compile Include="DTOs\ISimplePostDto.cs" />
     <Compile Include="DTOs\Concrete\SimpleBlogWithPostsDto.cs" />
     <Compile Include="DTOs\Concrete\SimplePostDto.cs" />
     <Compile Include="Helpers\DbSnapShot.cs" />
