@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Validation;
 using System.Linq;
@@ -11,14 +12,22 @@ namespace GenericServices.Concrete
 
         private List<ValidationResult> _errors;
         /// <summary>
-        /// Holds the list of errors. Empty list means no errors. Null means validation has not been done
+        /// Holds the list of errors. Empty list means no errors.
         /// </summary>
-        public IReadOnlyList<ValidationResult> Errors { get { return _errors; }}
+        public IReadOnlyList<ValidationResult> Errors
+        {
+            get
+            {
+                if (_errors == null)
+                    throw new NullReferenceException("The status must have an error set or the success message set before you can access errors.");
+                return _errors;
+            }
+        }
 
         /// <summary>
         /// Returns true if not errors or not validated yet, else false. 
         /// </summary>
-        public bool IsValid { get { return ( Errors != null && Errors.Count == 0); }}
+        public bool IsValid { get { return (_errors != null && Errors.Count == 0); }}
 
         public string SuccessMessage { get; private set; }
 
@@ -112,7 +121,9 @@ namespace GenericServices.Concrete
             if (IsValid)
                 return SuccessMessage ?? "The task completed successfully";
 
-            return string.Format("Failed with {0} errors", _errors.Count);
+            return _errors == null 
+                ? "Not currently setup" 
+                : string.Format("Failed with {0} errors", _errors.Count);
         }
 
     }
