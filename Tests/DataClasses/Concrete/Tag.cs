@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Tests.DataClasses.Concrete
 {
@@ -14,6 +15,8 @@ namespace Tests.DataClasses.Concrete
         [MaxLength(128)]
         [Required]
         public string Name { get; set; }
+
+        public ICollection<Post> Posts { get; set; }
 
         public override string ToString()
         {

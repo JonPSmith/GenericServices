@@ -55,7 +55,7 @@ namespace Tests.UnitTests.Group04Services
 
                 //VERIFY
                 list.Count.ShouldEqual(3);
-                var firstPost = db.Posts.Include(x => x.AllocatedTags).AsNoTracking().First();
+                var firstPost = db.Posts.Include(x => x.Tags).AsNoTracking().First();
                 list[0].Title.ShouldEqual(firstPost.Title);
                 list[0].Content.ShouldEqual(firstPost.Content);
                 list[0].BloggerName.ShouldEqual(firstPost.Blogger.Name);
@@ -71,7 +71,7 @@ namespace Tests.UnitTests.Group04Services
             {
                 //SETUP
                 var service = new DetailService<Post, DetailPostDto>(db);
-                var firstPost = db.Posts.Include( x => x.AllocatedTags).AsNoTracking().First();
+                var firstPost = db.Posts.Include( x => x.Tags).AsNoTracking().First();
 
                 //ATTEMPT
                 var dto = service.GetDetail(x => x.PostId == firstPost.PostId);
@@ -82,7 +82,7 @@ namespace Tests.UnitTests.Group04Services
                 dto.BloggerName.ShouldEqual(firstPost.Blogger.Name);
                 dto.Title.ShouldEqual(firstPost.Title);
                 dto.Content.ShouldEqual(firstPost.Content);
-                CollectionAssert.AreEqual(firstPost.AllocatedTags.Select(x => x.TagId), dto.AllocatedTags.Select(x => x.TagId));
+                CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), dto.Tags.Select(x => x.TagId));
             }
         }
 
@@ -127,10 +127,10 @@ namespace Tests.UnitTests.Group04Services
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
                 snap.CheckSnapShot(db, 1, 2);
-                var post = db.Posts.Include(x => x.AllocatedTags).OrderByDescending( x => x.PostId).First();
+                var post = db.Posts.Include(x => x.Tags).OrderByDescending( x => x.PostId).First();
                 post.Title.ShouldEqual(dto.Title);
                 post.BlogId.ShouldEqual(db.Blogs.First().BlogId);
-                CollectionAssert.AreEqual(db.Tags.Take(2).Select(x => x.TagId), post.AllocatedTags.Select(x => x.TagId));
+                CollectionAssert.AreEqual(db.Tags.Take(2).Select(x => x.TagId), post.Tags.Select(x => x.TagId));
             }
         }
 
@@ -193,7 +193,7 @@ namespace Tests.UnitTests.Group04Services
                 dto.BlogId = 333;
                 dto.Title = "Should copy this title";
                 dto.Content = "Should copy this content";
-                dto.AllocatedTags = firstPost.AllocatedTags;
+                dto.Tags = firstPost.Tags;
                 dto.LastUpdated = new DateTime(2000, 1, 1);  
 
                 //ATTEMPT
@@ -262,10 +262,10 @@ namespace Tests.UnitTests.Group04Services
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
                 snap.CheckSnapShot(db);
-                var post = db.Posts.Include(x => x.AllocatedTags).Single(x => x.PostId == firstPost.PostId);
+                var post = db.Posts.Include(x => x.Tags).Single(x => x.PostId == firstPost.PostId);
                 post.Title.ShouldEqual(dto.Title);
                 post.BlogId.ShouldEqual(db.Blogs.First().BlogId);
-                CollectionAssert.AreEqual(db.Tags.Take(2).Select(x => x.TagId), post.AllocatedTags.Select(x => x.TagId));
+                CollectionAssert.AreEqual(db.Tags.Take(2).Select(x => x.TagId), post.Tags.Select(x => x.TagId));
             }
         }
 
@@ -292,10 +292,10 @@ namespace Tests.UnitTests.Group04Services
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
                 snap.CheckSnapShot(db, 0, -1);
-                var post = db.Posts.Include( x=> x.AllocatedTags).Single(x => x.PostId == firstPost.PostId);
+                var post = db.Posts.Include( x=> x.Tags).Single(x => x.PostId == firstPost.PostId);
                 post.Title.ShouldEqual(dto.Title);
                 post.BlogId.ShouldEqual(db.Blogs.First().BlogId);
-                CollectionAssert.AreEqual(db.Tags.Take(1).Select(x => x.TagId), post.AllocatedTags.Select(x => x.TagId));
+                CollectionAssert.AreEqual(db.Tags.Take(1).Select(x => x.TagId), post.Tags.Select(x => x.TagId));
             }
         }
 
@@ -321,10 +321,10 @@ namespace Tests.UnitTests.Group04Services
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
                 snap.CheckSnapShot(db, 0, 1);
-                var post = db.Posts.Include(x => x.AllocatedTags).Single(x => x.PostId == firstPost.PostId);
+                var post = db.Posts.Include(x => x.Tags).Single(x => x.PostId == firstPost.PostId);
                 post.Title.ShouldEqual(dto.Title);
                 post.BlogId.ShouldEqual(db.Blogs.First().BlogId);
-                CollectionAssert.AreEquivalent(db.Tags.Take(3).Select(x => x.TagId), post.AllocatedTags.Select(x => x.TagId));
+                CollectionAssert.AreEquivalent(db.Tags.Take(3).Select(x => x.TagId), post.Tags.Select(x => x.TagId));
             }
         }
 

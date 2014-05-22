@@ -17,7 +17,7 @@ namespace Tests.Helpers
         public DbSnapShot(SampleWebAppDb db)
         {
             NumBlogs = db.Blogs.Count();
-            NumPostTagLinks = db.PostTagLinks.Count();
+            NumPostTagLinks = db.Database.SqlQuery<int>("SELECT COUNT(*) FROM dbo.TagPosts").First();
             NumPosts = db.Posts.Count();
             NumTags = db.Tags.Count();
         }

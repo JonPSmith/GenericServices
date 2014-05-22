@@ -22,16 +22,15 @@ namespace Tests.DataClasses
 
             if (context.Blogs.Any())
             {
-                context.PostTagLinks.ToList().ForEach(x => context.PostTagLinks.Remove(x));
                 context.Posts.ToList().ForEach(x => context.Posts.Remove(x));
                 context.Tags.ToList().ForEach(x => context.Tags.Remove(x));
                 context.Blogs.ToList().ForEach(x => context.Blogs.Remove(x));
                 context.SaveChanges();
             }
 
-            var goodTag = new Tag {Name = "Good post", Slug = "good"};
-            var badTag = new Tag {Name = "Bad post", Slug = "bad"};
-            var uglyTag = new Tag {Name = "Ugly post", Slug = "ugly"};
+            var goodTag = new Tag { Name = "Good post", Slug = "good" };
+            var badTag = new Tag { Name = "Bad post", Slug = "bad" };
+            var uglyTag = new Tag { Name = "Ugly post", Slug = "ugly" };
 
             var jonBlogger = new Blog
             {
@@ -48,12 +47,8 @@ namespace Tests.DataClasses
             {
                 Blogger = jonBlogger,
                 Title = "First great post",
-                Content = "A fine set of words.\nIn two lines."
-            };
-            jonPost1.AllocatedTags = new List<PostTagLink>
-            {
-                new PostTagLink { InPost = jonPost1, HasTag = goodTag },
-                new PostTagLink { InPost = jonPost1, HasTag = uglyTag}
+                Content = "A fine set of words.\nIn two lines.",
+                Tags = new List<Tag> { goodTag, uglyTag }
             };
 
             var jonPost2 = new Post
@@ -61,26 +56,19 @@ namespace Tests.DataClasses
                 Blogger = jonBlogger,
                 Title = "Second post, which isn't bad",
                 Content = "Another fine set of words.\nWith this line\nand another line, making three lines.",
-            };
-            jonPost2.AllocatedTags = new List<PostTagLink>
-            {
-                new PostTagLink {InPost = jonPost2, HasTag = badTag}
+                Tags = new List<Tag> { badTag }
             };
 
             var fredPost = new Post
             {
                 Blogger = fredBlogger,
                 Title = "First great post",
-                Content = "A fine set of words.\nIn two lines."
-            };
-            fredPost.AllocatedTags = new List<PostTagLink>
-            {
-                new PostTagLink { InPost = fredPost, HasTag = uglyTag },
-                new PostTagLink { InPost = fredPost, HasTag = badTag}
+                Content = "A fine set of words.\nIn two lines.",
+                Tags = new List<Tag> { uglyTag, badTag }
             };
 
-            jonBlogger.Posts = new List<Post> {jonPost1, jonPost2};
-            fredBlogger.Posts = new List<Post>{ fredPost};
+            jonBlogger.Posts = new List<Post> { jonPost1, jonPost2 };
+            fredBlogger.Posts = new List<Post> { fredPost };
 
             context.Blogs.Add(jonBlogger);
             context.Blogs.Add(fredBlogger);

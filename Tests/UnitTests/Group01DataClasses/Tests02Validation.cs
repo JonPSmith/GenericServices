@@ -75,11 +75,8 @@ namespace Tests.UnitTests.Group01DataClasses
                 {
                     Blogger = existingBlogger,
                     Title = "Test post",
-                    Content = "Nothing special"
-                };
-                newPost.AllocatedTags = new List<PostTagLink>
-                {
-                    new PostTagLink {InPost = newPost, HasTag = existingTag}
+                    Content = "Nothing special",
+                    Tags = new[] { existingTag }
                 };
                 db.Posts.Add(newPost);
                 var status = db.SaveChangesWithValidation();
@@ -105,11 +102,8 @@ namespace Tests.UnitTests.Group01DataClasses
                 {
                     Blogger = existingBlogger,
                     Title = "Test post!",
-                    Content = "Nothing special"
-                };
-                newPost.AllocatedTags = new List<PostTagLink>
-                {
-                    new PostTagLink {InPost = newPost, HasTag = existingTag}
+                    Content = "Nothing special",
+                    Tags = new[] { existingTag }
                 };
                 db.Posts.Add(newPost);
                 var status = db.SaveChangesWithValidation();
@@ -136,10 +130,7 @@ namespace Tests.UnitTests.Group01DataClasses
                     Blogger = existingBlogger,
                     Title = "Test post?",
                     Content = "Nothing special",
-                };
-                newPost.AllocatedTags = new List<PostTagLink>
-                {
-                    new PostTagLink {InPost = newPost, HasTag = existingTag}
+                    Tags = new[] { existingTag }
                 };
                 db.Posts.Add(newPost);
                 var status = db.SaveChangesWithValidation();
@@ -166,10 +157,7 @@ namespace Tests.UnitTests.Group01DataClasses
                     Blogger = existingBlogger,
                     Title = "Test post",
                     Content = "Should not end sentence with sheep.",
-                };
-                newPost.AllocatedTags = new List<PostTagLink>
-                {
-                    new PostTagLink {InPost = newPost, HasTag = existingTag}
+                    Tags = new[] { existingTag }
                 };
                 db.Posts.Add(newPost);
                 var status = db.SaveChangesWithValidation();
@@ -197,10 +185,7 @@ namespace Tests.UnitTests.Group01DataClasses
                     Blogger = existingBlogger,
                     Title = "Test post",
                     Content = "Should not end sentence with sheep. Nor end sentence with lamb.",
-                };
-                newPost.AllocatedTags = new List<PostTagLink>
-                {
-                    new PostTagLink {InPost = newPost, HasTag = existingTag}
+                    Tags = new[] { existingTag }
                 };
                 db.Posts.Add(newPost);
                 var status = db.SaveChangesWithValidation();

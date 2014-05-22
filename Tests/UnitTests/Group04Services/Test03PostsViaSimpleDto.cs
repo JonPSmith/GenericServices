@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
 using GenericServices;
@@ -70,7 +71,7 @@ namespace Tests.UnitTests.Group04Services
             {
                 //SETUP
                 var service = new DetailService<Post, SimplePostDto>(db);
-                var firstPost = db.Posts.Include(x => x.AllocatedTags).AsNoTracking().First();
+                var firstPost = db.Posts.Include(x => x.Tags).AsNoTracking().First();
 
                 //ATTEMPT
                 var dto = service.GetDetail(x => x.PostId == firstPost.PostId);
@@ -79,7 +80,7 @@ namespace Tests.UnitTests.Group04Services
                 dto.PostId.ShouldEqual(firstPost.PostId);
                 dto.BloggerName.ShouldEqual(firstPost.Blogger.Name);
                 dto.Title.ShouldEqual(firstPost.Title);
-                CollectionAssert.AreEqual(firstPost.AllocatedTags.Select(x => x.TagId), dto.AllocatedTags.Select(x => x.TagId));
+                CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), dto.Tags.Select(x => x.TagId));
             }
         }
 
@@ -94,24 +95,20 @@ namespace Tests.UnitTests.Group04Services
                 PostId = 123,
                 BloggerName = "This should not be copied",
                 Title = "Should copy this title",
-                LastUpdated = new DateTime(2000, 1, 1)
+                LastUpdated = new DateTime(2000, 1, 1),
+                Tags = new Collection<Tag> { new Tag { Name = "Should not copy this", Slug = "No" } }
             };
-            dto.AllocatedTags = new List<PostTagLink>
-                {
-                    new PostTagLink {PostId = 123, HasTag = new Tag {Name = "Should not copy this", Slug = "No"}}
-                };
+
 
             //ATTEMPT
             var newData = new Post
             {
                 Blogger = new Blog { Name = "Original Blog Name" },
                 BlogId = 777,
-                Content = "Original Content"
+                Content = "Original Content",
+                Tags = new Collection<Tag> { new Tag { Name = "Original Tag name", Slug = "Yes"} }
             };
-            newData.AllocatedTags = new List<PostTagLink>
-                {
-                    new PostTagLink {InPost = newData, HasTag = new Tag {Name = "Original Tag name", Slug = "Yes"}}
-                };
+
             var status = dto.CopyDtoToData(null, dto, newData);
 
             //VERIFY
@@ -122,8 +119,8 @@ namespace Tests.UnitTests.Group04Services
             newData.Blogger.Name.ShouldEqual("Original Blog Name");
             newData.BlogId.ShouldEqual(777);
             newData.Content.ShouldEqual("Original Content");
-            newData.AllocatedTags.Count.ShouldEqual(1);
-            newData.AllocatedTags.First().HasTag.Name.ShouldEqual("Original Tag name");
+            newData.Tags.Count.ShouldEqual(1);
+            newData.Tags.First().Name.ShouldEqual("Original Tag name");
         }
 
         [Test]
@@ -133,7 +130,7 @@ namespace Tests.UnitTests.Group04Services
             {
                 //SETUP
                 var service = new UpdateSetupService<Post, SimplePostDto>(db);
-                var firstPost = db.Posts.Include(x => x.AllocatedTags).AsNoTracking().First();
+                var firstPost = db.Posts.Include(x => x.Tags).AsNoTracking().First();
 
                 //ATTEMPT
                 var dto = service.GetOriginal(x => x.PostId == firstPost.PostId);
@@ -142,7 +139,7 @@ namespace Tests.UnitTests.Group04Services
                 dto.PostId.ShouldEqual(firstPost.PostId);
                 dto.BloggerName.ShouldEqual(firstPost.Blogger.Name);
                 dto.Title.ShouldEqual(firstPost.Title);
-                CollectionAssert.AreEqual(firstPost.AllocatedTags.Select(x => x.TagId), dto.AllocatedTags.Select(x => x.TagId));
+                CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), dto.Tags.Select(x => x.TagId));
             }
         }
 
@@ -154,7 +151,7 @@ namespace Tests.UnitTests.Group04Services
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
-                var firstPost = db.Posts.Include(x => x.AllocatedTags).AsNoTracking().First();
+                var firstPost = db.Posts.Include(x => x.Tags).AsNoTracking().First();
                 var service = new UpdateService<Post, SimplePostDto>(db);
                 var setupService = new UpdateSetupService<Post, SimplePostDto>(db);
 
@@ -177,7 +174,7 @@ namespace Tests.UnitTests.Group04Services
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
-                var firstPost = db.Posts.Include(x => x.AllocatedTags).AsNoTracking().First();
+                var firstPost = db.Posts.Include(x => x.Tags).AsNoTracking().First();
                 var service = new UpdateService<Post, SimplePostDto>(db);
                 var setupService = new UpdateSetupService<Post, SimplePostDto>(db);
 
@@ -188,10 +185,10 @@ namespace Tests.UnitTests.Group04Services
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
-                var updatedPost = db.Posts.Include(x => x.AllocatedTags).First();
+                var updatedPost = db.Posts.Include(x => x.Tags).First();
                 updatedPost.Title.ShouldEqual(dto.Title);
                 updatedPost.Blogger.ShouldNotEqualNull();
-                CollectionAssert.AreEqual(firstPost.AllocatedTags.Select(x => x.TagId), updatedPost.AllocatedTags.Select(x => x.TagId));
+                CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), updatedPost.Tags.Select(x => x.TagId));
 
             }
         }

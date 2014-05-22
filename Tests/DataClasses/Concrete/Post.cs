@@ -20,18 +20,18 @@ namespace Tests.DataClasses.Concrete
         public int BlogId { get; set; }
         public virtual Blog Blogger { get; set; }
 
-        public ICollection<PostTagLink> AllocatedTags { get; set; }
+        public ICollection<Tag> Tags { get; set; }
 
         public override string ToString()
         {
             return string.Format("PostId: {0}, Title: {1}, BlogId: {2}, Blogger: {3}, AllocatedTags: {4}", 
-                PostId, Title, BlogId, Blogger == null ? "null" : Blogger.Name, AllocatedTags == null ? "null" : AllocatedTags.Count().ToString());
+                PostId, Title, BlogId, Blogger == null ? "null" : Blogger.Name, Tags == null ? "null" : Tags.Count().ToString());
         }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             //Note that Tags may be null if the read din't include them, in which case we can't check them
-            if (AllocatedTags != null && !AllocatedTags.Any())
+            if (Tags != null && !Tags.Any())
                 yield return new ValidationResult("The post must have at least one Tag.", new[] { "AllocatedTags" });
 
             if (Title.Contains("!"))

@@ -20,7 +20,6 @@ namespace Tests.DataClasses
         public IDbSet<Blog> Blogs { get; set; }
         public IDbSet<Post> Posts { get; set; }
         public IDbSet<Tag> Tags { get; set; }
-        public IDbSet<PostTagLink> PostTagLinks { get; set; }
 
         public ISuccessOrErrors SaveChangesWithValidation()
         {
