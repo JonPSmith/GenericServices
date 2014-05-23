@@ -55,7 +55,7 @@ namespace Tests.UnitTests.Group04Services
                 list.Count.ShouldEqual(3);
                 list[0].Title.ShouldEqual("First great post");
                 list[0].Blogger.Name.ShouldEqual("Jon Smith");
-                list[0].Tags.ShouldEqual(null);
+                list[0].AllocatedTags.ShouldEqual(null);
 
             }
         }
@@ -90,7 +90,7 @@ namespace Tests.UnitTests.Group04Services
                 //SETUP
                 var snap = new DbSnapShot(db);
                 var firstPostUntrackedNoIncludes = db.Posts.AsNoTracking().First();
-                var firstPostUntrackedWithIncludes = db.Posts.AsNoTracking().Include( x => x.Tags).First();
+                var firstPostUntrackedWithIncludes = db.Posts.AsNoTracking().Include( x => x.AllocatedTags).First();
                 var service = new UpdateService<Post>(db);
 
                 //ATTEMPT
@@ -100,12 +100,12 @@ namespace Tests.UnitTests.Group04Services
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
                 snap.CheckSnapShot(db);
-                var updatedPost = db.Posts.Include(x => x.Tags).First();
+                var updatedPost = db.Posts.Include(x => x.AllocatedTags).First();
                 updatedPost.Title.ShouldEqual(firstPostUntrackedNoIncludes.Title);
                 updatedPost.Content.ShouldEqual(firstPostUntrackedWithIncludes.Content);
                 updatedPost.Blogger.ShouldNotEqualNull();
                 updatedPost.Blogger.Name.ShouldEqual(firstPostUntrackedWithIncludes.Blogger.Name);
-                CollectionAssert.AreEqual(firstPostUntrackedWithIncludes.Tags.Select(x => x.TagId), updatedPost.Tags.Select(x => x.TagId));
+                CollectionAssert.AreEqual(firstPostUntrackedWithIncludes.AllocatedTags.Select(x => x.TagId), updatedPost.AllocatedTags.Select(x => x.TagId));
 
             }
         }
@@ -139,21 +139,22 @@ namespace Tests.UnitTests.Group04Services
                 //SETUP
                 var snap = new DbSnapShot(db);
                 var service = new CreateService<Post>(db);
-                var firstPostUntracked = db.Posts.Include( x => x.Tags).AsNoTracking().First();
-                var tagsTracked = db.Tags.ToList().Where(x => firstPostUntracked.Tags.Any(y => y.TagId == x.TagId)).ToList();
+                var firstPostUntracked = db.Posts.Include( x => x.AllocatedTags).AsNoTracking().First();
+                var tagsTracked = db.Tags.ToList().Where(x => firstPostUntracked.AllocatedTags.Any(y => y.TagId == x.TagId)).ToList();
 
                 //ATTEMPT
                 firstPostUntracked.Title = Guid.NewGuid().ToString();
-                firstPostUntracked.Tags = tagsTracked;
+                firstPostUntracked.AllocatedTags =
+                    tagsTracked.Select(x => new PostTagLink {InPost = firstPostUntracked, HasTag = x}).ToList();
                 var status = service.Create(firstPostUntracked);
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true);
                 snap.CheckSnapShot(db,1,2);
-                var updatedPost = db.Posts.OrderByDescending( x => x.PostId).Include(x => x.Tags).First();
+                var updatedPost = db.Posts.OrderByDescending( x => x.PostId).Include(x => x.AllocatedTags).First();
                 updatedPost.Title.ShouldEqual(firstPostUntracked.Title);
                 updatedPost.BlogId.ShouldEqual(firstPostUntracked.BlogId);
-                CollectionAssert.AreEqual(firstPostUntracked.Tags.Select(x => x.TagId), updatedPost.Tags.Select(x => x.TagId));
+                CollectionAssert.AreEqual(firstPostUntracked.AllocatedTags.Select(x => x.TagId), updatedPost.AllocatedTags.Select(x => x.TagId));
             }
         }
 

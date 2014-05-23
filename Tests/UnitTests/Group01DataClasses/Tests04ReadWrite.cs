@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using NUnit.Framework;
 using Tests.DataClasses;
@@ -52,7 +51,7 @@ namespace Tests.UnitTests.Group01DataClasses
                 //VERIFY
                 blogs.Count.ShouldEqual(2);
                 blogs.All(x => x.Posts != null).ShouldEqual(true);
-                blogs.All(x => x.Posts.All(y => y.Tags == null)).ShouldEqual(true);
+                blogs.All(x => x.Posts.All(y => y.AllocatedTags == null)).ShouldEqual(true);
             }
         }
 
@@ -64,12 +63,12 @@ namespace Tests.UnitTests.Group01DataClasses
                 //SETUP
 
                 //ATTEMPT
-                var blogs = db.Blogs.Include(x => x.Posts.Select(y => y.Tags)).ToList();
+                var blogs = db.Blogs.Include(x => x.Posts.Select(y => y.AllocatedTags)).ToList();
 
                 //VERIFY
                 blogs.Count.ShouldEqual(2);
                 blogs.All(x => x.Posts != null).ShouldEqual(true);
-                blogs.All(x => x.Posts.All(y => y.Tags != null)).ShouldEqual(true);
+                blogs.All(x => x.Posts.All(y => y.AllocatedTags != null)).ShouldEqual(true);
 
             }
         }
@@ -87,7 +86,7 @@ namespace Tests.UnitTests.Group01DataClasses
                 //VERIFY
                 posts.Count.ShouldEqual(3);
                 posts.All(x => x.Blogger != null).ShouldEqual(true);
-                posts.All(x => x.Tags == null).ShouldEqual(true);
+                posts.All(x => x.AllocatedTags == null).ShouldEqual(true);
             }
         }
 
@@ -100,12 +99,12 @@ namespace Tests.UnitTests.Group01DataClasses
                 //SETUP
 
                 //ATTEMPT
-                var posts = db.Posts.Include( x => x.Tags).ToList();
+                var posts = db.Posts.Include( x => x.AllocatedTags).ToList();
 
                 //VERIFY
                 posts.Count.ShouldEqual(3);
                 posts.All(x => x.Blogger != null).ShouldEqual(true);
-                posts.All(x => x.Tags != null).ShouldEqual(true);
+                posts.All(x => x.AllocatedTags != null).ShouldEqual(true);
             }
         }
 
@@ -117,12 +116,10 @@ namespace Tests.UnitTests.Group01DataClasses
                 //SETUP
 
                 //ATTEMPT
-                var postsWithuglyTags = db.Posts.Where(x => x.Tags.Any( y => y.Slug == "ugly")).ToList();
-                var uglyTagPosts = db.Tags.Include(x => x.Posts).Single(y => y.Slug == "ugly").Posts;
+                var uglyTags = db.PostTagLinks.Where(x => x.HasTag.Slug == "ugly").Select(x => x.InPost).ToList();
 
                 //VERIFY
-                postsWithuglyTags.Count.ShouldEqual(2);
-                uglyTagPosts.Count().ShouldEqual(2);
+                uglyTags.Count.ShouldEqual(2);
             }
         }
 
@@ -144,17 +141,23 @@ namespace Tests.UnitTests.Group01DataClasses
                 {
                     Blogger = jonBlogger,
                     Content = "a few simple words.",
-                    Title = "A new post",
-                    Tags = new[] { uglyTag }
+                    Title = "A new post"
                 };
-
+                newPost.AllocatedTags = new List<PostTagLink>
+                {
+                    new PostTagLink {InPost = newPost, HasTag = uglyTag}
+                };
                 db.Posts.Add(newPost);
                 var status = db.SaveChangesWithValidation();
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
                 snap.CheckSnapShot(db, 1, 1);
-                var uglyPosts = db.Tags.Include(x => x.Posts).Single(y => y.Slug == "ugly").Posts;
+                var uglyPosts =
+                    db.PostTagLinks.Include(x => x.InPost)
+                        .Where(x => x.HasTag.Slug == "ugly")
+                        .Select(x => x.InPost)
+                        .ToList();
                 uglyPosts.Count.ShouldEqual(3);
             }
         }
@@ -210,43 +213,20 @@ namespace Tests.UnitTests.Group01DataClasses
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
-                var badTag = db.Tags.Single(x => x.Slug == "bad");
-                var firstPost = db.Posts.First();
 
                 //ATTEMPT
-                db.Entry(firstPost).Collection( x => x.Tags).Load();
-                firstPost.Tags.Add( badTag);
+                var badTag = db.Tags.Single(x => x.Slug == "bad");
+                var jonBlogger = db.Blogs.Include( x => x.Posts).First();
+                var firstPost = jonBlogger.Posts.First();
+                db.Entry(firstPost).Collection( x => x.AllocatedTags).Load();
+                firstPost.AllocatedTags.Add( new PostTagLink { InPost = firstPost, HasTag = badTag});
                 var status = db.SaveChangesWithValidation();
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
                 snap.CheckSnapShot(db, 0, 1);
-                firstPost = db.Blogs.Include(x => x.Posts.Select(y => y.Tags)).First().Posts.First();
-                firstPost.Tags.Count.ShouldEqual(3);
-            }
-        }
-
-        [Test]
-        public void Check26ReplaceTagsOk()
-        {
-            using (var db = new SampleWebAppDb())
-            {
-                //SETUP
-                var snap = new DbSnapShot(db);
-                var firstPost = db.Posts.First();
-                var tagsNotInFirstPostTracked = db.Tags.Where(x => x.Posts.All(y => y.PostId != firstPost.PostId)).ToList();
-
-                //ATTEMPT
-
-                db.Entry(firstPost).Collection(x => x.Tags).Load();
-                firstPost.Tags = tagsNotInFirstPostTracked;
-                var status = db.SaveChangesWithValidation();
-
-                //VERIFY
-                status.IsValid.ShouldEqual(true, status.Errors);
-                snap.CheckSnapShot(db, 0, -1);
-                firstPost = db.Blogs.Include(x => x.Posts.Select(y => y.Tags)).First().Posts.First();
-                firstPost.Tags.Count.ShouldEqual(1);
+                firstPost = db.Blogs.Include(x => x.Posts.Select(y => y.AllocatedTags)).First().Posts.First();
+                firstPost.AllocatedTags.Count.ShouldEqual(3);
             }
         }
 

@@ -18,7 +18,7 @@ namespace Tests.DTOs
         [MinLength(2), MaxLength(128)]
         string Title { get; set; }
 
-        ICollection<Tag> Tags { get; }
+        List<PostTagLink> AllocatedTags { get; }
         DateTime LastUpdated { get; }
 
         /// <summary>

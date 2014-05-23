@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data.Entity;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using GenericServices;
@@ -38,7 +37,7 @@ namespace Tests.DTOs.Concrete
         [UIHint("HiddenInput")]
         public int BlogId { get; set; }
 
-        public ICollection<Tag> Tags { get; set; }            //this must be copied back
+        public ICollection<PostTagLink> AllocatedTags { get; set; }            //this must be copied back
 
         //------------------------------------------
         //Item set up if update
@@ -63,7 +62,7 @@ namespace Tests.DTOs.Concrete
         /// </summary>
         public DateTime LastUpdatedUtc { get { return DateTime.SpecifyKind(LastUpdated, DateTimeKind.Utc); } }
 
-        public string TagNames { get { return string.Join(", ", Tags.Select(x => x.Name)); } }
+        public string TagNames { get { return string.Join(", ", AllocatedTags.Select(x => x.HasTag.Name)); } }
 
 
         //ctor
@@ -104,9 +103,9 @@ namespace Tests.DTOs.Concrete
 
             var preselectedTags = dto.PostId == 0
                 ? new List<KeyValuePair<string, int>>()
-                : context.Set<Tag>()
-                    .Where(x => x.Posts.Any(y => y.PostId == dto.PostId))
-                    .Select( x => new { Key = x.Name, Value = x.TagId})
+                : context.Set<PostTagLink>()
+                    .Where(x => x.PostId == dto.PostId)
+                    .Select( x => new { Key = x.HasTag.Name, Value = x.TagId})
                     .ToList()
                     .Select(x => new KeyValuePair<string, int>(x.Key, x.Value))
                     .ToList();
@@ -154,7 +153,7 @@ namespace Tests.DTOs.Concrete
             
             var blogger = db.Blogs.Find((int) blogId);
             if (blogger == null)
-                return "Could not find the blogger you selected. Did another user delete it?";
+                return "Could not find the blogger you selected, which is odd.";
             
             //all ok
             if ((int) blogId != post.BlogId)
@@ -171,14 +170,33 @@ namespace Tests.DTOs.Concrete
                 return "You must select at least one tag for the post.";
 
             if (requiredTagIds.Any(x => db.Tags.Find(x) == null))
-                return "Could not find one of the tags. Did another user delete it?";
+                return "Could not find one of the tags, which is odd.";
 
-            if (post.PostId != 0)
-                //This is an update so we need to load the tags
-                db.Entry(post).Collection(p => p.Tags).Load();
+            var tagLinksToDelete =
+                db.PostTagLinks.Where(x => !requiredTagIds.Contains(x.TagId) && x.PostId == PostId).ToList();
+            var tagLinksToAdd = requiredTagIds
+                .Where(x => !db.PostTagLinks.Any(y => y.TagId == x && y.PostId == PostId))
+                .Select(z => new PostTagLink {InPost = post, HasTag = db.Tags.Find(z)}).ToList();
 
-            var newTagsForPost = db.Tags.Where(x => requiredTagIds.Contains(x.TagId)).ToList();
-            Tags = newTagsForPost;      //will be copied over by copyDtoToData
+            //Now the complicated bit! (has to deal with both update and create, which have different needs)
+            //We need to both update the PostTagLinks record AND the Posts AllocatedTags array.
+            //If we don't do both we get foreign key problems
+            //Now we update the AllocatedTags property in the dto, which the CopyUpdateProperties will then copy into the post
+            //First we get the AllocatedTag entry right 
+            AllocatedTags = db.PostTagLinks.Where(x => x.PostId == PostId).ToList()        //first part finds current entries...
+                .Where( x => !tagLinksToDelete.Any(y => y.TagId == x.TagId))               //then we remove any we don't want any more      
+                .ToList();
+            //Then add any new ones
+            tagLinksToAdd.ForEach(x => AllocatedTags.Add( x));
+
+            //secondly we get the PostTagLinks entries right (must come second)
+            tagLinksToDelete.ForEach( x => db.PostTagLinks.Remove(x));
+            tagLinksToAdd.ForEach(x => db.PostTagLinks.Add(x));
+            //********************************************************************
+            //If using EF 6 you could use the more efficent RemoveRange. See below
+            //db.PostTagLinks.RemoveRange(tagLinksToDelete);
+            //db.PostTagLinks.AddRange(tagLinksToAdd);
+            //********************************************************************
 
             return null;
         }
