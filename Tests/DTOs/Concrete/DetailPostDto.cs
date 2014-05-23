@@ -178,25 +178,21 @@ namespace Tests.DTOs.Concrete
                 .Where(x => !db.PostTagLinks.Any(y => y.TagId == x && y.PostId == PostId))
                 .Select(z => new PostTagLink {InPost = post, HasTag = db.Tags.Find(z)}).ToList();
 
-            //Now the complicated bit! (has to deal with both update and create, which have different needs)
-            //We need to both update the PostTagLinks record AND the Posts AllocatedTags array.
-            //If we don't do both we get foreign key problems
-            //Now we update the AllocatedTags property in the dto, which the CopyUpdateProperties will then copy into the post
-            //First we get the AllocatedTag entry right 
-            AllocatedTags = db.PostTagLinks.Where(x => x.PostId == PostId).ToList()        //first part finds current entries...
-                .Where( x => !tagLinksToDelete.Any(y => y.TagId == x.TagId))               //then we remove any we don't want any more      
-                .ToList();
-            //Then add any new ones
-            tagLinksToAdd.ForEach(x => AllocatedTags.Add( x));
-
-            //secondly we get the PostTagLinks entries right (must come second)
-            tagLinksToDelete.ForEach( x => db.PostTagLinks.Remove(x));
+            //We get the PostTagLinks entries right, which is what EF needs
+            tagLinksToDelete.ForEach(x => db.PostTagLinks.Remove(x));
             tagLinksToAdd.ForEach(x => db.PostTagLinks.Add(x));
             //********************************************************************
             //If using EF 6 you could use the more efficent RemoveRange. See below
             //db.PostTagLinks.RemoveRange(tagLinksToDelete);
             //db.PostTagLinks.AddRange(tagLinksToAdd);
             //********************************************************************
+
+            //Now we need to get the AllocatedTags property right for the Validate (tried to fudge it by setting to null but EF didn't like that)
+            AllocatedTags = db.PostTagLinks.Where(x => x.PostId == PostId).ToList()        //first part finds current entries...
+                .Where( x => !tagLinksToDelete.Any(y => y.TagId == x.TagId))               //then we remove any we don't want any more      
+                .ToList();
+            //Then add any new ones
+            tagLinksToAdd.ForEach(x => AllocatedTags.Add( x));
 
             return null;
         }

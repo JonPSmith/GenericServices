@@ -39,6 +39,7 @@ namespace Tests.UnitTests.Group01DataClasses
             }
         }
 
+        [Test]
         public void Check01ReadBlogsWithPostsOk()
         {
             using (var db = new SampleWebAppDb())
@@ -213,20 +214,69 @@ namespace Tests.UnitTests.Group01DataClasses
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
+                var badTag = db.Tags.Single(x => x.Slug == "bad");
+                var firstPost = db.Posts.First();
 
                 //ATTEMPT
-                var badTag = db.Tags.Single(x => x.Slug == "bad");
-                var jonBlogger = db.Blogs.Include( x => x.Posts).First();
-                var firstPost = jonBlogger.Posts.First();
-                db.Entry(firstPost).Collection( x => x.AllocatedTags).Load();
-                firstPost.AllocatedTags.Add( new PostTagLink { InPost = firstPost, HasTag = badTag});
+                db.PostTagLinks.Add(new PostTagLink { InPost = firstPost, HasTag = badTag });
                 var status = db.SaveChangesWithValidation();
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
                 snap.CheckSnapShot(db, 0, 1);
-                firstPost = db.Blogs.Include(x => x.Posts.Select(y => y.AllocatedTags)).First().Posts.First();
+                firstPost = db.Posts.Include(x => x.AllocatedTags).First();
                 firstPost.AllocatedTags.Count.ShouldEqual(3);
+            }
+        }
+
+        [Test]
+        public void Check26UpdatePostToRemoveTagOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var snap = new DbSnapShot(db);
+                var firstPost = db.Posts.First();
+                var postTagLinksToRemove = db.PostTagLinks.First(x => x.PostId == firstPost.PostId);
+
+                //ATTEMPT              
+                db.PostTagLinks.Remove(postTagLinksToRemove);
+                var status = db.SaveChangesWithValidation();
+
+                //VERIFY
+                status.IsValid.ShouldEqual(true, status.Errors);
+                snap.CheckSnapShot(db, 0, -1);
+                firstPost = db.Posts.Include(x => x.AllocatedTags).First();
+                firstPost.AllocatedTags.Count.ShouldEqual(1);
+            }
+        }
+
+
+        [Test]
+        public void Check27UpdatePostInvertTagsOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var snap = new DbSnapShot(db);
+                var firstPost = db.Posts.First();
+                var tagsNotInFirstPostTracked = db.PostTagLinks.Where( x => x.PostId != firstPost.PostId).Select( x => x.HasTag).ToList();
+                var postTagLinksInFirstPostTracked = db.PostTagLinks.Where(x => x.PostId == firstPost.PostId).ToList();
+
+                //ATTEMPT
+                postTagLinksInFirstPostTracked.ForEach( x => db.PostTagLinks.Remove(x));
+                tagsNotInFirstPostTracked.ForEach(
+                    x => db.PostTagLinks.Add(new PostTagLink {InPost = firstPost, HasTag = x}));
+
+                //db.Entry(firstPost).Collection(x => x.AllocatedTags).Load();
+                //firstPost.AllocatedTags.Add(new PostTagLink { InPost = firstPost, HasTag = badTag });
+                var status = db.SaveChangesWithValidation();
+
+                //VERIFY
+                status.IsValid.ShouldEqual(true, status.Errors);
+                snap.CheckSnapShot(db, 0, tagsNotInFirstPostTracked.Count - postTagLinksInFirstPostTracked.Count);
+                firstPost = db.Posts.Include(x => x.AllocatedTags).First();
+                firstPost.AllocatedTags.Count.ShouldEqual(tagsNotInFirstPostTracked.Count);
             }
         }
 
