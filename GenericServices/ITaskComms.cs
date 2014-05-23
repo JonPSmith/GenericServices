@@ -1,4 +1,6 @@
-﻿namespace GenericServices.Tasking
+﻿using GenericServices.Tasking;
+
+namespace GenericServices
 {
     public interface ITaskComms
     {

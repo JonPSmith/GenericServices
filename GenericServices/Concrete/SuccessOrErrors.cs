@@ -14,6 +14,7 @@ namespace GenericServices.Concrete
         private readonly List<string> _warnings = new List<string>();
 
         private List<ValidationResult> _errors;
+        private string _successMessage;
 
         /// <summary>
         /// Holds the list of errors. Empty list means no errors.
@@ -41,12 +42,29 @@ namespace GenericServices.Concrete
         /// <summary>
         /// Returns true if not errors or not validated yet, else false. 
         /// </summary>
-        public bool HasWarnings { get { return (_warnings.Count == 0); } }
+        public bool HasWarnings { get { return (_warnings.Count > 0); } }
 
-        public string SuccessMessage { get; private set; }
+        /// <summary>
+        /// This returns the success message with suffix is nay warning messages
+        /// </summary>
+        public string SuccessMessage
+        {
+            get { return HasWarnings ? string.Format("{0} (has {1} warnings)",_successMessage,_warnings.Count  ) : _successMessage; }
+        }
 
         //---------------------------------------------------
         //public methods
+
+
+        /// <summary>
+        /// Adds a warning message. It places the test 'Warning: ' before the message
+        /// </summary>
+        /// <param name="warningformat"></param>
+        /// <param name="args"></param>
+        public void AddWarning(string warningformat, params object[] args)
+        {
+            _warnings.Add("Warning: " + string.Format(warningformat, args));
+        }
 
         /// <summary>
         /// This converts the Entity framework errors into Validation errors
@@ -58,7 +76,7 @@ namespace GenericServices.Concrete
             foreach (var errorsPerThisClass in errors)
                 _errors.AddRange(errorsPerThisClass.ValidationErrors.Select(y => new ValidationResult(y.ErrorMessage, new[] { y.PropertyName })));
 
-            SuccessMessage = string.Empty;
+            _successMessage = string.Empty;
             return this;
         }
 
@@ -69,7 +87,7 @@ namespace GenericServices.Concrete
         public ISuccessOrErrors SetErrors(IEnumerable<string> errors)
         {
             _errors = errors.Where(x => !string.IsNullOrEmpty(x)).Select(x => new ValidationResult(x)).ToList();
-            SuccessMessage = string.Empty;
+            _successMessage = string.Empty;
             return this;
         }
 
@@ -84,18 +102,8 @@ namespace GenericServices.Concrete
             if (_errors == null)
                 _errors = new List<ValidationResult>();
             _errors.Add(new ValidationResult(string.Format(errorformat, args)));
-            SuccessMessage = string.Empty;
+            _successMessage = string.Empty;
             return this;
-        }
-
-        /// <summary>
-        /// Adds a warning message. It places the test 'Warning: ' before the message
-        /// </summary>
-        /// <param name="warningformat"></param>
-        /// <param name="args"></param>
-        public void AddWarning(string warningformat, params object[] args)
-        {            
-            _warnings.Add( "Warning: " + string.Format(warningformat, args));
         }
 
         /// <summary>
@@ -110,7 +118,7 @@ namespace GenericServices.Concrete
             if (_errors == null)
                 _errors = new List<ValidationResult>();
             _errors.Add(new ValidationResult(string.Format(errorformat, args), new[] { parameterName }));
-            SuccessMessage = string.Empty;
+            _successMessage = string.Empty;
             return this;
         }
 
@@ -122,7 +130,7 @@ namespace GenericServices.Concrete
         public ISuccessOrErrors SetSuccessMessage(string successformat, params object [] args)
         {
             _errors = new List<ValidationResult>();         //empty list means its been validated and its Valid
-            SuccessMessage = string.Format(successformat, args);
+            _successMessage = string.Format(successformat, args);
             return this;
         }
 
@@ -144,7 +152,7 @@ namespace GenericServices.Concrete
         public override string ToString()
         {
             if (IsValid)
-                return SuccessMessage ?? "The task completed successfully";
+                return _successMessage ?? "The task completed successfully";
 
             return _errors == null 
                 ? "Not currently setup" 

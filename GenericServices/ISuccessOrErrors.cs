@@ -12,11 +12,32 @@ namespace GenericServices
         IReadOnlyList<ValidationResult> Errors { get; }
 
         /// <summary>
+        /// This returns any warning messages
+        /// </summary>
+        IReadOnlyList<string> Warnings { get; }
+
+        /// <summary>
         /// Returns true if not errors or not validated yet, else false. 
         /// </summary>
         bool IsValid { get; }
 
+        /// <summary>
+        /// Returns true if not errors or not validated yet, else false. 
+        /// </summary>
+        bool HasWarnings { get; }
+
+        /// <summary>
+        /// This returns the success message with suffix is nay warning messages
+        /// </summary>
         string SuccessMessage { get; }
+
+
+        /// <summary>
+        /// Adds a warning message. It places the test 'Warning: ' before the message
+        /// </summary>
+        /// <param name="warningformat"></param>
+        /// <param name="args"></param>
+        void AddWarning(string warningformat, params object[] args);
 
         /// <summary>
         /// This converts the Class level errors to ValidationResults and sets the error list to them.

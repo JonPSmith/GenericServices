@@ -39,7 +39,7 @@ namespace Tests.DTOs.Concrete
 
         internal protected override ServiceFunctions SupportedFunctions
         {
-            get { return ServiceFunctions.AllButCreate | ServiceFunctions.DoesNotNeedSetup; }
+            get { return ServiceFunctions.AllCrudButCreate | ServiceFunctions.DoesNotNeedSetup; }
         }
     }
 }

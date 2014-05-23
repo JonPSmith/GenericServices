@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
-using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -21,13 +20,14 @@ namespace GenericServices.Concrete
         Detail = 2,
         Create = 4,
         Update = 8,
-        RunDataTask = 16,
+        //note: no delete as delete does not need a dto
+        RunDataTask = 32,
         //DoesNotNeedSetup refers the need to call the SetupSecondaryData method
-        //if this flag is NOT set then expects dto to override SetupForeignKeys method
+        //if this flag is NOT set then expects dto to override SetupSecondaryData method
         DoesNotNeedSetup = 128,
-        AllButCreate = List | Detail | Update,
-        AllButList = Detail | Create | Update,
-        All = List | Detail | Create | Update
+        AllCrudButCreate = List | Detail | Update,
+        AllCrudButList = Detail | Create | Update,
+        AllCrud = List | Detail | Create | Update
     }
 
     public abstract class EfGenericDto<TData, TDto> where TData : class

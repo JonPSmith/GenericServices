@@ -83,7 +83,7 @@ namespace Tests.DTOs.Concrete
 
         internal protected override ServiceFunctions SupportedFunctions
         {
-            get { return ServiceFunctions.All; }
+            get { return ServiceFunctions.AllCrud; }
         }
 
         /// <summary>

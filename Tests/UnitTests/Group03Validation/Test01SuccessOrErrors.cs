@@ -42,12 +42,31 @@ namespace Tests.UnitTests.Group03Validation
             var status = new SuccessOrErrors();
 
             //ATTEMPT
-            status.SetSuccessMessage("This was {0}.", "successfull");
+            status.SetSuccessMessage("This was {0}.", "successful");
 
             //VERIFY
             status.IsValid.ShouldEqual(true);
-            status.SuccessMessage.ShouldEqual("This was successfull.");
+            status.HasWarnings.ShouldEqual(false);
+            status.SuccessMessage.ShouldEqual("This was successful.");
             status.Errors.Count.ShouldEqual(0);
+        }
+
+        [Test]
+        public void Check06SuccessWithWarningsOk()
+        {
+            //SETUP  
+            var status = new SuccessOrErrors();
+
+            //ATTEMPT
+            status.AddWarning("This is a warning");
+            status.SetSuccessMessage("This was {0}.", "successful");
+
+            //VERIFY
+            status.IsValid.ShouldEqual(true);
+            status.HasWarnings.ShouldEqual(true);
+            status.SuccessMessage.ShouldEqual("This was successful. (has 1 warnings)");
+            status.Warnings.Count.ShouldEqual(1);
+            status.Warnings[0].ShouldEqual("Warning: This is a warning");
         }
 
         [Test]

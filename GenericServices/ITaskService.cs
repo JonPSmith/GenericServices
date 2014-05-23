@@ -1,4 +1,4 @@
-﻿namespace GenericServices.Tasking
+﻿namespace GenericServices
 {
     public interface ITaskService<in T> where T : class
     {
