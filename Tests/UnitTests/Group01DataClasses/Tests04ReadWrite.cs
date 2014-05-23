@@ -260,16 +260,13 @@ namespace Tests.UnitTests.Group01DataClasses
                 //SETUP
                 var snap = new DbSnapShot(db);
                 var firstPost = db.Posts.First();
-                var tagsNotInFirstPostTracked = db.PostTagLinks.Where( x => x.PostId != firstPost.PostId).Select( x => x.HasTag).ToList();
                 var postTagLinksInFirstPostTracked = db.PostTagLinks.Where(x => x.PostId == firstPost.PostId).ToList();
+                var tagsNotInFirstPostTracked = db.Tags.ToList().Where( x => postTagLinksInFirstPostTracked.All( y => y.TagId != x.TagId)).ToList();
 
                 //ATTEMPT
                 postTagLinksInFirstPostTracked.ForEach( x => db.PostTagLinks.Remove(x));
                 tagsNotInFirstPostTracked.ForEach(
                     x => db.PostTagLinks.Add(new PostTagLink {InPost = firstPost, HasTag = x}));
-
-                //db.Entry(firstPost).Collection(x => x.AllocatedTags).Load();
-                //firstPost.AllocatedTags.Add(new PostTagLink { InPost = firstPost, HasTag = badTag });
                 var status = db.SaveChangesWithValidation();
 
                 //VERIFY
