@@ -62,8 +62,8 @@ namespace Tests.DataClasses
             var fredPost = new Post
             {
                 Blogger = fredBlogger,
-                Title = "First great post",
-                Content = "A fine set of words.\nIn two lines.",
+                Title = "Freds good post",
+                Content = "He hasn't got much to say.",
                 Tags = new List<Tag> { uglyTag, badTag }
             };
 
