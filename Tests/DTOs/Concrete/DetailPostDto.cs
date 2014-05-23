@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
@@ -121,8 +122,7 @@ namespace Tests.DTOs.Concrete
             if (db == null)
                 throw new NullReferenceException("The IDbContextWithValidation must be linked to TemplateWebAppDb.");
 
-            //Copy over the standard items
-            var status = new SuccessOrErrors().SetSuccessMessage("OK if no errors set");
+            var status = SuccessOrErrors.Success("OK if no errors set");
 
             //now we sort out the blogger
             var errMsg = SetupBloggerIdFromDropDownList(db, post);

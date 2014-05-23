@@ -13,6 +13,22 @@ using AutoMapper.QueryableExtensions;
 
 namespace GenericServices.Concrete
 {
+    [Flags]
+    public enum ServiceFunctions
+    {
+        None = 0,
+        List = 1,
+        Detail = 2,
+        Create = 4,
+        Update = 8,
+        RunDataTask = 16,
+        //DoesNotNeedSetup refers the need to call the SetupSecondaryData method
+        //if this flag is NOT set then expects dto to override SetupForeignKeys method
+        DoesNotNeedSetup = 128,
+        AllButCreate = List | Detail | Update,
+        AllButList = Detail | Create | Update,
+        All = List | Detail | Create | Update
+    }
 
     public abstract class EfGenericDto<TData, TDto> where TData : class
         where TDto : EfGenericDto<TData,TDto>
@@ -33,7 +49,7 @@ namespace GenericServices.Concrete
         /// </summary>
         /// <param name="context"></param>
         /// <returns>returns an IQueryable of the table TData as Untracked</returns>
-        internal protected virtual IQueryable<TData> GetDataUntracked(IDbContextWithValidation context)
+        protected virtual IQueryable<TData> GetDataUntracked(IDbContextWithValidation context)
         {
             return context.Set<TData>().AsNoTracking();
         }
@@ -86,7 +102,7 @@ namespace GenericServices.Concrete
             Mapper.CreateMap<TDto, TData>()
                 .ForAllMembers(opt => opt.Condition(CheckIfSourceSetterIsPublic));
             Mapper.Map(source, destination);
-            return new SuccessOrErrors().SetSuccessMessage("Successfull copy of data");
+            return SuccessOrErrors.Success("Successfull copy of data");
         }
 
         //---------------------------------------------------------------

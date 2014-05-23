@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
 using Tests.DataClasses.Concrete;
@@ -48,7 +49,7 @@ namespace Tests.DataClasses
                 Blogger = jonBlogger,
                 Title = "First great post",
                 Content = "A fine set of words.\nIn two lines.",
-                Tags = new List<Tag> { goodTag, uglyTag }
+                Tags = new Collection<Tag> { goodTag, uglyTag }
             };
 
             var jonPost2 = new Post
@@ -56,7 +57,7 @@ namespace Tests.DataClasses
                 Blogger = jonBlogger,
                 Title = "Second post, which isn't bad",
                 Content = "Another fine set of words.\nWith this line\nand another line, making three lines.",
-                Tags = new List<Tag> { badTag }
+                Tags = new Collection<Tag> { badTag }
             };
 
             var fredPost = new Post
@@ -64,11 +65,11 @@ namespace Tests.DataClasses
                 Blogger = fredBlogger,
                 Title = "Freds good post",
                 Content = "He hasn't got much to say.",
-                Tags = new List<Tag> { uglyTag, badTag }
+                Tags = new Collection<Tag> { uglyTag, badTag }
             };
 
-            jonBlogger.Posts = new List<Post> { jonPost1, jonPost2 };
-            fredBlogger.Posts = new List<Post> { fredPost };
+            jonBlogger.Posts = new Collection<Post> { jonPost1, jonPost2 };
+            fredBlogger.Posts = new Collection<Post> { fredPost };
 
             context.Blogs.Add(jonBlogger);
             context.Blogs.Add(fredBlogger);

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using Tests.DataClasses.Concrete;
 
@@ -18,6 +19,6 @@ namespace Tests.DTOs
         [Required]
         string EmailAddress { get; set; }
 
-        List<Post> Posts { get; }
+        ICollection<Post> Posts { get; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Validation;
 using System.Linq;
@@ -10,7 +11,10 @@ namespace GenericServices.Concrete
     public class SuccessOrErrors : ISuccessOrErrors
     {
 
+        private readonly List<string> _warnings = new List<string>();
+
         private List<ValidationResult> _errors;
+
         /// <summary>
         /// Holds the list of errors. Empty list means no errors.
         /// </summary>
@@ -25,9 +29,19 @@ namespace GenericServices.Concrete
         }
 
         /// <summary>
+        /// This returns any warning messages
+        /// </summary>
+        public IReadOnlyList<string> Warnings { get { return _warnings; }}
+
+        /// <summary>
         /// Returns true if not errors or not validated yet, else false. 
         /// </summary>
         public bool IsValid { get { return (_errors != null && Errors.Count == 0); }}
+
+        /// <summary>
+        /// Returns true if not errors or not validated yet, else false. 
+        /// </summary>
+        public bool HasWarnings { get { return (_warnings.Count == 0); } }
 
         public string SuccessMessage { get; private set; }
 
@@ -63,6 +77,7 @@ namespace GenericServices.Concrete
         /// Allows a single error to be added
         /// </summary>
         /// <param name="errorformat"></param>
+        /// <param name="args"></param>
         /// <returns></returns>
         public ISuccessOrErrors AddSingleError(string errorformat, params object[] args)
         {
@@ -71,6 +86,16 @@ namespace GenericServices.Concrete
             _errors.Add(new ValidationResult(string.Format(errorformat, args)));
             SuccessMessage = string.Empty;
             return this;
+        }
+
+        /// <summary>
+        /// Adds a warning message. It places the test 'Warning: ' before the message
+        /// </summary>
+        /// <param name="warningformat"></param>
+        /// <param name="args"></param>
+        public void AddWarning(string warningformat, params object[] args)
+        {            
+            _warnings.Add( "Warning: " + string.Format(warningformat, args));
         }
 
         /// <summary>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Tests.UiHelpers
@@ -31,7 +32,7 @@ namespace Tests.UiHelpers
         public void SetupMultiSelectList(IEnumerable<KeyValuePair<string, int>> allPossibleOptions,
                                          IEnumerable<KeyValuePair<string, int>> initialSelectionValues)
         {
-            AllPossibleOptions = allPossibleOptions.ToList();           //we take copies of the collections
+            AllPossibleOptions = allPossibleOptions.ToList() ;           //we take copies of the collections
             InitialSelection = initialSelectionValues.ToList();
             FinalSelection = InitialSelection.Select(x => x.Value.ToString("D")).ToArray();
         }
@@ -43,7 +44,7 @@ namespace Tests.UiHelpers
         /// <returns></returns>
         public int[] GetFinalSelectionAsInts()
         {
-            var result = new List<int>();
+            var result = new Collection<int>();
             if (FinalSelection == null)
                 //the FinalSelection can be null if no item has been selected, so return empty array
                 return result.ToArray();

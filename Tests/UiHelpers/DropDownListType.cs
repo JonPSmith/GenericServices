@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
@@ -10,7 +11,7 @@ namespace Tests.UiHelpers
         /// <summary>
         /// This contains the strings to show and the value to return if that string is selected
         /// </summary>
-        public List<KeyValuePair<string,string>> KeyValueList { get; private set; }
+        public Collection<KeyValuePair<string,string>> KeyValueList { get; private set; }
 
         /// <summary>
         /// This is the value returned from the list
@@ -43,7 +44,7 @@ namespace Tests.UiHelpers
         public void SetupDropDownListContent(IEnumerable<KeyValuePair<string, string>> keyValueList, 
                                 string promptString)
         {
-            KeyValueList = keyValueList.ToList();       //take a copy
+            KeyValueList = new Collection<KeyValuePair<string, string>>(keyValueList.ToList());       //take a copy
             if (promptString != null)
                 KeyValueList.Insert(0, new KeyValuePair<string, string>(promptString, null));
             else

@@ -1,16 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Validation;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
 using GenericServices.Concrete;
 using NUnit.Framework;
 using Tests.Helpers;
-using Tests.UnitTests.Group04Services;
 
 namespace Tests.UnitTests.Group03Validation
 {
@@ -99,7 +91,7 @@ namespace Tests.UnitTests.Group03Validation
         //{
         //    //SETUP  
         //    var status = new SuccessOrErrors();
-        //    var dbErrors = new List<DbEntityValidationResult>
+        //    var dbErrors = new Collection<DbEntityValidationResult>
         //    {
         //        new DbEntityValidationResult( new DbEntityEntry( null), new Collection<DbValidationError>
         //            {
