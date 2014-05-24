@@ -1,5 +1,6 @@
 ﻿using GenericServices.Concrete;
 using NUnit.Framework;
+using Tests.DataClasses.Concrete;
 using Tests.Helpers;
 using Tests.Tasks;
 
@@ -15,10 +16,10 @@ namespace Tests.UnitTests.Group04Services
             //SETUP    
 
             //ATTEMPT
-            IDataTaskService<IEmptyTask, bool> taskService = new TaskService<IEmptyTask, bool>(null, new EmptyTask());
+            IDataTaskService<ITestTaskTask, Tag> taskService = new TaskService<ITestTaskTask, Tag>(null, new TestTaskTask());
 
             //VERIFY
-            (taskService is TaskService<IEmptyTask, bool>).ShouldEqual(true);
+            (taskService is TaskService<ITestTaskTask, Tag>).ShouldEqual(true);
         }
 
         [Test]
@@ -26,10 +27,11 @@ namespace Tests.UnitTests.Group04Services
         {
 
             //SETUP    
-            var taskService = new TaskService<IEmptyTask, bool>(null, new EmptyTask());
+            var taskService = new TaskService<ITestTaskTask, Tag>(null, new TestTaskTask());
 
             //ATTEMPT
-            var status = taskService.RunTask(true);
+            var tag = new Tag { TagId = 0 };      //this controls the task failing. 0 means success
+            var status = taskService.RunTask(tag);
 
             //VERIFY
             status.IsValid.ShouldEqual(true);
@@ -41,15 +43,17 @@ namespace Tests.UnitTests.Group04Services
         {
 
             //SETUP
-            var taskService = new TaskService<IEmptyTask, bool>(null, new EmptyTask());
+            var dummyDb = new DummyIDbContextWithValidation();
+            var taskService = new TaskService<ITestTaskTask, Tag>(dummyDb, new TestTaskTask());
 
             //ATTEMPT
-            var status = taskService.RunDbTask(false);
+            var tag = new Tag { TagId = 2 };      //this controls the task failing. 0 means success
+            var status = taskService.RunDbTask(tag);
 
             //VERIFY
             status.IsValid.ShouldEqual(false);
             status.Errors.Count.ShouldEqual(1);
-            status.Errors[0].ErrorMessage.ShouldEqual("bool was false, so error");
+            status.Errors[0].ErrorMessage.ShouldEqual("forced fail");
         }
 
         [Test]
@@ -58,10 +62,11 @@ namespace Tests.UnitTests.Group04Services
 
             //SETUP    
             var dummyDb = new DummyIDbContextWithValidation();
-            var taskService = new TaskService<IEmptyTask, bool>(dummyDb, new EmptyTask());
+            var taskService = new TaskService<ITestTaskTask, Tag>(dummyDb, new TestTaskTask());
 
             //ATTEMPT
-            var status = taskService.RunDbTask(true);
+            var tag = new Tag { TagId = 0 };      //this controls the task failing. 0 means success
+            var status = taskService.RunDbTask(tag);
 
             //VERIFY
             status.IsValid.ShouldEqual(true);
@@ -75,15 +80,16 @@ namespace Tests.UnitTests.Group04Services
 
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
-            var taskService = new TaskService<IEmptyTask, bool>(dummyDb, new EmptyTask());
+            var taskService = new TaskService<ITestTaskTask, Tag>(dummyDb, new TestTaskTask());
 
             //ATTEMPT
-            var status = taskService.RunDbTask(false);
+            var tag = new Tag { TagId = 2 };      //this controls the task failing. 0 means success
+            var status = taskService.RunDbTask(tag);
 
             //VERIFY
             status.IsValid.ShouldEqual(false);
             status.Errors.Count.ShouldEqual(1);
-            status.Errors[0].ErrorMessage.ShouldEqual("bool was false, so error");
+            status.Errors[0].ErrorMessage.ShouldEqual("forced fail");
             dummyDb.SaveChangesWithValidationCalled.ShouldEqual(false);
         }
 

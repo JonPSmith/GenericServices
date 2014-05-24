@@ -3,23 +3,35 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using GenericServices;
 using GenericServices.Concrete;
 using Tests.DataClasses.Concrete;
 
-namespace Tests.DTOs.Concrete
+namespace Tests.TestOnlyDTOs
 {
-    internal enum TestErrorsFlags { NoError, FailOnCopyDataToDto, FailOnCopyDtoToData }
+    internal enum TestErrorsFlags { NoError, FailOnCopyDataToDto, FailOnCopyDtoToData, ForceTaskFail, ForceTaskWarnWithWrite, ForceTaskWarnNoWrite }
 
-    public class TestWithErrorsAndTrackingDto : EfGenericDto<Tag, TestWithErrorsAndTrackingDto>
+    public class TestWithErrorsAndTrackingDto : EfGenericDto<Tag, TestWithErrorsAndTrackingDto>, ICheckIfWarnings
     {
         private ServiceFunctions _supportedFunctionsToUse = ServiceFunctions.AllCrud | 
                                                             ServiceFunctions.RunTask |
                                                             ServiceFunctions.RunDbTask;
 
         private List<string> _logOfFunctionsCalled = new List<string>();
+
+        //-------------------------------------- 
+
+        internal ServiceFunctions SupportedFunctionsToUse
+        {
+            get { return _supportedFunctionsToUse; }
+            set { _supportedFunctionsToUse = value; }
+        }
+
+        internal string FunctionsCalledCommaDelimited { get { return string.Join(",", _logOfFunctionsCalled); } }
+
+        internal TestErrorsFlags WhereToFail { get; set; }
+
+        public bool WriteEvenIfWarning { get { return WhereToFail == TestErrorsFlags.ForceTaskWarnWithWrite; } }
 
         //--------------------------------------
         //tag parts
@@ -36,20 +48,6 @@ namespace Tests.DTOs.Concrete
         [Required]
         public string Name { get; set; }
 
-        //--------------------------------------
-
-        internal ServiceFunctions SupportedFunctionsToUse
-        {
-            get { return _supportedFunctionsToUse; }
-            set { _supportedFunctionsToUse = value; }
-        }
-
-        internal string FunctionsCalledCommaDelimited { get { return string.Join(",", _logOfFunctionsCalled); } }
-
-        internal TestErrorsFlags WhereToFail { get; set; }
-
-
-        //------------
         //ctors
 
         public TestWithErrorsAndTrackingDto()
@@ -60,7 +58,6 @@ namespace Tests.DTOs.Concrete
         {
             WhereToFail = whereToFail;
         }
-
 
         //---------------------------------------------------------------------
         //overridden methods
@@ -115,5 +112,7 @@ namespace Tests.DTOs.Concrete
         {
             _logOfFunctionsCalled.Add("SetupSecondaryData");
         }
+
+
     }
 }

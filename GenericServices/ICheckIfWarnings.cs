@@ -11,7 +11,7 @@ namespace GenericServices
         /// <summary>
         /// This allows the user to control whether data should still be written if warnings
         /// </summary>
-        bool WriteEvenIfWarning { get; set; }
+        bool WriteEvenIfWarning { get; }
     }
 
 }

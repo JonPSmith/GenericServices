@@ -137,7 +137,7 @@ namespace GenericServices.Concrete
             if (!status.IsValid) return status;
 
             var copyStatus = dto.CopyDataToDto(_db, taskData, dto); //now convert back into Dto format
-            if (!status.IsValid) status = copyStatus;      //we send back the bad copystatus
+            if (!copyStatus.IsValid) status = copyStatus;      //we send back the bad copystatus
 
             if (taskComms != null) taskComms.ReportProgress(100);
 
@@ -161,7 +161,7 @@ namespace GenericServices.Concrete
             status = _taskToRun.Task(taskComms, taskData);
             if (!status.IsValid) return status;
 
-            if (TaskServiceHelper.ShouldStopAsWarningsMatter(status.HasWarnings, taskData))
+            if (TaskServiceHelper.ShouldStopAsWarningsMatter(status.HasWarnings, dto))
                 //There were warnings and we are asked to not write to the database
                 return status.SetSuccessMessage("{0}... but NOT written to database as warnings.",
                     status.SuccessMessage);
@@ -199,10 +199,10 @@ namespace GenericServices.Concrete
     internal static class TaskServiceHelper
     {
 
-        internal static bool ShouldStopAsWarningsMatter<TTaskData>(bool hasWarnings, TTaskData taskData)
+        internal static bool ShouldStopAsWarningsMatter<T>(bool hasWarnings, T classToCheck)
         {
             if (!hasWarnings) return false;
-            var flagClass = taskData as ICheckIfWarnings;
+            var flagClass = classToCheck as ICheckIfWarnings;
             return (flagClass != null && !flagClass.WriteEvenIfWarning);
         }
     }
