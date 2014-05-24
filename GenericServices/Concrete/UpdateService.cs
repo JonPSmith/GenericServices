@@ -56,7 +56,7 @@ namespace GenericServices.Concrete
             {
                 result = _db.SaveChangesWithValidation();
                 if (result.IsValid)
-                    result.SetSuccessMessage("Successfully updated {0}.", dto.DataItemName);
+                    return result.SetSuccessMessage("Successfully updated {0}.", dto.DataItemName);
             }
 
             //otherwise there are errors

@@ -17,7 +17,8 @@
         public TDto GetDto()
         {
             var dto = new TDto();
-            dto.SetupSecondaryData(_db, dto);
+            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
+                dto.SetupSecondaryData(_db, dto);
 
             return dto;
         }

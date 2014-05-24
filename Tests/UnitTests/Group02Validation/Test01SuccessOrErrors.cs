@@ -4,7 +4,7 @@ using GenericServices.Concrete;
 using NUnit.Framework;
 using Tests.Helpers;
 
-namespace Tests.UnitTests.Group03Validation
+namespace Tests.UnitTests.Group02Validation
 {
     class Test01SuccessOrErrors
     {

@@ -48,7 +48,7 @@
                 _db.Set<TData>().Add(tData);
                 result = _db.SaveChangesWithValidation();
                 if (result.IsValid)
-                    result.SetSuccessMessage("Successfully created {0}.", dto.DataItemName);
+                    return result.SetSuccessMessage("Successfully created {0}.", dto.DataItemName);
             }
 
             //otherwise there are errors

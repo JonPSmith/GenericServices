@@ -66,25 +66,32 @@
     <Compile Include="DataClasses\DataLayerInitialise.cs" />
     <Compile Include="DataClasses\SampleWebAppDb.cs" />
     <Compile Include="DTOs\Concrete\DetailPostDto.cs" />
+    <Compile Include="DTOs\Concrete\TestWithErrorsAndTrackingDto.cs" />
     <Compile Include="DTOs\IDetailPostDto.cs" />
     <Compile Include="DTOs\ISimpleBlogWithPostsDto.cs" />
     <Compile Include="DTOs\ISimplePostDto.cs" />
     <Compile Include="DTOs\Concrete\SimpleBlogWithPostsDto.cs" />
     <Compile Include="DTOs\Concrete\SimplePostDto.cs" />
     <Compile Include="Helpers\DbSnapShot.cs" />
+    <Compile Include="Helpers\DummyIDbContextWithValidation.cs" />
     <Compile Include="Helpers\ExtendAsserts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tasks\EmptyTask.cs" />
     <Compile Include="UiHelpers\DropDownListType.cs" />
     <Compile Include="UiHelpers\MultiSelectListType.cs" />
     <Compile Include="UnitTests\Group01DataClasses\Tests01Setup.cs" />
     <Compile Include="UnitTests\Group01DataClasses\Tests02Validation.cs" />
     <Compile Include="UnitTests\Group01DataClasses\Tests04ReadWrite.cs" />
-    <Compile Include="UnitTests\Group03Validation\Test01SuccessOrErrors.cs" />
+    <Compile Include="UnitTests\Group02Validation\Test01SuccessOrErrors.cs" />
+    <Compile Include="UnitTests\Group03ServiceFlow\Test03DetailService.cs" />
+    <Compile Include="UnitTests\Group03ServiceFlow\Test02UpdateService.cs" />
+    <Compile Include="UnitTests\Group03ServiceFlow\Test01CreateService.cs" />
     <Compile Include="UnitTests\Group04Services\Test01AutoMapper.cs" />
     <Compile Include="UnitTests\Group04Services\Test02PostsDirect.cs" />
     <Compile Include="UnitTests\Group04Services\Test03PostsViaSimpleDto.cs" />
     <Compile Include="UnitTests\Group04Services\Test05PostsViaDetailDto.cs" />
     <Compile Include="UnitTests\Group04Services\Test07BlogsViaDetailDto.cs" />
+    <Compile Include="UnitTests\Group04Services\Test10RunTask.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -96,6 +103,7 @@
       <Name>GenericServices</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

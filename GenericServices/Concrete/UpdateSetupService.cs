@@ -26,7 +26,8 @@ namespace GenericServices.Concrete
                 throw new InvalidOperationException("This DTO does not support a detailed view.");
 
             dto = dto.CreateDtoAndCopyDataIn(_db, whereExpression);
-            dto.SetupSecondaryData(_db, dto);
+            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
+                dto.SetupSecondaryData(_db, dto);
             return dto;
         }
     }

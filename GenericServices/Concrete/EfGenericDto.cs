@@ -21,7 +21,8 @@ namespace GenericServices.Concrete
         Create = 4,
         Update = 8,
         //note: no delete as delete does not need a dto
-        RunDataTask = 32,
+        RunTask = 32,
+        RunDbTask = 32,
         //DoesNotNeedSetup refers the need to call the SetupSecondaryData method
         //if this flag is NOT set then expects dto to override SetupSecondaryData method
         DoesNotNeedSetup = 128,
@@ -105,6 +106,21 @@ namespace GenericServices.Concrete
             return SuccessOrErrors.Success("Successfull copy of data");
         }
 
+        /// <summary>
+        /// This copies only the properties in TData that have public setter into the TDto
+        /// You can override this if you need a more complex copy
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="source"></param>
+        /// <param name="destination"></param>
+        internal protected virtual ISuccessOrErrors CopyDataToDto(IDbContextWithValidation context, TData source, TDto destination)
+        {
+            Mapper.CreateMap<TDto, TData>()
+                .ForAllMembers(opt => opt.Condition(CheckIfSourceSetterIsPublic));
+            Mapper.Map(source, destination);
+            return SuccessOrErrors.Success("Successfull copy of data");
+        }
+
         //---------------------------------------------------------------
         //helper methods
 
@@ -113,7 +129,7 @@ namespace GenericServices.Concrete
         /// It copies TData properties into all TDto properties that have accessable setters, i.e. not private
         /// </summary>
         /// <returns>dto, or null if not found</returns>
-        internal protected TDto CreateDtoAndCopyDataIn(IDbContextWithValidation context, Expression<Func<TData, bool>> predicate)
+        internal protected virtual TDto CreateDtoAndCopyDataIn(IDbContextWithValidation context, Expression<Func<TData, bool>> predicate)
         {
             Mapper.CreateMap<TData, TDto>();
             var dto = GetDataUntracked(context).Where(predicate).Project().To<TDto>().SingleOrDefault();

@@ -1,6 +1,6 @@
 ﻿namespace GenericServices
 {
-    public interface ITaskService<in T> where T : class
+    public interface ITaskService<in T>
     {
         /// <summary>
         /// This controls the lower value sent back to reportProgress
@@ -18,9 +18,9 @@
         /// This is a general form of a task that can be run sync or async
         /// </summary>
         /// <param name="taskComms">Task communication channel, can be null</param>
-        /// <param name="dto">data transfer object holding the setup data needed by the service</param>
+        /// <param name="taskData">setup data sent to the service </param>
         /// <returns></returns>
-        ISuccessOrErrors Task(ITaskComms taskComms, T dto);
+        ISuccessOrErrors Task(ITaskComms taskComms, T taskData);
 
     }
 }
