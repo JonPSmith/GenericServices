@@ -76,7 +76,7 @@ namespace Tests.UnitTests.Group04Services
 
             //VERIFY
             status.IsValid.ShouldEqual(true);
-            status.SuccessMessage.ShouldEqual("Successful... and written to database");
+            status.SuccessMessage.ShouldEqual("Successful... and written to database.");
             dummyDb.SaveChangesWithValidationCalled.ShouldEqual(true);
         }
 
@@ -102,6 +102,80 @@ namespace Tests.UnitTests.Group04Services
         //-------------------------------------------------------------------------------
         //now dto based tasking
 
+        [Test]
+        public void Check12RunDbTaskEmptyTaskIsValidOk()
+        {
+
+            //SETUP    
+            var taskService = new TaskService<ITestTaskTask, Tag, TestWithErrorsAndTrackingDto>(null, new TestTaskTask());
+
+            //ATTEMPT
+            var dto = new TestWithErrorsAndTrackingDto();
+            dto.TagId = 0 ;      //this controls the task failing. 0 means success
+            var status = taskService.RunTask(dto);
+
+            //VERIFY
+            status.IsValid.ShouldEqual(true);
+            status.SuccessMessage.ShouldEqual("Successful");
+        }
+
+        [Test]
+        public void Check13RunDbTaskEmptyFailOk()
+        {
+
+            //SETUP
+            var dummyDb = new DummyIDbContextWithValidation();
+            var taskService = new TaskService<ITestTaskTask, Tag, TestWithErrorsAndTrackingDto>(dummyDb, new TestTaskTask());
+
+            //ATTEMPT
+            var dto = new TestWithErrorsAndTrackingDto();
+            dto.TagId = 2 ;      //this controls the task failing. 0 means success
+            var status = taskService.RunDbTask(dto);
+
+            //VERIFY
+            status.IsValid.ShouldEqual(false);
+            status.Errors.Count.ShouldEqual(1);
+            status.Errors[0].ErrorMessage.ShouldEqual("forced fail");
+        }
+
+        [Test]
+        public void Check15RunDbTaskEmptyTaskIsValidOk()
+        {
+
+            //SETUP    
+            var dummyDb = new DummyIDbContextWithValidation();
+            var taskService = new TaskService<ITestTaskTask, Tag, TestWithErrorsAndTrackingDto>(dummyDb, new TestTaskTask());
+
+            //ATTEMPT
+            var dto = new TestWithErrorsAndTrackingDto();
+            dto.TagId = 0 ;      //this controls the task failing. 0 means success
+            var status = taskService.RunDbTask(dto);
+
+            //VERIFY
+            status.IsValid.ShouldEqual(true);
+            status.SuccessMessage.ShouldEqual("Successful... and written to database.");
+            dummyDb.SaveChangesWithValidationCalled.ShouldEqual(true);
+        }
+
+        [Test]
+        public void Check16RunDbTaskEmptyFailOk()
+        {
+
+            //SETUP
+            var dummyDb = new DummyIDbContextWithValidation();
+            var taskService = new TaskService<ITestTaskTask, Tag, TestWithErrorsAndTrackingDto>(dummyDb, new TestTaskTask());
+
+            //ATTEMPT
+            var dto = new TestWithErrorsAndTrackingDto();
+            dto.TagId = 2 ;      //this controls the task failing. 0 means success
+            var status = taskService.RunDbTask(dto);
+
+            //VERIFY
+            status.IsValid.ShouldEqual(false);
+            status.Errors.Count.ShouldEqual(1);
+            status.Errors[0].ErrorMessage.ShouldEqual("forced fail");
+            dummyDb.SaveChangesWithValidationCalled.ShouldEqual(false);
+        }
 
     }
 }

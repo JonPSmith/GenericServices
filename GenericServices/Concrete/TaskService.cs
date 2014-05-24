@@ -51,7 +51,7 @@ namespace GenericServices.Concrete
             //we now need to save the changes to the database
             var dataStatus = _db.SaveChangesWithValidation();
             return dataStatus.IsValid 
-                ? dataStatus.SetSuccessMessage("{0}... and written to database", taskStatus.SuccessMessage)
+                ? dataStatus.SetSuccessMessage("{0}... and written to database.", taskStatus.SuccessMessage)
                 : dataStatus;
         }
 
@@ -179,7 +179,7 @@ namespace GenericServices.Concrete
 
             if (taskComms != null)
                 taskComms.ReportProgress(100, TaskMessage.InfoMessage("Successfully written to database."));
-            return status.SetSuccessMessage("{0}.. and written to database.", taskSuccessMessage);
+            return status.SetSuccessMessage("{0}... and written to database.", taskSuccessMessage);
 
         }
 
