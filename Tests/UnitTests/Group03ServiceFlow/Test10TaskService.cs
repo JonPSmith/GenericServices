@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using GenericServices.Concrete;
+﻿using GenericServices.Concrete;
 using NUnit.Framework;
 using Tests.DataClasses;
 using Tests.DataClasses.Concrete;

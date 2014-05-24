@@ -54,7 +54,7 @@
   <ItemGroup>
     <Compile Include="Concrete\TaskService.cs" />
     <Compile Include="Concrete\CreateService.cs" />
-    <Compile Include="Concrete\IDataTaskService.cs" />
+    <Compile Include="Concrete\ITaskService.cs" />
     <Compile Include="ICheckIfWarnings.cs" />
     <Compile Include="IUpdateSetupService.cs" />
     <Compile Include="Concrete\UpdateSetupService.cs" />

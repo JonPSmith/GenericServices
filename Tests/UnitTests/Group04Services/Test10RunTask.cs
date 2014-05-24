@@ -3,6 +3,7 @@ using NUnit.Framework;
 using Tests.DataClasses.Concrete;
 using Tests.Helpers;
 using Tests.Tasks;
+using Tests.TestOnlyDTOs;
 
 namespace Tests.UnitTests.Group04Services
 {
@@ -16,11 +17,16 @@ namespace Tests.UnitTests.Group04Services
             //SETUP    
 
             //ATTEMPT
-            IDataTaskService<ITestTaskTask, Tag> taskService = new TaskService<ITestTaskTask, Tag>(null, new TestTaskTask());
+            ITaskService<ITestTaskTask, Tag> taskService = new TaskService<ITestTaskTask, Tag>(null, new TestTaskTask());
+            ITaskService<ITestTaskTask, Tag, TestWithErrorsAndTrackingDto> taskDtoService = 
+                new TaskService<ITestTaskTask, Tag, TestWithErrorsAndTrackingDto>(null, new TestTaskTask());
 
             //VERIFY
             (taskService is TaskService<ITestTaskTask, Tag>).ShouldEqual(true);
         }
+
+        //--------------------------------------------------------------
+        //non dto tasking
 
         [Test]
         public void Check02RunTaskEmptyTaskIsValidOk()
@@ -92,6 +98,10 @@ namespace Tests.UnitTests.Group04Services
             status.Errors[0].ErrorMessage.ShouldEqual("forced fail");
             dummyDb.SaveChangesWithValidationCalled.ShouldEqual(false);
         }
+
+        //-------------------------------------------------------------------------------
+        //now dto based tasking
+
 
     }
 }

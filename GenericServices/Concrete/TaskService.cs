@@ -3,8 +3,10 @@ using GenericServices.Tasking;
 
 namespace GenericServices.Concrete
 {
-    public class TaskService<TTask, TTaskData> : IDataTaskService<TTask, TTaskData> 
-        where TTask : class, ITaskService<TTaskData> 
+
+
+    public class TaskService<TTask, TTaskData> : ITaskService<TTask, TTaskData> 
+         where TTask : class, ITaskService<TTaskData> 
     {
         private readonly IDbContextWithValidation _db;
         private readonly TTask _taskToRun;
@@ -12,7 +14,7 @@ namespace GenericServices.Concrete
         public TaskService(IDbContextWithValidation db, TTask taskToRun)
         {
             if (taskToRun == null)
-                throw new NullReferenceException("Dependecy injection did not find the task. Check you have added ITaskService<TaskDto> to the task's definition.");
+                throw new NullReferenceException("Dependecy injection did not find the task. Check you have added ITaskService<TaskDto> to the task's interface.");
             _db = db;
             _taskToRun = taskToRun;
         }
@@ -57,7 +59,9 @@ namespace GenericServices.Concrete
 
     //---------------------------------------------------------------------------
 
-    public class TaskService<TTask, TTaskData, TDto>
+
+
+    public class TaskService<TTask, TTaskData, TDto> : ITaskService<TTask, TTaskData, TDto> 
         where TTask : class, ITaskService<TTaskData> 
         where TTaskData : class, new()
         where TDto : EfGenericDto<TTaskData, TDto>
@@ -69,7 +73,7 @@ namespace GenericServices.Concrete
         public TaskService(IDbContextWithValidation db, TTask taskToRun)
         {
             if (taskToRun == null)
-                throw new NullReferenceException("Dependecy injection did not find the task. Check you have added ITaskService<TaskDto> to the task's definition.");
+                throw new NullReferenceException("Dependecy injection did not find the task. Check you have added ITaskService<TaskDto> to the task's interface.");
             _db = db;
             _taskToRun = taskToRun;
         }
