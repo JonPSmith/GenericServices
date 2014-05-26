@@ -42,10 +42,14 @@ and another line, making three lines.</Content>
           <Title>Freds good post</Title>
           <Content>He hasn't got much to say.</Content>
           <TagSlugs>ugly,bad</TagSlugs>
-          <PostTagGrades>
+          <PostTagGrade>
             <TagSlug>bad</TagSlug>
             <Grade>5</Grade>
-          </PostTagGrades>
+          </PostTagGrade>
+          <PostTagGrade>
+            <TagSlug>ugly</TagSlug>
+            <Grade>10</Grade>
+          </PostTagGrade>
         </Post>
       </Posts>
     </Blog>

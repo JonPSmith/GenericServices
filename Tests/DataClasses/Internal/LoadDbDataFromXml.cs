@@ -66,7 +66,7 @@ namespace Tests.DataClasses.Internal
 
 
                     //look for PostTagGrades for this post
-                    foreach (var postTagXml in postXml.Elements("PostTagGrades"))
+                    foreach (var postTagXml in postXml.Elements("PostTagGrade"))
                     {
                         var newPostTag = new PostTagGrade
                         {

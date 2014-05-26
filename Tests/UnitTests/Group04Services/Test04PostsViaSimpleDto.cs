@@ -60,7 +60,7 @@ namespace Tests.UnitTests.Group04Services
                 list.Count.ShouldEqual(3);
                 list[0].Title.ShouldEqual("First great post");
                 list[0].BloggerName.ShouldEqual("Jon Smith");
-                list[0].TagNames.ShouldEqual("Good post, Ugly post");
+                list[0].TagNames.ShouldEqual("Ugly post, Good post");
                 list[0].LastUpdatedUtc.Kind.ShouldEqual(DateTimeKind.Utc);
 
             }

@@ -25,7 +25,7 @@ namespace Tests.UnitTests.Group01DataClasses
                 db.Posts.Count().ShouldEqual(3);
                 db.Tags.Count().ShouldEqual(3);
                 db.Database.SqlQuery<int>("SELECT COUNT(*) FROM dbo.TagPosts").First().ShouldEqual(5);
-                db.PostTagGrades.Count().ShouldEqual(1);
+                db.PostTagGrades.Count().ShouldEqual(2);
             }
         }
 
@@ -50,9 +50,9 @@ namespace Tests.UnitTests.Group01DataClasses
                 allPosts[2].Blogger.Name.ShouldEqual("Jon Smith");
                 string.Join(",", allPosts[2].Tags.Select(x => x.Slug)).ShouldEqual("bad");
 
-                db.PostTagGrades.Count().ShouldEqual(1);
-                db.PostTagGrades.Single().PostId.ShouldEqual(allPosts[0].PostId);
-                db.PostTagGrades.Include(x => x.TagPart).Single().TagPart.Slug.ShouldEqual("bad");
+                db.PostTagGrades.Count().ShouldEqual(2);
+                db.PostTagGrades.ToList().All( x => x.PostId == allPosts[0].PostId).ShouldEqual(true);
+                string.Join(",", db.PostTagGrades.Include(x => x.TagPart).Select(x => x.TagPart.Slug)).ShouldEqual("bad,ugly");
             }
         }
 

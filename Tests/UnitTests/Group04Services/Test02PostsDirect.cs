@@ -174,7 +174,7 @@ namespace Tests.UnitTests.Group04Services
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
                 status.SuccessMessage.ShouldEqual("Successfully deleted Post.");
-                snap.CheckSnapShot(db, -1,-2, 0, 0, -1);
+                snap.CheckSnapShot(db, -1,-2, 0, 0, -2);
             }
         }
 

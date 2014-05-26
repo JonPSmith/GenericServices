@@ -17,7 +17,6 @@
             if (itemToDelete == null)
                 return result.AddSingleError("Could not find the {0} you asked to delete.", typeof(TData).Name);
 
-            var tData = new TData();
             _db.Set<TData>().Remove(itemToDelete);
             result = _db.SaveChangesWithValidation();
             if (result.IsValid)
