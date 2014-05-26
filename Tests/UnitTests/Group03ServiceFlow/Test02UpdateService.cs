@@ -76,6 +76,7 @@ namespace Tests.UnitTests.Group03ServiceFlow
                 };
 
                 //ATTEMPT
+                //dto.CopyDtoToData(db, dto, new Tag());          //do this to preload AutoMapper
                 var status = service.Update(dto);
 
                 //VERIFY

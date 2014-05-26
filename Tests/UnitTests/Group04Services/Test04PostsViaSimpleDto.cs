@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
@@ -13,7 +12,7 @@ using Tests.Helpers;
 
 namespace Tests.UnitTests.Group04Services
 {
-    class Test03PostsViaSimpleDto
+    class Test04PostsViaSimpleDto
     {
 
         [TestFixtureSetUp]
@@ -41,6 +40,8 @@ namespace Tests.UnitTests.Group04Services
             //VERIFY
             (listService is IListService<Post, SimplePostDto>).ShouldEqual(true);
         }
+        
+        //--------------------------------------------------------
 
         [Test]
         public void Check02ListPostOk()
@@ -65,7 +66,7 @@ namespace Tests.UnitTests.Group04Services
         }
 
         [Test]
-        public void Check03DetailPostOk()
+        public void Check02DetailPostOk()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -85,43 +86,7 @@ namespace Tests.UnitTests.Group04Services
         }
 
 
-        [Test]
-        public void Check04ListDtoUpdateOk()
-        {
 
-            //SETUP
-            var dto = new SimplePostDto
-            {
-                PostId = 123,
-                BloggerName = "This should not be copied",
-                Title = "Should copy this title",
-                LastUpdated = new DateTime(2000, 1, 1),
-                Tags = new Collection<Tag> { new Tag { Name = "Should not copy this", Slug = "No" } }
-            };
-
-
-            //ATTEMPT
-            var newData = new Post
-            {
-                Blogger = new Blog { Name = "Original Blog Name" },
-                BlogId = 777,
-                Content = "Original Content",
-                Tags = new Collection<Tag> { new Tag { Name = "Original Tag name", Slug = "Yes"} }
-            };
-
-            var status = dto.CopyDtoToData(null, dto, newData);
-
-            //VERIFY
-            status.IsValid.ShouldEqual(true, status.Errors);
-            newData.PostId.ShouldEqual(123);
-            newData.Title.ShouldEqual("Should copy this title");
-
-            newData.Blogger.Name.ShouldEqual("Original Blog Name");
-            newData.BlogId.ShouldEqual(777);
-            newData.Content.ShouldEqual("Original Content");
-            newData.Tags.Count.ShouldEqual(1);
-            newData.Tags.First().Name.ShouldEqual("Original Tag name");
-        }
 
         [Test]
         public void Check05UpdateSetupOk()

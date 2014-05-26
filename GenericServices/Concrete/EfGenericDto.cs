@@ -115,8 +115,7 @@ namespace GenericServices.Concrete
         /// <param name="destination"></param>
         internal protected virtual ISuccessOrErrors CopyDataToDto(IDbContextWithValidation context, TData source, TDto destination)
         {
-            Mapper.CreateMap<TData, TDto>()
-                .ForAllMembers(opt => opt.Condition(CheckIfSourceSetterIsPublic));
+            Mapper.CreateMap<TData, TDto>();
             Mapper.Map(source, destination);
             return SuccessOrErrors.Success("Successfull copy of data");
         }

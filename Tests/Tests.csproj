@@ -89,7 +89,8 @@
     <Compile Include="UnitTests\Group03ServiceFlow\Test01CreateService.cs" />
     <Compile Include="UnitTests\Group04Services\Test01AutoMapper.cs" />
     <Compile Include="UnitTests\Group04Services\Test02PostsDirect.cs" />
-    <Compile Include="UnitTests\Group04Services\Test03PostsViaSimpleDto.cs" />
+    <Compile Include="UnitTests\Group04Services\Test03CheckGenericDto.cs" />
+    <Compile Include="UnitTests\Group04Services\Test04PostsViaSimpleDto.cs" />
     <Compile Include="UnitTests\Group04Services\Test05PostsViaDetailDto.cs" />
     <Compile Include="UnitTests\Group04Services\Test07BlogsViaDetailDto.cs" />
     <Compile Include="UnitTests\Group04Services\Test10RunTask.cs" />

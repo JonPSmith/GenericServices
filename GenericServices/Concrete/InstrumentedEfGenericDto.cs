@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using AutoMapper;
 
 namespace GenericServices.Concrete
 {
@@ -112,6 +113,12 @@ namespace GenericServices.Concrete
             {
                 if (_whereToFail.HasFlag(InstrumentedOpFlags.FailOnCopyDtoToData))
                     return new SuccessOrErrors().AddSingleError("Flag was set to fail here.");
+
+                //Mapper.CreateMap<TDto, TData>()
+                //    .ForAllMembers(opt => opt.Condition(CheckIfSourceSetterIsPublic));
+                //LogSpecificName("After CreateMap");
+                //Mapper.Map(source, destination);
+                //return SuccessOrErrors.Success("Successfull copy of data");
 
                 return base.CopyDtoToData(context, source, destination);
             }
