@@ -18,7 +18,8 @@ namespace Tests.UnitTests.Group03ServiceFlow
             using (var db = new SampleWebAppDb())
             {
                 DataLayerInitialise.InitialiseThis();
-                DataLayerInitialise.ResetDatabaseToTestData(db);
+                var filepath = TestFileHelpers.GetTestFileFilePath("DbContentSimple.xml");
+                DataLayerInitialise.ResetDatabaseToTestData(db, filepath);
             }
         }
 

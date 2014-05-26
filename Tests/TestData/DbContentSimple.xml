@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Content>
+  <Tags>
+    <Tag>
+      <Name>Good post</Name>
+      <Slug>good</Slug>
+    </Tag>
+    <Tag>
+      <Name>Bad post</Name>
+      <Slug>bad</Slug>
+    </Tag>
+    <Tag>
+      <Name>Ugly post</Name>
+      <Slug>ugly</Slug>
+    </Tag>
+  </Tags>
+  <Blogs>
+    <Blog>
+      <Name>Jon Smith</Name>
+      <Email>jon.smith@nospam.com</Email>
+      <Posts>
+        <Post>
+          <Title>First great post</Title>
+          <Content>A fine set of words.
+In two lines.</Content>
+          <TagSlugs>good,ugly</TagSlugs>
+        </Post>
+        <Post>
+          <Title>Second post, which isn't bad</Title>
+          <Content>Another fine set of words.
+With this line
+and another line, making three lines.</Content>
+          <TagSlugs>bad</TagSlugs>
+        </Post>
+      </Posts>
+    </Blog>
+    <Blog>
+      <Name>Fred Bloggs</Name>
+      <Email>fred.bloggs@nospam.com</Email>
+      <Posts>
+        <Post>
+          <Title>Freds good post</Title>
+          <Content>He hasn't got much to say.</Content>
+          <TagSlugs>ugly,bad</TagSlugs>
+          <PostTagGrades>
+            <TagSlug>bad</TagSlug>
+            <Grade>5</Grade>
+          </PostTagGrades>
+        </Post>
+      </Posts>
+    </Blog>
+  </Blogs>
+</Content>

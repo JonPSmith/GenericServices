@@ -20,7 +20,8 @@ namespace Tests.UnitTests.Group04Services
             using (var db = new SampleWebAppDb())
             {
                 DataLayerInitialise.InitialiseThis();
-                DataLayerInitialise.ResetDatabaseToTestData(db);
+                var filepath = TestFileHelpers.GetTestFileFilePath("DbContentSimple.xml");
+                DataLayerInitialise.ResetDatabaseToTestData(db, filepath);
             }
         }
 
@@ -55,7 +56,7 @@ namespace Tests.UnitTests.Group04Services
 
                 //VERIFY
                 list.Count.ShouldEqual(3);
-                var firstPost = db.Posts.Include(x => x.Tags).AsNoTracking().First();
+                var firstPost = db.Posts.Include(x => x.Tags).ToList().First(x => x.PostId == list[0].PostId);
                 list[0].Title.ShouldEqual(firstPost.Title);
                 list[0].Content.ShouldEqual(firstPost.Content);
                 list[0].BloggerName.ShouldEqual(firstPost.Blogger.Name);

@@ -14,15 +14,18 @@ namespace Tests.Helpers
 
         public int NumTags { get; private set; }
 
+        public int NumPostTagGrades { get; private set; }
+
         public DbSnapShot(SampleWebAppDb db)
         {
             NumBlogs = db.Blogs.Count();
             NumPostTagLinks = db.Database.SqlQuery<int>("SELECT COUNT(*) FROM dbo.TagPosts").First();
             NumPosts = db.Posts.Count();
             NumTags = db.Tags.Count();
+            NumPostTagGrades = db.PostTagGrades.Count();
         }
 
-        public void CheckSnapShot(SampleWebAppDb db, int postsChange = 0, int postTagLinkChange = 0, int blogsChange = 0, int tagsChange = 0)
+        public void CheckSnapShot(SampleWebAppDb db, int postsChange = 0, int postTagLinkChange = 0, int blogsChange = 0, int tagsChange = 0, int postTagGradesChange = 0)
         {
             var newSnap = new DbSnapShot(db);
 
@@ -30,6 +33,7 @@ namespace Tests.Helpers
             newSnap.NumPostTagLinks.ShouldEqual(NumPostTagLinks + postTagLinkChange, "posttaglinks wrong");
             newSnap.NumBlogs.ShouldEqual(NumBlogs + blogsChange, "blogs wrong");
             newSnap.NumTags.ShouldEqual(NumTags + tagsChange, "tags wrong");
+            newSnap.NumPostTagGrades.ShouldEqual(NumPostTagGrades + postTagGradesChange, "postTagGrades wrong");
         }
 
     }

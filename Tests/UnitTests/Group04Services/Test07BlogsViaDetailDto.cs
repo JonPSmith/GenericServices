@@ -19,7 +19,8 @@ namespace Tests.UnitTests.Group04Services
             using (var db = new SampleWebAppDb())
             {
                 DataLayerInitialise.InitialiseThis();
-                DataLayerInitialise.ResetDatabaseToTestData(db);
+                var filepath = TestFileHelpers.GetTestFileFilePath("DbContentSimple.xml");
+                DataLayerInitialise.ResetDatabaseToTestData(db, filepath);
             }
         }
 

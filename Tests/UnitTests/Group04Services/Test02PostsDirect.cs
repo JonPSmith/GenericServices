@@ -19,7 +19,8 @@ namespace Tests.UnitTests.Group04Services
             using (var db = new SampleWebAppDb())
             {
                 DataLayerInitialise.InitialiseThis();
-                DataLayerInitialise.ResetDatabaseToTestData(db);
+                var filepath = TestFileHelpers.GetTestFileFilePath("DbContentSimple.xml");
+                DataLayerInitialise.ResetDatabaseToTestData(db, filepath);
             }
         }
 
@@ -53,8 +54,8 @@ namespace Tests.UnitTests.Group04Services
 
                 //VERIFY
                 list.Count.ShouldEqual(3);
-                list[0].Title.ShouldEqual("First great post");
-                list[0].Blogger.Name.ShouldEqual("Jon Smith");
+                list[0].Title.ShouldEqual("Freds good post");
+                list[0].Blogger.Name.ShouldEqual("Fred Bloggs");
                 list[0].Tags.ShouldEqual(null);
 
             }
@@ -173,7 +174,7 @@ namespace Tests.UnitTests.Group04Services
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
                 status.SuccessMessage.ShouldEqual("Successfully deleted Post.");
-                snap.CheckSnapShot(db, -1,-2);
+                snap.CheckSnapShot(db, -1,-2, 0, 0, -1);
             }
         }
 

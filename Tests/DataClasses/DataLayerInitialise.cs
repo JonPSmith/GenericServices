@@ -1,13 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Data.Entity;
-using System.Linq;
-using Tests.DataClasses.Concrete;
+﻿using System.Data.Entity;
+using Tests.DataClasses.Internal;
 
 namespace Tests.DataClasses
 {
+
     public static class DataLayerInitialise
     {
+
 
         /// <summary>
         /// This should be called at Startup
@@ -18,61 +17,20 @@ namespace Tests.DataClasses
             Database.SetInitializer(new DropCreateDatabaseIfModelChanges<SampleWebAppDb>());
         }
 
-        public static void ResetDatabaseToTestData(SampleWebAppDb context)
+        public static void ResetDatabaseToTestData(SampleWebAppDb context, string filepathOfXmlFile)
         {
 
-            if (context.Blogs.Any())
-            {
-                context.Posts.ToList().ForEach(x => context.Posts.Remove(x));
-                context.Tags.ToList().ForEach(x => context.Tags.Remove(x));
-                context.Blogs.ToList().ForEach(x => context.Blogs.Remove(x));
-                context.SaveChanges();
-            }
+            context.Posts.RemoveRange( context.Posts);
+            context.Tags.RemoveRange( context.Tags);
+            context.Blogs.RemoveRange( context.Blogs);
+            //context.PostTagGrades.RemoveRange(context.PostTagGrades);
+            context.SaveChanges();
 
-            var goodTag = new Tag { Name = "Good post", Slug = "good" };
-            var badTag = new Tag { Name = "Bad post", Slug = "bad" };
-            var uglyTag = new Tag { Name = "Ugly post", Slug = "ugly" };
+            var loader = new LoadDbDataFromXml(filepathOfXmlFile);
 
-            var jonBlogger = new Blog
-            {
-                Name = "Jon Smith",
-                EmailAddress = "jon.smith@nospam.com"
-            };
-            var fredBlogger = new Blog
-            {
-                Name = "Fred Bloggs",
-                EmailAddress = "fred.blogs@nospam.com"
-            };
-
-            var jonPost1 = new Post
-            {
-                Blogger = jonBlogger,
-                Title = "First great post",
-                Content = "A fine set of words.\nIn two lines.",
-                Tags = new Collection<Tag> { goodTag, uglyTag }
-            };
-
-            var jonPost2 = new Post
-            {
-                Blogger = jonBlogger,
-                Title = "Second post, which isn't bad",
-                Content = "Another fine set of words.\nWith this line\nand another line, making three lines.",
-                Tags = new Collection<Tag> { badTag }
-            };
-
-            var fredPost = new Post
-            {
-                Blogger = fredBlogger,
-                Title = "Freds good post",
-                Content = "He hasn't got much to say.",
-                Tags = new Collection<Tag> { uglyTag, badTag }
-            };
-
-            jonBlogger.Posts = new Collection<Post> { jonPost1, jonPost2 };
-            fredBlogger.Posts = new Collection<Post> { fredPost };
-
-            context.Blogs.Add(jonBlogger);
-            context.Blogs.Add(fredBlogger);
+            context.Blogs.AddRange(loader.Bloggers);                //note: The order things appear in the database are not obvious
+            //have to add these by hand
+            context.PostTagGrades.AddRange(loader.PostTagGrades);
             context.SaveChanges();
         }
     }

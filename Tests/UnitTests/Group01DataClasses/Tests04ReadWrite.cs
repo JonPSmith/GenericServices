@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Threading;
 using NUnit.Framework;
@@ -18,7 +20,8 @@ namespace Tests.UnitTests.Group01DataClasses
             using (var db = new SampleWebAppDb())
             {
                 DataLayerInitialise.InitialiseThis();
-                DataLayerInitialise.ResetDatabaseToTestData(db);
+                var filepath = TestFileHelpers.GetTestFileFilePath("DbContentSimple.xml");
+                DataLayerInitialise.ResetDatabaseToTestData(db, filepath);
             }
         }
 
@@ -208,18 +211,18 @@ namespace Tests.UnitTests.Group01DataClasses
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
-                var badTag = db.Tags.Single(x => x.Slug == "bad");
                 var firstPost = db.Posts.First();
+                var tagsNotInFirstPostTracked = db.Tags.Where(x => x.Posts.All(y => y.PostId != firstPost.PostId)).ToList();
 
                 //ATTEMPT
                 db.Entry(firstPost).Collection( x => x.Tags).Load();
-                firstPost.Tags.Add( badTag);
+                tagsNotInFirstPostTracked.ForEach( x => firstPost.Tags.Add( x));
                 var status = db.SaveChangesWithValidation();
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
                 snap.CheckSnapShot(db, 0, 1);
-                firstPost = db.Blogs.Include(x => x.Posts.Select(y => y.Tags)).First().Posts.First();
+                firstPost = db.Posts.Include(x => x.Tags).First();
                 firstPost.Tags.Count.ShouldEqual(3);
             }
         }
@@ -242,8 +245,121 @@ namespace Tests.UnitTests.Group01DataClasses
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
                 snap.CheckSnapShot(db, 0, -1);
-                firstPost = db.Blogs.Include(x => x.Posts.Select(y => y.Tags)).First().Posts.First();
+                firstPost = db.Posts.Include(x => x.Tags).First();
                 firstPost.Tags.Count.ShouldEqual(1);
+            }
+        }
+
+        [Test]
+        public void Check27DeleteConnectedPostOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var snap = new DbSnapShot(db);
+                var lastPost = db.Posts.Include(x => x.Tags).ToList().Last();
+                var numTags = lastPost.Tags.Count;
+
+                //ATTEMPT
+                db.Posts.Remove(lastPost);
+                var status = db.SaveChangesWithValidation();
+
+                //VERIFY
+                status.IsValid.ShouldEqual(true, status.Errors);
+                snap.CheckSnapShot(db, -1, -numTags);
+            }
+        }
+
+        [Test]
+        public void Check28DeleteViaAttachOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var snap = new DbSnapShot(db);
+                var lastPost = db.Posts.Include(x => x.Tags).AsNoTracking().ToList().Last();
+                var numTags = lastPost.Tags.Count;
+
+                //ATTEMPT
+                var postToDelete = new Post {PostId = lastPost.PostId};
+                db.Posts.Attach(postToDelete);
+                db.Posts.Remove(postToDelete);
+                var status = db.SaveChangesWithValidation();
+
+                //VERIFY
+                status.IsValid.ShouldEqual(true, status.Errors);
+                snap.CheckSnapShot(db, -1, -numTags);
+            }
+        }
+
+
+        //---------------------------------------------------------
+        //now deleting the PostTagGrade
+
+        [Test]
+        public void Check30FindMultipleKeyOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var firstPostTagGrades = db.PostTagGrades.First();
+
+                //ATTEMPT
+                var foundPtg = db.PostTagGrades.Find(firstPostTagGrades.PostId, firstPostTagGrades.TagId);
+
+                //VERIFY
+                foundPtg.ShouldNotEqualNull();
+                foundPtg.Grade.ShouldEqual(5);
+            }
+        }
+
+        [Test]
+        public void Check31DeleteViaAttachOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var snap = new DbSnapShot(db);
+                var firstPostTagGrades = db.PostTagGrades.AsNoTracking().First();
+
+                //ATTEMPT
+                var ptgToDelete = new PostTagGrade
+                {
+                    PostId = firstPostTagGrades.PostId,
+                    TagId = firstPostTagGrades.TagId
+                };
+                db.PostTagGrades.Attach(ptgToDelete);
+                ((IObjectContextAdapter)db).ObjectContext.DeleteObject(ptgToDelete);
+                var status = db.SaveChangesWithValidation();
+
+                //VERIFY
+                status.IsValid.ShouldEqual(true, status.Errors);
+                snap.CheckSnapShot(db, 0,0,0,0,-1);
+            }
+        }
+
+        [Test]
+        public void Check32DeleteViaRemoveOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var snap = new DbSnapShot(db);
+                var firstPostTagGrades = db.PostTagGrades.AsNoTracking().First();
+
+                //ATTEMPT
+                var ptgToDelete = new PostTagGrade
+                {
+                    PostId = firstPostTagGrades.PostId,
+                    TagId = firstPostTagGrades.TagId
+                };
+                db.PostTagGrades.Attach(ptgToDelete);
+                db.PostTagGrades.Remove(ptgToDelete);
+                var status = db.SaveChangesWithValidation();
+
+                //VERIFY
+                status.IsValid.ShouldEqual(true, status.Errors);
+                snap.CheckSnapShot(db, 0, 0, 0, 0, -1);
             }
         }
 
