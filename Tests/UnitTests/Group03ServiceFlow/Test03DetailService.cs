@@ -6,7 +6,6 @@ using Tests.DataClasses;
 using Tests.DataClasses.Concrete;
 using Tests.DTOs.Concrete;
 using Tests.Helpers;
-using Tests.TestOnlyDTOs;
 
 namespace Tests.UnitTests.Group03ServiceFlow
 {
@@ -29,7 +28,7 @@ namespace Tests.UnitTests.Group03ServiceFlow
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
-                var service = new DetailService<Tag, TestWithErrorsAndTrackingDto>(db);
+                var service = new DetailService<Tag, SimpleTagDto>(db);
                 var firstTag = db.Tags.First();
 
                 //ATTEMPT

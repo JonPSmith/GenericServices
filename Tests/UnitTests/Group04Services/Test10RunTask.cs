@@ -1,9 +1,9 @@
 ﻿using GenericServices.Concrete;
 using NUnit.Framework;
 using Tests.DataClasses.Concrete;
+using Tests.DTOs.Concrete;
 using Tests.Helpers;
 using Tests.Tasks;
-using Tests.TestOnlyDTOs;
 
 namespace Tests.UnitTests.Group04Services
 {
@@ -18,8 +18,8 @@ namespace Tests.UnitTests.Group04Services
 
             //ATTEMPT
             ITaskService<ITestTaskTask, Tag> taskService = new TaskService<ITestTaskTask, Tag>(null, new TestTaskTask());
-            ITaskService<ITestTaskTask, Tag, TestWithErrorsAndTrackingDto> taskDtoService = 
-                new TaskService<ITestTaskTask, Tag, TestWithErrorsAndTrackingDto>(null, new TestTaskTask());
+            ITaskService<ITestTaskTask, Tag, SimpleTagDto> taskDtoService = 
+                new TaskService<ITestTaskTask, Tag, SimpleTagDto>(null, new TestTaskTask());
 
             //VERIFY
             (taskService is TaskService<ITestTaskTask, Tag>).ShouldEqual(true);
@@ -107,10 +107,10 @@ namespace Tests.UnitTests.Group04Services
         {
 
             //SETUP    
-            var taskService = new TaskService<ITestTaskTask, Tag, TestWithErrorsAndTrackingDto>(null, new TestTaskTask());
+            var taskService = new TaskService<ITestTaskTask, Tag, SimpleTagDto>(null, new TestTaskTask());
 
             //ATTEMPT
-            var dto = new TestWithErrorsAndTrackingDto();
+            var dto = new SimpleTagDto();
             dto.TagId = 0 ;      //this controls the task failing. 0 means success
             var status = taskService.RunTask(dto);
 
@@ -125,10 +125,10 @@ namespace Tests.UnitTests.Group04Services
 
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
-            var taskService = new TaskService<ITestTaskTask, Tag, TestWithErrorsAndTrackingDto>(dummyDb, new TestTaskTask());
+            var taskService = new TaskService<ITestTaskTask, Tag, SimpleTagDto>(dummyDb, new TestTaskTask());
 
             //ATTEMPT
-            var dto = new TestWithErrorsAndTrackingDto();
+            var dto = new SimpleTagDto();
             dto.TagId = 2 ;      //this controls the task failing. 0 means success
             var status = taskService.RunDbTask(dto);
 
@@ -144,10 +144,10 @@ namespace Tests.UnitTests.Group04Services
 
             //SETUP    
             var dummyDb = new DummyIDbContextWithValidation();
-            var taskService = new TaskService<ITestTaskTask, Tag, TestWithErrorsAndTrackingDto>(dummyDb, new TestTaskTask());
+            var taskService = new TaskService<ITestTaskTask, Tag, SimpleTagDto>(dummyDb, new TestTaskTask());
 
             //ATTEMPT
-            var dto = new TestWithErrorsAndTrackingDto();
+            var dto = new SimpleTagDto();
             dto.TagId = 0 ;      //this controls the task failing. 0 means success
             var status = taskService.RunDbTask(dto);
 
@@ -163,10 +163,10 @@ namespace Tests.UnitTests.Group04Services
 
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
-            var taskService = new TaskService<ITestTaskTask, Tag, TestWithErrorsAndTrackingDto>(dummyDb, new TestTaskTask());
+            var taskService = new TaskService<ITestTaskTask, Tag, SimpleTagDto>(dummyDb, new TestTaskTask());
 
             //ATTEMPT
-            var dto = new TestWithErrorsAndTrackingDto();
+            var dto = new SimpleTagDto();
             dto.TagId = 2 ;      //this controls the task failing. 0 means success
             var status = taskService.RunDbTask(dto);
 

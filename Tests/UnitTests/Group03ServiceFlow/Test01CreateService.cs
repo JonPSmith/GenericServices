@@ -5,7 +5,6 @@ using Tests.DataClasses;
 using Tests.DataClasses.Concrete;
 using Tests.DTOs.Concrete;
 using Tests.Helpers;
-using Tests.TestOnlyDTOs;
 
 namespace Tests.UnitTests.Group03ServiceFlow
 {
@@ -28,7 +27,7 @@ namespace Tests.UnitTests.Group03ServiceFlow
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
-                var service = new CreateSetupService<Tag, TestWithErrorsAndTrackingDto>(db);
+                var service = new CreateSetupService<Tag, SimpleTagDto>(db);
 
                 //ATTEMPT
                 var dto = service.GetDto();
@@ -44,9 +43,9 @@ namespace Tests.UnitTests.Group03ServiceFlow
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
-                var service = new CreateService<Tag, TestWithErrorsAndTrackingDto>(db);
-                var dto = new TestWithErrorsAndTrackingDto();
-                dto.SupportedFunctionsToUse = ServiceFunctions.None;
+                var service = new CreateService<Tag, SimpleTagDto>(db);
+                var dto = new SimpleTagDto();
+                dto.SetSupportedFunctions( ServiceFunctions.None);
 
                 //ATTEMPT
                 var status = service.Create(dto);
@@ -59,15 +58,15 @@ namespace Tests.UnitTests.Group03ServiceFlow
             }
         }
 
-        [TestCase(TestErrorsFlags.NoError, true, "CopyDtoToData")]
-        [TestCase(TestErrorsFlags.FailOnCopyDtoToData, false, "CopyDtoToData,SetupSecondaryData")]  
-        public void Check02CreateFlow(TestErrorsFlags errorFlag, bool isValid, string expectedFunctionsCalled)
+        [TestCase(InstrumentedOpFlags.NormalOperation, true, "CopyDtoToData")]
+        [TestCase(InstrumentedOpFlags.FailOnCopyDtoToData, false, "CopyDtoToData,SetupSecondaryData")]  
+        public void Check02CreateFlow(InstrumentedOpFlags errorFlag, bool isValid, string expectedFunctionsCalled)
         {
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
-                var service = new CreateService<Tag, TestWithErrorsAndTrackingDto>(db);
-                var dto = new TestWithErrorsAndTrackingDto(errorFlag)
+                var service = new CreateService<Tag, SimpleTagDto>(db);
+                var dto = new SimpleTagDto(errorFlag)
                 {
                     Name = "Test Name",
                     Slug = Guid.NewGuid().ToString("N")

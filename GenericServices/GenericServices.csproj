@@ -52,9 +52,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Concrete\InstrumentedLog.cs" />
     <Compile Include="Concrete\TaskService.cs" />
     <Compile Include="Concrete\CreateService.cs" />
     <Compile Include="Concrete\ITaskService.cs" />
+    <Compile Include="Concrete\InstrumentedEfGenericDto.cs" />
     <Compile Include="ICheckIfWarnings.cs" />
     <Compile Include="IUpdateSetupService.cs" />
     <Compile Include="Concrete\UpdateSetupService.cs" />
@@ -83,6 +85,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

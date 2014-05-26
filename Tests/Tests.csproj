@@ -66,9 +66,8 @@
     <Compile Include="DataClasses\DataLayerInitialise.cs" />
     <Compile Include="DataClasses\SampleWebAppDb.cs" />
     <Compile Include="DTOs\Concrete\DetailPostDto.cs" />
-    <Compile Include="Tasks\TestTaskData.cs" />
+    <Compile Include="DTOs\Concrete\SimpleTagDto.cs" />
     <Compile Include="Tasks\TestTaskTask.cs" />
-    <Compile Include="TestOnlyDTOs\TestWithErrorsAndTrackingDto.cs" />
     <Compile Include="DTOs\IDetailPostDto.cs" />
     <Compile Include="DTOs\ISimpleBlogWithPostsDto.cs" />
     <Compile Include="DTOs\ISimplePostDto.cs" />

@@ -6,7 +6,6 @@ using Tests.DataClasses;
 using Tests.DataClasses.Concrete;
 using Tests.DTOs.Concrete;
 using Tests.Helpers;
-using Tests.TestOnlyDTOs;
 
 namespace Tests.UnitTests.Group03ServiceFlow
 {
@@ -29,7 +28,7 @@ namespace Tests.UnitTests.Group03ServiceFlow
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
-                var service = new UpdateSetupService<Tag, TestWithErrorsAndTrackingDto>(db);
+                var service = new UpdateSetupService<Tag, SimpleTagDto>(db);
                 var firstTag = db.Tags.First();
 
                 //ATTEMPT
@@ -46,9 +45,9 @@ namespace Tests.UnitTests.Group03ServiceFlow
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
-                var service = new UpdateService<Tag, TestWithErrorsAndTrackingDto>(db);
-                var dto = new TestWithErrorsAndTrackingDto();
-                dto.SupportedFunctionsToUse = ServiceFunctions.None;
+                var service = new UpdateService<Tag, SimpleTagDto>(db);
+                var dto = new SimpleTagDto();
+                dto.SetSupportedFunctions(ServiceFunctions.None);
 
                 //ATTEMPT
                 var status = service.Update(dto);
@@ -61,15 +60,15 @@ namespace Tests.UnitTests.Group03ServiceFlow
             }
         }
 
-        [TestCase(TestErrorsFlags.NoError, true, "FindItemTracked,CopyDtoToData")]
-        [TestCase(TestErrorsFlags.FailOnCopyDtoToData, false, "FindItemTracked,CopyDtoToData,SetupSecondaryData")]
-        public void Check02UpdateFlow(TestErrorsFlags errorFlag, bool isValid, string expectedFunctionsCalled)
+        [TestCase(InstrumentedOpFlags.NormalOperation, true, "FindItemTracked,CopyDtoToData")]
+        [TestCase(InstrumentedOpFlags.FailOnCopyDtoToData, false, "FindItemTracked,CopyDtoToData,SetupSecondaryData")]
+        public void Check02UpdateFlow(InstrumentedOpFlags errorFlag, bool isValid, string expectedFunctionsCalled)
         {
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
-                var service = new UpdateService<Tag, TestWithErrorsAndTrackingDto>(db);
-                var dto = new TestWithErrorsAndTrackingDto(errorFlag)
+                var service = new UpdateService<Tag, SimpleTagDto>(db);
+                var dto = new SimpleTagDto(errorFlag)
                 {
                     TagId = db.Tags.First().TagId,
                     Name = "Test Name",
