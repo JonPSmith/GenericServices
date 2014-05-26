@@ -1,7 +1,9 @@
-namespace GenericServices.Concrete
+using GenericServices.Concrete;
+
+namespace GenericServices
 {
-    public interface ITaskService<TTask, in TTaskData>
-        where TTask : class, ITaskService<TTaskData> 
+    public interface IActionService<TAction, in TActionData>
+        where TAction : class, IActionDefn<TActionData> 
     {
         /// <summary>
         /// This runs a task that does not write to the database. 
@@ -9,7 +11,7 @@ namespace GenericServices.Concrete
         /// </summary>
         /// <param name="taskData"></param>
         /// <returns></returns>
-        ISuccessOrErrors RunTask(TTaskData taskData);
+        ISuccessOrErrors DoAction(TActionData taskData);
 
         /// <summary>
         /// This runs a task that writes data to the database. 
@@ -18,13 +20,13 @@ namespace GenericServices.Concrete
         /// </summary>
         /// <param name="taskData"></param>
         /// <returns></returns>
-        ISuccessOrErrors RunDbTask(TTaskData taskData);
+        ISuccessOrErrors DoDbAction(TActionData taskData);
     }
 
-    public interface ITaskService<TTask, TTaskData, TDto>
-        where TTask : class, ITaskService<TTaskData>
-        where TTaskData : class, new()
-        where TDto : EfGenericDto<TTaskData, TDto>
+    public interface IActionService<TAction, TActionData, TDto>
+        where TAction : class, IActionDefn<TActionData>
+        where TActionData : class, new()
+        where TDto : EfGenericDto<TActionData, TDto>
     {
         /// <summary>
         /// This runs a task that does not write to the database. We assume is passes data back via the dto.
@@ -33,7 +35,7 @@ namespace GenericServices.Concrete
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        ISuccessOrErrors RunTask(TDto dto);
+        ISuccessOrErrors DoAction(TDto dto);
 
         /// <summary>
         /// This converts the dto to the task data format then runs the task
@@ -41,9 +43,9 @@ namespace GenericServices.Concrete
         /// It calls SaveChangesWithValidation to commit the data as long as there are
         /// no errors and (no warnings || warnings don't matter)
         /// </summary>
-        /// <param name="dto">The dto to be converted to the TaskData format</param>
+        /// <param name="dto">The dto to be converted to the ActionData format</param>
         /// <returns></returns>
-        ISuccessOrErrors RunDbTask(TDto dto);
+        ISuccessOrErrors DoDbAction(TDto dto);
 
         /// <summary>
         /// This is available to reset any secondary data in the dto. Call this if the ModelState was invalid and

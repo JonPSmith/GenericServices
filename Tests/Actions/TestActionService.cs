@@ -1,18 +1,18 @@
 ﻿using GenericServices;
 using GenericServices.Concrete;
-using GenericServices.Tasking;
 using Tests.DataClasses.Concrete;
 
-namespace Tests.Tasks
+namespace Tests.Actions
 {
-    public interface ITestTaskTask : ITaskService<Tag>
+    public interface ITestActionService : IActionDefn<Tag>
     {
     }
 
 
-    public class TestTaskTask : TaskCommunicate, ITestTaskTask
+    public class TestActionService : ActionCommunicate, ITestActionService
     {
-        public ISuccessOrErrors Task(ITaskComms taskComms, Tag taskData)
+
+        public ISuccessOrErrors DoAction(IActionComms actionComms, Tag actionData)
         {
             var status = new SuccessOrErrors();
 
@@ -21,11 +21,11 @@ namespace Tests.Tasks
             //1 means success, but with warning
             //2 and above mean fail
 
-            if (taskData.TagId == 1)
+            if (actionData.TagId == 1)
                 status.AddWarning("This is a warning message");
 
-            return taskData.TagId <= 1 
-                ? status.SetSuccessMessage("Successful") 
+            return actionData.TagId <= 1
+                ? status.SetSuccessMessage("Successful")
                 : status.AddSingleError("forced fail");
         }
     }

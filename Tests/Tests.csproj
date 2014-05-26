@@ -62,12 +62,13 @@
     <Compile Include="DataClasses\Concrete\Blog.cs" />
     <Compile Include="DataClasses\Concrete\Helpers\TrackUpdate.cs" />
     <Compile Include="DataClasses\Concrete\Post.cs" />
+    <Compile Include="DataClasses\Concrete\PostTagGrade.cs" />
     <Compile Include="DataClasses\Concrete\Tag.cs" />
     <Compile Include="DataClasses\DataLayerInitialise.cs" />
     <Compile Include="DataClasses\SampleWebAppDb.cs" />
     <Compile Include="DTOs\Concrete\DetailPostDto.cs" />
     <Compile Include="DTOs\Concrete\SimpleTagDto.cs" />
-    <Compile Include="Tasks\TestTaskTask.cs" />
+    <Compile Include="Actions\TestActionService.cs" />
     <Compile Include="DTOs\IDetailPostDto.cs" />
     <Compile Include="DTOs\ISimpleBlogWithPostsDto.cs" />
     <Compile Include="DTOs\ISimplePostDto.cs" />

@@ -1,20 +1,17 @@
 ﻿using System;
-using GenericServices.Tasking;
 
 namespace GenericServices.Concrete
 {
-
-
-    public class TaskService<TTask, TTaskData> : ITaskService<TTask, TTaskData> 
-         where TTask : class, ITaskService<TTaskData> 
+    public class ActionService<TAction, TActionData> : IActionService<TAction, TActionData> 
+        where TAction : class, IActionDefn<TActionData> 
     {
         private readonly IDbContextWithValidation _db;
-        private readonly TTask _taskToRun;
+        private readonly TAction _taskToRun;
 
-        public TaskService(IDbContextWithValidation db, TTask taskToRun)
+        public ActionService(IDbContextWithValidation db, TAction taskToRun)
         {
             if (taskToRun == null)
-                throw new NullReferenceException("Dependecy injection did not find the task. Check you have added ITaskService<TaskDto> to the task's interface.");
+                throw new NullReferenceException("Dependecy injection did not find the action. Check you have added IActionService<ActionDto> to the classe's interface.");
             _db = db;
             _taskToRun = taskToRun;
         }
@@ -25,9 +22,9 @@ namespace GenericServices.Concrete
         /// </summary>
         /// <param name="taskData"></param>
         /// <returns></returns>
-        public ISuccessOrErrors RunTask(TTaskData taskData)
+        public ISuccessOrErrors DoAction(TActionData taskData)
         {
-            return _taskToRun.Task(null, taskData);
+            return _taskToRun.DoAction(null, taskData);
         }
 
         /// <summary>
@@ -37,21 +34,21 @@ namespace GenericServices.Concrete
         /// </summary>
         /// <param name="taskData"></param>
         /// <returns></returns>
-        public ISuccessOrErrors RunDbTask(TTaskData taskData)
+        public ISuccessOrErrors DoDbAction(TActionData taskData)
         {
 
-            var taskStatus = _taskToRun.Task(null, taskData);
-            if (!taskStatus.IsValid) return taskStatus;             //task failed
+            var actionStatus = _taskToRun.DoAction(null, taskData);
+            if (!actionStatus.IsValid) return actionStatus;             //task failed
 
-            if (TaskServiceHelper.ShouldStopAsWarningsMatter(taskStatus.HasWarnings, taskData))
+            if (ActionServiceHelper.ShouldStopAsWarningsMatter(actionStatus.HasWarnings, taskData))
                 //There were warnings and we are asked to not write to the database
-                return taskStatus.SetSuccessMessage("{0}... but NOT written to database as warnings.",
-                    taskStatus.SuccessMessage);
+                return actionStatus.SetSuccessMessage("{0}... but NOT written to database as warnings.",
+                    actionStatus.SuccessMessage);
 
             //we now need to save the changes to the database
             var dataStatus = _db.SaveChangesWithValidation();
             return dataStatus.IsValid 
-                ? dataStatus.SetSuccessMessage("{0}... and written to database.", taskStatus.SuccessMessage)
+                ? dataStatus.SetSuccessMessage("{0}... and written to database.", actionStatus.SuccessMessage)
                 : dataStatus;
         }
 
@@ -61,19 +58,19 @@ namespace GenericServices.Concrete
 
 
 
-    public class TaskService<TTask, TTaskData, TDto> : ITaskService<TTask, TTaskData, TDto> 
-        where TTask : class, ITaskService<TTaskData> 
-        where TTaskData : class, new()
-        where TDto : EfGenericDto<TTaskData, TDto>
+    public class ActionService<TAction, TActionData, TDto> : IActionService<TAction, TActionData, TDto>
+        where TAction : class, IActionDefn<TActionData>
+        where TActionData : class, new()
+        where TDto : EfGenericDto<TActionData, TDto>
     {
 
         private readonly IDbContextWithValidation _db;
-        private readonly TTask _taskToRun;
+        private readonly TAction _taskToRun;
 
-        public TaskService(IDbContextWithValidation db, TTask taskToRun)
+        public ActionService(IDbContextWithValidation db, TAction taskToRun)
         {
             if (taskToRun == null)
-                throw new NullReferenceException("Dependecy injection did not find the task. Check you have added ITaskService<TaskDto> to the task's interface.");
+                throw new NullReferenceException("Dependecy injection did not find the action. Check you have added IActionService<ActionDto> to the classe's interface.");
             _db = db;
             _taskToRun = taskToRun;
         }
@@ -85,9 +82,9 @@ namespace GenericServices.Concrete
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        public ISuccessOrErrors RunTask(TDto dto)
+        public ISuccessOrErrors DoAction(TDto dto)
         {
-            var status = RunTask(dto, null);
+            var status = DoAction(dto, null);
             if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
                 //we reset any secondary data as we expect the view to be reshown with the errors
                 dto.SetupSecondaryData(_db, dto);
@@ -102,11 +99,11 @@ namespace GenericServices.Concrete
         /// It calls SaveChangesWithValidation to commit the data as long as there are
         /// no errors and (no warnings or warnings don't matter)
         /// </summary>
-        /// <param name="dto">The dto to be converted to the TaskData format</param>
+        /// <param name="dto">The dto to be converted to the ActionData format</param>
         /// <returns></returns>
-        public ISuccessOrErrors RunDbTask(TDto dto)
+        public ISuccessOrErrors DoDbAction(TDto dto)
         {
-            var status = RunDbTask(dto, null);
+            var status = DoDbAction(dto, null);
             if (!status.IsValid && !dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
                 //we reset any secondary data as we expect the view to be reshown with the errors
                 dto.SetupSecondaryData(_db, dto);
@@ -126,18 +123,18 @@ namespace GenericServices.Concrete
         /// <param name="dto"></param>
         /// <param name="taskComms"></param>
         /// <returns></returns>
-        private ISuccessOrErrors RunTask(TDto dto, ITaskComms taskComms)
+        private ISuccessOrErrors DoAction(TDto dto, IActionComms taskComms)
         {
             ISuccessOrErrors status = new SuccessOrErrors();
 
-            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.RunTask))
+            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoAction))
                 return status.AddSingleError("Running a task is not setup for this data.");
 
-            var taskData = new TTaskData();
-            status = dto.CopyDtoToData(_db, dto, taskData); //convert Tdto into TTaskData format
+            var taskData = new TActionData();
+            status = dto.CopyDtoToData(_db, dto, taskData); //convert Tdto into TActionData format
             if (!status.IsValid) return status;
 
-            status = _taskToRun.Task(taskComms, taskData);
+            status = _taskToRun.DoAction(taskComms, taskData);
             if (!status.IsValid) return status;
 
             var copyStatus = dto.CopyDataToDto(_db, taskData, dto); //now convert back into Dto format
@@ -145,27 +142,27 @@ namespace GenericServices.Concrete
 
             if (taskComms != null) taskComms.ReportProgress(100);
 
-            return status;      
+            return status;
         }
 
 
-        private ISuccessOrErrors RunDbTask(TDto dto, ITaskComms taskComms)
+        private ISuccessOrErrors DoDbAction(TDto dto, IActionComms taskComms)
         {
             ISuccessOrErrors status = new SuccessOrErrors();
 
-            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.RunDbTask))
+            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoDbAction))
                 return status.AddSingleError("Running a db task is not setup for this data.");
 
             _taskToRun.UpperBound = 90; //we need to write to database, so lower task % to allow for final commit
 
-            var taskData = new TTaskData();
-            status = dto.CopyDtoToData(_db, dto, taskData); //convert Tdto into TTaskData format
+            var taskData = new TActionData();
+            status = dto.CopyDtoToData(_db, dto, taskData); //convert Tdto into TActionData format
             if (!status.IsValid) return status;
 
-            status = _taskToRun.Task(taskComms, taskData);
+            status = _taskToRun.DoAction(taskComms, taskData);
             if (!status.IsValid) return status;
 
-            if (TaskServiceHelper.ShouldStopAsWarningsMatter(status.HasWarnings, dto))
+            if (ActionServiceHelper.ShouldStopAsWarningsMatter(status.HasWarnings, dto))
                 //There were warnings and we are asked to not write to the database
                 return status.SetSuccessMessage("{0}... but NOT written to database as warnings.",
                     status.SuccessMessage);
@@ -173,12 +170,12 @@ namespace GenericServices.Concrete
             //if get to here we need to write to database, so handle that with possible task comms
             var taskSuccessMessage = status.SuccessMessage;
             if (taskComms != null)
-                taskComms.ReportProgress(90, TaskMessage.InfoMessage("Writing to database..."));
+                taskComms.ReportProgress(90, ProgressMessage.InfoMessage("Writing to database..."));
             status = _db.SaveChangesWithValidation();
             if (!status.IsValid) return status;
 
             if (taskComms != null)
-                taskComms.ReportProgress(100, TaskMessage.InfoMessage("Successfully written to database."));
+                taskComms.ReportProgress(100, ProgressMessage.InfoMessage("Successfully written to database."));
             return status.SetSuccessMessage("{0}... and written to database.", taskSuccessMessage);
 
         }
@@ -200,7 +197,7 @@ namespace GenericServices.Concrete
 
     }
 
-    internal static class TaskServiceHelper
+    internal static class ActionServiceHelper
     {
 
         internal static bool ShouldStopAsWarningsMatter<T>(bool hasWarnings, T classToCheck)

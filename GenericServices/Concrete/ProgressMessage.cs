@@ -1,14 +1,13 @@
-﻿namespace GenericServices.Tasking
+﻿namespace GenericServices.Concrete
 {
+    public enum ProgressMessageTypes { Notset, Verbose, Info, Warning, Error, Critical, Cancelled, Finished, Failed }
 
-    public enum TaskMessageTypes { Notset, Verbose, Info, Warning, Error, Critical, Cancelled, Finished, Failed}
-
-    public class TaskMessage
+    public class ProgressMessage
     {
         /// <summary>
         /// The type of message, which includes the different ways it can finish
         /// </summary>
-        public TaskMessageTypes MessageType { get; private set; }
+        public ProgressMessageTypes MessageType { get; private set; }
 
         /// <summary>
         /// In string from for JSON
@@ -26,7 +25,7 @@
         /// <param name="messageType"></param>
         /// <param name="messageText">messageText can contain format parameters, e.g. {0}, which includes args</param>
         /// <param name="args">optional arguments to go with formatted string</param>
-        public TaskMessage(TaskMessageTypes messageType, string messageText, params object [] args)
+        public ProgressMessage(ProgressMessageTypes messageType, string messageText, params object [] args)
         {
             MessageType = messageType;
             MessageText = args != null ? string.Format(messageText, args) : messageText ?? string.Empty;
@@ -38,9 +37,9 @@
         /// <param name="message"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static TaskMessage InfoMessage(string message, params object[] args)
+        public static ProgressMessage InfoMessage(string message, params object[] args)
         {
-            return new TaskMessage(TaskMessageTypes.Info, message, args);
+            return new ProgressMessage(ProgressMessageTypes.Info, message, args);
         }
 
         /// <summary>
@@ -49,9 +48,9 @@
         /// <param name="message"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static TaskMessage CancelledMessage(string message, params object[] args)
+        public static ProgressMessage CancelledMessage(string message, params object[] args)
         {
-            return new TaskMessage(TaskMessageTypes.Cancelled, message, args);
+            return new ProgressMessage(ProgressMessageTypes.Cancelled, message, args);
         }
 
         /// <summary>
@@ -61,9 +60,9 @@
         /// <param name="messageText"></param>
         /// <param name="args"></param>
         /// <returns></returns>
-        public static TaskMessage FinishedMessage(bool failed, string messageText, params object[] args)
+        public static ProgressMessage FinishedMessage(bool failed, string messageText, params object[] args)
         {
-            return new TaskMessage(failed ? TaskMessageTypes.Failed : TaskMessageTypes.Finished, messageText, args);
+            return new ProgressMessage(failed ? ProgressMessageTypes.Failed : ProgressMessageTypes.Finished, messageText, args);
         }
 
         public override string ToString()

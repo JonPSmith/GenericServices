@@ -1,15 +1,15 @@
-﻿using GenericServices.Tasking;
+﻿using GenericServices.Concrete;
 
 namespace GenericServices
 {
-    public interface ITaskComms
+    public interface IActionComms
     {
         /// <summary>
         /// This sends a status update to the user from the running task
         /// </summary>
         /// <param name="percentageDone">goes from 0 to 100</param>
         /// <param name="message">message, with message type in. Can be null for no message</param>
-        void ReportProgress(int percentageDone, TaskMessage message = null);
+        void ReportProgress(int percentageDone, ProgressMessage message = null);
 
         /// <summary>
         /// This is true if the user has asked for the task to cancel

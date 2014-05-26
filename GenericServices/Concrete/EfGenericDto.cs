@@ -21,8 +21,8 @@ namespace GenericServices.Concrete
         Create = 4,
         Update = 8,
         //note: no delete as delete does not need a dto
-        RunTask = 32,
-        RunDbTask = 32,
+        DoAction = 32,
+        DoDbAction = 32,
         //DoesNotNeedSetup refers the need to call the SetupSecondaryData method
         //if this flag is NOT set then expects dto to override SetupSecondaryData method
         DoesNotNeedSetup = 128,

@@ -8,7 +8,7 @@ using AutoMapper;
 
 namespace GenericServices.Concrete
 {
-    public enum InstrumentedOpFlags { NormalOperation, FailOnCopyDataToDto, FailOnCopyDtoToData, ForceTaskFail, ForceTaskWarnWithWrite, ForceTaskWarnNoWrite }
+    public enum InstrumentedOpFlags { NormalOperation, FailOnCopyDataToDto, FailOnCopyDtoToData, ForceActionFail, ForceActionWarnWithWrite, ForceActionkWarnNoWrite }
 
     public abstract class InstrumentedEfGenericDto<TData, TDto> : EfGenericDto<TData, TDto>, ICheckIfWarnings
         where TData : class
@@ -85,7 +85,7 @@ namespace GenericServices.Concrete
         //---------------------------------------------------------------------
         //ICheckIfWarnings implementation
 
-        public bool WriteEvenIfWarning { get { return _whereToFail == InstrumentedOpFlags.ForceTaskWarnWithWrite; } }
+        public bool WriteEvenIfWarning { get { return _whereToFail == InstrumentedOpFlags.ForceActionWarnWithWrite; } }
 
         //---------------------------------------------------------------------
         //overridden methods

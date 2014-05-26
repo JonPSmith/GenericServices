@@ -7,10 +7,9 @@ namespace Tests.DTOs.Concrete
     class SimpleTagDto : InstrumentedEfGenericDto<Tag, SimpleTagDto>
     {
 
-
         private ServiceFunctions _supportedFunctionsToUse = ServiceFunctions.AllCrud |
-                                                    ServiceFunctions.RunTask |
-                                                    ServiceFunctions.RunDbTask;
+                                                    ServiceFunctions.DoAction |
+                                                    ServiceFunctions.DoDbAction;
 
         public SimpleTagDto()
         {

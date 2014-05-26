@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace GenericServices.Tasking
+namespace GenericServices.Concrete
 {
-    public abstract class TaskCommunicate
+    public abstract class ActionCommunicate
     {
 
         //private static log4net.ILog Logger;
@@ -21,7 +21,7 @@ namespace GenericServices.Tasking
         /// </summary>
         public int UpperBound { get; set; }
 
-        protected TaskCommunicate()
+        protected ActionCommunicate()
         {
             LowerBound = 0;
             UpperBound = 100;
@@ -31,24 +31,24 @@ namespace GenericServices.Tasking
         /// <summary>
         /// This reports progress with optional message. Also returns state of cancelPending flag
         /// </summary>
-        /// <param name="taskComms">Task communication channel, can be null</param>
+        /// <param name="actionComms">action communication channel, can be null</param>
         /// <param name="percentageDone">must be between 0 and 100</param>
         /// <param name="message">optional message to show user</param>
         /// <returns>Returns true if user has asked for cancellation</returns>
-        protected bool ReportProgressAndCheckCancelPending(ITaskComms taskComms, int percentageDone, TaskMessage message = null)
+        protected bool ReportProgressAndCheckCancelPending(IActionComms actionComms, int percentageDone, ProgressMessage message = null)
         {
-            if (taskComms != null)
+            if (actionComms != null)
             {
                 int percentageToReport = (int) (LowerBound + ((Math.Min(percentageDone,100)/100.0))*(UpperBound - LowerBound));
                 if (percentageToReport != _lastReportedProgressPercentage || message != null)
                     //we only report progess if the progress percent has changed or there is a message to send
-                    taskComms.ReportProgress(percentageToReport, message);
+                    actionComms.ReportProgress(percentageToReport, message);
 
                 if (message != null)
                     SendtoLogger(message);
 
                 _lastReportedProgressPercentage = percentageToReport;
-                return taskComms.CancellationPending;
+                return actionComms.CancellationPending;
             }
 
             return false;
@@ -58,22 +58,22 @@ namespace GenericServices.Tasking
         /// <summary>
         /// This reports progress with optional message. Also returns state of cancelPending flag
         /// </summary>
-        /// <param name="taskComms">Task communication channel, can be null</param>
+        /// <param name="actionComms">Action communication channel, can be null</param>
         /// <param name="percentageDone">must be between 0 and 100</param>
         /// <param name="message">optional message to show user</param>
         /// <returns>Returns true if user has asked for cancellation</returns>
-        protected bool ReportProgressAndCheckCancelPending(ITaskComms taskComms, double percentageDone,
-                                                           TaskMessage message = null)
+        protected bool ReportProgressAndCheckCancelPending(IActionComms actionComms, double percentageDone,
+                                                           ProgressMessage message = null)
         {
-            return ReportProgressAndCheckCancelPending(taskComms, (int) Math.Max(percentageDone,0), message);
+            return ReportProgressAndCheckCancelPending(actionComms, (int) Math.Max(percentageDone,0), message);
         }
 
         /// <summary>
         /// Returns true if user has asked for cancellation
         /// </summary>
-        /// <param name="taskComms">Task communication channel, can be null</param>
+        /// <param name="taskComms">Action communication channel, can be null</param>
         /// <returns>Returns true if user has asked for cancellation</returns>
-        protected bool CancelPending(ITaskComms taskComms)
+        protected bool CancelPending(IActionComms taskComms)
         {
             return taskComms != null && taskComms.CancellationPending;
         }
@@ -81,35 +81,35 @@ namespace GenericServices.Tasking
         //---------------------------------------------------
         //private helpers
 
-        private static void SendtoLogger(TaskMessage message)
+        private static void SendtoLogger(ProgressMessage message)
         {
 
             switch (message.MessageType)
             {
-                //case TaskMessageTypes.Notset:
+                //case ProgressMessageTypes.Notset:
                 //    break;
-                //case TaskMessageTypes.Verbose:
+                //case ProgressMessageTypes.Verbose:
                 //    Logger.Debug(message.MessageText);
                 //    break;
-                //case TaskMessageTypes.Info:
+                //case ProgressMessageTypes.Info:
                 //    Logger.Info(message.MessageText);
                 //    break;
-                //case TaskMessageTypes.Warning:
+                //case ProgressMessageTypes.Warning:
                 //    Logger.Warn(message.MessageText);
                 //    break;
-                //case TaskMessageTypes.Error:
+                //case ProgressMessageTypes.Error:
                 //    Logger.Error(message.MessageText);
                 //    break;
-                //case TaskMessageTypes.Critical:
+                //case ProgressMessageTypes.Critical:
                 //    Logger.Fatal(message.MessageText);
                 //    break;
-                //case TaskMessageTypes.Finished:
+                //case ProgressMessageTypes.Finished:
                 //    Logger.InfoFormat("Finished: {0}", message.MessageText);
                 //    break;
-                //case TaskMessageTypes.Cancelled:
+                //case ProgressMessageTypes.Cancelled:
                 //    Logger.InfoFormat("Cancelled: {0}", message.MessageText);
                 //    break;
-                //case TaskMessageTypes.Failed:
+                //case ProgressMessageTypes.Failed:
                 //    Logger.InfoFormat("FAILED: {0}", message.MessageText);
                 //    break;
                 default:
