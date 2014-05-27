@@ -1,15 +1,16 @@
 ﻿using GenericServices;
+using GenericServices.Actions;
 using GenericServices.Concrete;
 using Tests.DataClasses.Concrete;
 
 namespace Tests.Actions
 {
-    public interface ITestActionService : IActionDefn<Tag>
+    public interface IEmptyTestAction : IActionDefn<Tag>
     {
     }
 
 
-    public class TestActionService : ActionCommunicate, ITestActionService
+    public class EmptyTestAction : ActionBase, IEmptyTestAction
     {
 
         public ISuccessOrErrors DoAction(IActionComms actionComms, Tag actionData)

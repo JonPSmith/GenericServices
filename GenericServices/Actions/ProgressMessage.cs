@@ -1,4 +1,4 @@
-﻿namespace GenericServices.Concrete
+﻿namespace GenericServices.Actions
 {
     public enum ProgressMessageTypes { Notset, Verbose, Info, Warning, Error, Critical, Cancelled, Finished, Failed }
 

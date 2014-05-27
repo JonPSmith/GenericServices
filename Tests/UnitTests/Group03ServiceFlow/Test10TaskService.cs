@@ -29,7 +29,7 @@ namespace Tests.UnitTests.Group03ServiceFlow
 
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
-            var taskService = new ActionService<ITestActionService, Tag, SimpleTagDto>(dummyDb, new TestActionService());
+            var taskService = new ActionService<IEmptyTestAction, Tag, SimpleTagDto>(dummyDb, new EmptyTestAction());
             var dto = new SimpleTagDto();
             dto.SetSupportedFunctions(ServiceFunctions.None);
 
@@ -53,7 +53,7 @@ namespace Tests.UnitTests.Group03ServiceFlow
         {
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
-            var service = new ActionService<ITestActionService, Tag, SimpleTagDto>(dummyDb, new TestActionService());
+            var service = new ActionService<IEmptyTestAction, Tag, SimpleTagDto>(dummyDb, new EmptyTestAction());
             var dto = new SimpleTagDto(errorFlag);
             if (errorFlag == InstrumentedOpFlags.ForceActionFail)
                 dto.TagId = 2;
@@ -77,7 +77,7 @@ namespace Tests.UnitTests.Group03ServiceFlow
         {
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
-            var service = new ActionService<ITestActionService, Tag, SimpleTagDto>(dummyDb, new TestActionService());
+            var service = new ActionService<IEmptyTestAction, Tag, SimpleTagDto>(dummyDb, new EmptyTestAction());
             var dto = new SimpleTagDto(errorFlag);
             if (errorFlag == InstrumentedOpFlags.ForceActionFail)
                 dto.TagId = 2;

@@ -59,6 +59,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\MockActionComms.cs" />
+    <Compile Include="Actions\CommsTestAction.cs" />
+    <Compile Include="Actions\CommsTestActionDto.cs" />
     <Compile Include="DataClasses\Concrete\Blog.cs" />
     <Compile Include="DataClasses\Concrete\Helpers\TrackUpdate.cs" />
     <Compile Include="DataClasses\Concrete\Post.cs" />
@@ -71,7 +74,7 @@
     <Compile Include="DTOs\ISimplePostTagGradeDto.cs" />
     <Compile Include="DTOs\Concrete\SimplePostTagGradeDto.cs" />
     <Compile Include="DTOs\Concrete\SimpleTagDto.cs" />
-    <Compile Include="Actions\TestActionService.cs" />
+    <Compile Include="Actions\EmptyTestAction.cs" />
     <Compile Include="DTOs\IDetailPostDto.cs" />
     <Compile Include="DTOs\ISimpleBlogWithPostsDto.cs" />
     <Compile Include="DTOs\ISimplePostDto.cs" />
@@ -104,7 +107,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="ClassDiagram1.cd" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

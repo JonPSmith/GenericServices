@@ -1,13 +1,14 @@
 ﻿using System;
+using GenericServices.Concrete;
 
-namespace GenericServices.Concrete
+namespace GenericServices.Actions
 {
-    public abstract class ActionCommunicate
+    public abstract class ActionBase
     {
 
         //private static log4net.ILog Logger;
 
-        private int _lastReportedProgressPercentage = -1;      
+        private int _lastReportedProgressPercentage = -1;
         
         /// <summary>
         /// This controls the lower value sent back to reportProgress
@@ -21,7 +22,7 @@ namespace GenericServices.Concrete
         /// </summary>
         public int UpperBound { get; set; }
 
-        protected ActionCommunicate()
+        protected ActionBase()
         {
             LowerBound = 0;
             UpperBound = 100;
@@ -29,53 +30,60 @@ namespace GenericServices.Concrete
         }
 
         /// <summary>
-        /// This reports progress with optional message. Also returns state of cancelPending flag
+        /// This reports progress with optional message.
+        /// After sending the message it checks for cancellation and throws OperationCanceledException if pending
         /// </summary>
-        /// <param name="actionComms">action communication channel, can be null</param>
+        /// <param name="actionComms">The comms channel for handling progress and cancellation</param>
         /// <param name="percentageDone">must be between 0 and 100</param>
         /// <param name="message">optional message to show user</param>
-        /// <returns>Returns true if user has asked for cancellation</returns>
-        protected bool ReportProgressAndCheckCancelPending(IActionComms actionComms, int percentageDone, ProgressMessage message = null)
+        protected void ReportProgressAndThrowExceptionIfCancelPending(IActionComms actionComms, int percentageDone, ProgressMessage message = null)
         {
-            if (actionComms != null)
-            {
-                int percentageToReport = (int) (LowerBound + ((Math.Min(percentageDone,100)/100.0))*(UpperBound - LowerBound));
-                if (percentageToReport != _lastReportedProgressPercentage || message != null)
-                    //we only report progess if the progress percent has changed or there is a message to send
-                    actionComms.ReportProgress(percentageToReport, message);
+            if (actionComms == null) return;
 
-                if (message != null)
-                    SendtoLogger(message);
-
-                _lastReportedProgressPercentage = percentageToReport;
-                return actionComms.CancellationPending;
-            }
-
-            return false;
+            ReportProgress(actionComms, percentageDone, message);
+            actionComms.ThrowExceptionIfCancelPending();
         }
 
-
         /// <summary>
-        /// This reports progress with optional message. Also returns state of cancelPending flag
+        /// This reports progress with optional message.
         /// </summary>
-        /// <param name="actionComms">Action communication channel, can be null</param>
+        /// <param name="actionComms">The comms channel for handling progress and cancellation</param>
         /// <param name="percentageDone">must be between 0 and 100</param>
         /// <param name="message">optional message to show user</param>
-        /// <returns>Returns true if user has asked for cancellation</returns>
-        protected bool ReportProgressAndCheckCancelPending(IActionComms actionComms, double percentageDone,
-                                                           ProgressMessage message = null)
+        protected void ReportProgress(IActionComms actionComms, int percentageDone, ProgressMessage message = null)
         {
-            return ReportProgressAndCheckCancelPending(actionComms, (int) Math.Max(percentageDone,0), message);
+            if (actionComms == null) return;
+
+            var percentageToReport = (int)(LowerBound + ((Math.Min(percentageDone, 100) / 100.0)) * (UpperBound - LowerBound));
+            if (percentageToReport != _lastReportedProgressPercentage || message != null)
+                //we only report progess if the progress percent has changed or there is a message to send
+                actionComms.ReportProgress(percentageToReport, message);
+
+            if (message != null)
+                SendtoLogger(message);
+
+            _lastReportedProgressPercentage = percentageToReport;
+        }
+
+        /// <summary>
+        /// This will throw an OperationCanceledException if the user has asked for the task to be cancelled.
+        /// This is the recommended way of checking for cancellation
+        /// <param name="actionComms">The comms channel for handling progress and cancellation</param>
+        /// </summary>
+        protected void ThrowExceptionIfCancelPending(IActionComms actionComms)
+        {
+            if (actionComms != null)
+                actionComms.ThrowExceptionIfCancelPending();
         }
 
         /// <summary>
         /// Returns true if user has asked for cancellation
         /// </summary>
-        /// <param name="taskComms">Action communication channel, can be null</param>
+        /// <param name="actionComms">The comms channel for handling progress and cancellation</param>
         /// <returns>Returns true if user has asked for cancellation</returns>
-        protected bool CancelPending(IActionComms taskComms)
+        protected bool CancelPending(IActionComms actionComms)
         {
-            return taskComms != null && taskComms.CancellationPending;
+            return actionComms != null && actionComms.CancellationPending;
         }
 
         //---------------------------------------------------

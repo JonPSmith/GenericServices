@@ -19,12 +19,12 @@ namespace Tests.UnitTests.Group04Services
             //SETUP    
 
             //ATTEMPT
-            IActionService<ITestActionService, Tag> taskService = new ActionService<ITestActionService, Tag>(null, new TestActionService());
-            IActionService<ITestActionService, Tag, SimpleTagDto> taskDtoService = 
-                new ActionService<ITestActionService, Tag, SimpleTagDto>(null, new TestActionService());
+            IActionService<IEmptyTestAction, Tag> taskService = new ActionService<IEmptyTestAction, Tag>(null, new EmptyTestAction());
+            IActionService<IEmptyTestAction, Tag, SimpleTagDto> taskDtoService = 
+                new ActionService<IEmptyTestAction, Tag, SimpleTagDto>(null, new EmptyTestAction());
 
             //VERIFY
-            (taskService is ActionService<ITestActionService, Tag>).ShouldEqual(true);
+            (taskService is ActionService<IEmptyTestAction, Tag>).ShouldEqual(true);
         }
 
         //--------------------------------------------------------------
@@ -35,7 +35,7 @@ namespace Tests.UnitTests.Group04Services
         {
 
             //SETUP    
-            var taskService = new ActionService<ITestActionService, Tag>(null, new TestActionService());
+            var taskService = new ActionService<IEmptyTestAction, Tag>(null, new EmptyTestAction());
 
             //ATTEMPT
             var tag = new Tag { TagId = 0 };      //this controls the task failing. 0 means success
@@ -52,7 +52,7 @@ namespace Tests.UnitTests.Group04Services
 
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
-            var taskService = new ActionService<ITestActionService, Tag>(dummyDb, new TestActionService());
+            var taskService = new ActionService<IEmptyTestAction, Tag>(dummyDb, new EmptyTestAction());
 
             //ATTEMPT
             var tag = new Tag { TagId = 2 };      //this controls the task failing. 0 means success
@@ -70,7 +70,7 @@ namespace Tests.UnitTests.Group04Services
 
             //SETUP    
             var dummyDb = new DummyIDbContextWithValidation();
-            var taskService = new ActionService<ITestActionService, Tag>(dummyDb, new TestActionService());
+            var taskService = new ActionService<IEmptyTestAction, Tag>(dummyDb, new EmptyTestAction());
 
             //ATTEMPT
             var tag = new Tag { TagId = 0 };      //this controls the task failing. 0 means success
@@ -88,7 +88,7 @@ namespace Tests.UnitTests.Group04Services
 
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
-            var taskService = new ActionService<ITestActionService, Tag>(dummyDb, new TestActionService());
+            var taskService = new ActionService<IEmptyTestAction, Tag>(dummyDb, new EmptyTestAction());
 
             //ATTEMPT
             var tag = new Tag { TagId = 2 };      //this controls the task failing. 0 means success
@@ -123,7 +123,7 @@ namespace Tests.UnitTests.Group04Services
         {
 
             //SETUP    
-            var taskService = new ActionService<ITestActionService, Tag, SimpleTagDto>(null, new TestActionService());
+            var taskService = new ActionService<IEmptyTestAction, Tag, SimpleTagDto>(null, new EmptyTestAction());
 
             //ATTEMPT
             var dto = new SimpleTagDto();
@@ -141,7 +141,7 @@ namespace Tests.UnitTests.Group04Services
 
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
-            var taskService = new ActionService<ITestActionService, Tag, SimpleTagDto>(dummyDb, new TestActionService());
+            var taskService = new ActionService<IEmptyTestAction, Tag, SimpleTagDto>(dummyDb, new EmptyTestAction());
 
             //ATTEMPT
             var dto = new SimpleTagDto();
@@ -160,7 +160,7 @@ namespace Tests.UnitTests.Group04Services
 
             //SETUP    
             var dummyDb = new DummyIDbContextWithValidation();
-            var taskService = new ActionService<ITestActionService, Tag, SimpleTagDto>(dummyDb, new TestActionService());
+            var taskService = new ActionService<IEmptyTestAction, Tag, SimpleTagDto>(dummyDb, new EmptyTestAction());
 
             //ATTEMPT
             var dto = new SimpleTagDto();
@@ -179,7 +179,7 @@ namespace Tests.UnitTests.Group04Services
 
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
-            var taskService = new ActionService<ITestActionService, Tag, SimpleTagDto>(dummyDb, new TestActionService());
+            var taskService = new ActionService<IEmptyTestAction, Tag, SimpleTagDto>(dummyDb, new EmptyTestAction());
 
             //ATTEMPT
             var dto = new SimpleTagDto();
