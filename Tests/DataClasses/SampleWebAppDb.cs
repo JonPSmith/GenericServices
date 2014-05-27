@@ -4,7 +4,7 @@ using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
 using GenericServices;
-using GenericServices.Concrete;
+using GenericServices.Services;
 using Tests.DataClasses.Concrete;
 using Tests.DataClasses.Concrete.Helpers;
 

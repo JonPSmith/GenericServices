@@ -1,4 +1,4 @@
-﻿namespace GenericServices.Concrete
+﻿namespace GenericServices.Services
 {
     public class DeleteService<TData> : IDeleteService<TData> where TData : class, new()                                            
     {

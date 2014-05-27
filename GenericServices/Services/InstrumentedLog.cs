@@ -1,4 +1,4 @@
-﻿namespace GenericServices.Concrete
+﻿namespace GenericServices.Services
 {
     public enum CallTypes { Point, Start, End }
 

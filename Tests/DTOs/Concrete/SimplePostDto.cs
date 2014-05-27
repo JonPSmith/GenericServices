@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using GenericServices;
-using GenericServices.Concrete;
+using GenericServices.Services;
 using Tests.DataClasses.Concrete;
 
 [assembly: InternalsVisibleTo("Tests")]

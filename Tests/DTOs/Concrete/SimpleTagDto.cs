@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using GenericServices.Concrete;
+using GenericServices.Services;
 using Tests.DataClasses.Concrete;
 
 namespace Tests.DTOs.Concrete

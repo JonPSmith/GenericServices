@@ -1,5 +1,5 @@
 ﻿using GenericServices.Actions;
-using GenericServices.Concrete;
+using GenericServices.Services;
 
 namespace GenericServices
 {

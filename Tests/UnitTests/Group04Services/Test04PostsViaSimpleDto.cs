@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
 using GenericServices;
-using GenericServices.Concrete;
+using GenericServices.Services;
 using NUnit.Framework;
 using Tests.DataClasses;
 using Tests.DataClasses.Concrete;

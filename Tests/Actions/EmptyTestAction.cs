@@ -1,6 +1,6 @@
 ﻿using GenericServices;
 using GenericServices.Actions;
-using GenericServices.Concrete;
+using GenericServices.Services;
 using Tests.DataClasses.Concrete;
 
 namespace Tests.Actions

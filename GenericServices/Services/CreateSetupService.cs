@@ -1,4 +1,4 @@
-﻿namespace GenericServices.Concrete
+﻿namespace GenericServices.Services
 {
     public class CreateSetupService<TData, TDto> : ICreateSetupService<TData, TDto> where TData : class
         where TDto : EfGenericDto<TData, TDto>, new()

@@ -6,7 +6,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using GenericServices;
-using GenericServices.Concrete;
+using GenericServices.Services;
 using Tests.DataClasses;
 using Tests.DataClasses.Concrete;
 using Tests.UiHelpers;

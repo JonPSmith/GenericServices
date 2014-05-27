@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using AutoMapper;
 
-namespace GenericServices.Concrete
+namespace GenericServices.Services
 {
     public enum InstrumentedOpFlags { NormalOperation, FailOnCopyDataToDto, FailOnCopyDtoToData, ForceActionFail, ForceActionWarnWithWrite, ForceActionkWarnNoWrite }
 

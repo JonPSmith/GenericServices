@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace GenericServices.Concrete
+namespace GenericServices.Services
 {
     public class UpdateSetupService<TData, TDto> : IUpdateSetupService<TData, TDto> where TData : class
         where TDto : EfGenericDto<TData, TDto>, new()

@@ -1,54 +1,62 @@
-﻿namespace GenericServices.Concrete
+﻿using System;
+using System.Data.Entity;
+
+namespace GenericServices.Services
 {
-    public class CreateService<TData> : ICreateService<TData> where TData : class
+    public class UpdateService<TData> : IUpdateService<TData> where TData : class
     {
         private readonly IDbContextWithValidation _db;
 
-        public CreateService(IDbContextWithValidation db)
+        public UpdateService(IDbContextWithValidation db)
         {
             _db = db;
         }
 
-        public ISuccessOrErrors Create(TData newItem)
+        public ISuccessOrErrors Update(TData itemToUpdate)
         {
-            _db.Set<TData>().Add(newItem);
+            if (itemToUpdate == null)
+                throw new ArgumentNullException("itemToUpdate", "The item provided was null.");
+
+            //Set the entry as modified
+            _db.Entry(itemToUpdate).State = EntityState.Modified;
+
             var result = _db.SaveChangesWithValidation();
             if (result.IsValid)
-                result.SetSuccessMessage("Successfully created {0}.", typeof(TData).Name);
+                result.SetSuccessMessage("Successfully updated {0}.", typeof(TData).Name);
 
             return result;
         }
-
     }
 
-    //---------------------------------------------------------------------------
+    //------------------------------------------------------------------------
 
-    public class CreateService<TData, TDto> : ICreateService<TData, TDto>
-        where TData : class, new()
+    public class UpdateService<TData, TDto> : IUpdateService<TData, TDto>
+        where TData : class
         where TDto : EfGenericDto<TData, TDto>
     {
         private readonly IDbContextWithValidation _db;
 
-
-        public CreateService(IDbContextWithValidation db)
+        public UpdateService(IDbContextWithValidation db)
         {
             _db = db;
         }
 
-        public ISuccessOrErrors Create(TDto dto)
+        public ISuccessOrErrors Update(TDto dto)
         {
             ISuccessOrErrors result = new SuccessOrErrors();
-            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.Create))
-                return result.AddSingleError("Create of a new {0} is not supported in this mode.", dto.DataItemName);
-            
-            var tData = new TData();
-            result = dto.CopyDtoToData(_db, dto, tData);    //update those properties we want to change
+            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.Update))
+                return result.AddSingleError("Delete of a {0} is not supported in this mode.", dto.DataItemName);
+
+            var itemToUpdate = dto.FindItemTracked(_db);
+            if (itemToUpdate == null)
+                return result.AddSingleError("Could not find the {0} you requested.", dto.DataItemName);
+
+            result = dto.CopyDtoToData(_db, dto, itemToUpdate); //update those properties we want to change
             if (result.IsValid)
             {
-                _db.Set<TData>().Add(tData);
                 result = _db.SaveChangesWithValidation();
                 if (result.IsValid)
-                    return result.SetSuccessMessage("Successfully created {0}.", dto.DataItemName);
+                    return result.SetSuccessMessage("Successfully updated {0}.", dto.DataItemName);
             }
 
             //otherwise there are errors
@@ -56,7 +64,6 @@
                 //we reset any secondary data as we expect the view to be reshown with the errors
                 dto.SetupSecondaryData(_db, dto);
             return result;
-
         }
 
         /// <summary>
@@ -73,6 +80,6 @@
 
             return dto;
         }
-
     }
+
 }

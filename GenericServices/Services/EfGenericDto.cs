@@ -10,7 +10,7 @@ using AutoMapper.QueryableExtensions;
 
 [assembly: InternalsVisibleTo("Tests")]
 
-namespace GenericServices.Concrete
+namespace GenericServices.Services
 {
     [Flags]
     public enum ServiceFunctions

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace GenericServices.Concrete
+namespace GenericServices.Services
 {
     public class ListService<TData> : IListService<TData> where TData : class
     {

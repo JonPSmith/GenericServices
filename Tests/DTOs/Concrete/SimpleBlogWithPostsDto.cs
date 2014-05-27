@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
 using GenericServices;
-using GenericServices.Concrete;
+using GenericServices.Services;
 using Tests.DataClasses.Concrete;
 
 namespace Tests.DTOs.Concrete

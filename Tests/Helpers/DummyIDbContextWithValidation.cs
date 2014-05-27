@@ -4,7 +4,7 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using GenericServices;
-using GenericServices.Concrete;
+using GenericServices.Services;
 
 namespace Tests.Helpers
 {

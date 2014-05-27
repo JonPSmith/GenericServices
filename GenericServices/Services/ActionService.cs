@@ -1,7 +1,8 @@
 ﻿using System;
 using GenericServices.Actions;
+using GenericServices.Services;
 
-namespace GenericServices.Concrete
+namespace GenericServices.Services
 {
     public class ActionService<TAction, TActionData> : IActionService<TAction, TActionData> 
         where TAction : class, IActionDefn<TActionData> 
