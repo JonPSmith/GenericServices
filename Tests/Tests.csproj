@@ -59,9 +59,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\CommsTestActionDto.cs" />
     <Compile Include="Actions\MockActionComms.cs" />
     <Compile Include="Actions\CommsTestAction.cs" />
-    <Compile Include="Actions\CommsTestActionDto.cs" />
+    <Compile Include="Actions\CommsTestActionData.cs" />
     <Compile Include="DataClasses\Concrete\Blog.cs" />
     <Compile Include="DataClasses\Concrete\Helpers\TrackUpdate.cs" />
     <Compile Include="DataClasses\Concrete\Post.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="UnitTests\Group03ServiceFlow\Test03DetailService.cs" />
     <Compile Include="UnitTests\Group03ServiceFlow\Test02UpdateService.cs" />
     <Compile Include="UnitTests\Group03ServiceFlow\Test01CreateService.cs" />
+    <Compile Include="UnitTests\Group06Actions\Test03ActionComms.cs" />
     <Compile Include="UnitTests\Group08Services\Test01AutoMapper.cs" />
     <Compile Include="UnitTests\Group08Services\Test02aPostTagGradeDirect.cs" />
     <Compile Include="UnitTests\Group08Services\Test02PostsDirect.cs" />

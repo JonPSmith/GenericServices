@@ -26,7 +26,7 @@ namespace GenericServices.Services
         /// <returns></returns>
         public ISuccessOrErrors DoAction(TActionData taskData)
         {
-            return _taskToRun.DoAction(null, taskData);
+            return DoAction(null, taskData);
         }
 
         /// <summary>
@@ -38,8 +38,52 @@ namespace GenericServices.Services
         /// <returns></returns>
         public ISuccessOrErrors DoDbAction(TActionData taskData)
         {
+            return DoDbAction(null, taskData);
+        }
 
-            var actionStatus = _taskToRun.DoAction(null, taskData);
+        /// <summary>
+        /// This runs a task that does not write to the database. 
+        /// We assume it passes information back via the taskData
+        /// </summary>
+        /// <param name="taskComms">The taskcomms to allow progress reports and cancellation</param>
+        /// <param name="taskData"></param>
+        /// <returns></returns>
+        public ISuccessOrErrors DoAction(IActionComms taskComms, TActionData taskData)
+        {
+
+            try
+            {
+                return _taskToRun.DoAction(taskComms, taskData);
+            }
+            finally
+            {
+                var disposable = _taskToRun as IDisposable;
+                if (disposable != null)
+                    disposable.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// This runs a task that writes data to the database. 
+        /// It calls SaveChangesWithValidation to commit the data as long as there are
+        /// no errors and (no warnings or warnings don't matter)
+        /// </summary>
+        /// <param name="taskComms">The taskcomms to allow progress reports and cancellation</param>
+        /// <param name="taskData"></param>
+        /// <returns></returns>
+        public ISuccessOrErrors DoDbAction(IActionComms taskComms, TActionData taskData)
+        {
+            ISuccessOrErrors actionStatus;
+            try
+            {
+                actionStatus = _taskToRun.DoAction(null, taskData);
+            }
+            finally
+            {
+                var disposable = _taskToRun as IDisposable;
+                if (disposable != null)
+                    disposable.Dispose();
+            }
             if (!actionStatus.IsValid) return actionStatus;             //task failed
 
             if (ActionServiceHelper.ShouldStopAsWarningsMatter(actionStatus.HasWarnings, taskData))
@@ -53,6 +97,7 @@ namespace GenericServices.Services
                 ? dataStatus.SetSuccessMessage("{0}... and written to database.", actionStatus.SuccessMessage)
                 : dataStatus;
         }
+
 
     }
 
@@ -86,12 +131,12 @@ namespace GenericServices.Services
         /// <returns></returns>
         public ISuccessOrErrors DoAction(TDto dto)
         {
-            var status = DoAction(dto, null);
+            var actionStatus = DoAction(null, dto);
             if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
                 //we reset any secondary data as we expect the view to be reshown with the errors
                 dto.SetupSecondaryData(_db, dto);
 
-            return status;
+            return actionStatus;
         }
 
 
@@ -105,27 +150,25 @@ namespace GenericServices.Services
         /// <returns></returns>
         public ISuccessOrErrors DoDbAction(TDto dto)
         {
-            var status = DoDbAction(dto, null);
-            if (!status.IsValid && !dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
+            var actionStatus = DoDbAction(null, dto);
+            if (!actionStatus.IsValid && !dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
                 //we reset any secondary data as we expect the view to be reshown with the errors
                 dto.SetupSecondaryData(_db, dto);
 
-            return status;
+            return actionStatus;
         }
 
-
         //--------------------------------------------------------------------------------
-        //now the protected versions
+        //now the versions with comms
 
         /// <summary>
         /// This runs a task that does not write to the database. We assume is passes data back via the dto.
         /// It first converts the dto to the taskdata format, runs the task and then converts
         /// the taskdata back to the dto format
         /// </summary>
-        /// <param name="dto"></param>
-        /// <param name="taskComms"></param>
+        /// <param name="taskComms">The taskcomms to allow progress reports and cancellation</param>
         /// <returns></returns>
-        private ISuccessOrErrors DoAction(TDto dto, IActionComms taskComms)
+        public ISuccessOrErrors DoAction(IActionComms taskComms, TDto dto)
         {
             ISuccessOrErrors status = new SuccessOrErrors();
 
@@ -136,7 +179,16 @@ namespace GenericServices.Services
             status = dto.CopyDtoToData(_db, dto, taskData); //convert Tdto into TActionData format
             if (!status.IsValid) return status;
 
-            status = _taskToRun.DoAction(taskComms, taskData);
+            try
+            {
+                status = _taskToRun.DoAction(taskComms, taskData);
+            }
+            finally
+            {
+                var disposable = _taskToRun as IDisposable;
+                if (disposable != null)
+                    disposable.Dispose();
+            }
             if (!status.IsValid) return status;
 
             var copyStatus = dto.CopyDataToDto(_db, taskData, dto); //now convert back into Dto format
@@ -147,8 +199,15 @@ namespace GenericServices.Services
             return status;
         }
 
-
-        private ISuccessOrErrors DoDbAction(TDto dto, IActionComms taskComms)
+        /// <summary>
+        /// This runs a task that writes data to the database. 
+        /// It calls SaveChangesWithValidation to commit the data as long as there are
+        /// no errors and (no warnings or warnings don't matter)
+        /// </summary>
+        /// <param name="taskComms">The taskcomms to allow progress reports and cancellation</param>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        public ISuccessOrErrors DoDbAction(IActionComms taskComms, TDto dto)
         {
             ISuccessOrErrors status = new SuccessOrErrors();
 
@@ -161,7 +220,16 @@ namespace GenericServices.Services
             status = dto.CopyDtoToData(_db, dto, taskData); //convert Tdto into TActionData format
             if (!status.IsValid) return status;
 
-            status = _taskToRun.DoAction(taskComms, taskData);
+            try
+            {
+                status = _taskToRun.DoAction(taskComms, taskData);
+            }
+            finally
+            {
+                var disposable = _taskToRun as IDisposable;
+                if (disposable != null)
+                    disposable.Dispose();
+            }
             if (!status.IsValid) return status;
 
             if (ActionServiceHelper.ShouldStopAsWarningsMatter(status.HasWarnings, dto))

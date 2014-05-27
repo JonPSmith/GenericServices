@@ -7,7 +7,7 @@ using GenericServices.Services;
 
 namespace Tests.Actions
 {
-    public interface ICommsTestAction : IActionDefn<CommsTestActionDto>, IDisposable
+    public interface ICommsTestAction : IActionDefn<CommsTestActionData>, IDisposable
     {
 
     }
@@ -17,7 +17,7 @@ namespace Tests.Actions
 
         public bool DisposeWasCalled { get; private set; }
 
-        public ISuccessOrErrors DoAction(IActionComms actionComms, CommsTestActionDto dto)
+        public ISuccessOrErrors DoAction(IActionComms actionComms, CommsTestActionData dto)
         {
             var result = new SuccessOrErrors();
 
@@ -54,7 +54,7 @@ namespace Tests.Actions
                     }
                 }
 
-                Thread.Sleep( (int)(dto.SecondsBetweenIterations * 1000));
+                //Thread.Sleep( (int)(dto.SecondsBetweenIterations * 1000));
             }
 
             if (dto.Mode == TestServiceModes.RunButOutputOneWarningAtEnd)
@@ -71,7 +71,6 @@ namespace Tests.Actions
                 result.SetSuccessMessage(string.Format("Have completed the task in {0:F2} seconds",
                                                            DateTime.Now.Subtract(startTime).TotalSeconds)); 
             }
-
 
             return result;
         }

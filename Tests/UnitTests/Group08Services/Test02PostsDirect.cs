@@ -47,6 +47,7 @@ namespace Tests.UnitTests.Group08Services
             {
                 //SETUP
                 var service = new ListService<Post>(db);
+                var firstPost = db.Posts.Include(x => x.Blogger).First();
 
                 //ATTEMPT
                 var query = service.GetList().Include(x => x.Blogger);
@@ -54,8 +55,8 @@ namespace Tests.UnitTests.Group08Services
 
                 //VERIFY
                 list.Count.ShouldEqual(3);
-                list[0].Title.ShouldEqual("Freds good post");
-                list[0].Blogger.Name.ShouldEqual("Fred Bloggs");
+                list[0].Title.ShouldEqual(firstPost.Title);
+                list[0].Blogger.Name.ShouldEqual(firstPost.Blogger.Name);
                 list[0].Tags.ShouldEqual(null);
 
             }

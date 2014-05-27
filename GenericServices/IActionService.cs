@@ -21,6 +21,26 @@ namespace GenericServices
         /// <param name="taskData"></param>
         /// <returns></returns>
         ISuccessOrErrors DoDbAction(TActionData taskData);
+
+        /// <summary>
+        /// This runs a task that does not write to the database. We assume is passes data back via the dto.
+        /// It first converts the dto to the taskdata format, runs the task and then converts
+        /// the taskdata back to the dto format
+        /// </summary>
+        /// <param name="taskComms"></param>
+        /// <param name="taskData"></param>
+        /// <returns></returns>
+        ISuccessOrErrors DoAction(IActionComms taskComms, TActionData taskData);
+
+        /// <summary>
+        /// This runs a task that does not write to the database. We assume is passes data back via the dto.
+        /// It first converts the dto to the taskdata format, runs the task and then converts
+        /// the taskdata back to the dto format
+        /// </summary>
+        /// <param name="taskComms"></param>
+        /// <param name="taskData"></param>
+        /// <returns></returns>
+        ISuccessOrErrors DoDbAction(IActionComms taskComms, TActionData taskData);
     }
 
     public interface IActionService<TAction, TActionData, TDto>
@@ -46,6 +66,26 @@ namespace GenericServices
         /// <param name="dto">The dto to be converted to the ActionData format</param>
         /// <returns></returns>
         ISuccessOrErrors DoDbAction(TDto dto);
+
+        /// <summary>
+        /// This runs a task that does not write to the database. We assume is passes data back via the dto.
+        /// It first converts the dto to the taskdata format, runs the task and then converts
+        /// the taskdata back to the dto format
+        /// </summary>
+        /// <param name="taskComms"></param>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        ISuccessOrErrors DoAction(IActionComms taskComms, TDto dto);
+
+        /// <summary>
+        /// This runs a task that does not write to the database. We assume is passes data back via the dto.
+        /// It first converts the dto to the taskdata format, runs the task and then converts
+        /// the taskdata back to the dto format
+        /// </summary>
+        /// <param name="taskComms"></param>
+        /// <param name="dto"></param>
+        /// <returns></returns>
+        ISuccessOrErrors DoDbAction(IActionComms taskComms, TDto dto);
 
         /// <summary>
         /// This is available to reset any secondary data in the dto. Call this if the ModelState was invalid and

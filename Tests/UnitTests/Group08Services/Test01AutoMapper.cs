@@ -21,7 +21,7 @@ namespace Tests.UnitTests.Group08Services
         }
 
         [Test]
-        public void Check01DirectReferenceOk()
+        public void Check01MappingAggregatesOk()
         {
 
             //SETUP  
