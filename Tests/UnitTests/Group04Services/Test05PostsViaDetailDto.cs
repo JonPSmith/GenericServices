@@ -14,6 +14,12 @@ namespace Tests.UnitTests.Group04Services
     class Test05PostsViaDetailDto
     {
 
+        [TestFixtureSetUp]
+        public void SetUpFixture()
+        {
+            new DetailPostDto().CacheSetup();
+        }
+
         [SetUp]
         public void SetUp()
         {
@@ -179,47 +185,47 @@ namespace Tests.UnitTests.Group04Services
             }
         }
 
-        [Test]
-        public void Check15DtoCopyPropertiesOk()
-        {
-            using (var db = new SampleWebAppDb())
-            {
-                //SETUP
-                var firstPost = db.Posts.First();
-                var setupService = new CreateSetupService<Post, DetailPostDto>(db);
-                var dto = setupService.GetDto();
+        //[Test]
+        //public void Check15DtoCopyPropertiesOk()
+        //{
+        //    using (var db = new SampleWebAppDb())
+        //    {
+        //        //SETUP
+        //        var firstPost = db.Posts.First();
+        //        var setupService = new CreateSetupService<Post, DetailPostDto>(db);
+        //        var dto = setupService.GetDto();
 
-                dto.PostId = firstPost.PostId;
-                dto.BloggerName = "Should copy this blogger name";
-                dto.BlogId = 333;
-                dto.Title = "Should copy this title";
-                dto.Content = "Should copy this content";
-                dto.Tags = firstPost.Tags;
-                dto.LastUpdated = new DateTime(2000, 1, 1);  
+        //        dto.PostId = firstPost.PostId;
+        //        dto.BloggerName = "Should copy this blogger name";
+        //        dto.BlogId = 333;
+        //        dto.Title = "Should copy this title";
+        //        dto.Content = "Should copy this content";
+        //        dto.Tags = firstPost.Tags;
+        //        dto.LastUpdated = new DateTime(2000, 1, 1);  
 
-                //ATTEMPT
-                var newData = new Post()
-                {
-                    Blogger = new Blog { Name = "Original Blog Name" },
-                    BlogId = 777,
-                    Content = "Original Content"
-                };
+        //        //ATTEMPT
+        //        var newData = new Post()
+        //        {
+        //            Blogger = new Blog { Name = "Original Blog Name" },
+        //            BlogId = 777,
+        //            Content = "Original Content"
+        //        };
 
-                dto.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
-                dto.UserChosenTags.FinalSelection =
-                    db.Tags.Take(2).ToList().Select(x => x.TagId.ToString("D")).ToArray();
-                var status = dto.CopyDtoToData(db, dto, newData);
+        //        dto.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
+        //        dto.UserChosenTags.FinalSelection =
+        //            db.Tags.Take(2).ToList().Select(x => x.TagId.ToString("D")).ToArray();
+        //        var status = dto.CopyDtoToData(db, dto, newData);
 
-                //VERIFY
-                status.IsValid.ShouldEqual(true, status.Errors);
-                newData.PostId.ShouldEqual(firstPost.PostId);
-                newData.Title.ShouldEqual("Should copy this title");
+        //        //VERIFY
+        //        status.IsValid.ShouldEqual(true, status.Errors);
+        //        newData.PostId.ShouldEqual(firstPost.PostId);
+        //        newData.Title.ShouldEqual("Should copy this title");
 
-                newData.BlogId.ShouldEqual(db.Blogs.First().BlogId);
-                newData.Content.ShouldEqual("Should copy this content");
-                //Can't check tags as that is written to database
-            }
-        }
+        //        newData.BlogId.ShouldEqual(db.Blogs.First().BlogId);
+        //        newData.Content.ShouldEqual("Should copy this content");
+        //        //Can't check tags as that is written to database
+        //    }
+        //}
 
 
         [Test]

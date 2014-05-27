@@ -24,6 +24,7 @@ namespace Tests.UnitTests.Group04Services
                 var filepath = TestFileHelpers.GetTestFileFilePath("DbContentSimple.xml");
                 DataLayerInitialise.ResetDatabaseToTestData(db, filepath);
             }
+            new SimplePostDto().CacheSetup();
         }
 
         [Test]
@@ -77,6 +78,7 @@ namespace Tests.UnitTests.Group04Services
 
                 //ATTEMPT
                 var dto = service.GetDetail(x => x.PostId == firstPost.PostId);
+                dto.LogSpecificName("End");
 
                 //VERIFY
                 dto.PostId.ShouldEqual(firstPost.PostId);
@@ -100,6 +102,7 @@ namespace Tests.UnitTests.Group04Services
 
                 //ATTEMPT
                 var dto = service.GetOriginal(x => x.PostId == firstPost.PostId);
+                dto.LogSpecificName("End");
 
                 //VERIFY
                 dto.PostId.ShouldEqual(firstPost.PostId);
@@ -125,6 +128,7 @@ namespace Tests.UnitTests.Group04Services
                 var dto = setupService.GetOriginal(x => x.PostId == firstPost.PostId);
                 dto.Title = Guid.NewGuid().ToString();
                 var status = service.Update(dto);
+                dto.LogSpecificName("End");
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
@@ -148,6 +152,7 @@ namespace Tests.UnitTests.Group04Services
                 var dto = setupService.GetOriginal(x => x.PostId == firstPost.PostId);
                 dto.Title = Guid.NewGuid().ToString();
                 var status = service.Update(dto);
+                dto.LogSpecificName("End");
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
@@ -172,6 +177,7 @@ namespace Tests.UnitTests.Group04Services
                 //ATTEMPT
                 firstPostUntracked.Title = "Can't I ask a question?";
                 var status = service.Update(firstPostUntracked);
+                firstPostUntracked.LogSpecificName("End");
 
                 //VERIFY
                 status.IsValid.ShouldEqual(false);
@@ -192,6 +198,7 @@ namespace Tests.UnitTests.Group04Services
                 //ATTEMPT
                 var dto = new SimplePostDto();
                 var status = service.Create(dto);
+                dto.LogSpecificName("End");
 
                 //VERIFY
                 status.IsValid.ShouldEqual(false);

@@ -61,30 +61,51 @@ namespace GenericServices.Concrete
         //-----------------------------------------------------
         //properties to get instrumented results
 
+        /// <summary>
+        /// Instrumentation property which returns a list of call points as a comma delimited string.
+        /// For start/end call points it only returns one entry.
+        /// </summary>
         public string FunctionsCalledCommaDelimited 
         { 
             get { return string.Join(",", _logOfCalls.Where(x => x.CallType != CallTypes.End).Select(x => x.CallPoint));} 
         }
 
+
+        /// <summary>
+        /// Instrumentation property which returns a list of instrumented call points with the time since the dto was created
+        /// </summary>
         public ReadOnlyCollection<InstrumentedLog> LogOfCalls { get { return new ReadOnlyCollection<InstrumentedLog>(_logOfCalls); } }
 
 
         //---------------------------------------------------------------------
         //public methods for logging and getting results
 
+        /// <summary>
+        /// Instrumentation method which allows a specific point to be logged with a given name
+        /// </summary>
+        /// <param name="callPoint"></param>
+        /// <param name="callType">defaults to Point</param>
         public void LogSpecificName(string callPoint, CallTypes callType = CallTypes.Point)
         {
             _logOfCalls.Add(new InstrumentedLog(callPoint, callType, _timer.ElapsedMilliseconds));
         }
 
+        /// <summary>
+        /// Thsi will log the name of the calling method
+        /// </summary>
+        /// <param name="callType">defaults to Point</param>
+        /// <param name="callerName">Do not use. Filled in by system with the calling method name</param>
         public void LogCaller( CallTypes callType = CallTypes.Point, [CallerMemberName] string callerName = "")
         {
-            _logOfCalls.Add(new InstrumentedLog(callerName, callType, _timer.ElapsedMilliseconds));
+            LogSpecificName(callerName, callType);
         }
 
         //---------------------------------------------------------------------
         //ICheckIfWarnings implementation
 
+        /// <summary>
+        /// This allows the user to control whether data should still be written even if warnings found
+        /// </summary>
         public bool WriteEvenIfWarning { get { return _whereToFail == InstrumentedOpFlags.ForceActionWarnWithWrite; } }
 
         //---------------------------------------------------------------------

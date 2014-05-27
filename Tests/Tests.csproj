@@ -68,6 +68,8 @@
     <Compile Include="DataClasses\Internal\LoadDbDataFromXml.cs" />
     <Compile Include="DataClasses\SampleWebAppDb.cs" />
     <Compile Include="DTOs\Concrete\DetailPostDto.cs" />
+    <Compile Include="DTOs\ISimplePostTagGradeDto.cs" />
+    <Compile Include="DTOs\Concrete\SimplePostTagGradeDto.cs" />
     <Compile Include="DTOs\Concrete\SimpleTagDto.cs" />
     <Compile Include="Actions\TestActionService.cs" />
     <Compile Include="DTOs\IDetailPostDto.cs" />
@@ -96,6 +98,7 @@
     <Compile Include="UnitTests\Group04Services\Test03CheckGenericDto.cs" />
     <Compile Include="UnitTests\Group04Services\Test04PostsViaSimpleDto.cs" />
     <Compile Include="UnitTests\Group04Services\Test05PostsViaDetailDto.cs" />
+    <Compile Include="UnitTests\Group04Services\Test08PostTagGradeViaDto.cs" />
     <Compile Include="UnitTests\Group04Services\Test07BlogsViaDetailDto.cs" />
     <Compile Include="UnitTests\Group04Services\Test10RunTask.cs" />
   </ItemGroup>

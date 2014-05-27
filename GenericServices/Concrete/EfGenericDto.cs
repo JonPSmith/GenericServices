@@ -35,6 +35,16 @@ namespace GenericServices.Concrete
         where TDto : EfGenericDto<TData,TDto>
     {
         /// <summary>
+        /// Optional method that will setup any mapping etc. that are cached. This will will improve speed later.
+        /// The GenericDto will still work without this method being called, but the first use that needs the map will be slower. 
+        /// </summary>
+        public void CacheSetup()
+        {
+            CreateDatatoDtoMapping();
+            CreateDtoToDataMapping();
+        }
+
+        /// <summary>
         /// This must be overridden to say that the dto supports the create function
         /// </summary>
         internal protected abstract ServiceFunctions SupportedFunctions { get; }
@@ -87,7 +97,7 @@ namespace GenericServices.Concrete
         /// <returns></returns>
         internal protected virtual IQueryable<TDto> BuildListQueryUntracked(IDbContextWithValidation context)
         {
-            Mapper.CreateMap<TData, TDto>();
+            CreateDatatoDtoMapping();
             return GetDataUntracked(context).Project().To<TDto>();
         }
 
@@ -100,11 +110,11 @@ namespace GenericServices.Concrete
         /// <param name="destination"></param>
         internal protected virtual ISuccessOrErrors CopyDtoToData(IDbContextWithValidation context, TDto source, TData destination)
         {
-            Mapper.CreateMap<TDto, TData>()
-                .ForAllMembers(opt => opt.Condition(CheckIfSourceSetterIsPublic));
+            CreateDtoToDataMapping();
             Mapper.Map(source, destination);
             return SuccessOrErrors.Success("Successfull copy of data");
         }
+
 
         /// <summary>
         /// This copies only the properties in TData that have public setter into the TDto
@@ -115,7 +125,7 @@ namespace GenericServices.Concrete
         /// <param name="destination"></param>
         internal protected virtual ISuccessOrErrors CopyDataToDto(IDbContextWithValidation context, TData source, TDto destination)
         {
-            Mapper.CreateMap<TData, TDto>();
+            CreateDatatoDtoMapping();
             Mapper.Map(source, destination);
             return SuccessOrErrors.Success("Successfull copy of data");
         }
@@ -140,6 +150,18 @@ namespace GenericServices.Concrete
 
         //---------------------------------------------------------------
         //private methods
+
+
+        private static void CreateDatatoDtoMapping()
+        {
+            Mapper.CreateMap<TData, TDto>();
+        }
+
+        private static void CreateDtoToDataMapping()
+        {
+            Mapper.CreateMap<TDto, TData>()
+                .ForAllMembers(opt => opt.Condition(CheckIfSourceSetterIsPublic));
+        }
 
         private static bool CheckIfSourceSetterIsPublic(ResolutionContext mapContext)
         {

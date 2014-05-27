@@ -105,6 +105,20 @@ namespace Tests.UnitTests.Group04Services
         //now dto based tasking
 
         [Test]
+        public void Check10SetupActionOk()
+        {
+
+            //SETUP    
+            var taskService = new ActionSetupService<Tag, SimpleTagDto>(null);
+
+            //ATTEMPT
+            var dto = taskService.GetDto();
+
+            //VERIFY
+            dto.ShouldNotEqualNull();
+        }
+
+        [Test]
         public void Check12RunDbActionTestActionServiceIsValidOk()
         {
 

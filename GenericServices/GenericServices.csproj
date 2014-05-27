@@ -53,6 +53,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Concrete\ActionService.cs" />
+    <Compile Include="Concrete\ActionSetupService.cs" />
+    <Compile Include="IActionSetupService.cs" />
     <Compile Include="Concrete\InstrumentedLog.cs" />
     <Compile Include="Concrete\CreateService.cs" />
     <Compile Include="IActionService.cs" />

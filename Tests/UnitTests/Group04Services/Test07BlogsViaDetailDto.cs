@@ -13,6 +13,12 @@ namespace Tests.UnitTests.Group04Services
     class Test07BlogsViaDetailDto
     {
 
+        [TestFixtureSetUp]
+        public void SetUpFixture()
+        {
+            new SimpleBlogWithPostsDto().CacheSetup();
+        }
+
         [SetUp]
         public void SetUp()
         {

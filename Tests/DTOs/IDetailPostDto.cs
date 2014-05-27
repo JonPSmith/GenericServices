@@ -39,5 +39,14 @@ namespace Tests.DTOs
         DateTime LastUpdatedUtc { get; }
 
         string TagNames { get; }
+
+        //-----------------------------------------------------------------------------
+        //public methods
+
+        /// <summary>
+        /// Optional method that will setup any mapping etc. that are cached. This will will improve speed later.
+        /// The GenericDto will still work without this method being called, but the first use that needs the map will be slower. 
+        /// </summary>
+        void CacheSetup();
     }
 }
