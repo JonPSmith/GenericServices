@@ -8,7 +8,7 @@ using Tests.DataClasses;
 using Tests.DataClasses.Concrete;
 using Tests.Helpers;
 
-namespace Tests.UnitTests.Group04Services
+namespace Tests.UnitTests.Group08Services
 {
     class Test02PostsDirect
     {
