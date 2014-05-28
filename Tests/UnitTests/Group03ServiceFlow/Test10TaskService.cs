@@ -1,5 +1,4 @@
 ﻿using GenericServices.Services;
-using GenericServices.Services;
 using NUnit.Framework;
 using Tests.Actions;
 using Tests.DataClasses;
@@ -78,7 +77,7 @@ namespace Tests.UnitTests.Group03ServiceFlow
         {
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
-            var service = new ActionService<IEmptyTestAction, Tag, SimpleTagDto>(dummyDb, new EmptyTestAction());
+            var service = new ActionDbService<IEmptyTestAction, Tag, SimpleTagDto>(dummyDb, new EmptyTestAction());
             var dto = new SimpleTagDto(errorFlag);
             if (errorFlag == InstrumentedOpFlags.ForceActionFail)
                 dto.TagId = 2;

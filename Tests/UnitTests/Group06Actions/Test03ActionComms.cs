@@ -1,15 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
-using GenericServices.Services;
+﻿using GenericServices.Services;
 using NUnit.Framework;
 using Tests.Actions;
 using Tests.DataClasses.Concrete;
 using Tests.Helpers;
-using Tests.UnitTests.Group08Services;
 
 namespace Tests.UnitTests.Group06Actions
 {
@@ -22,7 +15,7 @@ namespace Tests.UnitTests.Group06Actions
             //SETUP  
             var dummyDb = new DummyIDbContextWithValidation();
             var testAction = new CommsTestAction();
-            var service = new ActionService<ICommsTestAction, CommsTestActionData>(dummyDb, testAction);
+            var service = new ActionService<ICommsTestAction, CommsTestActionData>(testAction);
 
             //ATTEMPT
             var data = new CommsTestActionData();
@@ -41,7 +34,7 @@ namespace Tests.UnitTests.Group06Actions
             //SETUP  
             var dummyDb = new DummyIDbContextWithValidation();
             var testAction = new CommsTestAction();
-            var service = new ActionService<ICommsTestAction, CommsTestActionData>(dummyDb, testAction);
+            var service = new ActionDbService<ICommsTestAction, CommsTestActionData>(dummyDb, testAction);
 
             //ATTEMPT
             var data = new CommsTestActionData();
@@ -78,7 +71,7 @@ namespace Tests.UnitTests.Group06Actions
             //SETUP  
             var dummyDb = new DummyIDbContextWithValidation();
             var testAction = new CommsTestAction();
-            var service = new ActionService<ICommsTestAction, CommsTestActionData, CommsTestActionDto>(dummyDb, testAction);
+            var service = new ActionDbService<ICommsTestAction, CommsTestActionData, CommsTestActionDto>(dummyDb, testAction);
 
             //ATTEMPT
             var dto = new CommsTestActionDto();
@@ -97,9 +90,8 @@ namespace Tests.UnitTests.Group06Actions
         public void Check05RunActionSuccessNoDisposeOk()
         {
             //SETUP  
-            var dummyDb = new DummyIDbContextWithValidation();
             var testAction = new EmptyTestAction();
-            var service = new ActionService<IEmptyTestAction, Tag>(dummyDb, testAction);
+            var service = new ActionService<IEmptyTestAction, Tag>(testAction);
 
             //ATTEMPT
             var data = new Tag();
@@ -107,7 +99,6 @@ namespace Tests.UnitTests.Group06Actions
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
-            dummyDb.SaveChangesWithValidationCalled.ShouldEqual(false);
         }
 
 
@@ -117,7 +108,7 @@ namespace Tests.UnitTests.Group06Actions
             //SETUP  
             var dummyDb = new DummyIDbContextWithValidation();
             var testAction = new EmptyTestAction();
-            var service = new ActionService<IEmptyTestAction, Tag>(dummyDb, testAction);
+            var service = new ActionDbService<IEmptyTestAction, Tag>(dummyDb, testAction);
 
             //ATTEMPT
             var data = new Tag();
@@ -135,9 +126,8 @@ namespace Tests.UnitTests.Group06Actions
         public void Check10CheckMessagesOk()
         {
             //SETUP  
-            var dummyDb = new DummyIDbContextWithValidation();
             var testAction = new CommsTestAction();
-            var service = new ActionService<ICommsTestAction, CommsTestActionData>(dummyDb, testAction);
+            var service = new ActionService<ICommsTestAction, CommsTestActionData>(testAction);
 
             //ATTEMPT
             var data = new CommsTestActionData();
