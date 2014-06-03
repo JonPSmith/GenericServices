@@ -43,6 +43,10 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.2.1402.2112\lib\net40\Moq.dll</HintPath>
     </Reference>
@@ -96,6 +100,8 @@
     <Compile Include="UnitTests\Group03ServiceFlow\Test03DetailService.cs" />
     <Compile Include="UnitTests\Group03ServiceFlow\Test02UpdateService.cs" />
     <Compile Include="UnitTests\Group03ServiceFlow\Test01CreateService.cs" />
+    <Compile Include="UnitTests\Group04GenericLogger\Test02SetupLogger.cs" />
+    <Compile Include="UnitTests\Group04GenericLogger\Test04Log4NetGenericLogger.cs" />
     <Compile Include="UnitTests\Group06Actions\Test03ActionComms.cs" />
     <Compile Include="UnitTests\Group08Services\Test01AutoMapper.cs" />
     <Compile Include="UnitTests\Group08Services\Test02aPostTagGradeDirect.cs" />
@@ -120,6 +126,7 @@
   <ItemGroup>
     <Content Include="TestData\DbContentSimple.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

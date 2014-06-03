@@ -120,8 +120,8 @@ namespace GenericServices.Actions
                 //case ProgressMessageTypes.Failed:
                 //    Logger.InfoFormat("FAILED: {0}", message.MessageText);
                 //    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                //default:
+                //    throw new ArgumentOutOfRangeException();
             }
         }
 

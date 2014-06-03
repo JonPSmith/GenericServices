@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using NUnit.Framework;
@@ -75,6 +76,11 @@ namespace Tests.Helpers
         internal static void ShouldNotEqualNull<T>(this T actualValue, string errorMessage = null) where T : class
         {
             Assert.NotNull( actualValue);
+        }
+
+        internal static void IsA<T>(this object actualValue, string errorMessage = null) where T : class
+        {
+            Assert.True(actualValue.GetType() == typeof(T));
         }
     }
 }

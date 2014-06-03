@@ -42,6 +42,9 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -52,9 +55,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Actions\ActionComms.cs" />
+    <Compile Include="Actions\ActionCommsForTask.cs" />
     <Compile Include="Actions\ProgressWithOptionalMessage.cs" />
+    <Compile Include="GenericLoggerSetup.cs" />
     <Compile Include="IActionService.cs" />
+    <Compile Include="Logger\IGenericLogger.cs" />
+    <Compile Include="Logger\NoLoggingGenericLogger.cs" />
+    <Compile Include="Logger\Log4NetGenericLogger.cs" />
     <Compile Include="Services\ActionDbService.cs" />
     <Compile Include="Services\ActionService.cs" />
     <Compile Include="Services\ActionSetupService.cs" />

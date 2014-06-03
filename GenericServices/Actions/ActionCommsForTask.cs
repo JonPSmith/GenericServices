@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using GenericServices.Services;
 
 namespace GenericServices.Actions
 {
-    public class ActionComms : IActionComms
+    public class ActionCommsForTask : IActionComms
     {
         private readonly CancellationToken _ctx;
         private readonly IProgress<ProgressWithOptionalMessage> _progressReporter;
@@ -37,7 +32,7 @@ namespace GenericServices.Actions
             _progressReporter.Report( new ProgressWithOptionalMessage(percentageDone, message));
         }
 
-        public ActionComms(CancellationToken ctx, IProgress<ProgressWithOptionalMessage> progressReporter)
+        public ActionCommsForTask(CancellationToken ctx, IProgress<ProgressWithOptionalMessage> progressReporter)
         {
             _ctx = ctx;
             _progressReporter = progressReporter;

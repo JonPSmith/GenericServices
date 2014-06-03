@@ -1,5 +1,4 @@
 ﻿using GenericServices.Actions;
-using GenericServices.Services;
 
 namespace GenericServices
 {
@@ -23,11 +22,6 @@ namespace GenericServices
         /// <param name="percentageDone">goes from 0 to 100</param>
         /// <param name="message">message, with message type in. Can be null for no message</param>
         void ReportProgress(int percentageDone, ProgressMessage message = null);
-
-
-
-
-
 
     }
 }
