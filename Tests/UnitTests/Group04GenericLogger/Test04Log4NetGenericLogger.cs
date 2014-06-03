@@ -4,6 +4,8 @@ using GenericServices.Logger;
 using log4net.Appender;
 using log4net.Config;
 using NUnit.Framework;
+using Tests.Actions;
+using Tests.DataClasses.Concrete;
 using Tests.Helpers;
 
 namespace Tests.UnitTests.Group04GenericLogger
@@ -106,6 +108,29 @@ namespace Tests.UnitTests.Group04GenericLogger
             logs[0].RenderedMessage.ShouldEqual("an exception");
             logs[0].ExceptionObject.Message.ShouldEqual("This is the exception message.");
             logs[0].ExceptionObject.IsA<InvalidOperationException>();
+        }
+
+        [Test]
+        public void Check20ActionDataBaseLoggerOk()
+        {
+
+            //SETUP  
+            var data = new CommsTestActionData
+            {
+                SecondsBetweenIterations = 0,
+                NumIterations = 1
+            };
+            var action = new CommsTestAction();
+
+            //ATTEMPT
+            action.DoAction(new MockActionComms(), data);
+
+            //VERIFY
+            var logs = _log4NetMemoryLog.GetEvents();
+            logs.Length.ShouldEqual(2);
+            logs[0].LoggerName.ShouldEqual("CommsTestAction");
+            logs[0].RenderedMessage.ShouldEqual("Task has started. Will run for 0.0 seconds.");
+
         }
 
     }

@@ -11,8 +11,13 @@ namespace GenericServices.Actions
 
         public ProgressWithOptionalMessage(int percentageDone, ProgressMessage optionalMessage)
         {
-            PercentageDone = Math.Min(0, Math.Max(100, percentageDone));
+            PercentageDone = percentageDone;
             OptionalMessage = optionalMessage;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("PercentageDone: {0}, OptionalMessage: {1}", PercentageDone, OptionalMessage);
         }
     }
 }

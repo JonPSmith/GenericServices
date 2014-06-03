@@ -1,4 +1,5 @@
 ﻿using System;
+using GenericServices.Logger;
 using GenericServices.Services;
 
 namespace GenericServices.Actions
@@ -6,7 +7,7 @@ namespace GenericServices.Actions
     public abstract class ActionBase
     {
 
-        //private static log4net.ILog Logger;
+        private readonly IGenericLogger _logger;
 
         private int _lastReportedProgressPercentage = -1;
         
@@ -26,7 +27,7 @@ namespace GenericServices.Actions
         {
             LowerBound = 0;
             UpperBound = 100;
-            //Logger = log4net.LogManager.GetLogger(GetType().Name);          //give it the name of the inherited type
+            _logger = GenericLoggerFactory.GetLogger(GetType().Name);       //give it the name of the inherited type
         }
 
         /// <summary>
@@ -89,39 +90,39 @@ namespace GenericServices.Actions
         //---------------------------------------------------
         //private helpers
 
-        private static void SendtoLogger(ProgressMessage message)
+        private void SendtoLogger(ProgressMessage message)
         {
 
             switch (message.MessageType)
             {
-                //case ProgressMessageTypes.Notset:
-                //    break;
-                //case ProgressMessageTypes.Verbose:
-                //    Logger.Debug(message.MessageText);
-                //    break;
-                //case ProgressMessageTypes.Info:
-                //    Logger.Info(message.MessageText);
-                //    break;
-                //case ProgressMessageTypes.Warning:
-                //    Logger.Warn(message.MessageText);
-                //    break;
-                //case ProgressMessageTypes.Error:
-                //    Logger.Error(message.MessageText);
-                //    break;
-                //case ProgressMessageTypes.Critical:
-                //    Logger.Fatal(message.MessageText);
-                //    break;
-                //case ProgressMessageTypes.Finished:
-                //    Logger.InfoFormat("Finished: {0}", message.MessageText);
-                //    break;
-                //case ProgressMessageTypes.Cancelled:
-                //    Logger.InfoFormat("Cancelled: {0}", message.MessageText);
-                //    break;
-                //case ProgressMessageTypes.Failed:
-                //    Logger.InfoFormat("FAILED: {0}", message.MessageText);
-                //    break;
-                //default:
-                //    throw new ArgumentOutOfRangeException();
+                case ProgressMessageTypes.Notset:
+                    break;
+                case ProgressMessageTypes.Verbose:
+                    _logger.Verbose(message.MessageText);
+                    break;
+                case ProgressMessageTypes.Info:
+                    _logger.Info(message.MessageText);
+                    break;
+                case ProgressMessageTypes.Warning:
+                    _logger.Warn(message.MessageText);
+                    break;
+                case ProgressMessageTypes.Error:
+                    _logger.Error(message.MessageText);
+                    break;
+                case ProgressMessageTypes.Critical:
+                    _logger.Critical(message.MessageText);
+                    break;
+                case ProgressMessageTypes.Finished:
+                    _logger.InfoFormat("Finished: {0}", message.MessageText);
+                    break;
+                case ProgressMessageTypes.Cancelled:
+                    _logger.InfoFormat("Cancelled: {0}", message.MessageText);
+                    break;
+                case ProgressMessageTypes.Failed:
+                    _logger.InfoFormat("FAILED: {0}", message.MessageText);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
 
