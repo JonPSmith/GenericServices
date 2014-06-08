@@ -24,7 +24,7 @@ namespace GenericServices.Services
             get
             {
                 if (_errors == null)
-                    throw new NullReferenceException("The status must have an error set or the success message set before you can access errors.");
+                    throw new InvalidOperationException("The status must have an error set or the success message set before you can access errors.");
                 return _errors;
             }
         }
