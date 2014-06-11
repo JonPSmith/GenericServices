@@ -46,11 +46,16 @@ namespace Tests.Helpers
         public static string GetTestDataFileDirectory(string alternateTestDir = TestFileDirectoryName)
         {
             string pathToManipulate = Environment.CurrentDirectory;
-            const string toRemoveFromEnd = @"\bin\debug";
-            if (!pathToManipulate.EndsWith(toRemoveFromEnd, StringComparison.InvariantCultureIgnoreCase))
-                throw new Exception("bad news guys. Not the expected path");
+            const string debugEnding = @"\bin\debug";
+            const string releaseEnding = @"\bin\release";
 
-            return pathToManipulate.Substring(0, pathToManipulate.Length - toRemoveFromEnd.Length) + alternateTestDir;
+            if (pathToManipulate.EndsWith(debugEnding, StringComparison.InvariantCultureIgnoreCase))
+                return pathToManipulate.Substring(0, pathToManipulate.Length - debugEnding.Length) + alternateTestDir;
+            if (pathToManipulate.EndsWith(releaseEnding, StringComparison.InvariantCultureIgnoreCase))
+                return pathToManipulate.Substring(0, pathToManipulate.Length - releaseEnding.Length) + alternateTestDir;   
+                
+            throw new Exception("bad news guys. Not the expected path");
+
         }
 
     }

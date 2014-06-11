@@ -23,7 +23,7 @@ namespace Tests.DataClasses
             context.Posts.RemoveRange( context.Posts);
             context.Tags.RemoveRange( context.Tags);
             context.Blogs.RemoveRange( context.Blogs);
-            //context.PostTagGrades.RemoveRange(context.PostTagGrades);
+            context.PostTagGrades.RemoveRange(context.PostTagGrades);
             context.SaveChanges();
 
             var loader = new LoadDbDataFromXml(filepathOfXmlFile);

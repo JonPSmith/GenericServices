@@ -25,6 +25,9 @@ namespace Tests.Helpers
             NumPostTagGrades = db.PostTagGrades.Count();
         }
 
+        //creates snapshot setting zero on everything
+        public DbSnapShot() { }
+
         public void CheckSnapShot(SampleWebAppDb db, int postsChange = 0, int postTagLinkChange = 0, int blogsChange = 0, int tagsChange = 0, int postTagGradesChange = 0)
         {
             var newSnap = new DbSnapShot(db);

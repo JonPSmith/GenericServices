@@ -29,7 +29,7 @@ namespace Tests.UnitTests.Group02Validation
             var status = new SuccessOrErrors();
 
             //ATTEMPT
-            var ex = Assert.Throws<NullReferenceException>(() => status.Errors.Any());
+            var ex = Assert.Throws<InvalidOperationException>(() => status.Errors.Any());
 
             //VERIFY
             ex.Message.ShouldEqual("The status must have an error set or the success message set before you can access errors.");

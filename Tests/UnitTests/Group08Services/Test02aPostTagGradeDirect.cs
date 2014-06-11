@@ -1,7 +1,4 @@
-﻿using System;
-using System.Data.Entity;
-using System.Linq;
-using GenericServices;
+﻿using System.Linq;
 using GenericServices.Services;
 using NUnit.Framework;
 using Tests.DataClasses;

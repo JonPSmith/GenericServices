@@ -85,6 +85,7 @@
     <Compile Include="DTOs\ISimplePostDto.cs" />
     <Compile Include="DTOs\Concrete\SimpleBlogWithPostsDto.cs" />
     <Compile Include="DTOs\Concrete\SimplePostDto.cs" />
+    <Compile Include="Helpers\DatabaseHelpers.cs" />
     <Compile Include="Helpers\DbSnapShot.cs" />
     <Compile Include="Helpers\DummyIDbContextWithValidation.cs" />
     <Compile Include="Helpers\ExtendAsserts.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="UnitTests\Group08Services\Test08PostTagGradeViaDto.cs" />
     <Compile Include="UnitTests\Group08Services\Test07BlogsViaDetailDto.cs" />
     <Compile Include="UnitTests\Group08Services\Test10RunTask.cs" />
+    <Compile Include="UnitTests\Group80Performance\Test01CheckHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
