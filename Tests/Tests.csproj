@@ -114,6 +114,7 @@
     <Compile Include="UnitTests\Group08Services\Test07BlogsViaDetailDto.cs" />
     <Compile Include="UnitTests\Group08Services\Test10RunTask.cs" />
     <Compile Include="UnitTests\Group80Performance\Test01CheckHelpers.cs" />
+    <Compile Include="UnitTests\Group80Performance\Test05PostPerformance.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

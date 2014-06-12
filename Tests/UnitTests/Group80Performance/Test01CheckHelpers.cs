@@ -21,7 +21,7 @@ namespace Tests.UnitTests.Group80Performance
         }
 
         [Test]
-        public void Check01FillComputedOk()
+        public void Check01FillComputedNAllOk()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -30,10 +30,28 @@ namespace Tests.UnitTests.Group80Performance
                 var snap = new DbSnapShot();        //empty
 
                 //ATTEMPT
-                db.FillComputed(numToCreate);
+                db.FillComputedNAll(numToCreate);
 
                 //VERIFY
                 snap.CheckSnapShot(db, numToCreate, numToCreate * 2, numToCreate, numToCreate, numToCreate);
+                (db.Posts.Max(x => x.PostId) - db.Posts.Min(x => x.PostId)).ShouldEqual(numToCreate - 1);       //check numbers are consecutive
+            }
+        }
+
+        [Test]
+        public void Check02FillComputedNPostOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                const int numToCreate = 20;
+                var snap = new DbSnapShot();        //empty
+
+                //ATTEMPT
+                db.FillComputedNPost(numToCreate);
+
+                //VERIFY
+                snap.CheckSnapShot(db, numToCreate, numToCreate, 2, 2);
                 (db.Posts.Max(x => x.PostId) - db.Posts.Min(x => x.PostId)).ShouldEqual(numToCreate - 1);       //check numbers are consecutive
             }
         }
@@ -47,10 +65,9 @@ namespace Tests.UnitTests.Group80Performance
                 var snap = new DbSnapShot(db);
 
                 //ATTEMPT
-                var result = db.GetListEfDirect<Post>().ToList();
+                db.ListEfDirect<Post>(0);
 
                 //VERIFY
-                result.Count.ShouldEqual(snap.NumPosts);
             }
         }
 
@@ -63,26 +80,9 @@ namespace Tests.UnitTests.Group80Performance
                 var snap = new DbSnapShot(db);
 
                 //ATTEMPT
-                var result = db.GetListPostEfViaDto().ToList();
+                db.ListPostEfViaDto(0);
 
                 //VERIFY
-                result.Count.ShouldEqual(snap.NumPosts);
-            }
-        }
-
-        [Test]
-        public void Check06ListEfViaDtoTake5Ok()
-        {
-            using (var db = new SampleWebAppDb())
-            {
-                //SETUP
-                var snap = new DbSnapShot(db);
-
-                //ATTEMPT
-                var result = db.GetListPostEfViaDto().Take(5).ToList();
-
-                //VERIFY
-                result.Count.ShouldEqual(5);
             }
         }
 
@@ -95,7 +95,7 @@ namespace Tests.UnitTests.Group80Performance
                 var snap = new DbSnapShot(db);
 
                 //ATTEMPT
-                db.CreatePostEfDirect();
+                db.CreatePostEfDirect(0);
 
                 //VERIFY
                 db.Posts.Count().ShouldEqual(snap.NumPosts + 1);
@@ -131,6 +131,107 @@ namespace Tests.UnitTests.Group80Performance
 
                 //ATTEMPT
                 db.DeletePostEfDirect(id);
+
+                //VERIFY
+                db.Posts.Count().ShouldEqual(snap.NumPosts - 1);
+            }
+        }
+
+        //---------------------------------------
+        //generics
+
+        [Test]
+        public void Check15ListGenericDirectOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var snap = new DbSnapShot(db);
+
+                //ATTEMPT
+                db.ListGenericDirect<Post>(0);
+
+                //VERIFY
+            }
+        }
+
+        [Test]
+        public void Check16ListGenericViaDtoOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var snap = new DbSnapShot(db);
+
+                //ATTEMPT
+                db.ListPostGenericViaDto(0);
+
+                //VERIFY
+            }
+        }
+
+        [Test]
+        public void Check17CreateGenericDirectOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var snap = new DbSnapShot(db);
+
+                //ATTEMPT
+                db.CreatePostGenericDirect(0);
+
+                //VERIFY
+                db.Posts.Count().ShouldEqual(snap.NumPosts + 1);
+            }
+        }
+
+        [Test]
+        public void Check18UpdateGenericDirectOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var snap = new DbSnapShot(db);
+                var id = db.Posts.AsNoTracking().First().PostId;
+
+                //ATTEMPT
+                db.UpdatePostGenericDirect(id);
+
+                //VERIFY
+                db.Posts.Count().ShouldEqual(snap.NumPosts);
+            }
+        }
+
+
+        [Test]
+        public void Check18UpdateGenericViaDtoOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var snap = new DbSnapShot(db);
+                var id = db.Posts.First().PostId;
+
+                //ATTEMPT
+                db.UpdatePostGenericViaDto(id);
+
+                //VERIFY
+                db.Posts.Count().ShouldEqual(snap.NumPosts);
+            }
+        }
+
+        [Test]
+        public void Check19DeleteGenericDirectOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var snap = new DbSnapShot(db);
+                var id = db.Posts.AsNoTracking().First().PostId;
+
+                //ATTEMPT
+                db.DeletePostGenericDirect(id);
 
                 //VERIFY
                 db.Posts.Count().ShouldEqual(snap.NumPosts - 1);

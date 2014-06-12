@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Data.Entity;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace GenericServices.Services
 {
+
     public class UpdateSetupService<TData, TDto> : IUpdateSetupService<TData, TDto> where TData : class
         where TDto : EfGenericDto<TData, TDto>, new()
     {
