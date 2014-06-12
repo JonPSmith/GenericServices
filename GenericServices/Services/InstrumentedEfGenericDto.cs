@@ -135,8 +135,8 @@ namespace GenericServices.Services
                 if (_whereToFail.HasFlag(InstrumentedOpFlags.FailOnCopyDtoToData))
                     return new SuccessOrErrors().AddSingleError("Flag was set to fail here.");
 
-                //Mapper.CreateMap<TDto, TData>()
-                //    .ForAllMembers(opt => opt.Condition(CheckIfSourceSetterIsPublic));
+                //Use the below code to instrument the inner parts of the mapping 
+                //CreateDtoToDataMapping();
                 //LogSpecificName("After CreateMap");
                 //Mapper.Map(source, destination);
                 //return SuccessOrErrors.Success("Successfull copy of data");

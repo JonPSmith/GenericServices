@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using NUnit.Framework;
 using Tests.DataClasses;
 using Tests.DataClasses.Concrete;
@@ -14,19 +10,15 @@ using Tests.Helpers;
 namespace Tests.UnitTests.Group80Performance
 {
     [Ignore]
-    class Test05PostPerformance
+    class Perf10PostPerformance
     {
-
 
         private int _firstPostId;
 
         [TestFixtureSetUp]
         public void SetUpFixture()
         {
-            using (var db = new SampleWebAppDb())
-            {
-                DataLayerInitialise.InitialiseThis();
-            }
+            DataLayerInitialise.InitialiseThis();
         }
 
         [Test]

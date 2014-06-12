@@ -113,8 +113,10 @@
     <Compile Include="UnitTests\Group08Services\Test08PostTagGradeViaDto.cs" />
     <Compile Include="UnitTests\Group08Services\Test07BlogsViaDetailDto.cs" />
     <Compile Include="UnitTests\Group08Services\Test10RunTask.cs" />
-    <Compile Include="UnitTests\Group80Performance\Test01CheckHelpers.cs" />
-    <Compile Include="UnitTests\Group80Performance\Test05PostPerformance.cs" />
+    <Compile Include="UnitTests\Group80Performance\Perf01CheckHelpers.cs" />
+    <Compile Include="UnitTests\Group80Performance\Perf04PostsViaSimpleDto.cs" />
+    <Compile Include="UnitTests\Group80Performance\Perf10PostPerformance.cs" />
+    <Compile Include="UnitTests\Group80Performance\Perf05PostsViaDetailDto.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

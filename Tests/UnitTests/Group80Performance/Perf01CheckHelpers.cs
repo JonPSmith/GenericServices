@@ -6,7 +6,7 @@ using Tests.Helpers;
 
 namespace Tests.UnitTests.Group80Performance
 {
-    class Test01CheckHelpers
+    class Perf01CheckHelpers
     {
 
         [TestFixtureSetUp]
