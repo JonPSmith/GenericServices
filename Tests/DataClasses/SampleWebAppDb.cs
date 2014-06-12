@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Threading.Tasks;
 using GenericServices;
 using GenericServices.Services;
 using Tests.DataClasses.Concrete;
@@ -13,10 +14,6 @@ namespace Tests.DataClasses
 
     public class SampleWebAppDb : DbContext, IDbContextWithValidation
     {
-        //********************************************************************
-        // Have used IDbSet below to ensure code is compatible with EF 5
-        // Note: code its build with EF 6.1 and has not been tested with EF 5
-        //********************************************************************
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<Post> Posts { get; set; }
         public DbSet<Tag> Tags { get; set; }
@@ -48,7 +45,31 @@ namespace Tests.DataClasses
         return result.SetSuccessMessage("Successfully added or updated {0} items", numChanges);
         }
 
+        public async Task<ISuccessOrErrors> SaveChangesWithValidationAsync()
+        {
+            var result = new SuccessOrErrors();
+            var numChanges = 0;
+            try
+            {
+                numChanges = await SaveChangesAsync(); //then update it
+            }
+            catch (DbEntityValidationException ex)
+            {
+                return result.SetErrors(ex.EntityValidationErrors);
+            }
+            catch (DbUpdateException ex)
+            {
+                if (ex.InnerException is System.Data.Entity.Core.UpdateException &&
+                    ex.InnerException.InnerException is System.Data.SqlClient.SqlException
+                    && ex.InnerException.InnerException.Data["HelpLink.EvtID"] is string &&
+                    (string)ex.InnerException.InnerException.Data["HelpLink.EvtID"] == "547")
+                    return result.AddSingleError("This operation failed because other data uses this entry.");
 
+                throw; //else it isn't something we understand
+            }
+
+            return result.SetSuccessMessage("Successfully added or updated {0} items", numChanges);
+        }
 
         /// <summary>
         /// This has been overridden to handle:

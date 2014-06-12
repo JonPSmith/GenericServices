@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
+using System.Threading.Tasks;
 using GenericServices;
 using GenericServices.Services;
 
@@ -19,6 +20,11 @@ namespace Tests.Helpers
             return SuccessOrErrors.Success("All ok.");
         }
 
+        public Task<ISuccessOrErrors> SaveChangesWithValidationAsync()
+        {
+            throw new NotImplementedException();
+        }
+
         public DbSet<TEntity> Set<TEntity>() where TEntity : class
         {
             throw new NotImplementedException();
@@ -30,6 +36,11 @@ namespace Tests.Helpers
         }
 
         public int SaveChanges()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<int> SaveChangesAsync()
         {
             throw new NotImplementedException();
         }

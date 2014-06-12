@@ -13,11 +13,10 @@ namespace GenericServices.Services
         public ActionDbService(IDbContextWithValidation db, TAction taskToRun)
         {
             if (taskToRun == null)
-                throw new NullReferenceException("Dependecy injection did not find the action. Check you have added IActionService<ActionDto> to the classe's interface.");
+                throw new NullReferenceException("Dependecy injection did not find the action. Check you have added IActionService<ActionDto> to the class's interface.");
             _db = db;
             _taskToRun = taskToRun;
         }
-
 
         /// <summary>
         /// This runs a task that writes data to the database. 
@@ -65,13 +64,9 @@ namespace GenericServices.Services
                 ? dataStatus.SetSuccessMessage("{0}... and written to database.", actionStatus.SuccessMessage)
                 : dataStatus;
         }
-
-
     }
 
     //---------------------------------------------------------------------------
-
-
 
     public class ActionDbService<TAction, TActionData, TDto> : IActionDbService<TAction, TActionData, TDto>
         where TAction : class, IActionDefn<TActionData>
@@ -85,7 +80,7 @@ namespace GenericServices.Services
         public ActionDbService(IDbContextWithValidation db, TAction taskToRun)
         {
             if (taskToRun == null)
-                throw new NullReferenceException("Dependecy injection did not find the action. Check you have added IActionService<ActionDto> to the classe's interface.");
+                throw new NullReferenceException("Dependecy injection did not find the action. Check you have added IActionService<ActionDto> to the class's interface.");
             _db = db;
             _taskToRun = taskToRun;
         }
