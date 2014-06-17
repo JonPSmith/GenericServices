@@ -37,7 +37,7 @@ namespace Tests.UnitTests.Group04ServiceFlowAsync
                 var dto = await service.GetOriginalAsync(x => x.TagId == firstTag.TagId);
 
                 //VERIFY
-                dto.FunctionsCalledCommaDelimited.ShouldEqual("CreateDtoAndCopyDataInAsync,SetupSecondaryData");
+                dto.FunctionsCalledCommaDelimited.ShouldEqual("CreateDtoAndCopyDataInAsync,SetupSecondaryDataAsync");
             }
         }
 
@@ -62,8 +62,8 @@ namespace Tests.UnitTests.Group04ServiceFlowAsync
             }
         }
 
-        [TestCase(InstrumentedOpFlags.NormalOperation, true, "FindItemTrackedAsync,CopyDtoToData")]
-        [TestCase(InstrumentedOpFlags.FailOnCopyDtoToData, false, "FindItemTrackedAsync,CopyDtoToData,SetupSecondaryData")]
+        [TestCase(InstrumentedOpFlags.NormalOperation, true, "FindItemTrackedAsync,CopyDtoToDataAsync")]
+        [TestCase(InstrumentedOpFlags.FailOnCopyDtoToData, false, "FindItemTrackedAsync,CopyDtoToDataAsync,SetupSecondaryDataAsync")]
         public async void Check02UpdateFlow(InstrumentedOpFlags errorFlag, bool isValid, string expectedFunctionsCalled)
         {
             using (var db = new SampleWebAppDb())

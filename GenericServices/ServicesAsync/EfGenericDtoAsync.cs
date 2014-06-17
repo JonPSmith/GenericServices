@@ -16,15 +16,11 @@ using GenericServices.Services;
 namespace GenericServices.ServicesAsync
 {
 
-    public abstract class EfGenericDtoAsync<TData, TDto> : EfGenericDto<TData, TDto>
+    public abstract class EfGenericDtoAsync<TData, TDto> : EfGenericDtoBase<TData, TDto>
         where TData : class
         where TDto : EfGenericDtoAsync<TData, TDto>
     {
 
-        internal protected override void SetupSecondaryData(IDbContextWithValidation db, TDto dto)
-        {
-            throw new InvalidOperationException("This should not be called when in Async mode.");
-        }
         
         /// <summary>
         /// This function will be called at the end of CreateSetupService and UpdateSetupService to setup any
@@ -40,11 +36,6 @@ namespace GenericServices.ServicesAsync
                 throw new InvalidOperationException("SupportedFunctions flags say that setup of secondary data is needed, but did not override the SetupSecondaryData method.");
         }
 
-        protected internal override TData FindItemTracked(IDbContextWithValidation context)
-        {
-            throw new InvalidOperationException("This should not be called when in Async mode.");
-        }
-
         /// <summary>
         /// This returns the TData item that fits the key(s) in the DTO.
         /// Override if you want to include other relationships for deep level updates
@@ -56,10 +47,7 @@ namespace GenericServices.ServicesAsync
             return await context.Set<TData>().FindAsync(GetKeyValues());
         }
 
-        internal protected override ISuccessOrErrors CopyDtoToData(IDbContextWithValidation context, TDto source, TData destination)
-        {
-            throw new InvalidOperationException("This should not be called when in Async mode.");
-        }
+
 
         /// <summary>
         /// This copies only the properties in TDto that have public setter into the TData
@@ -75,15 +63,22 @@ namespace GenericServices.ServicesAsync
             return SuccessOrErrors.Success("Successfull copy of data");
         }
 
-
+        /// <summary>
+        /// This copies only the properties in TData that have public setter into the TDto
+        /// You can override this if you need a more complex copy
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="source"></param>
+        /// <param name="destination"></param>
+        internal protected virtual async Task<ISuccessOrErrors> CopyDataToDtoAsync(IDbContextWithValidation context, TData source, TDto destination)
+        {
+            CreateDatatoDtoMapping();
+            Mapper.Map(source, destination);
+            return SuccessOrErrors.Success("Successfull copy of data");
+        }
 
         //---------------------------------------------------------------
         //helper methods
-
-        internal protected override TDto CreateDtoAndCopyDataIn(IDbContextWithValidation context, Expression<Func<TData, bool>> predicate)
-        {
-            throw new InvalidOperationException("This should not be called when in Async mode.");
-        }
 
         /// <summary>
         /// This copies an existing TData into a new the dto using a Lambda expression to define the where clause

@@ -145,14 +145,15 @@ namespace Tests.UnitTests.Group09ServicesAsync
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
-                var listService = new ListService<Post, SimplePostDtoAsync>(db);
-                var firstPostUntracked = listService.GetList().First();
+                var firstPost = db.Posts.Include(x => x.Tags).AsNoTracking().First();
                 var service = new UpdateServiceAsync<Post, SimplePostDtoAsync>(db);
+                var setupService = new UpdateSetupServiceAsync<Post, SimplePostDtoAsync>(db);
 
                 //ATTEMPT
-                firstPostUntracked.Title = "Can't I ask a question?";
-                var status = await service.UpdateAsync(firstPostUntracked);
-                firstPostUntracked.LogSpecificName("End");
+                var dto = await setupService.GetOriginalAsync(x => x.PostId == firstPost.PostId);
+                dto.Title = "Can't I ask a question?";
+                var status = await service.UpdateAsync(dto);
+                dto.LogSpecificName("End");
 
                 //VERIFY
                 status.IsValid.ShouldEqual(false);

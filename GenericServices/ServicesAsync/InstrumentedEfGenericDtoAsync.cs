@@ -117,7 +117,7 @@ namespace GenericServices.ServicesAsync
                 return base.BuildListQueryUntracked(context);
         }
 
-        protected internal override void SetupSecondaryData(IDbContextWithValidation db, TDto dto)
+        protected internal override async Task SetupSecondaryDataAsync(IDbContextWithValidation db, TDto dto)
         {
             LogCaller();
         }
@@ -135,14 +135,14 @@ namespace GenericServices.ServicesAsync
                 return await context.Set<TData>().FindAsync(GetKeyValues());
         }
 
-        protected internal override ISuccessOrErrors CopyDataToDto(IDbContextWithValidation context, TData source, TDto destination)
+        protected internal override async Task<ISuccessOrErrors> CopyDataToDtoAsync(IDbContextWithValidation context, TData source, TDto destination)
         {
             using (new LogStartStop(this))
             {
                 if (_whereToFail.HasFlag(InstrumentedOpFlags.FailOnCopyDataToDto))
                     return new SuccessOrErrors().AddSingleError("Flag was set to fail here.");
 
-                return base.CopyDataToDto(context, source, destination);
+                return await base.CopyDataToDtoAsync(context, source, destination);
             }
         }
 

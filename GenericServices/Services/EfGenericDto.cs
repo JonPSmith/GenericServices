@@ -12,58 +12,12 @@ using AutoMapper.QueryableExtensions;
 
 namespace GenericServices.Services
 {
-    [Flags]
-    public enum ServiceFunctions
-    {
-        None = 0,
-        List = 1,
-        Detail = 2,
-        Create = 4,
-        Update = 8,
-        //note: no delete as delete does not need a dto
-        DoAction = 32,
-        DoDbAction = 32,
-        //DoesNotNeedSetup refers the need to call the SetupSecondaryData method
-        //if this flag is NOT set then expects dto to override SetupSecondaryData method
-        DoesNotNeedSetup = 128,
-        AllCrudButCreate = List | Detail | Update,
-        AllCrudButList = Detail | Create | Update,
-        AllCrud = List | Detail | Create | Update
-    }
 
-    public abstract class EfGenericDto<TData, TDto> where TData : class
+
+    public abstract class EfGenericDto<TData, TDto> : EfGenericDtoBase<TData, TDto> 
+        where TData : class
         where TDto : EfGenericDto<TData,TDto>
     {
-        /// <summary>
-        /// Optional method that will setup any mapping etc. that are cached. This will will improve speed later.
-        /// The GenericDto will still work without this method being called, but the first use that needs the map will be slower. 
-        /// </summary>
-        public void CacheSetup()
-        {
-            CreateDatatoDtoMapping();
-            CreateDtoToDataMapping();
-        }
-
-        /// <summary>
-        /// This must be overridden to say that the dto supports the create function
-        /// </summary>
-        internal protected abstract ServiceFunctions SupportedFunctions { get; }
-
-        /// <summary>
-        /// This provides the name of the name of the data item to display in success or error messages.
-        /// Override if you want a more user friendly name
-        /// </summary>
-        internal protected virtual string DataItemName { get { return typeof (TData).Name; }}
-        
-        /// <summary>
-        /// This method is called to get the data table. Can be overridden if include statements are needed.
-        /// </summary>
-        /// <param name="context"></param>
-        /// <returns>returns an IQueryable of the table TData as Untracked</returns>
-        protected virtual IQueryable<TData> GetDataUntracked(IDbContextWithValidation context)
-        {
-            return context.Set<TData>().AsNoTracking();
-        }
 
         /// <summary>
         /// This function will be called at the end of CreateSetupService and UpdateSetupService to setup any
@@ -88,17 +42,6 @@ namespace GenericServices.Services
         internal protected virtual TData FindItemTracked(IDbContextWithValidation context)
         {
             return context.Set<TData>().Find(GetKeyValues());
-        }
-
-        /// <summary>
-        /// This provides the IQueryable command to get a list of TData, but projected to TDto.
-        /// Can be overridden if standard AutoMapping isn't good enough, or return null if not supported
-        /// </summary>
-        /// <returns></returns>
-        internal protected virtual IQueryable<TDto> BuildListQueryUntracked(IDbContextWithValidation context)
-        {
-            CreateDatatoDtoMapping();
-            return GetDataUntracked(context).Project().To<TDto>();
         }
 
         /// <summary>

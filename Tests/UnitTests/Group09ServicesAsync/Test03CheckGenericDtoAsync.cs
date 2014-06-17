@@ -62,7 +62,7 @@ namespace Tests.UnitTests.Group09ServicesAsync
         }
 
         [Test]
-        public void Check02CopyDataToDtoOk()
+        public async void Check02CopyDataToDtoOk()
         {
 
             //SETUP
@@ -86,7 +86,7 @@ namespace Tests.UnitTests.Group09ServicesAsync
                 Tags = new Collection<Tag> { new Tag { Name = "this should be overwritten", Slug = "No" } }
             };
 
-            var status = newDto.CopyDataToDto(null, data, newDto);
+            var status = await newDto.CopyDataToDtoAsync(null, data, newDto);
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);

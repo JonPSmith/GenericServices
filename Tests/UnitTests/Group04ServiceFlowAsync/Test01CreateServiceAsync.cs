@@ -24,7 +24,7 @@ namespace Tests.UnitTests.Group04ServiceFlowAsync
         }
 
         [Test]
-        public void Check01CreateSetupFlowOk()
+        public async void Check01CreateSetupFlowOk()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -32,10 +32,10 @@ namespace Tests.UnitTests.Group04ServiceFlowAsync
                 var service = new CreateSetupServiceAsync<Tag, SimpleTagDtoAsync>(db);
 
                 //ATTEMPT
-                var dto = service.GetDto();
+                var dto = await service.GetDtoAsync();
 
                 //VERIFY
-                dto.FunctionsCalledCommaDelimited.ShouldEqual("SetupSecondaryData");
+                dto.FunctionsCalledCommaDelimited.ShouldEqual("SetupSecondaryDataAsync");
             }
         }
 
@@ -60,8 +60,8 @@ namespace Tests.UnitTests.Group04ServiceFlowAsync
             }
         }
 
-        [TestCase(InstrumentedOpFlags.NormalOperation, true, "CopyDtoToData")]
-        [TestCase(InstrumentedOpFlags.FailOnCopyDtoToData, false, "CopyDtoToData,SetupSecondaryData")]  
+        [TestCase(InstrumentedOpFlags.NormalOperation, true, "CopyDtoToDataAsync")]
+        [TestCase(InstrumentedOpFlags.FailOnCopyDtoToData, false, "CopyDtoToDataAsync,SetupSecondaryDataAsync")]  
         public async void Check02CreateFlow(InstrumentedOpFlags errorFlag, bool isValid, string expectedFunctionsCalled)
         {
             using (var db = new SampleWebAppDb())

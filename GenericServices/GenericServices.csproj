@@ -80,6 +80,9 @@
     <Compile Include="Services\ActionSetupService.cs" />
     <Compile Include="IActionSetupService.cs" />
     <Compile Include="Services\CreateService.cs" />
+    <Compile Include="Services\EfGenericDtoBase.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Services\InstrumentedLog.cs" />
     <Compile Include="ServicesAsync\CreateServiceAsync.cs" />
     <Compile Include="IActionDbService.cs" />
