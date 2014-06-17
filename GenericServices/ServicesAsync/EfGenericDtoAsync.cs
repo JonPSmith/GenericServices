@@ -21,6 +21,25 @@ namespace GenericServices.ServicesAsync
         where TDto : EfGenericDtoAsync<TData, TDto>
     {
 
+        internal protected override void SetupSecondaryData(IDbContextWithValidation db, TDto dto)
+        {
+            throw new InvalidOperationException("This should not be called when in Async mode.");
+        }
+        
+        /// <summary>
+        /// This function will be called at the end of CreateSetupService and UpdateSetupService to setup any
+        /// additional data in the dto used to display dropdownlists etc. 
+        /// It is also called at the end of the CreateService or UpdateService if there are errors, so that
+        /// the data is available if the form needs to be reshown.
+        /// This function should be overridden if the dto needs additional data setup 
+        /// </summary>
+        /// <returns></returns>
+        internal protected virtual async Task SetupSecondaryDataAsync(IDbContextWithValidation db, TDto dto)
+        {
+            if (!SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
+                throw new InvalidOperationException("SupportedFunctions flags say that setup of secondary data is needed, but did not override the SetupSecondaryData method.");
+        }
+
         protected internal override TData FindItemTracked(IDbContextWithValidation context)
         {
             throw new InvalidOperationException("This should not be called when in Async mode.");
@@ -36,6 +55,27 @@ namespace GenericServices.ServicesAsync
         {
             return await context.Set<TData>().FindAsync(GetKeyValues());
         }
+
+        internal protected override ISuccessOrErrors CopyDtoToData(IDbContextWithValidation context, TDto source, TData destination)
+        {
+            throw new InvalidOperationException("This should not be called when in Async mode.");
+        }
+
+        /// <summary>
+        /// This copies only the properties in TDto that have public setter into the TData
+        /// You can override this if you need a more complex copy
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="source"></param>
+        /// <param name="destination"></param>
+        internal protected virtual async Task<ISuccessOrErrors> CopyDtoToDataAsync(IDbContextWithValidation context, TDto source, TData destination)
+        {
+            CreateDtoToDataMapping();
+            Mapper.Map(source, destination);
+            return SuccessOrErrors.Success("Successfull copy of data");
+        }
+
+
 
         //---------------------------------------------------------------
         //helper methods

@@ -31,7 +31,7 @@ namespace GenericServices.ServicesAsync
 
             dto = await dto.CreateDtoAndCopyDataInAsync(_db, whereExpression);
             if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
-                dto.SetupSecondaryData(_db, dto);
+                await dto.SetupSecondaryDataAsync(_db, dto);
             return dto;
         }
     }

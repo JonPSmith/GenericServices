@@ -20,6 +20,6 @@ namespace GenericServices
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        TDto ResetDto(TDto dto);
+        Task<TDto> ResetDtoAsync(TDto dto);
     }
 }

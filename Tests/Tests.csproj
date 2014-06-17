@@ -75,7 +75,9 @@
     <Compile Include="DataClasses\DataLayerInitialise.cs" />
     <Compile Include="DataClasses\Internal\LoadDbDataFromXml.cs" />
     <Compile Include="DataClasses\SampleWebAppDb.cs" />
+    <Compile Include="DTOs\Concrete\DetailPostDtoAsync.cs" />
     <Compile Include="DTOs\Concrete\DetailPostDto.cs" />
+    <Compile Include="DTOs\Concrete\SimplePostDtoAsync.cs" />
     <Compile Include="DTOs\Concrete\SimpleTagDtoAsync.cs" />
     <Compile Include="DTOs\ISimplePostTagGradeDto.cs" />
     <Compile Include="DTOs\Concrete\SimplePostTagGradeDto.cs" />
@@ -111,12 +113,15 @@
     <Compile Include="UnitTests\Group08Services\Test01AutoMapper.cs" />
     <Compile Include="UnitTests\Group08Services\Test02aPostTagGradeDirect.cs" />
     <Compile Include="UnitTests\Group08Services\Test02PostsDirect.cs" />
+    <Compile Include="UnitTests\Group09ServicesAsync\Test02PostsDirectAsync.cs" />
     <Compile Include="UnitTests\Group08Services\Test03CheckGenericDto.cs" />
     <Compile Include="UnitTests\Group08Services\Test04PostsViaSimpleDto.cs" />
     <Compile Include="UnitTests\Group08Services\Test05PostsViaDetailDto.cs" />
     <Compile Include="UnitTests\Group08Services\Test08PostTagGradeViaDto.cs" />
     <Compile Include="UnitTests\Group08Services\Test07BlogsViaDetailDto.cs" />
     <Compile Include="UnitTests\Group08Services\Test10RunTask.cs" />
+    <Compile Include="UnitTests\Group09ServicesAsync\Test03CheckGenericDtoAsync.cs" />
+    <Compile Include="UnitTests\Group09ServicesAsync\Test04PostsViaSimpleDtoAsync.cs" />
     <Compile Include="UnitTests\Group80Performance\Perf01CheckHelpers.cs" />
     <Compile Include="UnitTests\Group80Performance\Perf03EfPost.cs" />
     <Compile Include="UnitTests\Group80Performance\Perf04PostsViaSimpleDto.cs" />

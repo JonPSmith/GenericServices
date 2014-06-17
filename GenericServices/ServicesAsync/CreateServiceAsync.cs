@@ -45,7 +45,7 @@ namespace GenericServices.ServicesAsync
                 return result.AddSingleError("Create of a new {0} is not supported in this mode.", dto.DataItemName);
             
             var tData = new TData();
-            result = dto.CopyDtoToData(_db, dto, tData);    //update those properties we want to change
+            result = await dto.CopyDtoToDataAsync(_db, dto, tData);    //update those properties we want to change
             if (result.IsValid)
             {
                 _db.Set<TData>().Add(tData);
@@ -57,7 +57,7 @@ namespace GenericServices.ServicesAsync
             //otherwise there are errors
             if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
                 //we reset any secondary data as we expect the view to be reshown with the errors
-                dto.SetupSecondaryData(_db, dto);
+                await dto.SetupSecondaryDataAsync(_db, dto);
             return result;
 
         }
@@ -68,11 +68,11 @@ namespace GenericServices.ServicesAsync
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        public TDto ResetDto(TDto dto)
+        public async Task<TDto> ResetDtoAsync(TDto dto)
         {
             if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
                 //we reset any secondary data as we expect the view to be reshown with the errors
-                dto.SetupSecondaryData(_db, dto);
+                await dto.SetupSecondaryDataAsync(_db, dto);
 
             return dto;
         }

@@ -146,7 +146,7 @@ namespace GenericServices.ServicesAsync
             }
         }
 
-        protected internal override ISuccessOrErrors CopyDtoToData(IDbContextWithValidation context, TDto source, TData destination)
+        protected internal override async Task<ISuccessOrErrors> CopyDtoToDataAsync(IDbContextWithValidation context, TDto source, TData destination)
         {
             using (new LogStartStop(this))
             {
@@ -159,7 +159,7 @@ namespace GenericServices.ServicesAsync
                 //Mapper.Map(source, destination);
                 //return SuccessOrErrors.Success("Successfull copy of data");
 
-                return base.CopyDtoToData(context, source, destination);
+                return await base.CopyDtoToDataAsync(context, source, destination);
             }
         }
 

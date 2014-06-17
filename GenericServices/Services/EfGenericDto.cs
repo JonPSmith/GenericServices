@@ -115,7 +115,6 @@ namespace GenericServices.Services
             return SuccessOrErrors.Success("Successfull copy of data");
         }
 
-
         /// <summary>
         /// This copies only the properties in TData that have public setter into the TDto
         /// You can override this if you need a more complex copy
@@ -162,19 +161,20 @@ namespace GenericServices.Services
             return keyProperies.Select(x => x.GetValue(this)).ToArray();
         }
 
-        //----------------------------------------------------------------
-        //private methods
 
-        private static void CreateDatatoDtoMapping()
+        protected static void CreateDatatoDtoMapping()
         {
             Mapper.CreateMap<TData, TDto>();
         }
 
-        private static void CreateDtoToDataMapping()
+        protected static void CreateDtoToDataMapping()
         {
             Mapper.CreateMap<TDto, TData>()
                 .ForAllMembers(opt => opt.Condition(CheckIfSourceSetterIsPublic));
         }
+
+        //----------------------------------------------------------------
+        //private methods
 
         private static bool CheckIfSourceSetterIsPublic(ResolutionContext mapContext)
         {
