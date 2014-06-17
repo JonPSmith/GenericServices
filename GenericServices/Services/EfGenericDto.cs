@@ -149,8 +149,21 @@ namespace GenericServices.Services
         }
 
         //---------------------------------------------------------------
-        //private methods
+        //protected methods
 
+
+        protected object[] GetKeyValues()
+        {
+            var keyProperies = typeof(TDto).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                    .Where(x => x.GetCustomAttribute<KeyAttribute>() != null).ToArray();
+            if (!keyProperies.Any())
+                throw new MissingPrimaryKeyException("You must mark the primary key(s) in the DTO with the [Key] attribute");
+
+            return keyProperies.Select(x => x.GetValue(this)).ToArray();
+        }
+
+        //----------------------------------------------------------------
+        //private methods
 
         private static void CreateDatatoDtoMapping()
         {
@@ -170,14 +183,5 @@ namespace GenericServices.Services
                    && ((PropertyInfo)mapContext.PropertyMap.SourceMember).SetMethod.IsPublic;
         }
 
-        private object[] GetKeyValues()
-        {
-            var keyProperies = typeof(TDto).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                    .Where(x => x.GetCustomAttribute<KeyAttribute>() != null).ToArray();
-            if (!keyProperies.Any())
-                throw new MissingPrimaryKeyException("You must mark the primary key(s) in the DTO with the [Key] attribute");
-
-            return keyProperies.Select(x => x.GetValue(this)).ToArray();
-        }
     }
 }

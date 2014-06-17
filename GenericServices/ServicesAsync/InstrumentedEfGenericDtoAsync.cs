@@ -4,25 +4,25 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using AutoMapper;
+using System.Threading.Tasks;
+using GenericServices.Services;
 
-namespace GenericServices.Services
+namespace GenericServices.ServicesAsync
 {
-    public enum InstrumentedOpFlags { NormalOperation, FailOnCopyDataToDto, FailOnCopyDtoToData, ForceActionFail, ForceActionWarnWithWrite, ForceActionkWarnNoWrite }
 
-    public abstract class InstrumentedEfGenericDto<TData, TDto> : EfGenericDto<TData, TDto>, ICheckIfWarnings
+    public abstract class InstrumentedEfGenericDtoAsync<TData, TDto> : EfGenericDtoAsync<TData, TDto>, ICheckIfWarnings
         where TData : class
-        where TDto : EfGenericDto<TData, TDto>
+        where TDto : EfGenericDtoAsync<TData, TDto>
     {
         /// <summary>
         /// Used to surround calls with using to catch start/end time
         /// </summary>
         private class LogStartStop : IDisposable
         {
-            private readonly InstrumentedEfGenericDto<TData, TDto> _callingClass;
+            private readonly InstrumentedEfGenericDtoAsync<TData, TDto> _callingClass;
             private readonly string _callingMethodName;
 
-            public LogStartStop(InstrumentedEfGenericDto<TData, TDto> callingClass, [CallerMemberName] string callerName = "")
+            public LogStartStop(InstrumentedEfGenericDtoAsync<TData, TDto> callingClass, [CallerMemberName] string callerName = "")
             {
                 _callingClass = callingClass;
                 _callingMethodName = callerName;
@@ -47,12 +47,12 @@ namespace GenericServices.Services
         //--------------------------------------------------
         //ctors
 
-        public InstrumentedEfGenericDto()
+        public InstrumentedEfGenericDtoAsync()
         {
             _timer.Start();
         }
 
-        internal InstrumentedEfGenericDto(InstrumentedOpFlags whereToFail)
+        internal InstrumentedEfGenericDtoAsync(InstrumentedOpFlags whereToFail)
             : this()
         {
             _whereToFail = whereToFail;
@@ -122,10 +122,17 @@ namespace GenericServices.Services
             LogCaller();
         }
 
-        protected internal override TData FindItemTracked(IDbContextWithValidation context)
+
+        /// <summary>
+        /// This returns the TData item that fits the key(s) in the DTO.
+        /// Override if you want to include other relationships for deep level updates
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        internal protected override async Task<TData> FindItemTrackedAsync(IDbContextWithValidation context)
         {
             using (new LogStartStop(this))
-                return base.FindItemTracked(context);
+                return await context.Set<TData>().FindAsync(GetKeyValues());
         }
 
         protected internal override ISuccessOrErrors CopyDataToDto(IDbContextWithValidation context, TData source, TDto destination)
@@ -156,11 +163,11 @@ namespace GenericServices.Services
             }
         }
 
-        protected internal override TDto CreateDtoAndCopyDataIn(IDbContextWithValidation context, Expression<Func<TData, bool>> predicate)
+        protected internal override async Task<TDto> CreateDtoAndCopyDataInAsync(IDbContextWithValidation context, Expression<Func<TData, bool>> predicate)
         {
             LogCaller(CallTypes.Start);
-            var newDto = base.CreateDtoAndCopyDataIn(context, predicate);
-            var instDto = newDto as InstrumentedEfGenericDto<TData, TDto>;
+            var newDto = await base.CreateDtoAndCopyDataInAsync(context, predicate);
+            var instDto = newDto as InstrumentedEfGenericDtoAsync<TData, TDto>;
             instDto._timer = _timer;
             instDto._logOfCalls = _logOfCalls;
             instDto._whereToFail = _whereToFail;
