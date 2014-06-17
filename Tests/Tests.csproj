@@ -76,6 +76,7 @@
     <Compile Include="DataClasses\Internal\LoadDbDataFromXml.cs" />
     <Compile Include="DataClasses\SampleWebAppDb.cs" />
     <Compile Include="DTOs\Concrete\DetailPostDto.cs" />
+    <Compile Include="DTOs\Concrete\SimpleTagDtoAsync.cs" />
     <Compile Include="DTOs\ISimplePostTagGradeDto.cs" />
     <Compile Include="DTOs\Concrete\SimplePostTagGradeDto.cs" />
     <Compile Include="DTOs\Concrete\SimpleTagDto.cs" />
@@ -97,12 +98,15 @@
     <Compile Include="UnitTests\Group01DataClasses\Tests02Validation.cs" />
     <Compile Include="UnitTests\Group01DataClasses\Tests04ReadWrite.cs" />
     <Compile Include="UnitTests\Group02Validation\Test01SuccessOrErrors.cs" />
-    <Compile Include="UnitTests\Group03ServiceFlow\Test10TaskService.cs" />
+    <Compile Include="UnitTests\Group03ServiceFlow\Test01CreateService.cs" />
+    <Compile Include="UnitTests\Group03ServiceFlow\Test10ActionService.cs" />
     <Compile Include="UnitTests\Group03ServiceFlow\Test03DetailService.cs" />
     <Compile Include="UnitTests\Group03ServiceFlow\Test02UpdateService.cs" />
-    <Compile Include="UnitTests\Group03ServiceFlow\Test01CreateService.cs" />
-    <Compile Include="UnitTests\Group04GenericLogger\Test02SetupLogger.cs" />
-    <Compile Include="UnitTests\Group04GenericLogger\Test04Log4NetGenericLogger.cs" />
+    <Compile Include="UnitTests\Group04ServiceFlowAsync\Test01CreateServiceAsync.cs" />
+    <Compile Include="UnitTests\Group04ServiceFlowAsync\Test02UpdateServiceAsync.cs" />
+    <Compile Include="UnitTests\Group04ServiceFlowAsync\Test03DetailServiceAsync.cs" />
+    <Compile Include="UnitTests\Group05GenericLogger\Test02SetupLogger.cs" />
+    <Compile Include="UnitTests\Group05GenericLogger\Test04Log4NetGenericLogger.cs" />
     <Compile Include="UnitTests\Group06Actions\Test03ActionComms.cs" />
     <Compile Include="UnitTests\Group08Services\Test01AutoMapper.cs" />
     <Compile Include="UnitTests\Group08Services\Test02aPostTagGradeDirect.cs" />

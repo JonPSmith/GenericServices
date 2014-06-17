@@ -5,10 +5,9 @@ using log4net.Appender;
 using log4net.Config;
 using NUnit.Framework;
 using Tests.Actions;
-using Tests.DataClasses.Concrete;
 using Tests.Helpers;
 
-namespace Tests.UnitTests.Group04GenericLogger
+namespace Tests.UnitTests.Group05GenericLogger
 {
     class Test04Log4NetGenericLogger
     {

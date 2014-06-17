@@ -3,7 +3,7 @@ using GenericServices.Logger;
 using NUnit.Framework;
 using Tests.Helpers;
 
-namespace Tests.UnitTests.Group04GenericLogger
+namespace Tests.UnitTests.Group05GenericLogger
 {
 
 
