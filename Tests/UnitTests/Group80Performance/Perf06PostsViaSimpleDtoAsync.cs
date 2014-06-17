@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Linq;
-using GenericServices.Services;
+using GenericServices.ServicesAsync;
 using NUnit.Framework;
 using Tests.DataClasses;
 using Tests.DataClasses.Concrete;
@@ -10,7 +10,7 @@ using Tests.Helpers;
 
 namespace Tests.UnitTests.Group80Performance
 {
-    class Perf04PostsViaSimpleDto
+    class Perf06PostsViaSimpleDtoAsync
     {
 
         [TestFixtureSetUp]
@@ -29,7 +29,7 @@ namespace Tests.UnitTests.Group80Performance
 
 
         [Test]
-        public void Perf01DetailPostOk()
+        public async void Perf01DetailPostOk()
         {
             int postId;
             using (var db = new SampleWebAppDb())
@@ -38,10 +38,10 @@ namespace Tests.UnitTests.Group80Performance
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
-                var service = new DetailService<Post, SimplePostDto>(db);
+                var service = new DetailServiceAsync<Post, SimplePostDtoAsync>(db);
 
                 //ATTEMPT
-                var dto = service.GetDetail(x => x.PostId == postId);
+                var dto = await service.GetDetailAsync(x => x.PostId == postId);
                 dto.LogSpecificName("End");
 
                 //VERIFY
@@ -50,7 +50,7 @@ namespace Tests.UnitTests.Group80Performance
         }
 
         [Test]
-        public void Perf05UpdateSetupOk()
+        public async void Perf05UpdateSetupOk()
         {
             int postId;
             using (var db = new SampleWebAppDb())
@@ -59,10 +59,10 @@ namespace Tests.UnitTests.Group80Performance
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
-                var service = new UpdateSetupService<Post, SimplePostDto>(db);
+                var service = new UpdateSetupServiceAsync<Post, SimplePostDtoAsync>(db);
 
                 //ATTEMPT
-                var dto = service.GetOriginal(x => x.PostId == postId);
+                var dto = await service.GetOriginalAsync(x => x.PostId == postId);
                 dto.LogSpecificName("End");
 
                 //VERIFY
@@ -71,7 +71,7 @@ namespace Tests.UnitTests.Group80Performance
         }
 
         [Test]
-        public void Perf06UpdateWithListDtoOk()
+        public async void Perf06UpdateWithListDtoOk()
         {
             int postId;
             using (var db = new SampleWebAppDb())
@@ -81,13 +81,13 @@ namespace Tests.UnitTests.Group80Performance
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
-                var service = new UpdateService<Post, SimplePostDto>(db);
-                var setupService = new UpdateSetupService<Post, SimplePostDto>(db);
+                var service = new UpdateServiceAsync<Post, SimplePostDtoAsync>(db);
+                var setupService = new UpdateSetupServiceAsync<Post, SimplePostDtoAsync>(db);
 
                 //ATTEMPT
-                var dto = setupService.GetOriginal(x => x.PostId == postId);
+                var dto = await setupService.GetOriginalAsync(x => x.PostId == postId);
                 dto.Title = Guid.NewGuid().ToString();
-                var status = service.Update(dto);
+                var status = await service.UpdateAsync(dto);
                 dto.LogSpecificName("End");
 
                 //VERIFY

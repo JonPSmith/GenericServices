@@ -122,11 +122,15 @@
     <Compile Include="UnitTests\Group08Services\Test10RunTask.cs" />
     <Compile Include="UnitTests\Group09ServicesAsync\Test03CheckGenericDtoAsync.cs" />
     <Compile Include="UnitTests\Group09ServicesAsync\Test04PostsViaSimpleDtoAsync.cs" />
+    <Compile Include="UnitTests\Group09ServicesAsync\Test05PostsViaDetailDtoAsync.cs" />
     <Compile Include="UnitTests\Group80Performance\Perf01CheckHelpers.cs" />
+    <Compile Include="UnitTests\Group80Performance\Perf04EfPostAsync.cs" />
     <Compile Include="UnitTests\Group80Performance\Perf03EfPost.cs" />
-    <Compile Include="UnitTests\Group80Performance\Perf04PostsViaSimpleDto.cs" />
+    <Compile Include="UnitTests\Group80Performance\Perf06PostsViaSimpleDtoAsync.cs" />
+    <Compile Include="UnitTests\Group80Performance\Perf05PostsViaSimpleDto.cs" />
+    <Compile Include="UnitTests\Group80Performance\Perf08PostsViaDetailDtoAsync.cs" />
     <Compile Include="UnitTests\Group80Performance\Perf10PostPerformance.cs" />
-    <Compile Include="UnitTests\Group80Performance\Perf05PostsViaDetailDto.cs" />
+    <Compile Include="UnitTests\Group80Performance\Perf07PostsViaDetailDto.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

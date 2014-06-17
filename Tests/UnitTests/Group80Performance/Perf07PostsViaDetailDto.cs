@@ -10,7 +10,7 @@ using Tests.Helpers;
 
 namespace Tests.UnitTests.Group80Performance
 {
-    class Perf05PostsViaDetailDto
+    class Perf07PostsViaDetailDto
     {
 
         [TestFixtureSetUp]
