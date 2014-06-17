@@ -131,12 +131,12 @@ namespace Tests.DTOs.Concrete
             var status = SuccessOrErrors.Success("OK if no errors set");
 
             //now we sort out the blogger
-            var errMsg = SetupBloggerIdFromDropDownList(db, post);
+            var errMsg = await SetupBloggerIdFromDropDownList(db, post);
             if (errMsg != null)
                 status.AddNamedParameterError("Bloggers", errMsg);
 
             //now we sort out the tags
-            errMsg = ChangeTagsBasedOnMultiSelectList(db, post);
+            errMsg = await ChangeTagsBasedOnMultiSelectList(db, post);
             if (errMsg != null)
                 status.AddNamedParameterError("UserChosenTags", errMsg);
 
@@ -151,14 +151,14 @@ namespace Tests.DTOs.Concrete
         //---------------------------------------------------
         //private helpers
 
-        private string SetupBloggerIdFromDropDownList(SampleWebAppDb db, Post post)
+        private async Task<string> SetupBloggerIdFromDropDownList(SampleWebAppDb db, Post post)
         {
             
             var blogId = Bloggers.SelectedValueAsInt;
             if (blogId == null)
                 return "The blogger was not selected. You must do that before the post can be saved.";
             
-            var blogger = db.Blogs.Find((int) blogId);
+            var blogger = await db.Blogs.FindAsync((int) blogId);
             if (blogger == null)
                 return "Could not find the blogger you selected. Did another user delete it?";
             
@@ -170,7 +170,7 @@ namespace Tests.DTOs.Concrete
             return null;
         }
 
-        private string ChangeTagsBasedOnMultiSelectList(SampleWebAppDb db, Post post)
+        private async Task<string> ChangeTagsBasedOnMultiSelectList(SampleWebAppDb db, Post post)
         {
             var requiredTagIds = UserChosenTags.GetFinalSelectionAsInts();
             if (!requiredTagIds.Any())
@@ -183,7 +183,7 @@ namespace Tests.DTOs.Concrete
                 //This is an update so we need to load the tags
                 db.Entry(post).Collection(p => p.Tags).Load();
 
-            var newTagsForPost = db.Tags.Where(x => requiredTagIds.Contains(x.TagId)).ToList();
+            var newTagsForPost = await db.Tags.Where(x => requiredTagIds.Contains(x.TagId)).ToListAsync();
             Tags = newTagsForPost;      //will be copied over by copyDtoToData
 
             return null;

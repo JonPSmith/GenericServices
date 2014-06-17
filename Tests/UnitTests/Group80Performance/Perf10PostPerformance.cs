@@ -158,7 +158,7 @@ namespace Tests.UnitTests.Group80Performance
             {
                 for (int i = 0; i < numCyclesToRun; i++)
                 {
-                    await actionToRun(db, i + _firstPostId);
+                    await actionToRun(db, i + _firstPostId);//.ConfigureAwait(false);
                 }
             }
             timer.Stop();
