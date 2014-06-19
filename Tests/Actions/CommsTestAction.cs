@@ -14,6 +14,14 @@ namespace Tests.Actions
 
     public class CommsTestAction : ActionBase, ICommsTestAction
     {
+        /// <summary>
+        /// This allows the action to configure what it supports, which then affects what the user sees
+        /// Note: it must be a constant as it is read just after the action is created
+        /// </summary>
+        public override ActionFlags ActionConfig
+        {
+            get { return ActionFlags.Normal; }
+        }
 
         public bool DisposeWasCalled { get; private set; }
 
@@ -84,5 +92,6 @@ namespace Tests.Actions
             DisposeWasCalled = true;
             Debug.WriteLine("The dispose was called");
         }
+
     }
 }

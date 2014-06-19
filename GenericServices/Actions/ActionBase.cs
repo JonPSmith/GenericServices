@@ -10,6 +10,12 @@ namespace GenericServices.Actions
         private readonly IGenericLogger _logger;
 
         private int _lastReportedProgressPercentage = -1;
+
+        /// <summary>
+        /// This allows the action to configure what it supports, which then affects what the user sees
+        /// Note: it must be a constant as it is read just after the action is created
+        /// </summary>
+        public abstract ActionFlags ActionConfig { get; }
         
         /// <summary>
         /// This controls the lower value sent back to reportProgress

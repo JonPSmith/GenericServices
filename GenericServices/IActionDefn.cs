@@ -1,7 +1,17 @@
-﻿namespace GenericServices
+﻿using System;
+
+namespace GenericServices
 {
+    [Flags]
+    public enum ActionFlags { Normal = 0, ExitOnSuccess = 1, NoProgressSent = 2, NoMessagesSent = 4, CancelNotSupported = 8 }
+
     public interface IActionDefn<in T>
     {
+        /// <summary>
+        /// This allows the action to configure what it supports, which then affects what the user sees
+        /// </summary>
+        ActionFlags ActionConfig { get; }
+
         /// <summary>
         /// This controls the lower value sent back to reportProgress
         /// Lower and Upper bound are there to allow outer tasks to call inner tasks 
@@ -15,7 +25,7 @@
         int UpperBound { get; set; }
 
         /// <summary>
-        /// This is a general form of a task that can be run sync or async
+        /// This is a general form of a method to be run
         /// </summary>
         /// <param name="actionComms">Action communication channel, can be null</param>
         /// <param name="actionData">setup data sent to the service </param>

@@ -1,4 +1,5 @@
-﻿using GenericServices.Services;
+﻿using GenericServices;
+using GenericServices.Services;
 using NUnit.Framework;
 using Tests.Actions;
 using Tests.DataClasses.Concrete;
@@ -8,6 +9,18 @@ namespace Tests.UnitTests.Group06Actions
 {
     class Test03ActionComms
     {
+
+        [Test]
+        public void Check00CommsTestActionConfigOk()
+        {
+            //SETUP  
+
+            //ATTEMPT
+            var testAction = new CommsTestAction();
+
+            //VERIFY
+            testAction.ActionConfig.ShouldEqual(ActionFlags.Normal);
+        }
 
         [Test]
         public void Check01RunActionSuccessOk()
@@ -84,10 +97,22 @@ namespace Tests.UnitTests.Group06Actions
         }
 
         //----------
-        //no dispose
+        //simple action
 
         [Test]
-        public void Check05RunActionSuccessNoDisposeOk()
+        public void Check05ActionConfigOk()
+        {
+            //SETUP  
+
+            //ATTEMPT
+            var testAction = new EmptyTestAction();
+
+            //VERIFY
+            testAction.ActionConfig.ShouldEqual( ActionFlags.NoProgressSent | ActionFlags.NoMessagesSent | ActionFlags.CancelNotSupported);
+        }
+
+        [Test]
+        public void Check06RunActionSuccessNoDisposeOk()
         {
             //SETUP  
             var testAction = new EmptyTestAction();
@@ -103,7 +128,7 @@ namespace Tests.UnitTests.Group06Actions
 
 
         [Test]
-        public void Check05RunDbActionSuccessNoDisposeOk()
+        public void Check07RunDbActionSuccessNoDisposeOk()
         {
             //SETUP  
             var dummyDb = new DummyIDbContextWithValidation();
