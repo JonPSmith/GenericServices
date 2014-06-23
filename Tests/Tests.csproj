@@ -110,18 +110,19 @@
     <Compile Include="UnitTests\Group04ServiceFlowAsync\Test03DetailServiceAsync.cs" />
     <Compile Include="UnitTests\Group05GenericLogger\Test02SetupLogger.cs" />
     <Compile Include="UnitTests\Group05GenericLogger\Test04Log4NetGenericLogger.cs" />
-    <Compile Include="UnitTests\Group08Services\Test01AutoMapper.cs" />
-    <Compile Include="UnitTests\Group08Services\Test02aPostTagGradeDirect.cs" />
-    <Compile Include="UnitTests\Group08Services\Test02PostsDirect.cs" />
-    <Compile Include="UnitTests\Group09ServicesAsync\Test02PostsDirectAsync.cs" />
-    <Compile Include="UnitTests\Group08Services\Test03CheckGenericDto.cs" />
-    <Compile Include="UnitTests\Group08Services\Test04PostsViaSimpleDto.cs" />
-    <Compile Include="UnitTests\Group08Services\Test05PostsViaDetailDto.cs" />
-    <Compile Include="UnitTests\Group08Services\Test08PostTagGradeViaDto.cs" />
-    <Compile Include="UnitTests\Group08Services\Test07BlogsViaDetailDto.cs" />
-    <Compile Include="UnitTests\Group09ServicesAsync\Test03CheckGenericDtoAsync.cs" />
-    <Compile Include="UnitTests\Group09ServicesAsync\Test04PostsViaSimpleDtoAsync.cs" />
-    <Compile Include="UnitTests\Group09ServicesAsync\Test05PostsViaDetailDtoAsync.cs" />
+    <Compile Include="UnitTests\Group10NonDbActions\Test03CheckTestAction.cs" />
+    <Compile Include="UnitTests\Group08CrudServices\Test01AutoMapper.cs" />
+    <Compile Include="UnitTests\Group08CrudServices\Test02aPostTagGradeDirect.cs" />
+    <Compile Include="UnitTests\Group08CrudServices\Test02PostsDirect.cs" />
+    <Compile Include="UnitTests\Group09CrudServicesAsync\Test02PostsDirectAsync.cs" />
+    <Compile Include="UnitTests\Group08CrudServices\Test03CheckGenericDto.cs" />
+    <Compile Include="UnitTests\Group08CrudServices\Test04PostsViaSimpleDto.cs" />
+    <Compile Include="UnitTests\Group08CrudServices\Test05PostsViaDetailDto.cs" />
+    <Compile Include="UnitTests\Group08CrudServices\Test08PostTagGradeViaDto.cs" />
+    <Compile Include="UnitTests\Group08CrudServices\Test07BlogsViaDetailDto.cs" />
+    <Compile Include="UnitTests\Group09CrudServicesAsync\Test03CheckGenericDtoAsync.cs" />
+    <Compile Include="UnitTests\Group09CrudServicesAsync\Test04PostsViaSimpleDtoAsync.cs" />
+    <Compile Include="UnitTests\Group09CrudServicesAsync\Test05PostsViaDetailDtoAsync.cs" />
     <Compile Include="UnitTests\Group80Performance\Perf01CheckHelpers.cs" />
     <Compile Include="UnitTests\Group80Performance\Perf04EfPostAsync.cs" />
     <Compile Include="UnitTests\Group80Performance\Perf03EfPost.cs" />
@@ -144,9 +145,7 @@
   <ItemGroup>
     <Content Include="TestData\DbContentSimple.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UnitTests\Group06Actions\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

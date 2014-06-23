@@ -8,7 +8,7 @@ using Tests.DataClasses.Concrete;
 using Tests.DTOs.Concrete;
 using Tests.Helpers;
 
-namespace Tests.UnitTests.Group09ServicesAsync
+namespace Tests.UnitTests.Group09CrudServicesAsync
 {
     class Test03CheckGenericDtoAsync
     {

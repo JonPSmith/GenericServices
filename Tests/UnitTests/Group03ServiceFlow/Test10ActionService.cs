@@ -45,9 +45,9 @@ namespace Tests.UnitTests.Group03ServiceFlow
         }
 
         [TestCase(InstrumentedOpFlags.NormalOperation, true, "CopyDtoToData")]
+        [TestCase(InstrumentedOpFlags.FailOnCopyDtoToData, false, "CopyDtoToData")]
         [TestCase(InstrumentedOpFlags.ForceActionFail, false, "CopyDtoToData")]
         [TestCase(InstrumentedOpFlags.ForceActionWarnWithWrite, true, "CopyDtoToData")]
-        [TestCase(InstrumentedOpFlags.FailOnCopyDtoToData, false, "CopyDtoToData")]
         public void Check02ActionFlowAction(InstrumentedOpFlags errorFlag, bool isValid, string expectedFunctionsCalled)
         {
             //SETUP

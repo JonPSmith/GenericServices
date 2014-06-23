@@ -3,15 +3,14 @@ using System.Data.Entity;
 using System.Linq;
 using GenericServices;
 using GenericServices.Services;
-using GenericServices.ServicesAsync;
 using NUnit.Framework;
 using Tests.DataClasses;
 using Tests.DataClasses.Concrete;
 using Tests.Helpers;
 
-namespace Tests.UnitTests.Group09ServicesAsync
+namespace Tests.UnitTests.Group08CrudServices
 {
-    class Test02PostsDirectAsync
+    class Test02PostsDirect
     {
 
         [TestFixtureSetUp]
@@ -32,17 +31,17 @@ namespace Tests.UnitTests.Group09ServicesAsync
             //SETUP    
 
             //ATTEMPT
-            ICreateServiceAsync<Post> createService = new CreateServiceAsync<Post>(null);
-            IDetailServiceAsync<Post> detailService = new DetailServiceAsync<Post>(null);
-            IDeleteServiceAsync<Post> deleteService = new DeleteServiceAsync<Post>(null);
-            IUpdateServiceAsync<Post> updateService = new UpdateServiceAsync<Post>(null);
+            ICreateService<Post> createService = new CreateService<Post>(null);
+            IDetailService<Post> detailService = new DetailService<Post>(null);
+            IListService<Post> listService = new ListService<Post>(null);
+            IUpdateService<Post> updateService = new UpdateService<Post>(null);
 
             //VERIFY
-            (updateService is IUpdateServiceAsync<Post>).ShouldEqual(true);
+            (listService is IListService<Post>).ShouldEqual(true);
         }
 
         [Test]
-        public async void Check02ListDirectPostOk()
+        public void Check02ListDirectPostOk()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -52,7 +51,7 @@ namespace Tests.UnitTests.Group09ServicesAsync
 
                 //ATTEMPT
                 var query = service.GetList().Include(x => x.Blogger);
-                var list = await query.ToListAsync();
+                var list = query.ToList();
 
                 //VERIFY
                 list.Count.ShouldEqual(3);
@@ -64,18 +63,18 @@ namespace Tests.UnitTests.Group09ServicesAsync
         }
 
         [Test]
-        public async void Check06UpdateDirectOk()
+        public void Check06UpdateDirectOk()
         {
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
                 var firstPostUntracked = db.Posts.AsNoTracking().First();
-                var service = new UpdateServiceAsync<Post>(db);
+                var service = new UpdateService<Post>(db);
 
                 //ATTEMPT
                 firstPostUntracked.Title = Guid.NewGuid().ToString();
-                var status = await service.UpdateAsync(firstPostUntracked);
+                var status = service.Update(firstPostUntracked);
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
@@ -86,7 +85,7 @@ namespace Tests.UnitTests.Group09ServicesAsync
         }
 
         [Test]
-        public async void Check07UpdateDirectPostCorrectOk()
+        public void Check07UpdateDirectPostCorrectOk()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -94,11 +93,11 @@ namespace Tests.UnitTests.Group09ServicesAsync
                 var snap = new DbSnapShot(db);
                 var firstPostUntrackedNoIncludes = db.Posts.AsNoTracking().First();
                 var firstPostUntrackedWithIncludes = db.Posts.AsNoTracking().Include( x => x.Tags).First();
-                var service = new UpdateServiceAsync<Post>(db);
+                var service = new UpdateService<Post>(db);
 
                 //ATTEMPT
                 firstPostUntrackedNoIncludes.Title = Guid.NewGuid().ToString();
-                var status = await service.UpdateAsync(firstPostUntrackedNoIncludes);
+                var status = service.Update(firstPostUntrackedNoIncludes);
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
@@ -114,20 +113,41 @@ namespace Tests.UnitTests.Group09ServicesAsync
         }
 
         [Test]
-        public async void Check08CreateDirectOk()
+        public void Check08UpdateWithListDtoBad()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var firstPostUntracked = db.Posts.AsNoTracking().First();
+                var service = new UpdateService<Post>(db);
+
+                //ATTEMPT
+                firstPostUntracked.Title = "Can't I ask a question?";
+                var status = service.Update(firstPostUntracked);
+
+                //VERIFY
+                status.IsValid.ShouldEqual(false);
+                status.Errors.Count.ShouldEqual(1);
+                status.Errors[0].ErrorMessage.ShouldEqual("Sorry, but you can't ask a question, i.e. the title can't end with '?'.");
+
+            }
+        }
+
+        [Test]
+        public void Check08CreateDirectOk()
         {
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
-                var service = new CreateServiceAsync<Post>(db);
+                var service = new CreateService<Post>(db);
                 var firstPostUntracked = db.Posts.Include( x => x.Tags).AsNoTracking().First();
                 var tagsTracked = db.Tags.ToList().Where(x => firstPostUntracked.Tags.Any(y => y.TagId == x.TagId)).ToList();
 
                 //ATTEMPT
                 firstPostUntracked.Title = Guid.NewGuid().ToString();
                 firstPostUntracked.Tags = tagsTracked;
-                var status = await service.CreateAsync(firstPostUntracked);
+                var status = service.Create(firstPostUntracked);
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true);
@@ -140,17 +160,17 @@ namespace Tests.UnitTests.Group09ServicesAsync
         }
 
         [Test]
-        public async void Check10DeleteDirectOk()
+        public void Check10DeleteDirectOk()
         {
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
                 var firstPostUntracked = db.Posts.AsNoTracking().First();
-                var service = new DeleteServiceAsync<Post>(db);
+                var service = new DeleteService<Post>(db);
 
                 //ATTEMPT
-                var status = await service.DeleteAsync(firstPostUntracked.PostId);
+                var status = service.Delete(firstPostUntracked.PostId);
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);

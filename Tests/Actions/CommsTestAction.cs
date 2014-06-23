@@ -7,12 +7,12 @@ using GenericServices.Services;
 
 namespace Tests.Actions
 {
-    public interface ICommsTestAction : IActionDefn<CommsTestActionData>, IDisposable
+    public interface ITestAction : IActionDefn<int, CommsTestActionData>, IDisposable
     {
 
     }
 
-    public class CommsTestAction : ActionBase, ICommsTestAction
+    public class TestAction : ActionBase, ITestAction
     {
         /// <summary>
         /// This allows the action to configure what it supports, which then affects what the user sees
@@ -25,9 +25,9 @@ namespace Tests.Actions
 
         public bool DisposeWasCalled { get; private set; }
 
-        public ISuccessOrErrors DoAction(IActionComms actionComms, CommsTestActionData dto)
+        public ISuccessOrErrors<int> DoAction(IActionComms actionComms, CommsTestActionData dto)
         {
-            var result = new SuccessOrErrors();
+            ISuccessOrErrors<int> result = new SuccessOrErrors<int>();
 
             if (dto.Mode == TestServiceModes.ThrowExceptionOnStart)
                 throw new Exception("Thrown exception at start.");
@@ -61,7 +61,6 @@ namespace Tests.Actions
                         return result.AddSingleError("Cancelled by user.");
                     }
                 }
-
                 //Thread.Sleep( (int)(dto.SecondsBetweenIterations * 1000));
             }
 
@@ -76,8 +75,9 @@ namespace Tests.Actions
             }
             else
             {
-                result.SetSuccessMessage(string.Format("Have completed the task in {0:F2} seconds",
-                                                           DateTime.Now.Subtract(startTime).TotalSeconds)); 
+                result.SetSuccessWithResult(dto.NumIterations,
+                    string.Format("Have completed the task in {0:F2} seconds",
+                    DateTime.Now.Subtract(startTime).TotalSeconds));
             }
 
             return result;

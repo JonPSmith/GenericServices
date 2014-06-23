@@ -1,18 +1,17 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
 using GenericServices;
-using GenericServices.Services;
+using GenericServices.ServicesAsync;
 using NUnit.Framework;
 using Tests.DataClasses;
 using Tests.DataClasses.Concrete;
 using Tests.DTOs.Concrete;
 using Tests.Helpers;
 
-namespace Tests.UnitTests.Group08Services
+namespace Tests.UnitTests.Group09CrudServicesAsync
 {
-    class Test04PostsViaSimpleDto
+    class Test04PostsViaSimpleDtoAsync
     {
 
         [TestFixtureSetUp]
@@ -24,7 +23,7 @@ namespace Tests.UnitTests.Group08Services
                 var filepath = TestFileHelpers.GetTestFileFilePath("DbContentSimple.xml");
                 DataLayerInitialise.ResetDatabaseToTestData(db, filepath);
             }
-            new SimplePostDto().CacheSetup();
+            new SimplePostDtoAsync().CacheSetup();
         }
 
         [Test]
@@ -34,74 +33,27 @@ namespace Tests.UnitTests.Group08Services
             //SETUP    
 
             //ATTEMPT
-            ICreateService<Post, SimplePostDto> createService = new CreateService<Post, SimplePostDto>(null);
-            IDetailService<Post, SimplePostDto> detailService = new DetailService<Post, SimplePostDto>(null);
-            IListService<Post, SimplePostDto> listService = new ListService<Post, SimplePostDto>(null);
-            IUpdateService<Post, SimplePostDto> updateService = new UpdateService<Post, SimplePostDto>(null);
+            ICreateServiceAsync<Post, SimplePostDtoAsync> createService = new CreateServiceAsync<Post, SimplePostDtoAsync>(null);
+            IDetailServiceAsync<Post, SimplePostDtoAsync> detailService = new DetailServiceAsync<Post, SimplePostDtoAsync>(null);
+            IUpdateServiceAsync<Post, SimplePostDtoAsync> updateService = new UpdateServiceAsync<Post, SimplePostDtoAsync>(null);
 
             //VERIFY
-            (listService is IListService<Post, SimplePostDto>).ShouldEqual(true);
+            (createService is ICreateServiceAsync<Post, SimplePostDtoAsync>).ShouldEqual(true);
         }
         
         //--------------------------------------------------------
 
         [Test]
-        public void Check02ListPostOk()
+        public async void Check02DetailPostOk()
         {
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
-                var service = new ListService<Post, SimplePostDto>(db);
-
-                //ATTEMPT
-                var query = service.GetList();
-                var list = query.ToList();
-
-                //VERIFY
-                list.Count.ShouldEqual(3);
-                list[0].Title.ShouldEqual("First great post");
-                list[0].BloggerName.ShouldEqual("Jon Smith");
-                list[0].TagNames.ShouldEqual("Ugly post, Good post");
-                list[0].LastUpdatedUtc.Kind.ShouldEqual(DateTimeKind.Utc);
-
-            }
-        }
-
-        [Test]
-        public void Check02DetailPostOk()
-        {
-            using (var db = new SampleWebAppDb())
-            {
-                //SETUP
-                var service = new DetailService<Post, SimplePostDto>(db);
+                var service = new DetailServiceAsync<Post, SimplePostDtoAsync>(db);
                 var firstPost = db.Posts.Include(x => x.Tags).AsNoTracking().First();
 
                 //ATTEMPT
-                var dto = service.GetDetail(x => x.PostId == firstPost.PostId);
-                dto.LogSpecificName("End");
-
-                //VERIFY
-                dto.PostId.ShouldEqual(firstPost.PostId);
-                dto.BloggerName.ShouldEqual(firstPost.Blogger.Name);
-                dto.Title.ShouldEqual(firstPost.Title);
-                CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), dto.Tags.Select(x => x.TagId));
-            }
-        }
-
-
-
-
-        [Test]
-        public void Check05UpdateSetupOk()
-        {
-            using (var db = new SampleWebAppDb())
-            {
-                //SETUP
-                var service = new UpdateSetupService<Post, SimplePostDto>(db);
-                var firstPost = db.Posts.Include(x => x.Tags).AsNoTracking().First();
-
-                //ATTEMPT
-                var dto = service.GetOriginal(x => x.PostId == firstPost.PostId);
+                var dto = await service.GetDetailAsync(x => x.PostId == firstPost.PostId);
                 dto.LogSpecificName("End");
 
                 //VERIFY
@@ -114,20 +66,42 @@ namespace Tests.UnitTests.Group08Services
 
 
         [Test]
-        public void Check06UpdateWithListDtoOk()
+        public async void Check05UpdateSetupOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var service = new UpdateSetupServiceAsync<Post, SimplePostDtoAsync>(db);
+                var firstPost = db.Posts.Include(x => x.Tags).AsNoTracking().First();
+
+                //ATTEMPT
+                var dto = await service.GetOriginalAsync(x => x.PostId == firstPost.PostId);
+                dto.LogSpecificName("End");
+
+                //VERIFY
+                dto.PostId.ShouldEqual(firstPost.PostId);
+                dto.BloggerName.ShouldEqual(firstPost.Blogger.Name);
+                dto.Title.ShouldEqual(firstPost.Title);
+                CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), dto.Tags.Select(x => x.TagId));
+            }
+        }
+
+
+        [Test]
+        public async void Check06UpdateWithListDtoOk()
         {
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
                 var firstPost = db.Posts.Include(x => x.Tags).AsNoTracking().First();
-                var service = new UpdateService<Post, SimplePostDto>(db);
-                var setupService = new UpdateSetupService<Post, SimplePostDto>(db);
+                var service = new UpdateServiceAsync<Post, SimplePostDtoAsync>(db);
+                var setupService = new UpdateSetupServiceAsync<Post, SimplePostDtoAsync>(db);
 
                 //ATTEMPT
-                var dto = setupService.GetOriginal(x => x.PostId == firstPost.PostId);
+                var dto = await setupService.GetOriginalAsync(x => x.PostId == firstPost.PostId);
                 dto.Title = Guid.NewGuid().ToString();
-                var status = service.Update(dto);
+                var status = await service.UpdateAsync(dto);
                 dto.LogSpecificName("End");
 
                 //VERIFY
@@ -139,19 +113,19 @@ namespace Tests.UnitTests.Group08Services
         }
 
         [Test]
-        public void Check07UpdateWithListDtoCorrectOk()
+        public async void Check07UpdateWithListDtoCorrectOk()
         {
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var firstPost = db.Posts.Include(x => x.Tags).AsNoTracking().First();
-                var service = new UpdateService<Post, SimplePostDto>(db);
-                var setupService = new UpdateSetupService<Post, SimplePostDto>(db);
+                var service = new UpdateServiceAsync<Post, SimplePostDtoAsync>(db);
+                var setupService = new UpdateSetupServiceAsync<Post, SimplePostDtoAsync>(db);
 
                 //ATTEMPT
-                var dto = setupService.GetOriginal(x => x.PostId == firstPost.PostId);
+                var dto = await setupService.GetOriginalAsync(x => x.PostId == firstPost.PostId);
                 dto.Title = Guid.NewGuid().ToString();
-                var status = service.Update(dto);
+                var status = await service.UpdateAsync(dto);
                 dto.LogSpecificName("End");
 
                 //VERIFY
@@ -165,19 +139,20 @@ namespace Tests.UnitTests.Group08Services
         }
 
         [Test]
-        public void Check08UpdateWithListDtoBad()
+        public async void Check08UpdateWithListDtoBad()
         {
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
-                var listService = new ListService<Post, SimplePostDto>(db);
-                var firstPostUntracked = listService.GetList().First();
-                var service = new UpdateService<Post, SimplePostDto>(db);
+                var firstPost = db.Posts.Include(x => x.Tags).AsNoTracking().First();
+                var service = new UpdateServiceAsync<Post, SimplePostDtoAsync>(db);
+                var setupService = new UpdateSetupServiceAsync<Post, SimplePostDtoAsync>(db);
 
                 //ATTEMPT
-                firstPostUntracked.Title = "Can't I ask a question?";
-                var status = service.Update(firstPostUntracked);
-                firstPostUntracked.LogSpecificName("End");
+                var dto = await setupService.GetOriginalAsync(x => x.PostId == firstPost.PostId);
+                dto.Title = "Can't I ask a question?";
+                var status = await service.UpdateAsync(dto);
+                dto.LogSpecificName("End");
 
                 //VERIFY
                 status.IsValid.ShouldEqual(false);
@@ -188,16 +163,16 @@ namespace Tests.UnitTests.Group08Services
         }
 
         [Test]
-        public void Check08CreateWithListDtoBad()
+        public async void Check08CreateWithListDtoBad()
         {
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
-                var service = new CreateService<Post, SimplePostDto>(db);
+                var service = new CreateServiceAsync<Post, SimplePostDtoAsync>(db);
 
                 //ATTEMPT
-                var dto = new SimplePostDto();
-                var status = service.Create(dto);
+                var dto = new SimplePostDtoAsync();
+                var status = await service.CreateAsync(dto);
                 dto.LogSpecificName("End");
 
                 //VERIFY

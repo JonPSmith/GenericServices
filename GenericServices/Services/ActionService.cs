@@ -79,7 +79,7 @@ namespace GenericServices.Services
 
             try
             {
-                status = _actionToRun.DoAction(actionComms, actionInData);
+                return _actionToRun.DoAction(actionComms, actionInData);
             }
             finally
             {
@@ -87,10 +87,6 @@ namespace GenericServices.Services
                 if (disposable != null)
                     disposable.Dispose();
             }
-
-            if (status.IsValid && actionComms != null) actionComms.ReportProgress(100);
-
-            return status;
         }
 
         /// <summary>

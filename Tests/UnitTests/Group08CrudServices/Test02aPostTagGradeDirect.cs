@@ -5,7 +5,7 @@ using Tests.DataClasses;
 using Tests.DataClasses.Concrete;
 using Tests.Helpers;
 
-namespace Tests.UnitTests.Group08Services
+namespace Tests.UnitTests.Group08CrudServices
 {
     class Test02APostTagGradeDirect
     {
