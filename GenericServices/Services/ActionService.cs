@@ -4,7 +4,7 @@ using GenericServices.Services;
 
 namespace GenericServices.Services
 {
-    public class ActionService<TAction, TActionOut, TActionIn>
+    public class ActionService<TAction, TActionOut, TActionIn> : IActionService<TAction, TActionOut, TActionIn>
         where TAction : class, IActionDefn<TActionOut, TActionIn>
     {
         private readonly TAction _actionToRun;
@@ -41,7 +41,7 @@ namespace GenericServices.Services
     //---------------------------------------------------------------------------
 
 
-    public class ActionService<TAction, TActionOut, TActionIn, TDto>
+    public class ActionService<TAction, TActionOut, TActionIn, TDto> : IActionService<TAction, TActionOut, TActionIn, TDto>
         where TAction : class, IActionDefn<TActionOut, TActionIn>
         where TActionIn : class, new()
         where TDto : EfGenericDto<TActionIn, TDto>

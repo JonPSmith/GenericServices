@@ -7,12 +7,12 @@ using GenericServices.Services;
 
 namespace Tests.Actions
 {
-    public interface ITestAction : IActionDefn<int, CommsTestActionData>, IDisposable
+    public interface IGTestAction : IActionDefn<int, GTestActionData>, IDisposable
     {
 
     }
 
-    public class TestAction : ActionBase, ITestAction
+    public class GTestAction : ActionBase, IGTestAction
     {
         /// <summary>
         /// This allows the action to configure what it supports, which then affects what the user sees
@@ -25,7 +25,7 @@ namespace Tests.Actions
 
         public bool DisposeWasCalled { get; private set; }
 
-        public ISuccessOrErrors<int> DoAction(IActionComms actionComms, CommsTestActionData dto)
+        public ISuccessOrErrors<int> DoAction(IActionComms actionComms, GTestActionData dto)
         {
             ISuccessOrErrors<int> result = new SuccessOrErrors<int>();
 
@@ -35,7 +35,7 @@ namespace Tests.Actions
             DateTime startTime = DateTime.Now;
 
             ReportProgressAndThrowExceptionIfCancelPending(actionComms, 0, 
-                new ProgressMessage(ProgressMessageTypes.Info, "Task has started. Will run for {0:f1} seconds.", dto.NumIterations * dto.SecondsBetweenIterations));
+                new ProgressMessage(ProgressMessageTypes.Info, "Action has started. Will run for {0:f1} seconds.", dto.NumIterations * dto.SecondsBetweenIterations));
 
             for (int i = 0; i < dto.NumIterations; i++)
             {
@@ -76,7 +76,7 @@ namespace Tests.Actions
             else
             {
                 result.SetSuccessWithResult(dto.NumIterations,
-                    string.Format("Have completed the task in {0:F2} seconds",
+                    string.Format("Have completed the action in {0:F2} seconds",
                     DateTime.Now.Subtract(startTime).TotalSeconds));
             }
 
@@ -85,7 +85,7 @@ namespace Tests.Actions
 
         /// <summary>
         /// If the user wants something to be called at the end then adding IDisposable to the class ensures 
-        /// that whatever happens Dispose on the task weill be called at the end
+        /// that whatever happens Dispose on the action weill be called at the end
         /// </summary>
         public void Dispose()
         {

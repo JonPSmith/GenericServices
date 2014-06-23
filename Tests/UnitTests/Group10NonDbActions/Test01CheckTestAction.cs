@@ -6,7 +6,7 @@ using Tests.Helpers;
 
 namespace Tests.UnitTests.Group10NonDbActions
 {
-    class Test03CheckTestAction
+    class Test01CheckTestAction
     {
 
         [Test]
@@ -15,7 +15,7 @@ namespace Tests.UnitTests.Group10NonDbActions
             //SETUP  
 
             //ATTEMPT
-            var testAction = new TestAction();
+            var testAction = new GTestAction();
 
             //VERIFY
             testAction.ActionConfig.ShouldEqual(ActionFlags.Normal);
@@ -25,10 +25,10 @@ namespace Tests.UnitTests.Group10NonDbActions
         public void Check02RunActionSuccessOk()
         {
             //SETUP  
-            var testAction = new TestAction();
+            var testAction = new GTestAction();
 
             //ATTEMPT
-            var data = new CommsTestActionData();
+            var data = new GTestActionData();
             var status = testAction.DoAction(null, data);
 
             //VERIFY
@@ -41,10 +41,10 @@ namespace Tests.UnitTests.Group10NonDbActions
         {
             //SETUP  
             var mockComms = new MockActionComms();
-            var testAction = new TestAction();
+            var testAction = new GTestAction();
 
             //ATTEMPT
-            var data = new CommsTestActionData();
+            var data = new GTestActionData();
             var status = testAction.DoAction(mockComms, data);
 
             //VERIFY

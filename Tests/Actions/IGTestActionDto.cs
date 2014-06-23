@@ -5,7 +5,7 @@ using GenericServices.Services;
 
 namespace Tests.Actions
 {
-    public interface ICommsTestActionDto
+    public interface IGTestActionDto
     {
         [UIHint("Enum")]
         TestServiceModes Mode { get; set; }
@@ -59,7 +59,7 @@ namespace Tests.Actions
     /// <summary>
     /// This is a copy of CommsTestActionDto just so we can try the TActionData to TDto versions
     /// </summary>
-    public class CommsTestActionDto : InstrumentedEfGenericDto<CommsTestActionData, CommsTestActionDto>, ICommsTestActionDto
+    public class GTestActionDto : InstrumentedEfGenericDto<GTestActionData, GTestActionDto>, IGTestActionDto
     {
         private double _secondsBetweenIterations = 1;
         private int _numIterations = 5;

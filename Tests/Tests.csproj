@@ -63,10 +63,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Actions\CommsTestActionDto.cs" />
+    <Compile Include="Actions\IGTestActionDto.cs" />
     <Compile Include="Actions\MockActionComms.cs" />
-    <Compile Include="Actions\CommsTestAction.cs" />
-    <Compile Include="Actions\CommsTestActionData.cs" />
+    <Compile Include="Actions\GTestAction.cs" />
+    <Compile Include="Actions\GTestActionData.cs" />
     <Compile Include="DataClasses\Concrete\Blog.cs" />
     <Compile Include="DataClasses\Concrete\Helpers\TrackUpdate.cs" />
     <Compile Include="DataClasses\Concrete\Post.cs" />
@@ -110,7 +110,8 @@
     <Compile Include="UnitTests\Group04ServiceFlowAsync\Test03DetailServiceAsync.cs" />
     <Compile Include="UnitTests\Group05GenericLogger\Test02SetupLogger.cs" />
     <Compile Include="UnitTests\Group05GenericLogger\Test04Log4NetGenericLogger.cs" />
-    <Compile Include="UnitTests\Group10NonDbActions\Test03CheckTestAction.cs" />
+    <Compile Include="UnitTests\Group10NonDbActions\Test02CheckActionService.cs" />
+    <Compile Include="UnitTests\Group10NonDbActions\Test01CheckTestAction.cs" />
     <Compile Include="UnitTests\Group08CrudServices\Test01AutoMapper.cs" />
     <Compile Include="UnitTests\Group08CrudServices\Test02aPostTagGradeDirect.cs" />
     <Compile Include="UnitTests\Group08CrudServices\Test02PostsDirect.cs" />

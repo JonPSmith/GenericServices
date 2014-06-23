@@ -12,7 +12,7 @@ namespace Tests.Actions
         ThrowOperationCanceledExceptionHalfWayThrough
     }
 
-    public class CommsTestActionData : ICheckIfWarnings
+    public class GTestActionData : ICheckIfWarnings
     {
         private double _secondsBetweenIterations = 1;
         private int _numIterations = 5;

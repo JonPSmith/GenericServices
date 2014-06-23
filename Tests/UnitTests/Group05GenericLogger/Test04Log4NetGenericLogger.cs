@@ -114,12 +114,12 @@ namespace Tests.UnitTests.Group05GenericLogger
         {
 
             //SETUP  
-            var data = new CommsTestActionData
+            var data = new GTestActionData
             {
                 SecondsBetweenIterations = 0,
                 NumIterations = 1
             };
-            var action = new TestAction();
+            var action = new GTestAction();
 
             //ATTEMPT
             action.DoAction(new MockActionComms(), data);
@@ -127,8 +127,8 @@ namespace Tests.UnitTests.Group05GenericLogger
             //VERIFY
             var logs = _log4NetMemoryLog.GetEvents();
             logs.Length.ShouldEqual(2);
-            logs[0].LoggerName.ShouldEqual("TestAction");
-            logs[0].RenderedMessage.ShouldEqual("Task has started. Will run for 0.0 seconds.");
+            logs[0].LoggerName.ShouldEqual("GTestAction");
+            logs[0].RenderedMessage.ShouldEqual("Action has started. Will run for 0.0 seconds.");
 
         }
 
