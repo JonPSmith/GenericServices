@@ -4,11 +4,13 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
-using AutoMapper;
 
 namespace GenericServices.Services
 {
-    public enum InstrumentedOpFlags { NormalOperation, FailOnCopyDataToDto, FailOnCopyDtoToData, ForceActionFail, ForceActionWarnWithWrite, ForceActionkWarnNoWrite }
+    [Flags]
+    public enum InstrumentedOpFlags { NormalOperation = 0, FailOnCopyDataToDto = 1, FailOnCopyDtoToData = 2,
+        //these flags are not used in InstrumentedEfGenericDto, but inside unit tests
+        ForceActionFail = 4, ForceActionWarnWithWrite = 8, ForceActionkWarnNoWrite = 16 }
 
     public abstract class InstrumentedEfGenericDto<TData, TDto> : EfGenericDto<TData, TDto>, ICheckIfWarnings
         where TData : class

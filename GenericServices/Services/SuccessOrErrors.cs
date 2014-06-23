@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Validation;
 using System.Linq;
@@ -8,13 +7,109 @@ using System.Linq;
 namespace GenericServices.Services
 {
 
+    public class SuccessOrErrors<T> : SuccessOrErrors, ISuccessOrErrors<T>
+    {
+        /// <summary>
+        /// Holds the value set using SetSuccessWithResult
+        /// </summary>
+        public T Result { get; private set; }
+
+
+        //ctors
+        public SuccessOrErrors() :base() {}
+
+        private SuccessOrErrors(ISuccessOrErrors nonResultStatus)
+            : base(nonResultStatus) {}
+
+
+        /// <summary>
+        /// This sets a successful end by setting the Result and supplying a success message 
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="successformat"></param>
+        /// <param name="args"></param>
+        public ISuccessOrErrors<T> SetSuccessWithResult(T result, string successformat, params object[] args)
+        {
+            Result = result;
+            base.SetSuccessMessage(successformat, args);
+            return this;
+        }
+
+        public new ISuccessOrErrors<T> SetErrors(IEnumerable<DbEntityValidationResult> errors)
+        {
+            base.SetErrors(errors);
+            return this;
+        }
+
+        public new ISuccessOrErrors<T> SetErrors(IEnumerable<string> errors)
+        {
+            base.SetErrors(errors);
+            return this;
+        }
+
+        public new ISuccessOrErrors<T> AddSingleError(string errorformat, params object[] args)
+        {
+            base.AddSingleError(errorformat, args);
+            return this;
+        }
+
+        public new ISuccessOrErrors<T> AddNamedParameterError(string parameterName, string errorformat, params object[] args)
+        {
+            base.AddNamedParameterError(parameterName, errorformat, args);
+            return this;
+        }
+
+        /// <summary>
+        /// This method should not be used in SuccessOrErrors(T). You should use SetSuccessWithResult
+        /// </summary>
+        /// <param name="successformat"></param>
+        /// <param name="args"></param>
+        public override ISuccessOrErrors SetSuccessMessage(string successformat, params object[] args)
+        {
+            throw new InvalidOperationException("With SuccessOrErrors<T> you must call SetSuccessWithResult.");
+        }
+
+        /// <summary>
+        /// Turns the non result status into a result status by copying any errors or warnings
+        /// </summary>
+        /// <param name="nonResultStatus"></param>
+        /// <returns></returns>
+        public static ISuccessOrErrors<T> ConvertNonResultStatus(ISuccessOrErrors nonResultStatus)
+        {
+            return new SuccessOrErrors<T>(nonResultStatus);
+        }
+
+        /// <summary>
+        /// This is a quick way to create an ISuccessOrErrors(T) with a success message and result
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="formattedSuccessMessage"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static ISuccessOrErrors<T> SuccessWithResult(T result, string formattedSuccessMessage, params object[] args)
+        {
+            return new SuccessOrErrors<T>().SetSuccessWithResult(result, string.Format(formattedSuccessMessage, args));
+        }
+
+    }
+
+
+
     public class SuccessOrErrors : ISuccessOrErrors
     {
 
-        private readonly List<string> _warnings = new List<string>();
+        protected List<string> LocalWarnings = new List<string>();
+        protected List<ValidationResult> LocalErrors;
+        protected string LocalSuccessMessage;
 
-        private List<ValidationResult> _errors;
-        private string _successMessage;
+        public SuccessOrErrors() { }
+
+        protected SuccessOrErrors(ISuccessOrErrors nonResultStatus)
+        {
+            var status = (SuccessOrErrors)nonResultStatus;
+            LocalWarnings = status.LocalWarnings;
+            LocalErrors = status.LocalErrors;
+        }
 
         /// <summary>
         /// Holds the list of errors. Empty list means no errors.
@@ -23,33 +118,33 @@ namespace GenericServices.Services
         {
             get
             {
-                if (_errors == null)
+                if (LocalErrors == null)
                     throw new InvalidOperationException("The status must have an error set or the success message set before you can access errors.");
-                return _errors;
+                return LocalErrors;
             }
         }
 
         /// <summary>
         /// This returns any warning messages
         /// </summary>
-        public IReadOnlyList<string> Warnings { get { return _warnings; }}
+        public IReadOnlyList<string> Warnings { get { return LocalWarnings; }}
 
         /// <summary>
         /// Returns true if not errors or not validated yet, else false. 
         /// </summary>
-        public bool IsValid { get { return (_errors != null && Errors.Count == 0); }}
+        public bool IsValid { get { return (LocalErrors != null && Errors.Count == 0); }}
 
         /// <summary>
         /// Returns true if not errors or not validated yet, else false. 
         /// </summary>
-        public bool HasWarnings { get { return (_warnings.Count > 0); } }
+        public bool HasWarnings { get { return (LocalWarnings.Count > 0); } }
 
         /// <summary>
         /// This returns the success message with suffix is nay warning messages
         /// </summary>
         public string SuccessMessage
         {
-            get { return HasWarnings ? string.Format("{0} (has {1} warnings)",_successMessage,_warnings.Count  ) : _successMessage; }
+            get { return HasWarnings ? string.Format("{0} (has {1} warnings)",LocalSuccessMessage,LocalWarnings.Count  ) : LocalSuccessMessage; }
         }
 
         //---------------------------------------------------
@@ -63,7 +158,7 @@ namespace GenericServices.Services
         /// <param name="args"></param>
         public void AddWarning(string warningformat, params object[] args)
         {
-            _warnings.Add("Warning: " + string.Format(warningformat, args));
+            LocalWarnings.Add("Warning: " + string.Format(warningformat, args));
         }
 
         /// <summary>
@@ -71,12 +166,12 @@ namespace GenericServices.Services
         /// </summary>
         public ISuccessOrErrors SetErrors(IEnumerable<DbEntityValidationResult> errors)
         {
-            _errors = new List<ValidationResult>();
+            LocalErrors = new List<ValidationResult>();
 
             foreach (var errorsPerThisClass in errors)
-                _errors.AddRange(errorsPerThisClass.ValidationErrors.Select(y => new ValidationResult(y.ErrorMessage, new[] { y.PropertyName })));
+                LocalErrors.AddRange(errorsPerThisClass.ValidationErrors.Select(y => new ValidationResult(y.ErrorMessage, new[] { y.PropertyName })));
 
-            _successMessage = string.Empty;
+            LocalSuccessMessage = string.Empty;
             return this;
         }
 
@@ -86,8 +181,8 @@ namespace GenericServices.Services
         /// <param name="errors"></param>
         public ISuccessOrErrors SetErrors(IEnumerable<string> errors)
         {
-            _errors = errors.Where(x => !string.IsNullOrEmpty(x)).Select(x => new ValidationResult(x)).ToList();
-            _successMessage = string.Empty;
+            LocalErrors = errors.Where(x => !string.IsNullOrEmpty(x)).Select(x => new ValidationResult(x)).ToList();
+            LocalSuccessMessage = string.Empty;
             return this;
         }
 
@@ -99,10 +194,10 @@ namespace GenericServices.Services
         /// <returns></returns>
         public ISuccessOrErrors AddSingleError(string errorformat, params object[] args)
         {
-            if (_errors == null)
-                _errors = new List<ValidationResult>();
-            _errors.Add(new ValidationResult(string.Format(errorformat, args)));
-            _successMessage = string.Empty;
+            if (LocalErrors == null)
+                LocalErrors = new List<ValidationResult>();
+            LocalErrors.Add(new ValidationResult(string.Format(errorformat, args)));
+            LocalSuccessMessage = string.Empty;
             return this;
         }
 
@@ -115,10 +210,10 @@ namespace GenericServices.Services
         /// <returns></returns>
         public ISuccessOrErrors AddNamedParameterError(string parameterName, string errorformat, params object[] args)
         {
-            if (_errors == null)
-                _errors = new List<ValidationResult>();
-            _errors.Add(new ValidationResult(string.Format(errorformat, args), new[] { parameterName }));
-            _successMessage = string.Empty;
+            if (LocalErrors == null)
+                LocalErrors = new List<ValidationResult>();
+            LocalErrors.Add(new ValidationResult(string.Format(errorformat, args), new[] { parameterName }));
+            LocalSuccessMessage = string.Empty;
             return this;
         }
 
@@ -127,10 +222,10 @@ namespace GenericServices.Services
         /// </summary>
         /// <param name="successformat"></param>
         /// <param name="args"></param>
-        public ISuccessOrErrors SetSuccessMessage(string successformat, params object [] args)
+        public virtual ISuccessOrErrors SetSuccessMessage(string successformat, params object [] args)
         {
-            _errors = new List<ValidationResult>();         //empty list means its been validated and its Valid
-            _successMessage = string.Format(successformat, args);
+            LocalErrors = new List<ValidationResult>();         //empty list means its been validated and its Valid
+            LocalSuccessMessage = string.Format(successformat, args);
             return this;
         }
 
@@ -152,11 +247,11 @@ namespace GenericServices.Services
         public override string ToString()
         {
             if (IsValid)
-                return _successMessage ?? "The task completed successfully";
+                return LocalSuccessMessage ?? "The task completed successfully";
 
-            return _errors == null 
+            return LocalErrors == null 
                 ? "Not currently setup" 
-                : string.Format("Failed with {0} errors", _errors.Count);
+                : string.Format("Failed with {0} errors", LocalErrors.Count);
         }
 
     }

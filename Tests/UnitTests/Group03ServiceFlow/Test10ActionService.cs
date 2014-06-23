@@ -29,31 +29,30 @@ namespace Tests.UnitTests.Group03ServiceFlow
 
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
-            var taskService = new ActionService<IEmptyTestAction, Tag, SimpleTagDto>(dummyDb, new EmptyTestAction());
+            var service = new ActionService<IEmptyTestAction, int, Tag, SimpleTagDto>(dummyDb, new EmptyTestAction());
             var dto = new SimpleTagDto();
             dto.SetSupportedFunctions(ServiceFunctions.None);
 
             //ATTEMPT
-            var status = taskService.DoAction(dto);
+            var status = service.DoAction(null, dto);
 
             //VERIFY
             status.IsValid.ShouldEqual(false);
             status.Errors.Count.ShouldEqual(1);
-            status.Errors[0].ErrorMessage.ShouldEqual("Running a task is not setup for this data.");
-            dto.FunctionsCalledCommaDelimited.ShouldEqual("SetupSecondaryData");
-            
+            status.Errors[0].ErrorMessage.ShouldEqual("Running an action is not setup for this data.");
+            dto.FunctionsCalledCommaDelimited.ShouldEqual("");
+
         }
 
-        [TestCase(InstrumentedOpFlags.NormalOperation, true, "CopyDtoToData,CopyDataToDto,SetupSecondaryData")]
-        [TestCase(InstrumentedOpFlags.ForceActionFail, false, "CopyDtoToData,SetupSecondaryData")]
-        [TestCase(InstrumentedOpFlags.ForceActionWarnWithWrite, true, "CopyDtoToData,CopyDataToDto,SetupSecondaryData")]
-        [TestCase(InstrumentedOpFlags.FailOnCopyDtoToData, false, "CopyDtoToData,SetupSecondaryData")]
-        [TestCase(InstrumentedOpFlags.FailOnCopyDataToDto, false, "CopyDtoToData,CopyDataToDto,SetupSecondaryData")]
+        [TestCase(InstrumentedOpFlags.NormalOperation, true, "CopyDtoToData")]
+        [TestCase(InstrumentedOpFlags.ForceActionFail, false, "CopyDtoToData")]
+        [TestCase(InstrumentedOpFlags.ForceActionWarnWithWrite, true, "CopyDtoToData")]
+        [TestCase(InstrumentedOpFlags.FailOnCopyDtoToData, false, "CopyDtoToData")]
         public void Check02ActionFlowAction(InstrumentedOpFlags errorFlag, bool isValid, string expectedFunctionsCalled)
         {
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
-            var service = new ActionService<IEmptyTestAction, Tag, SimpleTagDto>(dummyDb, new EmptyTestAction());
+            var service = new ActionService<IEmptyTestAction, int, Tag, SimpleTagDto>(dummyDb, new EmptyTestAction());
             var dto = new SimpleTagDto(errorFlag);
             if (errorFlag == InstrumentedOpFlags.ForceActionFail)
                 dto.TagId = 2;
@@ -61,36 +60,37 @@ namespace Tests.UnitTests.Group03ServiceFlow
                 dto.TagId = 1;
 
             //ATTEMPT
-            var status = service.DoAction(dto);
+            var status = service.DoAction(null, dto);
 
             //VERIFY
             status.IsValid.ShouldEqual(isValid, status.Errors);
+            status.Result.ShouldEqual(status.IsValid ? dto.TagId : 0);
             dto.FunctionsCalledCommaDelimited.ShouldEqual(expectedFunctionsCalled);
         }
 
-        [TestCase(InstrumentedOpFlags.NormalOperation, true, "CopyDtoToData")]
-        [TestCase(InstrumentedOpFlags.ForceActionFail, false, "CopyDtoToData,SetupSecondaryData")]
-        [TestCase(InstrumentedOpFlags.ForceActionWarnWithWrite, true, "CopyDtoToData")]
-        [TestCase(InstrumentedOpFlags.ForceActionkWarnNoWrite, true, "CopyDtoToData")]
-        [TestCase(InstrumentedOpFlags.FailOnCopyDtoToData, false, "CopyDtoToData,SetupSecondaryData")]
-        public void Check05ActionFlowDbAction(InstrumentedOpFlags errorFlag, bool isValid, string expectedFunctionsCalled)
-        {
-            //SETUP
-            var dummyDb = new DummyIDbContextWithValidation();
-            var service = new ActionDbService<IEmptyTestAction, Tag, SimpleTagDto>(dummyDb, new EmptyTestAction());
-            var dto = new SimpleTagDto(errorFlag);
-            if (errorFlag == InstrumentedOpFlags.ForceActionFail)
-                dto.TagId = 2;
-            else if (errorFlag == InstrumentedOpFlags.ForceActionWarnWithWrite || errorFlag == InstrumentedOpFlags.ForceActionkWarnNoWrite)
-                dto.TagId = 1;
+        //[TestCase(InstrumentedOpFlags.NormalOperation, true, "CopyDtoToData")]
+        //[TestCase(InstrumentedOpFlags.ForceActionFail, false, "CopyDtoToData,SetupSecondaryData")]
+        //[TestCase(InstrumentedOpFlags.ForceActionWarnWithWrite, true, "CopyDtoToData")]
+        //[TestCase(InstrumentedOpFlags.ForceActionkWarnNoWrite, true, "CopyDtoToData")]
+        //[TestCase(InstrumentedOpFlags.FailOnCopyDtoToData, false, "CopyDtoToData,SetupSecondaryData")]
+        //public void Check05ActionFlowDbAction(InstrumentedOpFlags errorFlag, bool isValid, string expectedFunctionsCalled)
+        //{
+        //    //SETUP
+        //    var dummyDb = new DummyIDbContextWithValidation();
+        //    var service = new ActionDbService<IEmptyTestAction, Tag, SimpleTagDto>(dummyDb, new EmptyTestAction());
+        //    var dto = new SimpleTagDto(errorFlag);
+        //    if (errorFlag == InstrumentedOpFlags.ForceActionFail)
+        //        dto.TagId = 2;
+        //    else if (errorFlag == InstrumentedOpFlags.ForceActionWarnWithWrite || errorFlag == InstrumentedOpFlags.ForceActionkWarnNoWrite)
+        //        dto.TagId = 1;
 
-            //ATTEMPT
-            var status = service.DoDbAction(dto);
+        //    //ATTEMPT
+        //    var status = service.DoDbAction(dto);
 
-            //VERIFY
-            status.IsValid.ShouldEqual(isValid);
-            dto.FunctionsCalledCommaDelimited.ShouldEqual(expectedFunctionsCalled);
-            dummyDb.SaveChangesWithValidationCalled.ShouldEqual(isValid && errorFlag != InstrumentedOpFlags.ForceActionkWarnNoWrite);
-        }
+        //    //VERIFY
+        //    status.IsValid.ShouldEqual(isValid);
+        //    dto.FunctionsCalledCommaDelimited.ShouldEqual(expectedFunctionsCalled);
+        //    dummyDb.SaveChangesWithValidationCalled.ShouldEqual(isValid && errorFlag != InstrumentedOpFlags.ForceActionkWarnNoWrite);
+        //}
     }
 }

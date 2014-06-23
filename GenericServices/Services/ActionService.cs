@@ -4,46 +4,34 @@ using GenericServices.Services;
 
 namespace GenericServices.Services
 {
-    public class ActionService<TAction, TActionData> : IActionService<TAction, TActionData> 
-        where TAction : class, IActionDefn<TActionData> 
+    public class ActionService<TAction, TActionOut, TActionIn>
+        where TAction : class, IActionDefn<TActionOut, TActionIn>
     {
-        private readonly TAction _taskToRun;
+        private readonly TAction _actionToRun;
 
-        public ActionService(TAction taskToRun)
+        public ActionService(TAction actionToRun)
         {
-            if (taskToRun == null)
-                throw new NullReferenceException("Dependecy injection did not find the action. Check you have added IActionService<ActionDto> to the classe's interface.");
-            _taskToRun = taskToRun;
+            if (actionToRun == null)
+                throw new NullReferenceException("Dependecy injection did not find the action. Check you have added IActionService<TActionOut, TActionIn> to the classe's interface.");
+            _actionToRun = actionToRun;
         }
 
         /// <summary>
-        /// This runs a task that does not write to the database. 
-        /// We assume it passes information back via the taskData
+        /// This runs a action that returns a result. 
         /// </summary>
-        /// <param name="taskData"></param>
-        /// <returns></returns>
-        public ISuccessOrErrors DoAction(TActionData taskData)
-        {
-            return DoAction(null, taskData);
-        }
-
-        /// <summary>
-        /// This runs a task that does not write to the database. 
-        /// We assume it passes information back via the taskData
-        /// </summary>
-        /// <param name="taskComms">The taskcomms to allow progress reports and cancellation</param>
-        /// <param name="taskData"></param>
-        /// <returns></returns>
-        public ISuccessOrErrors DoAction(IActionComms taskComms, TActionData taskData)
+        /// <param name="actionComms">The actionComms to allow progress reports and cancellation</param>
+        /// <param name="actionData">Data that the action takes in to undertake the action</param>
+        /// <returns>The status, with a result if Valid</returns>
+        public ISuccessOrErrors<TActionOut> DoAction(IActionComms actionComms, TActionIn actionData)
         {
 
             try
             {
-                return _taskToRun.DoAction(taskComms, taskData);
+                return _actionToRun.DoAction(actionComms, actionData);
             }
             finally
             {
-                var disposable = _taskToRun as IDisposable;
+                var disposable = _actionToRun as IDisposable;
                 if (disposable != null)
                     disposable.Dispose();
             }
@@ -53,77 +41,54 @@ namespace GenericServices.Services
     //---------------------------------------------------------------------------
 
 
-    public class ActionService<TAction, TActionData, TDto> : IActionService<TAction, TActionData, TDto>
-        where TAction : class, IActionDefn<TActionData>
-        where TActionData : class, new()
-        where TDto : EfGenericDto<TActionData, TDto>
+    public class ActionService<TAction, TActionOut, TActionIn, TDto>
+        where TAction : class, IActionDefn<TActionOut, TActionIn>
+        where TActionIn : class, new()
+        where TDto : EfGenericDto<TActionIn, TDto>
     {
 
         private readonly IDbContextWithValidation _db;
-        private readonly TAction _taskToRun;
+        private readonly TAction _actionToRun;
 
-        public ActionService(IDbContextWithValidation db, TAction taskToRun)
+        public ActionService(IDbContextWithValidation db, TAction actionToRun)
         {
-            if (taskToRun == null)
+            if (actionToRun == null)
                 throw new NullReferenceException("Dependecy injection did not find the action. Check you have added IActionService<ActionDto> to the classe's interface.");
             _db = db;
-            _taskToRun = taskToRun;
+            _actionToRun = actionToRun;
         }
 
         /// <summary>
-        /// This runs a task that does not write to the database. We assume is passes data back via the dto.
-        /// It first converts the dto to the taskdata format, runs the task and then converts
-        /// the taskdata back to the dto format
+        /// This runs an action that does not write to the database. 
+        /// It first converts the dto to the TActionIn format and then runs the action
         /// </summary>
-        /// <param name="dto"></param>
-        /// <returns></returns>
-        public ISuccessOrErrors DoAction(TDto dto)
+        /// <param name="actionComms">The actioncomms to allow progress reports and cancellation</param>
+        /// <param name="dto">The dto to be converted to the TActionIn class</param>
+        /// <returns>The status, with a result if the status is valid</returns>
+        public ISuccessOrErrors<TActionOut> DoAction(IActionComms actionComms, TDto dto)
         {
-            var actionStatus = DoAction(null, dto);
-            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
-                //we reset any secondary data as we expect the view to be reshown with the errors
-                dto.SetupSecondaryData(_db, dto);
-
-            return actionStatus;
-        }
-
-        //--------------------------------------------------------------------------------
-        //now the versions with comms
-
-        /// <summary>
-        /// This runs a task that does not write to the database. We assume is passes data back via the dto.
-        /// It first converts the dto to the taskdata format, runs the task and then converts
-        /// the taskdata back to the dto format
-        /// </summary>
-        /// <param name="taskComms">The taskcomms to allow progress reports and cancellation</param>
-        /// <returns></returns>
-        public ISuccessOrErrors DoAction(IActionComms taskComms, TDto dto)
-        {
-            ISuccessOrErrors status = new SuccessOrErrors();
+            ISuccessOrErrors<TActionOut> status = new SuccessOrErrors<TActionOut>();
 
             if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoAction))
-                return status.AddSingleError("Running a task is not setup for this data.");
+                return status.AddSingleError("Running an action is not setup for this data.");
 
-            var taskData = new TActionData();
-            status = dto.CopyDtoToData(_db, dto, taskData); //convert Tdto into TActionData format
-            if (!status.IsValid) return status;
+            var actionInData = new TActionIn();
+            var nonResultStatus = dto.CopyDtoToData(_db, dto, actionInData); //convert Tdto into TActionIn format
+            if (!nonResultStatus.IsValid) 
+                return SuccessOrErrors<TActionOut>.ConvertNonResultStatus( nonResultStatus);
 
             try
             {
-                status = _taskToRun.DoAction(taskComms, taskData);
+                status = _actionToRun.DoAction(actionComms, actionInData);
             }
             finally
             {
-                var disposable = _taskToRun as IDisposable;
+                var disposable = _actionToRun as IDisposable;
                 if (disposable != null)
                     disposable.Dispose();
             }
-            if (!status.IsValid) return status;
 
-            var copyStatus = dto.CopyDataToDto(_db, taskData, dto); //now convert back into Dto format
-            if (!copyStatus.IsValid) status = copyStatus;      //we send back the bad copystatus
-
-            if (taskComms != null) taskComms.ReportProgress(100);
+            if (status.IsValid && actionComms != null) actionComms.ReportProgress(100);
 
             return status;
         }
