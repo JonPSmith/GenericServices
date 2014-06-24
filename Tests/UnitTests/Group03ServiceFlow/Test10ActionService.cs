@@ -25,12 +25,48 @@ namespace Tests.UnitTests.Group03ServiceFlow
 
 
         [Test]
-        public void Check01ActionFailOk()
+        public void Check01ActionNoSubmitOk()
         {
 
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
-            var service = new ActionService<IEmptyTestAction, int, Tag, SimpleTagDto>(dummyDb, new EmptyTestAction());
+            var service = new ActionService<IEmptyTestAction, int, Tag, SimpleTagDto>(dummyDb, new EmptyTestAction(false));
+            var dto = new SimpleTagDto();
+
+            //ATTEMPT
+            var status = service.DoAction(null, dto);
+
+            //VERIFY
+            status.IsValid.ShouldEqual(true);
+            dummyDb.SaveChangesWithValidationCalled.ShouldEqual(false);
+
+        }
+
+        [Test]
+        public void Check02ActionSubmitOk()
+        {
+
+            //SETUP
+            var dummyDb = new DummyIDbContextWithValidation();
+            var service = new ActionService<IEmptyTestAction, int, Tag, SimpleTagDto>(dummyDb, new EmptyTestAction(true));
+            var dto = new SimpleTagDto();
+
+            //ATTEMPT
+            var status = service.DoAction(null, dto);
+
+            //VERIFY
+            status.IsValid.ShouldEqual(true);
+            dummyDb.SaveChangesWithValidationCalled.ShouldEqual(true);
+
+        }
+
+        [Test]
+        public void Check03ActionFailOk()
+        {
+
+            //SETUP
+            var dummyDb = new DummyIDbContextWithValidation();
+            var service = new ActionService<IEmptyTestAction, int, Tag, SimpleTagDto>(dummyDb, new EmptyTestAction(false));
             var dto = new SimpleTagDto();
             dto.SetSupportedFunctions(ServiceFunctions.None);
 
@@ -49,11 +85,11 @@ namespace Tests.UnitTests.Group03ServiceFlow
         [TestCase(InstrumentedOpFlags.FailOnCopyDtoToData, false, "CopyDtoToData")]
         [TestCase(InstrumentedOpFlags.ForceActionFail, false, "CopyDtoToData")]
         [TestCase(InstrumentedOpFlags.ForceActionWarnWithWrite, true, "CopyDtoToData")]
-        public void Check02ActionFlowAction(InstrumentedOpFlags errorFlag, bool isValid, string expectedFunctionsCalled)
+        public void Check05ActionFlowAction(InstrumentedOpFlags errorFlag, bool isValid, string expectedFunctionsCalled)
         {
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
-            var service = new ActionService<IEmptyTestAction, int, Tag, SimpleTagDto>(dummyDb, new EmptyTestAction());
+            var service = new ActionService<IEmptyTestAction, int, Tag, SimpleTagDto>(dummyDb, new EmptyTestAction(false));
             var dto = new SimpleTagDto(errorFlag);
             if (errorFlag == InstrumentedOpFlags.ForceActionFail)
                 dto.TagId = 2;
@@ -69,29 +105,5 @@ namespace Tests.UnitTests.Group03ServiceFlow
             dto.FunctionsCalledCommaDelimited.ShouldEqual(expectedFunctionsCalled);
         }
 
-        //[TestCase(InstrumentedOpFlags.NormalOperation, true, "CopyDtoToData")]
-        //[TestCase(InstrumentedOpFlags.ForceActionFail, false, "CopyDtoToData,SetupSecondaryData")]
-        //[TestCase(InstrumentedOpFlags.ForceActionWarnWithWrite, true, "CopyDtoToData")]
-        //[TestCase(InstrumentedOpFlags.ForceActionkWarnNoWrite, true, "CopyDtoToData")]
-        //[TestCase(InstrumentedOpFlags.FailOnCopyDtoToData, false, "CopyDtoToData,SetupSecondaryData")]
-        //public void Check05ActionFlowDbAction(InstrumentedOpFlags errorFlag, bool isValid, string expectedFunctionsCalled)
-        //{
-        //    //SETUP
-        //    var dummyDb = new DummyIDbContextWithValidation();
-        //    var service = new ActionDbService<IEmptyTestAction, Tag, SimpleTagDto>(dummyDb, new EmptyTestAction());
-        //    var dto = new SimpleTagDto(errorFlag);
-        //    if (errorFlag == InstrumentedOpFlags.ForceActionFail)
-        //        dto.TagId = 2;
-        //    else if (errorFlag == InstrumentedOpFlags.ForceActionWarnWithWrite || errorFlag == InstrumentedOpFlags.ForceActionkWarnNoWrite)
-        //        dto.TagId = 1;
-
-        //    //ATTEMPT
-        //    var status = service.DoDbAction(dto);
-
-        //    //VERIFY
-        //    status.IsValid.ShouldEqual(isValid);
-        //    dto.FunctionsCalledCommaDelimited.ShouldEqual(expectedFunctionsCalled);
-        //    dummyDb.SaveChangesWithValidationCalled.ShouldEqual(isValid && errorFlag != InstrumentedOpFlags.ForceActionkWarnNoWrite);
-        //}
     }
 }

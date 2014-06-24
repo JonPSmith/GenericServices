@@ -21,6 +21,14 @@ namespace GenericServices
         ISuccessOrErrors<T> SetSuccessWithResult(T result, string successformat, params object[] args);
 
         /// <summary>
+        /// This allows the current success message to be updated
+        /// </summary>
+        /// <param name="successformat"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        ISuccessOrErrors<T> UpdateSuccessMessage(string successformat, params object[] args);
+
+        /// <summary>
         /// Holds the list of errors. Empty list means no errors. Null means validation has not been done
         /// </summary>
         IReadOnlyList<ValidationResult> Errors { get; }

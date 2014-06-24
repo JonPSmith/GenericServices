@@ -110,7 +110,8 @@
     <Compile Include="UnitTests\Group04ServiceFlowAsync\Test03DetailServiceAsync.cs" />
     <Compile Include="UnitTests\Group05GenericLogger\Test02SetupLogger.cs" />
     <Compile Include="UnitTests\Group05GenericLogger\Test04Log4NetGenericLogger.cs" />
-    <Compile Include="UnitTests\Group10NonDbActions\Test02CheckActionService.cs" />
+    <Compile Include="UnitTests\Group10NonDbActions\Test02ActionServiceEmptyAction.cs" />
+    <Compile Include="UnitTests\Group10NonDbActions\Test03ActionServiceGTestAction.cs" />
     <Compile Include="UnitTests\Group10NonDbActions\Test01CheckTestAction.cs" />
     <Compile Include="UnitTests\Group08CrudServices\Test01AutoMapper.cs" />
     <Compile Include="UnitTests\Group08CrudServices\Test02aPostTagGradeDirect.cs" />

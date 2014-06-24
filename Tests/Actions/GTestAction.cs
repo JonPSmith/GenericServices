@@ -24,6 +24,13 @@ namespace Tests.Actions
             get { return ActionFlags.Normal; }
         }
 
+        /// <summary>
+        /// If true then the caller should call EF SubmitChanges if the method exited with status IsValid and
+        /// it looks to see if the data part has a ICheckIfWarnings and if the WriteEvenIfWarning is false
+        /// and there are warnings then it does not call SubmitChanges
+        /// </summary>
+        public override bool SubmitChangesOnSuccess { get { return false; } }
+
         public bool DisposeWasCalled { get; private set; }
 
         public ISuccessOrErrors<int> DoAction(IActionComms actionComms, GTestActionData dto)

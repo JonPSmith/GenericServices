@@ -1,19 +1,19 @@
 ﻿using System;
-using GenericServices.Actions;
 using GenericServices.Core;
-using GenericServices.Services;
 
 namespace GenericServices.Services
 {
     public class ActionService<TAction, TActionOut, TActionIn> : IActionService<TAction, TActionOut, TActionIn>
         where TAction : class, IActionDefn<TActionOut, TActionIn>
     {
+        private readonly IDbContextWithValidation _db;
         private readonly TAction _actionToRun;
 
-        public ActionService(TAction actionToRun)
+        public ActionService(IDbContextWithValidation db, TAction actionToRun)
         {
             if (actionToRun == null)
-                throw new NullReferenceException("Dependecy injection did not find the action. Check you have added IActionService<TActionOut, TActionIn> to the classe's interface.");
+                throw new NullReferenceException("Dependecy injection did not find the action. Check you have added IActionDefn<TActionOut, TActionIn> to the classe's interface.");
+            _db = db;
             _actionToRun = actionToRun;
         }
 
@@ -28,7 +28,8 @@ namespace GenericServices.Services
 
             try
             {
-                return _actionToRun.DoAction(actionComms, actionData);
+                var status = _actionToRun.DoAction(actionComms, actionData);
+                return CallSubmitChangesIfNeeded(actionData, status);
             }
             finally
             {
@@ -36,6 +37,22 @@ namespace GenericServices.Services
                 if (disposable != null)
                     disposable.Dispose();
             }
+        }
+
+        private ISuccessOrErrors<TActionOut> CallSubmitChangesIfNeeded(TActionIn actionData, ISuccessOrErrors<TActionOut> status)
+        {
+            if (!status.IsValid || !_actionToRun.SubmitChangesOnSuccess) return status;     //nothing to do
+
+            if (ActionServiceHelper.ShouldStopAsWarningsMatter(status.HasWarnings, actionData))
+                //There were warnings and we are asked to not write to the database
+                return status.UpdateSuccessMessage("{0}... but NOT written to database as warnings.",
+                    status.SuccessMessage);
+
+            //we now need to save the changes to the database
+            var dataStatus = _db.SaveChangesWithValidation();
+            return dataStatus.IsValid
+                ? status.UpdateSuccessMessage("{0}... and written to database.", status.SuccessMessage)
+                : SuccessOrErrors<TActionOut>.ConvertNonResultStatus(dataStatus);
         }
     }
 
@@ -54,7 +71,7 @@ namespace GenericServices.Services
         public ActionService(IDbContextWithValidation db, TAction actionToRun)
         {
             if (actionToRun == null)
-                throw new NullReferenceException("Dependecy injection did not find the action. Check you have added IActionService<ActionDto> to the classe's interface.");
+                throw new NullReferenceException("Dependecy injection did not find the action. Check you have added IActionDefn<TActionOut, TActionIn> to the classe's interface.");
             _db = db;
             _actionToRun = actionToRun;
         }
@@ -80,7 +97,8 @@ namespace GenericServices.Services
 
             try
             {
-                return _actionToRun.DoAction(actionComms, actionInData);
+                status = _actionToRun.DoAction(actionComms, actionInData);
+                return CallSubmitChangesIfNeeded(actionInData, status);
             }
             finally
             {
@@ -103,6 +121,23 @@ namespace GenericServices.Services
                 dto.SetupSecondaryData(_db, dto);
 
             return dto;
+        }
+
+
+        private ISuccessOrErrors<TActionOut> CallSubmitChangesIfNeeded(TActionIn actionData, ISuccessOrErrors<TActionOut> status)
+        {
+            if (!status.IsValid || !_actionToRun.SubmitChangesOnSuccess) return status;     //nothing to do
+
+            if (ActionServiceHelper.ShouldStopAsWarningsMatter(status.HasWarnings, actionData))
+                //There were warnings and we are asked to not write to the database
+                return status.UpdateSuccessMessage("{0}... but NOT written to database as warnings.",
+                    status.SuccessMessage);
+
+            //we now need to save the changes to the database
+            var dataStatus = _db.SaveChangesWithValidation();
+            return dataStatus.IsValid
+                ? status.UpdateSuccessMessage("{0}... and written to database.", status.SuccessMessage)
+                : SuccessOrErrors<TActionOut>.ConvertNonResultStatus(dataStatus);
         }
     }
 

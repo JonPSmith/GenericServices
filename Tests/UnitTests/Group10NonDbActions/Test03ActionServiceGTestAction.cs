@@ -7,7 +7,7 @@ using Tests.Helpers;
 
 namespace Tests.UnitTests.Group10NonDbActions
 {
-    class Test02CheckActionService
+    class Test03ActionServiceGTestAction
     {
 
         [Test]
@@ -17,7 +17,7 @@ namespace Tests.UnitTests.Group10NonDbActions
             //SETUP    
 
             //ATTEMPT
-            IActionService<GTestAction, int, GTestActionData> actionService = new ActionService<GTestAction, int, GTestActionData>(new GTestAction());
+            IActionService<GTestAction, int, GTestActionData> actionService = new ActionService<GTestAction, int, GTestActionData>(null, new GTestAction());
             IActionService<GTestAction, int, GTestActionData, GTestActionDto> actionDtoService =
                 new ActionService<GTestAction, int, GTestActionData, GTestActionDto>(null, new GTestAction());
 
@@ -29,8 +29,9 @@ namespace Tests.UnitTests.Group10NonDbActions
         public void Check02RunActionServiceSuccessOk()
         {
             //SETUP
+            var dummyDb = new DummyIDbContextWithValidation();
             var testAction = new GTestAction();
-            var service = new ActionService<GTestAction, int, GTestActionData>(testAction);
+            var service = new ActionService<GTestAction, int, GTestActionData>(dummyDb, testAction);
 
             //ATTEMPT
             var data = new GTestActionData();
@@ -46,8 +47,9 @@ namespace Tests.UnitTests.Group10NonDbActions
         public void Check03RunActionServiceCommsOk()
         {
             //SETUP  
+            var dummyDb = new DummyIDbContextWithValidation();
             var mockComms = new MockActionComms();
-            var service = new ActionService<GTestAction, int, GTestActionData>(new GTestAction());
+            var service = new ActionService<GTestAction, int, GTestActionData>(dummyDb, new GTestAction());
 
             //ATTEMPT
             var data = new GTestActionData();

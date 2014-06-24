@@ -70,6 +70,18 @@ namespace GenericServices.Core
         }
 
         /// <summary>
+        /// This allows the current success message to be updated
+        /// </summary>
+        /// <param name="successformat"></param>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public ISuccessOrErrors<T> UpdateSuccessMessage(string successformat, params object[] args)
+        {
+            base.SetSuccessMessage(successformat, args);
+            return this;
+        }
+
+        /// <summary>
         /// Turns the non result status into a result status by copying any errors or warnings
         /// </summary>
         /// <param name="nonResultStatus"></param>
