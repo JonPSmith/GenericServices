@@ -2,7 +2,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using AutoMapper;
@@ -10,7 +9,7 @@ using AutoMapper.QueryableExtensions;
 
 [assembly: InternalsVisibleTo("Tests")]
 
-namespace GenericServices.Services
+namespace GenericServices.Core
 {
     [Flags]
     public enum ServiceFunctions

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using GenericServices.Core;
 using GenericServices.Services;
 using Tests.DataClasses.Concrete;
 

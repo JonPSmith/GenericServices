@@ -1,4 +1,5 @@
 ﻿using System;
+using GenericServices.Core;
 using GenericServices.Services;
 using NUnit.Framework;
 using Tests.Helpers;

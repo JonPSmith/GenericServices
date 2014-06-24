@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using GenericServices.Core;
 
 namespace GenericServices.Services
 {

@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Actions\ActionCommsForTask.cs" />
     <Compile Include="Actions\ProgressWithOptionalMessage.cs" />
+    <Compile Include="Core\EfGenericDtoAsync.cs" />
     <Compile Include="GenericLoggerSetup.cs" />
     <Compile Include="IActionService.cs" />
     <Compile Include="Logger\IGenericLogger.cs" />
@@ -65,12 +66,11 @@
     <Compile Include="ServicesAsync\CreateSetupServiceAsync.cs" />
     <Compile Include="ServicesAsync\DeleteServiceAsync.cs" />
     <Compile Include="ServicesAsync\DetailServiceAsync.cs" />
-    <Compile Include="ServicesAsync\EfGenericDtoAsync.cs" />
     <Compile Include="ICreateServiceAsync.cs" />
     <Compile Include="ICreateSetupServiceAsync.cs" />
     <Compile Include="IDetailServiceAsync.cs" />
     <Compile Include="IDeleteServiceAsync.cs" />
-    <Compile Include="ServicesAsync\InstrumentedEfGenericDtoAsync.cs" />
+    <Compile Include="Core\InstrumentedEfGenericDtoAsync.cs" />
     <Compile Include="IUpdateServiceAsync.cs" />
     <Compile Include="IUpdateSetupServiceAsync.cs" />
     <Compile Include="ServicesAsync\UpdateServiceAsync.cs" />
@@ -80,23 +80,23 @@
     <Compile Include="Services\ActionSetupService.cs" />
     <Compile Include="IActionSetupService.cs" />
     <Compile Include="Services\CreateService.cs" />
-    <Compile Include="Services\EfGenericDtoBase.cs">
+    <Compile Include="Core\EfGenericDtoBase.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\InstrumentedLog.cs" />
+    <Compile Include="Core\InstrumentedLog.cs" />
     <Compile Include="ServicesAsync\CreateServiceAsync.cs" />
     <Compile Include="IActionDbService.cs" />
-    <Compile Include="Services\InstrumentedEfGenericDto.cs" />
+    <Compile Include="Core\InstrumentedEfGenericDto.cs" />
     <Compile Include="ICheckIfWarnings.cs" />
     <Compile Include="IUpdateSetupService.cs" />
     <Compile Include="Services\UpdateSetupService.cs" />
     <Compile Include="Services\CreateSetupService.cs" />
     <Compile Include="Services\DeleteService.cs" />
     <Compile Include="Services\DetailService.cs" />
-    <Compile Include="Services\EfGenericDto.cs" />
+    <Compile Include="Core\EfGenericDto.cs" />
     <Compile Include="ICreateSetupService.cs" />
     <Compile Include="Services\ListService.cs" />
-    <Compile Include="Services\SuccessOrErrors.cs" />
+    <Compile Include="Core\SuccessOrErrors.cs" />
     <Compile Include="Services\UpdateService.cs" />
     <Compile Include="ICreateService.cs" />
     <Compile Include="IDbContextWithValidation.cs" />

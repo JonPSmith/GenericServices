@@ -5,6 +5,7 @@ using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Threading.Tasks;
 using GenericServices;
+using GenericServices.Core;
 using GenericServices.Services;
 
 namespace Tests.Helpers

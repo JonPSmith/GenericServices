@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq.Expressions;
+using GenericServices.Core;
 using GenericServices.Services;
 
 namespace GenericServices

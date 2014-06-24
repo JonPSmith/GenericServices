@@ -10,7 +10,6 @@ namespace Tests.UnitTests.Group10NonDbActions
     class Test02CheckActionService
     {
 
-
         [Test]
         public void Check01ReferencesOk()
         {

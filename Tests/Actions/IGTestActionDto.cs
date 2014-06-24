@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.Runtime.CompilerServices;
+using GenericServices.Core;
 using GenericServices.Services;
 
 namespace Tests.Actions

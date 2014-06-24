@@ -1,5 +1,6 @@
 ﻿using GenericServices;
 using GenericServices.Actions;
+using GenericServices.Core;
 using GenericServices.Services;
 using Tests.DataClasses.Concrete;
 

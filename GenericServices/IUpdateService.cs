@@ -1,3 +1,4 @@
+using GenericServices.Core;
 using GenericServices.Services;
 
 namespace GenericServices

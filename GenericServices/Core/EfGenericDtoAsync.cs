@@ -1,10 +1,7 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -13,7 +10,7 @@ using GenericServices.Services;
 
 [assembly: InternalsVisibleTo("Tests")]
 
-namespace GenericServices.ServicesAsync
+namespace GenericServices.Core
 {
 
     public abstract class EfGenericDtoAsync<TData, TDto> : EfGenericDtoBase<TData, TDto>

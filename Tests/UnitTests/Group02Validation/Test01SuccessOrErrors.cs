@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using GenericServices.Core;
 using GenericServices.Services;
 using NUnit.Framework;
 using Tests.Helpers;

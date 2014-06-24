@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using GenericServices.Services;
 
-namespace GenericServices.ServicesAsync
+namespace GenericServices.Core
 {
 
     public abstract class InstrumentedEfGenericDtoAsync<TData, TDto> : EfGenericDtoAsync<TData, TDto>, ICheckIfWarnings

@@ -1,4 +1,6 @@
-﻿namespace GenericServices.Services
+﻿using GenericServices.Core;
+
+namespace GenericServices.Services
 {
     public class DeleteService<TData> : IDeleteService<TData> where TData : class, new()                                            
     {

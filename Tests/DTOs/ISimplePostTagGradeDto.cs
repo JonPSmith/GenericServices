@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.CompilerServices;
+using GenericServices.Core;
 using GenericServices.Services;
 using Tests.DataClasses.Concrete;
 

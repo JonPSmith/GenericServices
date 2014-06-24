@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading;
 using GenericServices;
 using GenericServices.Actions;
+using GenericServices.Core;
 using GenericServices.Services;
 
 namespace Tests.Actions

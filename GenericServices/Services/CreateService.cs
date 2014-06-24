@@ -1,4 +1,6 @@
-﻿namespace GenericServices.Services
+﻿using GenericServices.Core;
+
+namespace GenericServices.Services
 {
     public class CreateService<TData> : ICreateService<TData> where TData : class
     {

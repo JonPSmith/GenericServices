@@ -1,4 +1,5 @@
 ﻿using System;
+using GenericServices.Core;
 using GenericServices.Services;
 using GenericServices.ServicesAsync;
 using NUnit.Framework;

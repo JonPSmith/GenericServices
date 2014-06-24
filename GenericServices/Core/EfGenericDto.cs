@@ -7,10 +7,11 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using GenericServices.Services;
 
 [assembly: InternalsVisibleTo("Tests")]
 
-namespace GenericServices.Services
+namespace GenericServices.Core
 {
 
 

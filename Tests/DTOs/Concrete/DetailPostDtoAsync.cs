@@ -6,6 +6,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using GenericServices;
+using GenericServices.Core;
 using GenericServices.Services;
 using GenericServices.ServicesAsync;
 using Tests.DataClasses;

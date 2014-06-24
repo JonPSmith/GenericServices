@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Validation;
 using System.Linq;
 
-namespace GenericServices.Services
+namespace GenericServices.Core
 {
 
     public class SuccessOrErrors<T> : SuccessOrErrors, ISuccessOrErrors<T>

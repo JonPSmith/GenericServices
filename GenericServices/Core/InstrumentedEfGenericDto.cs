@@ -4,8 +4,9 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using GenericServices.Services;
 
-namespace GenericServices.Services
+namespace GenericServices.Core
 {
     [Flags]
     public enum InstrumentedOpFlags { NormalOperation = 0, FailOnCopyDataToDto = 1, FailOnCopyDtoToData = 2,

@@ -1,4 +1,5 @@
-﻿using GenericServices.Services;
+﻿using GenericServices.Core;
+using GenericServices.Services;
 using NUnit.Framework;
 using Tests.Actions;
 using Tests.DataClasses;

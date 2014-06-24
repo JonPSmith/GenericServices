@@ -5,6 +5,7 @@ using System.Data.Entity.Validation;
 using System.Linq;
 using System.Threading.Tasks;
 using GenericServices;
+using GenericServices.Core;
 using GenericServices.Services;
 using Tests.DataClasses.Concrete;
 using Tests.DataClasses.Concrete.Helpers;
