@@ -140,7 +140,7 @@ namespace GenericServices.Core
             using (new LogStartStop(this))
             {
                 if (_whereToFail.HasFlag(InstrumentedOpFlags.FailOnCopyDataToDto))
-                    return new SuccessOrErrors().AddSingleError("Flag was set to fail here.");
+                    return new SuccessOrErrors().AddSingleError("Flag was set to fail in CopyDataToDtoAsync.");
 
                 return await base.CopyDataToDtoAsync(context, source, destination);
             }
@@ -151,7 +151,7 @@ namespace GenericServices.Core
             using (new LogStartStop(this))
             {
                 if (_whereToFail.HasFlag(InstrumentedOpFlags.FailOnCopyDtoToData))
-                    return new SuccessOrErrors().AddSingleError("Flag was set to fail here.");
+                    return new SuccessOrErrors().AddSingleError("Flag was set to fail in CopyDtoToDataAsync.");
 
                 //Use the below code to instrument the inner parts of the mapping 
                 //CreateDtoToDataMapping();
