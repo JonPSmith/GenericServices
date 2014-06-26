@@ -1,14 +1,16 @@
 ﻿using System;
+using System.Threading.Tasks;
 using GenericServices.Core;
+using GenericServices.Services;
 
-namespace GenericServices.Services
+namespace GenericServices.ServicesAsync
 {
-    public class ActionService<TActionOut, TActionIn> : IActionService<TActionOut, TActionIn>
+    public class ActionServiceAsync<TActionOut, TActionIn> : IActionServiceAsync<TActionOut, TActionIn> 
     {
         private readonly IDbContextWithValidation _db;
-        private readonly IActionDefn<TActionOut, TActionIn> _actionToRun;
+        private readonly IActionDefnAsync<TActionOut, TActionIn> _actionToRun;
 
-        public ActionService(IDbContextWithValidation db, IActionDefn<TActionOut, TActionIn> actionToRun)
+        public ActionServiceAsync(IDbContextWithValidation db, IActionDefnAsync<TActionOut, TActionIn> actionToRun)
         {
             if (actionToRun == null)
                 throw new NullReferenceException("Dependecy injection did not find the action. Check you have added IActionDefn<TActionOut, TActionIn> to the classe's interface.");
@@ -21,14 +23,14 @@ namespace GenericServices.Services
         /// </summary>
         /// <param name="actionComms">The actionComms to allow progress reports and cancellation</param>
         /// <param name="actionData">Data that the action takes in to undertake the action</param>
-        /// <returns>The status, with a result if Valid</returns>
-        public ISuccessOrErrors<TActionOut> DoAction(IActionComms actionComms, TActionIn actionData)
+        /// <returns>A Task containing status, which has a result if Valid</returns>
+        public async Task<ISuccessOrErrors<TActionOut>> DoActionAsync(IActionComms actionComms, TActionIn actionData)
         {
 
             try
             {
-                var status = _actionToRun.DoAction(actionComms, actionData);
-                return CallSubmitChangesIfNeeded(actionData, status);
+                var status = await _actionToRun.DoActionAsync(actionComms, actionData);
+                return await CallSubmitChangesIfNeededAsync(actionData, status);
             }
             finally
             {
@@ -38,7 +40,7 @@ namespace GenericServices.Services
             }
         }
 
-        private ISuccessOrErrors<TActionOut> CallSubmitChangesIfNeeded(TActionIn actionData, ISuccessOrErrors<TActionOut> status)
+        private async Task<ISuccessOrErrors<TActionOut>> CallSubmitChangesIfNeededAsync(TActionIn actionData, ISuccessOrErrors<TActionOut> status)
         {
             if (!status.IsValid || !_actionToRun.SubmitChangesOnSuccess) return status;     //nothing to do
 
@@ -48,7 +50,7 @@ namespace GenericServices.Services
                     status.SuccessMessage);
 
             //we now need to save the changes to the database
-            var dataStatus = _db.SaveChangesWithValidation();
+            var dataStatus = await _db.SaveChangesWithValidationAsync();
             return dataStatus.IsValid
                 ? status.UpdateSuccessMessage("{0}... and written to database.", status.SuccessMessage)
                 : SuccessOrErrors<TActionOut>.ConvertNonResultStatus(dataStatus);
@@ -58,15 +60,15 @@ namespace GenericServices.Services
     //---------------------------------------------------------------------------
 
 
-    public class ActionService<TActionOut, TActionIn, TDto> : IActionService<TActionOut, TActionIn, TDto>
+    public class ActionServiceAsync<TActionOut, TActionIn, TDto> : IActionServiceAsync<TActionOut, TActionIn, TDto>
         where TActionIn : class, new()
-        where TDto : EfGenericDto<TActionIn, TDto>
+        where TDto : EfGenericDtoAsync<TActionIn, TDto>
     {
 
         private readonly IDbContextWithValidation _db;
-        private readonly IActionDefn<TActionOut, TActionIn> _actionToRun;
+        private readonly IActionDefnAsync<TActionOut, TActionIn> _actionToRun;
 
-        public ActionService(IDbContextWithValidation db, IActionDefn<TActionOut, TActionIn> actionToRun)
+        public ActionServiceAsync(IDbContextWithValidation db, IActionDefnAsync<TActionOut, TActionIn> actionToRun)
         {
             if (actionToRun == null)
                 throw new NullReferenceException("Dependecy injection did not find the action. Check you have added IActionDefn<TActionOut, TActionIn> to the classe's interface.");
@@ -80,8 +82,8 @@ namespace GenericServices.Services
         /// </summary>
         /// <param name="actionComms">The actioncomms to allow progress reports and cancellation</param>
         /// <param name="dto">The dto to be converted to the TActionIn class</param>
-        /// <returns>The status, with a result if the status is valid</returns>
-        public ISuccessOrErrors<TActionOut> DoAction(IActionComms actionComms, TDto dto)
+        /// <returns>A Task containing status, which has a result if Valid</returns>
+        public async Task<ISuccessOrErrors<TActionOut>> DoActionAsync(IActionComms actionComms, TDto dto)
         {
             ISuccessOrErrors<TActionOut> status = new SuccessOrErrors<TActionOut>();
 
@@ -89,14 +91,14 @@ namespace GenericServices.Services
                 return status.AddSingleError("Running an action is not setup for this data.");
 
             var actionInData = new TActionIn();
-            var nonResultStatus = dto.CopyDtoToData(_db, dto, actionInData); //convert Tdto into TActionIn format
+            var nonResultStatus = await dto.CopyDtoToDataAsync(_db, dto, actionInData); //convert Tdto into TActionIn format
             if (!nonResultStatus.IsValid) 
                 return SuccessOrErrors<TActionOut>.ConvertNonResultStatus( nonResultStatus);
 
             try
             {
-                status = _actionToRun.DoAction(actionComms, actionInData);
-                return CallSubmitChangesIfNeeded(actionInData, status);
+                status = await _actionToRun.DoActionAsync(actionComms, actionInData);
+                return await CallSubmitChangesIfNeededAsync(actionInData, status);
             }
             finally
             {
@@ -112,17 +114,17 @@ namespace GenericServices.Services
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        public TDto ResetDto(TDto dto)
+        public async Task<TDto> ResetDtoAsync(TDto dto)
         {
             if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
                 //we reset any secondary data as we expect the view to be reshown with the errors
-                dto.SetupSecondaryData(_db, dto);
+                await dto.SetupSecondaryDataAsync(_db, dto);
 
             return dto;
         }
 
 
-        private ISuccessOrErrors<TActionOut> CallSubmitChangesIfNeeded(TActionIn actionData, ISuccessOrErrors<TActionOut> status)
+        private async Task<ISuccessOrErrors<TActionOut>> CallSubmitChangesIfNeededAsync(TActionIn actionData, ISuccessOrErrors<TActionOut> status)
         {
             if (!status.IsValid || !_actionToRun.SubmitChangesOnSuccess) return status;     //nothing to do
 
@@ -132,21 +134,11 @@ namespace GenericServices.Services
                     status.SuccessMessage);
 
             //we now need to save the changes to the database
-            var dataStatus = _db.SaveChangesWithValidation();
+            var dataStatus = await _db.SaveChangesWithValidationAsync();
             return dataStatus.IsValid
                 ? status.UpdateSuccessMessage("{0}... and written to database.", status.SuccessMessage)
                 : SuccessOrErrors<TActionOut>.ConvertNonResultStatus(dataStatus);
         }
     }
 
-    internal static class ActionServiceHelper
-    {
-
-        internal static bool ShouldStopAsWarningsMatter<T>(bool hasWarnings, T classToCheck)
-        {
-            if (!hasWarnings) return false;
-            var flagClass = classToCheck as ICheckIfWarnings;
-            return (flagClass != null && !flagClass.WriteEvenIfWarning);
-        }
-    }
 }

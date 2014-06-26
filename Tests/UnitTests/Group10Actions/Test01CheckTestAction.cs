@@ -4,7 +4,7 @@ using NUnit.Framework;
 using Tests.Actions;
 using Tests.Helpers;
 
-namespace Tests.UnitTests.Group10NonDbActions
+namespace Tests.UnitTests.Group10Actions
 {
     class Test01CheckTestAction
     {

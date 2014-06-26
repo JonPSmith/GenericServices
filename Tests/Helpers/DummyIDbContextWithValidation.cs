@@ -6,7 +6,6 @@ using System.Data.Entity.Validation;
 using System.Threading.Tasks;
 using GenericServices;
 using GenericServices.Core;
-using GenericServices.Services;
 
 namespace Tests.Helpers
 {
@@ -21,9 +20,10 @@ namespace Tests.Helpers
             return SuccessOrErrors.Success("All ok.");
         }
 
-        public Task<ISuccessOrErrors> SaveChangesWithValidationAsync()
+        public async Task<ISuccessOrErrors> SaveChangesWithValidationAsync()
         {
-            throw new NotImplementedException();
+            SaveChangesWithValidationCalled = true;
+            return SuccessOrErrors.Success("All ok.");
         }
 
         public DbSet<TEntity> Set<TEntity>() where TEntity : class

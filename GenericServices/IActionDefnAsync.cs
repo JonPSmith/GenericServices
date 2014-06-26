@@ -1,11 +1,10 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace GenericServices
 {
-    [Flags]
-    public enum ActionFlags { Normal = 0, ExitOnSuccess = 1, NoProgressSent = 2, NoMessagesSent = 4, CancelNotSupported = 8 }
 
-    public interface IActionDefn<TOut, in TIn>
+    public interface IActionDefnAsync<TOut, in TIn>
     {
         /// <summary>
         /// If true then the caller should call EF SubmitChanges if the method exited with status IsValid and
@@ -38,7 +37,7 @@ namespace GenericServices
         /// <param name="actionComms">Action communication channel, can be null</param>
         /// <param name="actionData">setup data sent to the service </param>
         /// <returns></returns>
-        ISuccessOrErrors<TOut> DoAction(IActionComms actionComms, TIn actionData);
+        Task<ISuccessOrErrors<TOut>> DoActionAsync(IActionComms actionComms, TIn actionData);
 
     }
 }

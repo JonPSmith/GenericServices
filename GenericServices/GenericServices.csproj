@@ -59,6 +59,7 @@
     <Compile Include="Actions\ProgressWithOptionalMessage.cs" />
     <Compile Include="Core\EfGenericDtoAsync.cs" />
     <Compile Include="GenericLoggerSetup.cs" />
+    <Compile Include="IActionDefnAsync.cs" />
     <Compile Include="IActionService.cs" />
     <Compile Include="Logger\IGenericLogger.cs" />
     <Compile Include="Logger\NoLoggingGenericLogger.cs" />
@@ -73,9 +74,10 @@
     <Compile Include="Core\InstrumentedEfGenericDtoAsync.cs" />
     <Compile Include="IUpdateServiceAsync.cs" />
     <Compile Include="IUpdateSetupServiceAsync.cs" />
+    <Compile Include="IActionServiceAsync.cs" />
     <Compile Include="ServicesAsync\UpdateServiceAsync.cs" />
     <Compile Include="ServicesAsync\UpdateSetupServiceAsync.cs" />
-    <Compile Include="Services\ActionDbService.cs" />
+    <Compile Include="ServicesAsync\ActionServiceAsync.cs" />
     <Compile Include="Services\ActionService.cs" />
     <Compile Include="Services\ActionSetupService.cs" />
     <Compile Include="IActionSetupService.cs" />
@@ -85,7 +87,6 @@
     </Compile>
     <Compile Include="Core\InstrumentedLog.cs" />
     <Compile Include="ServicesAsync\CreateServiceAsync.cs" />
-    <Compile Include="IActionDbService.cs" />
     <Compile Include="Core\InstrumentedEfGenericDto.cs" />
     <Compile Include="ICheckIfWarnings.cs" />
     <Compile Include="IUpdateSetupService.cs" />

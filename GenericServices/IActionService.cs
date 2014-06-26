@@ -3,8 +3,7 @@ using GenericServices.Services;
 
 namespace GenericServices
 {
-    public interface IActionService<TAction, TActionOut, in TActionIn>
-        where TAction : class, IActionDefn<TActionOut, TActionIn> 
+    public interface IActionService<TActionOut, in TActionIn>
     {
 
         /// <summary>
@@ -19,8 +18,7 @@ namespace GenericServices
 
     }
 
-    public interface IActionService<TAction, TActionOut, TActionIn, TDto>
-        where TAction : class, IActionDefn<TActionOut, TActionIn>
+    public interface IActionService<TActionOut, TActionIn, TDto>
         where TActionIn : class, new()
         where TDto : EfGenericDto<TActionIn, TDto>
     {
