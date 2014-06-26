@@ -262,8 +262,8 @@ namespace GenericServices.Core
                 return LocalSuccessMessage ?? "The task completed successfully";
 
             return LocalErrors == null 
-                ? "Not currently setup" 
-                : string.Format("Failed with {0} errors", LocalErrors.Count);
+                ? "Not currently setup"
+                : string.Format("Failed with {0} error{1}", LocalErrors.Count, LocalErrors.Count > 1 ? "s" : string.Empty);
         }
 
     }
