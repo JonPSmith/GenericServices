@@ -51,7 +51,7 @@ namespace GenericServices.Actions
         /// <param name="actionComms">The comms channel for handling progress and cancellation</param>
         /// <param name="percentageDone">must be between 0 and 100</param>
         /// <param name="message">optional message to show user</param>
-        protected void ReportProgressAndThrowExceptionIfCancelPending(IActionComms actionComms, int percentageDone, ProgressMessage message = null)
+        protected void ReportProgressAndCheckCancel(IActionComms actionComms, int percentageDone, ProgressMessage message = null)
         {
             if (actionComms == null) return;
 

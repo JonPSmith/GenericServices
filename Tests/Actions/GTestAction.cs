@@ -42,7 +42,7 @@ namespace Tests.Actions
 
             DateTime startTime = DateTime.Now;
 
-            ReportProgressAndThrowExceptionIfCancelPending(actionComms, 0, 
+            ReportProgressAndCheckCancel(actionComms, 0, 
                 new ProgressMessage(ProgressMessageTypes.Info, "Action has started. Will run for {0:f1} seconds.", dto.NumIterations * dto.SecondsBetweenIterations));
 
             for (int i = 0; i < dto.NumIterations; i++)
