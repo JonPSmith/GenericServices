@@ -60,16 +60,6 @@ namespace GenericServices.Core
         }
 
         /// <summary>
-        /// This method should not be used in SuccessOrErrors(T). You should use SetSuccessWithResult
-        /// </summary>
-        /// <param name="successformat"></param>
-        /// <param name="args"></param>
-        public override ISuccessOrErrors SetSuccessMessage(string successformat, params object[] args)
-        {
-            throw new InvalidOperationException("With SuccessOrErrors<T> you must call SetSuccessWithResult.");
-        }
-
-        /// <summary>
         /// This allows the current success message to be updated
         /// </summary>
         /// <param name="successformat"></param>

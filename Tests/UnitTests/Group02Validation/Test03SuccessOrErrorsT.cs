@@ -69,21 +69,6 @@ namespace Tests.UnitTests.Group02Validation
         }
 
         [Test]
-        public void Check05SetSuccessMessageFail()
-        {
-            //SETUP  
-            var status = new SuccessOrErrors<string>();
-
-            //ATTEMPT
-            var ex =
-                Assert.Throws<InvalidOperationException>(() => status.SetSuccessMessage("Bad way of setting success"));
-
-            //VERIFY
-            ex.Message.ShouldEqual("With SuccessOrErrors<T> you must call SetSuccessWithResult.");
-        }
-
-
-        [Test]
         public void Check10CheckAssignNonResultOk()
         {
             //SETUP  
