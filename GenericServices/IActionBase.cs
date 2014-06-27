@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Threading.Tasks;
 
 namespace GenericServices
 {
+    [Flags]
+    public enum ActionFlags { Normal = 0, ExitOnSuccess = 1, NoProgressSent = 2, NoMessagesSent = 4, CancelNotSupported = 8 }
 
-    public interface IActionDefnAsync<TOut, in TIn>
+    public interface IActionBase
     {
         /// <summary>
         /// If true then the caller should call EF SubmitChanges if the method exited with status IsValid and
@@ -30,14 +31,5 @@ namespace GenericServices
         /// This controls the upper bound of the value sent back to reportProgress
         /// </summary>
         int UpperBound { get; set; }
-
-        /// <summary>
-        /// This is a general form of a method to be run
-        /// </summary>
-        /// <param name="actionComms">Action communication channel, can be null</param>
-        /// <param name="actionData">setup data sent to the service </param>
-        /// <returns></returns>
-        Task<ISuccessOrErrors<TOut>> DoActionAsync(IActionComms actionComms, TIn actionData);
-
     }
 }

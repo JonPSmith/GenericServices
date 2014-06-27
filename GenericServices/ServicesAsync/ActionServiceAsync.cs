@@ -8,12 +8,12 @@ namespace GenericServices.ServicesAsync
     public class ActionServiceAsync<TActionOut, TActionIn> : IActionServiceAsync<TActionOut, TActionIn> 
     {
         private readonly IDbContextWithValidation _db;
-        private readonly IActionDefnAsync<TActionOut, TActionIn> _actionToRun;
+        private readonly IActionAsync<TActionOut, TActionIn> _actionToRun;
 
-        public ActionServiceAsync(IDbContextWithValidation db, IActionDefnAsync<TActionOut, TActionIn> actionToRun)
+        public ActionServiceAsync(IDbContextWithValidation db, IActionAsync<TActionOut, TActionIn> actionToRun)
         {
             if (actionToRun == null)
-                throw new NullReferenceException("Dependecy injection did not find the action. Check you have added IActionDefn<TActionOut, TActionIn> to the classe's interface.");
+                throw new NullReferenceException("Dependecy injection did not find the action. Check you have added IActionSync<TActionOut, TActionIn> to the classe's interface.");
             _db = db;
             _actionToRun = actionToRun;
         }
@@ -66,12 +66,12 @@ namespace GenericServices.ServicesAsync
     {
 
         private readonly IDbContextWithValidation _db;
-        private readonly IActionDefnAsync<TActionOut, TActionIn> _actionToRun;
+        private readonly IActionAsync<TActionOut, TActionIn> _actionToRun;
 
-        public ActionServiceAsync(IDbContextWithValidation db, IActionDefnAsync<TActionOut, TActionIn> actionToRun)
+        public ActionServiceAsync(IDbContextWithValidation db, IActionAsync<TActionOut, TActionIn> actionToRun)
         {
             if (actionToRun == null)
-                throw new NullReferenceException("Dependecy injection did not find the action. Check you have added IActionDefn<TActionOut, TActionIn> to the classe's interface.");
+                throw new NullReferenceException("Dependecy injection did not find the action. Check you have added IActionSync<TActionOut, TActionIn> to the classe's interface.");
             _db = db;
             _actionToRun = actionToRun;
         }

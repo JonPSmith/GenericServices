@@ -6,12 +6,12 @@ namespace GenericServices.Services
     public class ActionService<TActionOut, TActionIn> : IActionService<TActionOut, TActionIn>
     {
         private readonly IDbContextWithValidation _db;
-        private readonly IActionDefn<TActionOut, TActionIn> _actionToRun;
+        private readonly IActionSync<TActionOut, TActionIn> _actionToRun;
 
-        public ActionService(IDbContextWithValidation db, IActionDefn<TActionOut, TActionIn> actionToRun)
+        public ActionService(IDbContextWithValidation db, IActionSync<TActionOut, TActionIn> actionToRun)
         {
             if (actionToRun == null)
-                throw new NullReferenceException("Dependecy injection did not find the action. Check you have added IActionDefn<TActionOut, TActionIn> to the classe's interface.");
+                throw new NullReferenceException("Dependecy injection did not find the action. Check you have added IActionSync<TActionOut, TActionIn> to the classe's interface.");
             _db = db;
             _actionToRun = actionToRun;
         }
@@ -64,12 +64,12 @@ namespace GenericServices.Services
     {
 
         private readonly IDbContextWithValidation _db;
-        private readonly IActionDefn<TActionOut, TActionIn> _actionToRun;
+        private readonly IActionSync<TActionOut, TActionIn> _actionToRun;
 
-        public ActionService(IDbContextWithValidation db, IActionDefn<TActionOut, TActionIn> actionToRun)
+        public ActionService(IDbContextWithValidation db, IActionSync<TActionOut, TActionIn> actionToRun)
         {
             if (actionToRun == null)
-                throw new NullReferenceException("Dependecy injection did not find the action. Check you have added IActionDefn<TActionOut, TActionIn> to the classe's interface.");
+                throw new NullReferenceException("Dependecy injection did not find the action. Check you have added IActionSync<TActionOut, TActionIn> to the classe's interface.");
             _db = db;
             _actionToRun = actionToRun;
         }

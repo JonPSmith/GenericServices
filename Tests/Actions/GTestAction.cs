@@ -8,7 +8,7 @@ using GenericServices.Services;
 
 namespace Tests.Actions
 {
-    public interface IGTestAction : IActionDefn<int, GTestActionData>, IDisposable
+    public interface IGTestAction : IActionSync<int, GTestActionData>, IDisposable
     {
 
     }

@@ -7,7 +7,7 @@ using Tests.DataClasses.Concrete;
 
 namespace Tests.Actions
 {
-    public interface IEmptyTestActionAsync : IActionDefnAsync<int, Tag>
+    public interface IEmptyTestActionAsync : IActionAsync<int, Tag>
     {
     }
 

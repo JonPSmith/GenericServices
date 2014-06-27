@@ -6,7 +6,7 @@ using Tests.DataClasses.Concrete;
 
 namespace Tests.Actions
 {
-    public interface IEmptyTestAction : IActionDefn<int, Tag>
+    public interface IEmptyTestAction : IActionSync<int, Tag>
     {
     }
 
