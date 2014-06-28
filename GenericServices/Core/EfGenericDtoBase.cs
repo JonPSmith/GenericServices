@@ -22,6 +22,8 @@ namespace GenericServices.Core
         //note: no delete as delete does not need a dto
         DoAction = 32,
         DoDbAction = 32,
+        //The destination data is validated after a CopyDtoToData. This flag allows you to turn this off
+        DoNotValidateonCopyDtoToData = 64,
         //DoesNotNeedSetup refers the need to call the SetupSecondaryData method
         //if this flag is NOT set then expects dto to override SetupSecondaryData method
         DoesNotNeedSetup = 128,

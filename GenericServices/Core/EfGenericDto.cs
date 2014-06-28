@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
@@ -13,8 +15,6 @@ using GenericServices.Services;
 
 namespace GenericServices.Core
 {
-
-
     public abstract class EfGenericDto<TData, TDto> : EfGenericDtoBase<TData, TDto> 
         where TData : class
         where TDto : EfGenericDto<TData,TDto>
@@ -46,8 +46,9 @@ namespace GenericServices.Core
         }
 
         /// <summary>
-        /// This copies only the properties in TDto that have public setter into the TData
-        /// You can override this if you need a more complex copy
+        /// This copies only the properties in TDto that have public setter into the TData.
+        /// It then validates the destination data unless the DoNotValidateonCopyDtoToData flag is set
+        /// You can override this if you need a more complex copy, but recommend calling this at the end to do the final copy and validate
         /// </summary>
         /// <param name="context"></param>
         /// <param name="source"></param>
@@ -56,7 +57,18 @@ namespace GenericServices.Core
         {
             CreateDtoToDataMapping();
             Mapper.Map(source, destination);
-            return SuccessOrErrors.Success("Successfull copy of data");
+
+            var status = SuccessOrErrors.Success("Successfull copy of data");
+            if (SupportedFunctions.HasFlag(ServiceFunctions.DoNotValidateonCopyDtoToData)) return status;
+            
+            //we need to run a validation on the destination as it might have new or tigher validation rules
+            var errors = new List<ValidationResult>();
+            var vc = new ValidationContext(destination, null, null);
+            var valid = Validator.TryValidateObject(destination, vc, errors, true);
+            if (!valid)
+                status.SetErrors(errors);
+
+            return status;
         }
 
         /// <summary>

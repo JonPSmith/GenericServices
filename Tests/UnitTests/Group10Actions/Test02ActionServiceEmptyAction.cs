@@ -130,6 +130,9 @@ namespace Tests.UnitTests.Group10Actions
             dummyDb.SaveChangesWithValidationCalled.ShouldEqual(false);
         }
 
+        //----------------------------------------
+        //now the dto versions
+
         [Test]
         public void Check10RunActionDtoSuccessOk()
         {
@@ -142,7 +145,9 @@ namespace Tests.UnitTests.Group10Actions
             //ATTEMPT
             var dto = new SimpleTagDto
             {
-                TagId = -123
+                TagId = -123,
+                Name = "test", 
+                Slug = "test"
             };
             var status = service.DoAction(mockComms, dto);
 
@@ -164,7 +169,9 @@ namespace Tests.UnitTests.Group10Actions
             //ATTEMPT
             var dto = new SimpleTagDto
             {
-                TagId = -123
+                TagId = -123,
+                Name = "test",
+                Slug = "test"
             };
             var status = service.DoAction(mockComms, dto);
 
@@ -188,7 +195,9 @@ namespace Tests.UnitTests.Group10Actions
             //ATTEMPT
             var dto = new SimpleTagDto
             {
-                TagId = 3           //will fail
+                TagId = 3,           //will fail,
+                Name = "test", 
+                Slug = "test"
             };
             var status = service.DoAction(mockComms, dto);
 

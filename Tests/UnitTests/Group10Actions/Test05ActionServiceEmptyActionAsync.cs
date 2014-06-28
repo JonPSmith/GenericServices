@@ -141,7 +141,9 @@ namespace Tests.UnitTests.Group10Actions
             //ATTEMPT
             var dto = new SimpleTagDtoAsync
             {
-                TagId = -123
+                TagId = -123,
+                Name = "test",
+                Slug = "test"
             };
             var status = await service.DoActionAsync(mockComms, dto);
 
@@ -163,7 +165,9 @@ namespace Tests.UnitTests.Group10Actions
             //ATTEMPT
             var dto = new SimpleTagDtoAsync
             {
-                TagId = -123
+                TagId = -123,
+                Name = "test",
+                Slug = "test"
             };
             var status = await service.DoActionAsync(mockComms, dto);
 
@@ -187,7 +191,9 @@ namespace Tests.UnitTests.Group10Actions
             //ATTEMPT
             var dto = new SimpleTagDtoAsync
             {
-                TagId = 3           //will fail
+                TagId = 3,           //will fail
+                Name = "test",
+                Slug = "test"
             };
             var status = await service.DoActionAsync(mockComms, dto);
 

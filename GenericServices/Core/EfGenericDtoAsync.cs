@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
@@ -57,7 +59,18 @@ namespace GenericServices.Core
         {
             CreateDtoToDataMapping();
             Mapper.Map(source, destination);
-            return SuccessOrErrors.Success("Successfull copy of data");
+
+            var status = SuccessOrErrors.Success("Successfull copy of data");
+            if (SupportedFunctions.HasFlag(ServiceFunctions.DoNotValidateonCopyDtoToData)) return status;
+
+            //we need to run a validation on the destination as it might have new or tigher validation rules
+            var errors = new List<ValidationResult>();
+            var vc = new ValidationContext(destination, null, null);
+            var valid = Validator.TryValidateObject(destination, vc, errors, true);
+            if (!valid)
+                status.SetErrors(errors);
+
+            return status;
         }
 
         /// <summary>

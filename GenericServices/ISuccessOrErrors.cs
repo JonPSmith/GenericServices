@@ -135,6 +135,11 @@ namespace GenericServices
         ISuccessOrErrors SetErrors(IEnumerable<DbEntityValidationResult> errors);
 
         /// <summary>
+        /// Copies in validation errors found outside into the status
+        /// </summary>
+        ISuccessOrErrors SetErrors(IEnumerable<ValidationResult> errors);
+
+        /// <summary>
         /// This sets the error list to a series of non property specific error messages
         /// </summary>
         /// <param name="errors"></param>

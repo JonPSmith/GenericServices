@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
+using GenericServices.Core;
 using NUnit.Framework;
 using Tests.DataClasses;
 using Tests.DataClasses.Concrete;
@@ -62,7 +63,75 @@ namespace Tests.UnitTests.Group08CrudServices
         }
 
         [Test]
-        public void Check02CopyDataToDtoOk()
+        public void Check02CopyDtoToDataValidationFail()
+        {
+
+            //SETUP
+            var dto = new SimplePostDto
+            {
+                PostId = 123,
+                BloggerName = "This should not be copied",
+                Title = null,
+                LastUpdated = new DateTime(2000, 1, 1),
+                Tags = new Collection<Tag> { new Tag { Name = "Should not copy this", Slug = "No" } }
+            };
+
+
+            //ATTEMPT
+            var newData = new Post
+            {
+                Blogger = new Blog { Name = "Original Blog Name" },
+                BlogId = 777,
+                Content = "Original Content",
+                Tags = new Collection<Tag> { new Tag { Name = "Original Tag name", Slug = "Yes" } }
+            };
+
+            var status = dto.CopyDtoToData(null, dto, newData);
+
+            //VERIFY
+            status.IsValid.ShouldEqual(false, status.Errors);
+            CollectionAssert.AreEquivalent(new[] { "The Title field is required." },
+                status.Errors.Select(x => x.ErrorMessage));
+        }
+
+
+        [Test]
+        public void Check03CopyDtoToDataValidationFail()
+        {
+
+            //SETUP
+            var dto = new SimpleTagDto();
+
+            //ATTEMPT
+            var newData = new Tag();
+
+            var status = dto.CopyDtoToData(null, dto, newData);
+
+            //VERIFY
+            status.IsValid.ShouldEqual(false, status.Errors);
+            CollectionAssert.AreEquivalent(new[] { "The Slug field is required.", "The Name field is required." },
+                status.Errors.Select(x => x.ErrorMessage));
+        }
+
+        [Test]
+        public void Check04CopyDtoToDataNoValidationOk()
+        {
+
+            //SETUP
+            var dto = new SimpleTagDto();
+            dto.SetSupportedFunctions( ServiceFunctions.DoNotValidateonCopyDtoToData);
+
+            //ATTEMPT
+            var newData = new Tag();
+
+            var status = dto.CopyDtoToData(null, dto, newData);
+
+            //VERIFY
+            status.IsValid.ShouldEqual(true, status.Errors);
+        }
+
+        [Test]
+        public void Check05CopyDataToDtoOk()
         {
 
             //SETUP
@@ -102,7 +171,7 @@ namespace Tests.UnitTests.Group08CrudServices
 
 
         [Test]
-        public void Check03CreateDtoAndCopyInDataOk()
+        public void Check06CreateDtoAndCopyInDataOk()
         {
             using (var db = new SampleWebAppDb())
             {

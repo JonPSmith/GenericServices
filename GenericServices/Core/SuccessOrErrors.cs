@@ -178,6 +178,16 @@ namespace GenericServices.Core
         }
 
         /// <summary>
+        /// Copies in validation errors found outside into the status
+        /// </summary>
+        public ISuccessOrErrors SetErrors(IEnumerable<ValidationResult> errors)
+        {
+            LocalErrors = errors.ToList();
+            LocalSuccessMessage = string.Empty;
+            return this;
+        }
+
+        /// <summary>
         /// This sets the error list to a series of non property specific error messages
         /// </summary>
         /// <param name="errors"></param>

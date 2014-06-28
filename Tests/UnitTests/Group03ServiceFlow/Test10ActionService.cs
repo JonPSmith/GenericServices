@@ -31,13 +31,13 @@ namespace Tests.UnitTests.Group03ServiceFlow
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
             var service = new ActionService<int, Tag, SimpleTagDto>(dummyDb, new EmptyTestAction(false));
-            var dto = new SimpleTagDto();
+            var dto = new SimpleTagDto {Name = "test", Slug = "test"};
 
             //ATTEMPT
             var status = service.DoAction(null, dto);
 
             //VERIFY
-            status.IsValid.ShouldEqual(true);
+            status.IsValid.ShouldEqual(true, status.Errors);
             dummyDb.SaveChangesWithValidationCalled.ShouldEqual(false);
 
         }
@@ -49,7 +49,7 @@ namespace Tests.UnitTests.Group03ServiceFlow
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
             var service = new ActionService<int, Tag, SimpleTagDto>(dummyDb, new EmptyTestAction(true));
-            var dto = new SimpleTagDto();
+            var dto = new SimpleTagDto { Name = "test", Slug = "test" };
 
             //ATTEMPT
             var status = service.DoAction(null, dto);
@@ -90,7 +90,7 @@ namespace Tests.UnitTests.Group03ServiceFlow
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
             var service = new ActionService<int, Tag, SimpleTagDto>(dummyDb, new EmptyTestAction(false));
-            var dto = new SimpleTagDto(errorFlag);
+            var dto = new SimpleTagDto(errorFlag){Name = "test", Slug = "test"};
             if (errorFlag == InstrumentedOpFlags.ForceActionFail)
                 dto.TagId = 2;
             else if (errorFlag == InstrumentedOpFlags.ForceActionWarnWithWrite)
