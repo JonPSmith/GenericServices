@@ -71,7 +71,7 @@ namespace Tests.UnitTests.Group08CrudServices
             {
                 PostId = 123,
                 BloggerName = "This should not be copied",
-                Title = null,
+                Title = "This title has an exclamation mark in it!",            //checks that IVallidatableObject is checked
                 LastUpdated = new DateTime(2000, 1, 1),
                 Tags = new Collection<Tag> { new Tag { Name = "Should not copy this", Slug = "No" } }
             };
@@ -90,7 +90,7 @@ namespace Tests.UnitTests.Group08CrudServices
 
             //VERIFY
             status.IsValid.ShouldEqual(false, status.Errors);
-            CollectionAssert.AreEquivalent(new[] { "The Title field is required." },
+            CollectionAssert.AreEquivalent(new[] { "Sorry, but you can't get too excited and include a ! in the title." },
                 status.Errors.Select(x => x.ErrorMessage));
         }
 
