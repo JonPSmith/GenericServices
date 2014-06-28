@@ -60,7 +60,7 @@ namespace GenericServices.Core
             CreateDtoToDataMapping();
             Mapper.Map(source, destination);
 
-            var status = SuccessOrErrors.Success("Successfull copy of data");
+            var status = SuccessOrErrors.Success("Successful copy of data");
             if (SupportedFunctions.HasFlag(ServiceFunctions.DoNotValidateonCopyDtoToData)) return status;
 
             //we need to run a validation on the destination as it might have new or tigher validation rules
@@ -84,7 +84,7 @@ namespace GenericServices.Core
         {
             CreateDatatoDtoMapping();
             Mapper.Map(source, destination);
-            return SuccessOrErrors.Success("Successfull copy of data");
+            return SuccessOrErrors.Success("Successful copy of data");
         }
 
         //---------------------------------------------------------------

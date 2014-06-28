@@ -153,7 +153,7 @@ namespace GenericServices.Core
                 //CreateDtoToDataMapping();
                 //LogSpecificName("After CreateMap");
                 //Mapper.Map(source, destination);
-                //return SuccessOrErrors.Success("Successfull copy of data");
+                //return SuccessOrErrors.Success("Successful copy of data");
 
                 return base.CopyDtoToData(context, source, destination);
             }
