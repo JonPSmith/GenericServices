@@ -2,7 +2,6 @@
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using GenericServices.Core;
-using GenericServices.Services;
 
 namespace GenericServices.ServicesAsync
 {

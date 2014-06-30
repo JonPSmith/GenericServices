@@ -25,6 +25,7 @@ namespace GenericServices.Services
     }
 
     //---------------------------------------------------------------------------
+    //DTO version
 
     public class ListService<TData, TDto> : IListService<TData, TDto>
         where TData : class

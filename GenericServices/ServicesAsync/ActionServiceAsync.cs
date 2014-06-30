@@ -58,7 +58,7 @@ namespace GenericServices.ServicesAsync
     }
 
     //---------------------------------------------------------------------------
-
+    //DTO version
 
     public class ActionServiceAsync<TActionOut, TActionIn, TDto> : IActionServiceAsync<TActionOut, TActionIn, TDto>
         where TActionIn : class, new()

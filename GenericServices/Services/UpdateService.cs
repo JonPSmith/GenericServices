@@ -30,6 +30,7 @@ namespace GenericServices.Services
     }
 
     //------------------------------------------------------------------------
+    //DTO version
 
     public class UpdateService<TData, TDto> : IUpdateService<TData, TDto>
         where TData : class

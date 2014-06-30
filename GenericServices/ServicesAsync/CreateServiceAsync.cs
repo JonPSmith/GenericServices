@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using GenericServices.Core;
-using GenericServices.Services;
 
 namespace GenericServices.ServicesAsync
 {
@@ -26,6 +25,7 @@ namespace GenericServices.ServicesAsync
     }
 
     //---------------------------------------------------------------------------
+    //DTO version
 
     public class CreateServiceAsync<TData, TDto> : ICreateServiceAsync<TData, TDto> 
         where TData : class, new()

@@ -2,7 +2,6 @@
 using System.Data.Entity;
 using System.Threading.Tasks;
 using GenericServices.Core;
-using GenericServices.Services;
 
 namespace GenericServices.ServicesAsync
 {
@@ -33,6 +32,7 @@ namespace GenericServices.ServicesAsync
     }
 
     //------------------------------------------------------------------------
+    //DTO version
 
     public class UpdateServiceAsync<TData, TDto> : IUpdateServiceAsync<TData,TDto>
         where TData : class

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using GenericServices.Core;
-using GenericServices.Services;
 
 namespace GenericServices.ServicesAsync
 {
@@ -33,6 +32,7 @@ namespace GenericServices.ServicesAsync
     }
 
     //---------------------------------------------------------------------
+    //DTO version
 
     public class DetailServiceAsync<TData, TDto> : IDetailServiceAsync<TData, TDto> 
         where TData : class

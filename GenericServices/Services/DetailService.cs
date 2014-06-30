@@ -30,6 +30,7 @@ namespace GenericServices.Services
     }
 
     //---------------------------------------------------------------------
+    //DTO version
 
     public class DetailService<TData, TDto> : IDetailService<TData, TDto>
         where TData : class
