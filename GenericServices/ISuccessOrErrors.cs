@@ -91,6 +91,13 @@ namespace GenericServices
         /// <returns></returns>
         ISuccessOrErrors<T> AddNamedParameterError(string parameterName, string errorformat, params object[] args);
 
+        /// <summary>
+        /// This returns the errors as:
+        /// If only one error then as a html p 
+        /// If multiple errors then as an unordered list
+        /// </summary>
+        /// <returns>simple html data without any classes</returns>
+        string ErrorsAsHtml();
     }
 
     public interface ISuccessOrErrors
@@ -169,5 +176,13 @@ namespace GenericServices
         /// <param name="successformat"></param>
         /// <param name="args"></param>
         ISuccessOrErrors SetSuccessMessage(string successformat, params object[] args);
+
+        /// <summary>
+        /// This returns the errors as:
+        /// If only one error then as a html p 
+        /// If multiple errors then as an unordered list
+        /// </summary>
+        /// <returns>simple html data without any classes</returns>
+        string ErrorsAsHtml();
     }
 }

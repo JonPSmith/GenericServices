@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Text;
 
 namespace GenericServices.Core
 {
@@ -264,6 +265,38 @@ namespace GenericServices.Core
             return LocalErrors == null 
                 ? "Not currently setup"
                 : string.Format("Failed with {0} error{1}", LocalErrors.Count, LocalErrors.Count > 1 ? "s" : string.Empty);
+        }
+
+        /// <summary>
+        /// This returns the errors as:
+        /// If only one error then as a html p 
+        /// If multiple errors then as an unordered list
+        /// </summary>
+        /// <returns>simple html data without any classes</returns>
+        public string ErrorsAsHtml()
+        {
+            if (IsValid)
+                throw new InvalidOperationException("You should not call this if there are no errors.");
+
+            if (Errors.Count == 1)
+                return string.Format("<p>{0}{1}</p>", FormatParamNames(Errors[0]), Errors[0].ErrorMessage);
+
+            var sb = new StringBuilder("<ul>");
+            foreach (var validationResult in Errors)
+            {
+                sb.AppendFormat("<li>{0}{1}</li>", FormatParamNames(validationResult), validationResult.ErrorMessage);
+            }
+            sb.Append("</ul>");
+
+            return sb.ToString();
+        }
+
+        private string FormatParamNames(ValidationResult validationResult)
+        {
+            if (validationResult.MemberNames.Any())
+                return string.Join(",", validationResult.MemberNames) + ": ";
+
+            return string.Empty;
         }
 
     }

@@ -105,6 +105,51 @@ namespace Tests.UnitTests.Group02Validation
             status.Errors[0].MemberNames.First().ShouldEqual("MyParameterName");
         }
 
+        [Test]
+        public void Check20SingleErrorAsHtmlOk()
+        {
+            //SETUP  
+            var status = new SuccessOrErrors();
+
+            //ATTEMPT
+            status.AddSingleError("This was {0}.", "bad");
+            var html = status.ErrorsAsHtml();
+
+            //VERIFY
+            html.ShouldEqual("<p>This was bad.</p>");           
+        }
+
+        [Test]
+        public void Check21SingleParamErrorAsHtmlOk()
+        {
+            //SETUP  
+            var status = new SuccessOrErrors();
+
+            //ATTEMPT
+            status.AddNamedParameterError("MyParameterName", "This was {0}.", "bad");
+            var html = status.ErrorsAsHtml();
+
+            //VERIFY
+            html.ShouldEqual("<p>MyParameterName: This was bad.</p>");
+        }
+
+        [Test]
+        public void Check23MultipleErrorsAsHtmlOk()
+        {
+            //SETUP  
+            var status = new SuccessOrErrors();
+
+            //ATTEMPT
+            status.AddSingleError("This was {0}.", "bad");
+            status.AddNamedParameterError("MyParameterName", "This was {0}.", "bad");
+            var html = status.ErrorsAsHtml();
+
+            //VERIFY
+            html.ShouldEqual("<ul><li>This was bad.</li><li>MyParameterName: This was bad.</li></ul>");
+        }
+
+
+
         //Cannot test this as cannot new DbEntityEntry and won't accept null 
         //[Test]
         //public void Check20AddNamedParameterErrorOk()
