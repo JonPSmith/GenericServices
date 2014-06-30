@@ -63,39 +63,6 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
         }
 
         [Test]
-        public async void Check02CopyDtoToDataValidationFail()
-        {
-
-            //SETUP
-            var dto = new SimplePostDtoAsync
-            {
-                PostId = 123,
-                BloggerName = "This should not be copied",
-                Title = null,
-                LastUpdated = new DateTime(2000, 1, 1),
-                Tags = new Collection<Tag> { new Tag { Name = "Should not copy this", Slug = "No" } }
-            };
-
-
-            //ATTEMPT
-            var newData = new Post
-            {
-                Blogger = new Blog { Name = "Original Blog Name" },
-                BlogId = 777,
-                Content = "Original Content",
-                Tags = new Collection<Tag> { new Tag { Name = "Original Tag name", Slug = "Yes" } }
-            };
-
-            var status = await dto.CopyDtoToDataAsync(null, dto, newData);
-
-            //VERIFY
-            status.IsValid.ShouldEqual(false, status.Errors);
-            CollectionAssert.AreEquivalent(new[] { "The Title field is required." },
-                status.Errors.Select(x => x.ErrorMessage));
-        }
-
-
-        [Test]
         public async void Check03CopyDtoToDataValidationFail()
         {
 
@@ -119,7 +86,7 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
 
             //SETUP
             var dto = new SimpleTagDtoAsync();
-            dto.SetSupportedFunctions(ServiceFunctions.DoNotValidateonCopyDtoToData);
+            dto.SetSupportedFunctions(ServiceFunctions.DoActionWithoutValidate);
 
             //ATTEMPT
             var newData = new Tag();

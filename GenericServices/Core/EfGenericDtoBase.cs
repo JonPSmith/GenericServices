@@ -20,13 +20,17 @@ namespace GenericServices.Core
         Create = 4,
         Update = 8,
         //note: no delete as delete does not need a dto
-        DoAction = 32,
-        DoDbAction = 32,
-        //The destination data is validated after a CopyDtoToData. This flag allows you to turn this off
-        DoNotValidateonCopyDtoToData = 64,
+        
+        //Now Action parts
+        DoActionWithoutValidate = 32,
+        //This is the default. It validates the destination before calling the action
+        DoAction = DoActionWithoutValidate | ValidateonCopyDtoToData,
+        //This causes the destination data is validated after a CopyDtoToData. 
+        //(Not really necessary when doing a DB action as SaveChanges does a validation)
+        ValidateonCopyDtoToData = 64,
         //DoesNotNeedSetup refers the need to call the SetupSecondaryData method
         //if this flag is NOT set then expects dto to override SetupSecondaryData method
-        DoesNotNeedSetup = 128,
+        DoesNotNeedSetup = 256,
         AllCrudButCreate = List | Detail | Update,
         AllCrudButList = Detail | Create | Update,
         AllCrud = List | Detail | Create | Update

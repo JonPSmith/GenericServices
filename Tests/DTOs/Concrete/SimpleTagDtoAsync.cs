@@ -10,8 +10,7 @@ namespace Tests.DTOs.Concrete
     {
 
         private ServiceFunctions _supportedFunctionsToUse = ServiceFunctions.AllCrud |
-                                                    ServiceFunctions.DoAction |
-                                                    ServiceFunctions.DoDbAction;
+                                                    ServiceFunctions.DoAction;
 
         public SimpleTagDtoAsync()
         {

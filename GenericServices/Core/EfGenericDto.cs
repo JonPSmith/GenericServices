@@ -59,7 +59,7 @@ namespace GenericServices.Core
             Mapper.Map(source, destination);
 
             var status = SuccessOrErrors.Success("Successful copy of data");
-            if (SupportedFunctions.HasFlag(ServiceFunctions.DoNotValidateonCopyDtoToData)) return status;
+            if (!SupportedFunctions.HasFlag(ServiceFunctions.ValidateonCopyDtoToData)) return status;
             
             //we need to run a validation on the destination as it might have new or tigher validation rules
             var errors = new List<ValidationResult>();

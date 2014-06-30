@@ -89,7 +89,7 @@ namespace Tests.Actions
 
         protected internal override ServiceFunctions SupportedFunctions
         {
-            get { return ServiceFunctions.DoAction | ServiceFunctions.DoDbAction; }
+            get { return ServiceFunctions.DoAction; }
         }
     }
 }

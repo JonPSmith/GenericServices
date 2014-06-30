@@ -63,39 +63,6 @@ namespace Tests.UnitTests.Group08CrudServices
         }
 
         [Test]
-        public void Check02CopyDtoToDataValidationFail()
-        {
-
-            //SETUP
-            var dto = new SimplePostDto
-            {
-                PostId = 123,
-                BloggerName = "This should not be copied",
-                Title = "This title has an exclamation mark in it!",            //checks that IVallidatableObject is checked
-                LastUpdated = new DateTime(2000, 1, 1),
-                Tags = new Collection<Tag> { new Tag { Name = "Should not copy this", Slug = "No" } }
-            };
-
-
-            //ATTEMPT
-            var newData = new Post
-            {
-                Blogger = new Blog { Name = "Original Blog Name" },
-                BlogId = 777,
-                Content = "Original Content",
-                Tags = new Collection<Tag> { new Tag { Name = "Original Tag name", Slug = "Yes" } }
-            };
-
-            var status = dto.CopyDtoToData(null, dto, newData);
-
-            //VERIFY
-            status.IsValid.ShouldEqual(false, status.Errors);
-            CollectionAssert.AreEquivalent(new[] { "Sorry, but you can't get too excited and include a ! in the title." },
-                status.Errors.Select(x => x.ErrorMessage));
-        }
-
-
-        [Test]
         public void Check03CopyDtoToDataValidationFail()
         {
 
@@ -119,7 +86,7 @@ namespace Tests.UnitTests.Group08CrudServices
 
             //SETUP
             var dto = new SimpleTagDto();
-            dto.SetSupportedFunctions( ServiceFunctions.DoNotValidateonCopyDtoToData);
+            dto.SetSupportedFunctions( ServiceFunctions.DoActionWithoutValidate);
 
             //ATTEMPT
             var newData = new Tag();
