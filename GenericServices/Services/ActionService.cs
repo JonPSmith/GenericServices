@@ -85,7 +85,7 @@ namespace GenericServices.Services
         {
             ISuccessOrErrors<TActionOut> status = new SuccessOrErrors<TActionOut>();
 
-            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoAction))
+            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoActionWithoutValidate))
                 return status.AddSingleError("Running an action is not setup for this data.");
 
             var actionInData = new TActionIn();
