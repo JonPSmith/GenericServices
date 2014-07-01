@@ -6,41 +6,65 @@ and .NET 4.5's [async/await](http://msdn.microsoft.com/en-gb/library/hh191443.as
 Its aim is to make the creation of the service layer simple while providing robust implementations of standard database and business object actions. It is an Open Source project.
 
 ### What is the motivation behind building GenericServices?
-I finished version 1 of a fairly complex MVC web application for analysing, modelling and visualising geospatial problems in mid 2014.
-This application, called [Spatial Modeller™](http://selectiveanalytics.com/about-us/spatial-modeller/)
-which combines a complex, Domain-Driven Design for the data and business objects with a powerful user interface using
-a [Single Page Application - SPA](http://en.wikipedia.org/wiki/Single-page_application).
-There was mismatch between what the business/data layers looked like and what the SPA wanted, which the service layer solved.
+I develop fairly complex analysing, modelling and data visualision web application (see [Spatial Modeller™](http://selectiveanalytics.com/about-us/spatial-modeller/)). These require Domain-Driven Design for the data and business objects, while the visualisation needs a comprehensive user interface which I implement using a [Single Page Application - SPA](http://en.wikipedia.org/wiki/Single-page_application). This means there often a mismatch between what the business/data layers classes and what the SPA needs.
 
-The Service Layer turned out to be a really important layer as it allowed a Domain-Driven Design focus on the backend problem
-while providing the SPA, via the WebApi, and other MVC pages with the data in the format they needed. It used lots of Data Transfer Objects - DTOs
-[See this useful article](http://msdn.microsoft.com/en-us/magazine/ee236638.aspx) to shape, alter and enhance the data as it moved up and down the layers.
+My experience is that the Service Layer, plus [Data Transfer Objects - DTOs](http://msdn.microsoft.com/en-us/magazine/ee236638.aspx) is the best way to solve mismatch. However I have found that the service layer is often filled with lots of code that was very similar, with just the data being different. I therefore researched a number of approaches to solve this and finally came up with a solution using C#'s Generic classes. I have therefore called it GenericServices.
 
-The service layer was great, but it had lots of code that was very similar with just the data being different. It was also boring to write!
-I therefore researched a number of approaches to solve this and finally came up with a solution using C#'s Generic classes.
+### What does the GenericServices framework provide?
 
-### What does the GenericService provide?
-
-#### 1. Generic Database access command
+#### 1. Generic Database access commands
 
 GenericServices provides the standard CRUD (Create, Read, Update and Delete) commands using EF 6. These commands have the following features:
 
+- Standard CRUD commands using EF6 that can link to any class through C# Generics.
 - Can work directly on the class connected to the database OR via a DTO to shape the data.
-- It uses Generic CRUD commands using EF6, so no duplication of code.
-- Does automatic, convention-based mapping between properties in the data and DTO classes.
-- For items that can't map, like loading a dropdownlist for the UI, there are clear extension points.
-- GenericService catches errors in the business/data layer and communicates them up to the UI.
+- Does automatic, convention-based mapping between data and DTO class properties.
+- Good extension points to handle specific issues like loading a dropdownlist for the UI.
 - There are normal and async versions of all CRUD commands.
-
-
 
 #### 2. Generic calling of business logic
 
-GenericServices has standard patterns for short and long-running business methods
+GenericServices has standard patterns for running business methods. The features are:
+
+- Ability to call a business method normally or as async task.
+- Ability to copy DTO to business data class (same methods as for database commands).
+- External code available for handling long-running methods with progress and cancel.
 
 #### 3. General items
 
-- There is a live [example web site](http://samplemvcwebapp.com.temporary-domain.com/) with good, documented examples.
-- The source code of the [example web site](https://github.com/JonPSmith/SampleMvcWebApp) is also available as a Opne Source project.
+- GenericService is designed to handle validation and error checking at multiple levels in the system.
+- Good examples of used via an online [example web site](http://samplemvcwebapp.com.temporary-domain.com/) which includes some documentation.
+- The source code of the [example web site](https://github.com/JonPSmith/SampleMvcWebApp) is also available as a Open Source project.
 - The commands have been extensively Unit Tested.
 - The project is Open Source.
+
+### List of commands
+
+1. Generic Database access commands
+  1. Direct access, i.e. uses DbContext data classes
+    1. Normal, synchronous access
+       - [ListService`1](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/Services/ListService.cs) with .AsList()
+       - [DetailService`1](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/Services/DetailService.cs)
+       - [CreateSetupService`1](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/Services/CreateSetupService.cs) and [CreateService`1](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/Services/CreateService.cs)
+       - [UpdateSetupService`1](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/Services/UpdateSetupService.cs) and [UpdateService`1](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/Services/UpdateService.cs)
+       - [DeleteService`1](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/Services/DeleteService.cs)
+    2. Async access
+       - [ListServiceAsync`](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/Services/ListService.cs) with .AsListAsync()
+       - [DetailServiceAsync`1](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/ServicesAsync/DetailServiceAsync.cs)
+       - [CreateSetupServiceAsync`1](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/ServicesAsync/CreateSetupServiceAsync.cs) and [CreateServiceAsync`1](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/ServicesAsync/CreateServiceAsync.cs)
+       - [UpdateSetupServiceAsync`1](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/ServicesAsync/UpdateSetupServiceAsync.cs) and [UpdateServiceAsync`1](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/ServicesAsync/UpdateServiceAsync.cs)
+       - [DeleteServiceAsync`1](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/ServicesAsync/DeleteServiceAsync.cs)
+  2. Via Dto with CopyDataToDto and CopyDtoToData commands built in
+
+     Note: when looking at file move down to parts with preceeding comment //DTO version
+    1. Normal, synchronous access
+       - [ListService`2](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/Services/ListService.cs) with .AsList()
+       - [DetailService`2](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/Services/DetailService.cs)
+       - [CreateSetupService`2](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/Services/CreateSetupService.cs) and [CreateService`2](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/Services/CreateService.cs)
+       - [UpdateSetupService`2](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/Services/UpdateSetupService.cs) and [UpdateService`2](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/Services/UpdateService.cs)
+
+    2. Async access
+       - [ListServiceAsync`2](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/Services/ListService.cs) with .AsListAsync()
+       - [DetailServiceAsync`2](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/ServicesAsync/DetailServiceAsync.cs)
+       - [CreateSetupServiceAsync`2](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/ServicesAsync/CreateSetupServiceAsync.cs) and [CreateServiceAsync`2](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/ServicesAsync/CreateServiceAsync.cs)
+       - [UpdateSetupServiceAsync`2](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/ServicesAsync/UpdateSetupServiceAsync.cs) and [UpdateServiceAsync`2](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/ServicesAsync/UpdateServiceAsync.cs)
