@@ -1,6 +1,7 @@
 ﻿using System;
+using GenericServices.Logger;
 
-namespace GenericServices.Logger
+namespace Tests.Helpers
 {
 
     public class Log4NetGenericLogger : IGenericLogger

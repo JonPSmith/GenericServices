@@ -2,6 +2,7 @@
 using GenericServices.Logger;
 using NUnit.Framework;
 using Tests.Helpers;
+using Log4NetGenericLogger = Tests.Helpers.Log4NetGenericLogger;
 
 namespace Tests.UnitTests.Group05GenericLogger
 {

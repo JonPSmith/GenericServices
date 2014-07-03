@@ -6,9 +6,9 @@ and .NET 4.5's [async/await](http://msdn.microsoft.com/en-gb/library/hh191443.as
 Its aim is to make the creation of the service layer simple while providing robust implementations of standard database and business object actions. It is an Open Source project.
 
 ### What is the motivation behind building GenericServices?
-I develop fairly complex analysing, modelling and data visualision web application (see [Spatial Modeller™](http://selectiveanalytics.com/about-us/spatial-modeller/)). These require Domain-Driven Design for the data and business objects, while the visualisation needs a comprehensive user interface which I implement using a [Single Page Application - SPA](http://en.wikipedia.org/wiki/Single-page_application). This means there often a mismatch between what the business/data layers classes and what the SPA needs.
+I develop fairly complex analysis, modelling and data visualision web application (see [Spatial Modeller™](http://selectiveanalytics.com/about-us/spatial-modeller/)). These require Domain-Driven Design for the data and business objects, while the visualisation needs a comprehensive user interface which I have implemented using a [Single Page Application - SPA](http://en.wikipedia.org/wiki/Single-page_application). This means there often a mismatch between what the business/data layers classes and what the SPA or other web pages need.
 
-My experience is that the Service Layer, plus [Data Transfer Objects - DTOs](http://msdn.microsoft.com/en-us/magazine/ee236638.aspx) is the best way to solve mismatch. However I have found that the service layer is often filled with lots of code that was very similar, with just the data being different. I therefore researched a number of approaches to solve this and finally came up with a solution using C#'s Generic classes. I have therefore called it GenericServices.
+My experience is that the Service Layer, plus [Data Transfer Objects - DTOs](http://msdn.microsoft.com/en-us/magazine/ee236638.aspx) is the best way to solve this mismatch. However I have found that the service layer is often filled with lots of code that is very similar, with just different data classes. I therefore researched a number of approaches to solve this and finally came up with a solution using C#'s Generic classes. I have therefore called it GenericServices.
 
 ### What does the GenericServices framework provide?
 
@@ -18,7 +18,7 @@ GenericServices provides the standard CRUD (Create, Read, Update and Delete) com
 
 - Standard CRUD commands using EF6 that can link to any class through C# Generics.
 - Can work directly on the class connected to the database OR via a DTO to shape the data.
-- Does automatic, convention-based mapping between data and DTO class properties.
+- Does automatic, convention-based mapping between data and DTO classes via [AutoMapper](https://github.com/AutoMapper/AutoMapper/wiki).
 - Good extension points to handle specific issues like loading a dropdownlist for the UI.
 - There are normal and async versions of all CRUD commands.
 
@@ -61,7 +61,7 @@ GenericServices has standard patterns for running business methods. The features
 
   2. Via Dto with CopyDataToDto and CopyDtoToData commands built in
 
-     Note: when looking at file move down to parts with preceeding comment //DTO version
+     Note: when looking for method in file see code after comment line: *//DTO version*
     1. Normal, synchronous access
        - [ListService`2](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/Services/ListService.cs) with .AsList()
        - [DetailService`2](https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/Services/DetailService.cs)

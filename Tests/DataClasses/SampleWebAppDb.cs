@@ -40,10 +40,10 @@ namespace Tests.DataClasses
                     (string) ex.InnerException.InnerException.Data["HelpLink.EvtID"] == "547")
                     return result.AddSingleError("This operation failed because other data uses this entry.");
            
-            throw; //else it isn't something we understand
+                throw; //else it isn't something we understand
             }
 
-        return result.SetSuccessMessage("Successfully added or updated {0} items", numChanges);
+            return result.SetSuccessMessage("Successfully added or updated {0} items", numChanges);
         }
 
         public async Task<ISuccessOrErrors> SaveChangesWithValidationAsync()

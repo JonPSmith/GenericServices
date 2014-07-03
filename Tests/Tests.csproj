@@ -73,6 +73,7 @@
     <Compile Include="DataClasses\Concrete\Post.cs" />
     <Compile Include="DataClasses\Concrete\PostTagGrade.cs" />
     <Compile Include="DataClasses\Concrete\Tag.cs" />
+    <Compile Include="DataClasses\CutDownValidation.cs" />
     <Compile Include="DataClasses\DataLayerInitialise.cs" />
     <Compile Include="DataClasses\Internal\LoadDbDataFromXml.cs" />
     <Compile Include="DataClasses\SampleWebAppDb.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Helpers\DbSnapShot.cs" />
     <Compile Include="Helpers\DummyIDbContextWithValidation.cs" />
     <Compile Include="Helpers\ExtendAsserts.cs" />
+    <Compile Include="Helpers\Log4NetGenericLogger.cs" />
     <Compile Include="Helpers\TestFileHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UiHelpers\DropDownListType.cs" />
