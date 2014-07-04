@@ -169,10 +169,9 @@ namespace GenericServices.Core
         /// </summary>
         public ISuccessOrErrors SetErrors(IEnumerable<DbEntityValidationResult> errors)
         {
-            LocalErrors = new List<ValidationResult>();
-
-            foreach (var errorsPerThisClass in errors)
-                LocalErrors.AddRange(errorsPerThisClass.ValidationErrors.Select(y => new ValidationResult(y.ErrorMessage, new[] { y.PropertyName })));
+            LocalErrors = errors.SelectMany(
+                    x => x.ValidationErrors.Select(y => new ValidationResult(y.ErrorMessage, new[] { y.PropertyName })))
+                    .ToList();
 
             LocalSuccessMessage = string.Empty;
             return this;

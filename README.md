@@ -33,7 +33,7 @@ GenericServices has standard patterns for running business methods. The features
 #### 3. General items
 
 - GenericService is designed to handle validation and error checking at multiple levels in the system.
-- Good examples of used via an online [example web site](http://samplemvcwebapp.com.temporary-domain.com/) which includes some documentation.
+- Good examples of used via an online [example web site](http://samplemvcwebapp.net/) which includes some documentation.
 - The source code of the [example web site](https://github.com/JonPSmith/SampleMvcWebApp) is also available as a Open Source project.
 - The commands have been extensively Unit Tested.
 - The project is Open Source.
