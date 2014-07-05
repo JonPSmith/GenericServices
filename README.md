@@ -42,7 +42,7 @@ GenericServices has standard patterns for running business methods. The features
 
   - It needs .NET 4.5 for the new [async/await](http://msdn.microsoft.com/en-gb/library/hh191443.aspx) tasking format introduced in .NET 4.5
   - It uses [Entity Framework 6](http://msdn.microsoft.com/en-us/data/ee712907) for database access, again because it supports async commands.
-  - It also makes use of the open source [AutoMapper](http://automapper.org/) library for transforming data and business classes to/from the user interface oriented DTOs.
+  - It also makes use of the open source [AutoMapper](http://automapper.org/) library for transforming data to/from DTOs.
 
 #### 4. General items
 
