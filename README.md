@@ -33,10 +33,11 @@ GenericServices has standard patterns for running business methods. The features
 #### 3. What frameworks are GenericServices is designed to work with?
 
 - GenericServices is designed work as a service layer framework in any .NET application, such as: 
-  - [ASP.NET MVC](http://www.asp.net/mvc/tutorials/mvc-5/introduction/getting-started), 
-  - [Windows 8 apps](http://msdn.microsoft.com/en-US/windows/apps/br229519), 
-  - [Widows Azure Web apps](https://azure.microsoft.com/en-us/services/web-sites/), etc. 
-- It assumed a disconnected state model, e.g. a web site where read of data is separate from write.
+  - [ASP.NET MVC](http://www.asp.net/mvc/tutorials/mvc-5/introduction/getting-started)
+  - [Windows 8 apps](http://msdn.microsoft.com/en-US/windows/apps/br229519) 
+  - [Widows Azure Web apps](https://azure.microsoft.com/en-us/services/web-sites/)
+  - etc. 
+- GenericServices assumed a disconnected state model, e.g. a web site where read of data is separate from write.
 - GenericServices assumes a horizontal scaling model, e.g. scale by having multiple web instances. 
 - GenericServices uses the following .NET frameworks/systems.
 
@@ -47,7 +48,7 @@ GenericServices has standard patterns for running business methods. The features
 #### 4. General items
 
 - GenericService is designed to handle validation and error checking at multiple levels in the system.
-- Good examples of used via an online [example web site](http://samplemvcwebapp.net/) which includes some documentation.
+- Good examples of usage via an online [example web site](http://samplemvcwebapp.net/) which includes some documentation.
 - The source code of the [example web site](https://github.com/JonPSmith/SampleMvcWebApp) is also available as a Open Source project.
 - The commands have been extensively Unit Tested.
 - The project is Open Source.
