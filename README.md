@@ -32,15 +32,15 @@ GenericServices has standard patterns for running business methods. The features
 
 #### 3. What frameworks are GenericServices is designed to work with?
 
-- GenericServices is designed work as a service layer framework in any .NET application, such as 
-[Windows 8 apps](http://msdn.microsoft.com/en-US/windows/apps/br229519), 
-[ASP.NET MVC](http://www.asp.net/mvc/tutorials/mvc-5/introduction/getting-started), 
-[Widows Azure Web apps](https://azure.microsoft.com/en-us/services/web-sites/), etc. 
-- It assumed a disconnected state model, e.g. a web site where the read of data prior to update is disconnected from the update of the data.
-- GenericServices assumes a horizontal scaling model, e.g. scale by having multiple web instances, as this is how Azure and most web sites scale. 
+- GenericServices is designed work as a service layer framework in any .NET application, such as: 
+  - [ASP.NET MVC](http://www.asp.net/mvc/tutorials/mvc-5/introduction/getting-started), 
+  - [Windows 8 apps](http://msdn.microsoft.com/en-US/windows/apps/br229519), 
+  - [Widows Azure Web apps](https://azure.microsoft.com/en-us/services/web-sites/), etc. 
+- It assumed a disconnected state model, e.g. a web site where read of data is separate from write.
+- GenericServices assumes a horizontal scaling model, e.g. scale by having multiple web instances. 
 - GenericServices uses the following .NET frameworks/systems.
 
-  - It needs .NET 4.5 because it implements all commands in normal and the new [async/await](http://msdn.microsoft.com/en-gb/library/hh191443.aspx) Tasking format introduced in .NET 4.5
+  - It needs .NET 4.5 for the new [async/await](http://msdn.microsoft.com/en-gb/library/hh191443.aspx) tasking format introduced in .NET 4.5
   - It uses [Entity Framework 6](http://msdn.microsoft.com/en-us/data/ee712907) for database access, again because it supports async commands.
   - It also makes use of the open source [AutoMapper](http://automapper.org/) library for transforming data and business classes to/from the user interface oriented DTOs.
 
