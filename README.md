@@ -34,10 +34,9 @@ GenericServices has standard patterns for running business methods. The features
 
 - GenericServices is designed work as a service layer framework in any .NET application, such as: 
   - [ASP.NET MVC](http://www.asp.net/mvc/tutorials/mvc-5/introduction/getting-started)
-  - [Windows 8 apps](http://msdn.microsoft.com/en-US/windows/apps/br229519) 
   - [Widows Azure Web apps](https://azure.microsoft.com/en-us/services/web-sites/)
   - etc. 
-- GenericServices assumed a disconnected state model, e.g. a web site where read of data is separate from write.
+- GenericServices assumed a disconnected state model, e.g. a web site or a Http RESTful service .
 - GenericServices assumes a horizontal scaling model, e.g. scale by having multiple web instances. 
 - GenericServices uses the following .NET frameworks/systems.
 
