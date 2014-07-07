@@ -90,6 +90,7 @@
     <Compile Include="DTOs\ISimplePostDto.cs" />
     <Compile Include="DTOs\Concrete\SimpleBlogWithPostsDto.cs" />
     <Compile Include="DTOs\Concrete\SimplePostDto.cs" />
+    <Compile Include="Helpers\TraceGenericLogger.cs" />
     <Compile Include="Helpers\DatabaseHelpers.cs" />
     <Compile Include="Helpers\DbSnapShot.cs" />
     <Compile Include="Helpers\DummyIDbContextWithValidation.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="UnitTests\Group04ServiceFlowAsync\Test02UpdateServiceAsync.cs" />
     <Compile Include="UnitTests\Group04ServiceFlowAsync\Test03DetailServiceAsync.cs" />
     <Compile Include="UnitTests\Group05GenericLogger\Test02SetupLogger.cs" />
+    <Compile Include="UnitTests\Group05GenericLogger\Test06TraceGenericLogger.cs" />
     <Compile Include="UnitTests\Group05GenericLogger\Test04Log4NetGenericLogger.cs" />
     <Compile Include="UnitTests\Group10Actions\Test05ActionServiceEmptyActionAsync.cs" />
     <Compile Include="UnitTests\Group10Actions\Test02ActionServiceEmptyAction.cs" />
