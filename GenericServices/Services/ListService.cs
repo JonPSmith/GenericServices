@@ -29,7 +29,7 @@ namespace GenericServices.Services
 
     public class ListService<TData, TDto> : IListService<TData, TDto>
         where TData : class
-        where TDto : EfGenericDto<TData, TDto>, new()
+        where TDto : EfGenericDtoBase<TData, TDto>, new()
     {
         private readonly IDbContextWithValidation _db;
 

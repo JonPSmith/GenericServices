@@ -15,7 +15,7 @@ namespace GenericServices
 
     public interface IListService<TData, out TDto>
         where TData : class
-        where TDto : EfGenericDto<TData, TDto>
+        where TDto : EfGenericDtoBase<TData, TDto>
     {
         IQueryable<TDto> GetList();
     }
