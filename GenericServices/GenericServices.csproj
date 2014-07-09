@@ -55,6 +55,7 @@
     <Compile Include="Actions\ActionCommsForTask.cs" />
     <Compile Include="Actions\ProgressWithOptionalMessage.cs" />
     <Compile Include="Core\EfGenericDtoAsync.cs" />
+    <Compile Include="Actions\Internal\ActionServiceHelper.cs" />
     <Compile Include="GenericLoggerSetup.cs" />
     <Compile Include="IActionAsync.cs" />
     <Compile Include="IActionService.cs" />

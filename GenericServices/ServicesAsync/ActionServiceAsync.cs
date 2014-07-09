@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using GenericServices.Actions.Internal;
 using GenericServices.Core;
 using GenericServices.Services;
 
@@ -30,7 +31,9 @@ namespace GenericServices.ServicesAsync
             try
             {
                 var status = await _actionToRun.DoActionAsync(actionComms, actionData);
-                return await CallSubmitChangesIfNeededAsync(actionData, status);
+                return status.AskedToSaveChanges(_actionToRun)
+                    ? await status.SaveChangesAttemptAsync(actionData, _db)
+                    : status;
             }
             finally
             {
@@ -38,22 +41,6 @@ namespace GenericServices.ServicesAsync
                 if (disposable != null)
                     disposable.Dispose();
             }
-        }
-
-        private async Task<ISuccessOrErrors<TActionOut>> CallSubmitChangesIfNeededAsync(TActionIn actionData, ISuccessOrErrors<TActionOut> status)
-        {
-            if (!status.IsValid || !_actionToRun.SubmitChangesOnSuccess) return status;     //nothing to do
-
-            if (ActionServiceHelper.ShouldStopAsWarningsMatter(status.HasWarnings, actionData))
-                //There were warnings and we are asked to not write to the database
-                return status.UpdateSuccessMessage("{0}... but NOT written to database as warnings.",
-                    status.SuccessMessage);
-
-            //we now need to save the changes to the database
-            var dataStatus = await _db.SaveChangesWithValidationAsync();
-            return dataStatus.IsValid
-                ? status.UpdateSuccessMessage("{0}... and written to database.", status.SuccessMessage)
-                : SuccessOrErrors<TActionOut>.ConvertNonResultStatus(dataStatus);
         }
     }
 
@@ -98,7 +85,9 @@ namespace GenericServices.ServicesAsync
             try
             {
                 status = await _actionToRun.DoActionAsync(actionComms, actionInData);
-                return await CallSubmitChangesIfNeededAsync(actionInData, status);
+                return status.AskedToSaveChanges(_actionToRun)
+                    ? await status.SaveChangesAttemptAsync(actionInData, _db)
+                    : status;
             }
             finally
             {
@@ -121,23 +110,6 @@ namespace GenericServices.ServicesAsync
                 await dto.SetupSecondaryDataAsync(_db, dto);
 
             return dto;
-        }
-
-
-        private async Task<ISuccessOrErrors<TActionOut>> CallSubmitChangesIfNeededAsync(TActionIn actionData, ISuccessOrErrors<TActionOut> status)
-        {
-            if (!status.IsValid || !_actionToRun.SubmitChangesOnSuccess) return status;     //nothing to do
-
-            if (ActionServiceHelper.ShouldStopAsWarningsMatter(status.HasWarnings, actionData))
-                //There were warnings and we are asked to not write to the database
-                return status.UpdateSuccessMessage("{0}... but NOT written to database as warnings.",
-                    status.SuccessMessage);
-
-            //we now need to save the changes to the database
-            var dataStatus = await _db.SaveChangesWithValidationAsync();
-            return dataStatus.IsValid
-                ? status.UpdateSuccessMessage("{0}... and written to database.", status.SuccessMessage)
-                : SuccessOrErrors<TActionOut>.ConvertNonResultStatus(dataStatus);
         }
     }
 
