@@ -2,8 +2,6 @@
 
 namespace GenericServices
 {
-    [Flags]
-    public enum ActionFlags { Normal = 0, ExitOnSuccess = 1, NoProgressSent = 2, NoMessagesSent = 4, CancelNotSupported = 8 }
 
     public interface IActionBase
     {
@@ -13,12 +11,6 @@ namespace GenericServices
         /// and there are warnings then it does not call SubmitChanges
         /// </summary>
         bool SubmitChangesOnSuccess { get; }
-
-        /// <summary>
-        /// This allows the action to configure what it supports, which then affects what the user sees
-        /// Note: it must be a constant as it is read just after the action is created
-        /// </summary>
-        ActionFlags ActionConfig { get; }
 
         /// <summary>
         /// This controls the lower value sent back to reportProgress

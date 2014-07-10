@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace GenericServices.Actions
+﻿namespace GenericServices.ActionComms
 {
     public class ProgressWithOptionalMessage
     {

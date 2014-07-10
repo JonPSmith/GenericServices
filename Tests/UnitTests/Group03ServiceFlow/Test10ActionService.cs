@@ -34,7 +34,7 @@ namespace Tests.UnitTests.Group03ServiceFlow
             var dto = new SimpleTagDto {Name = "test", Slug = "test"};
 
             //ATTEMPT
-            var status = service.DoAction(null, dto);
+            var status = service.DoAction(dto);
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
@@ -52,7 +52,7 @@ namespace Tests.UnitTests.Group03ServiceFlow
             var dto = new SimpleTagDto { Name = "test", Slug = "test" };
 
             //ATTEMPT
-            var status = service.DoAction(null, dto);
+            var status = service.DoAction(dto);
 
             //VERIFY
             status.IsValid.ShouldEqual(true);
@@ -71,7 +71,7 @@ namespace Tests.UnitTests.Group03ServiceFlow
             dto.SetSupportedFunctions(ServiceFunctions.None);
 
             //ATTEMPT
-            var status = service.DoAction(null, dto);
+            var status = service.DoAction(dto);
 
             //VERIFY
             status.IsValid.ShouldEqual(false);
@@ -97,7 +97,7 @@ namespace Tests.UnitTests.Group03ServiceFlow
                 dto.TagId = 1;
 
             //ATTEMPT
-            var status = service.DoAction(null, dto);
+            var status = service.DoAction(dto);
 
             //VERIFY
             status.IsValid.ShouldEqual(isValid, status.Errors);

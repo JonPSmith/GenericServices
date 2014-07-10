@@ -146,28 +146,5 @@ namespace Tests.UnitTests.Group05GenericLogger
             logs[0].ShouldEndWith("A, expection InvalidOperationException: an exception");
         }
 
-        [Test]
-        public void Check20ActionDataBaseLoggerOk()
-        {
-
-            //SETUP  
-            var data = new GTestActionData
-            {
-                SecondsBetweenIterations = 0,
-                NumIterations = 1
-            };
-            var action = new GTestAction();
-
-            //ATTEMPT
-            action.DoAction(new MockActionComms(), data);
-
-            //VERIFY
-            Trace.Flush();
-            var logs = _loggedData.ToString().Split('\n').Where(x => x != string.Empty).Select(x => x.Trim()).ToArray();
-            logs.Length.ShouldEqual(2);
-            logs[0].ShouldEndWith("GTestAction: Action has started. Will run for 0.0 seconds.");
-
-        }
-
     }
 }

@@ -1,37 +1,27 @@
 using GenericServices.Core;
-using GenericServices.Services;
 
 namespace GenericServices
 {
     public interface IActionService<TActionOut, in TActionIn>
     {
-
         /// <summary>
-        /// This runs a task that does not write to the database. We assume is passes data back via the dto.
-        /// It first converts the dto to the taskdata format, runs the task and then converts
-        /// the taskdata back to the dto format
+        /// This runs a method, handing it the data it needs
         /// </summary>
-        /// <param name="taskComms"></param>
         /// <param name="taskData"></param>
-        /// <returns></returns>
-        ISuccessOrErrors<TActionOut> DoAction(IActionComms taskComms, TActionIn taskData);
-
+        /// <returns>The status, with a result if the status is valid</returns>
+        ISuccessOrErrors<TActionOut> DoAction(TActionIn taskData);
     }
 
     public interface IActionService<TActionOut, TActionIn, TDto>
         where TActionIn : class, new()
         where TDto : EfGenericDto<TActionIn, TDto>
     {
-
         /// <summary>
-        /// This runs a task that does not write to the database. We assume is passes data back via the dto.
-        /// It first converts the dto to the taskdata format, runs the task and then converts
-        /// the taskdata back to the dto format
+        /// This converts the dto to the format that the method needs and then runs it
         /// </summary>
-        /// <param name="taskComms"></param>
         /// <param name="dto"></param>
-        /// <returns></returns>
-        ISuccessOrErrors<TActionOut> DoAction(IActionComms taskComms, TDto dto);
+        /// <returns>The status, with a result if the status is valid</returns>
+        ISuccessOrErrors<TActionOut> DoAction(TDto dto);
 
         /// <summary>
         /// This is available to reset any secondary data in the dto. Call this if the ModelState was invalid and

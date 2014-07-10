@@ -38,7 +38,7 @@ namespace Tests.UnitTests.Group10Actions
             {
                 TagId = -456
             };
-            var status = await service.DoActionAsync(null, data);
+            var status = await service.DoActionAsync(data);
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
@@ -56,7 +56,7 @@ namespace Tests.UnitTests.Group10Actions
 
             //ATTEMPT
             var data = new Tag();
-            var status = await service.DoActionAsync(null, data);
+            var status = await service.DoActionAsync(data);
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
@@ -78,7 +78,7 @@ namespace Tests.UnitTests.Group10Actions
             {
                 TagId = 1 //means a warning
             };
-            var status = await service.DoActionAsync(null, data);
+            var status = await service.DoActionAsync(data);
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
@@ -100,7 +100,7 @@ namespace Tests.UnitTests.Group10Actions
             {
                 TagId = 1 //means a warning
             };
-            var status = await service.DoActionAsync(null, data);
+            var status = await service.DoActionAsync(data);
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
@@ -122,7 +122,7 @@ namespace Tests.UnitTests.Group10Actions
             {
                 TagId = 3 //will fail
             };
-            var status = await service.DoActionAsync(null, data);
+            var status = await service.DoActionAsync(data);
 
             //VERIFY
             status.IsValid.ShouldEqual(false, status.Errors);
@@ -134,7 +134,6 @@ namespace Tests.UnitTests.Group10Actions
         {
             //SETUP  
             var dummyDb = new DummyIDbContextWithValidation();
-            var mockComms = new MockActionComms();
             var testAction = new EmptyTestActionAsync(false);
             var service = new ActionServiceAsync<int, Tag, SimpleTagDtoAsync>(dummyDb, testAction);
 
@@ -145,7 +144,7 @@ namespace Tests.UnitTests.Group10Actions
                 Name = "test",
                 Slug = "test"
             };
-            var status = await service.DoActionAsync(mockComms, dto);
+            var status = await service.DoActionAsync(dto);
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
@@ -158,7 +157,6 @@ namespace Tests.UnitTests.Group10Actions
         {
             //SETUP  
             var dummyDb = new DummyIDbContextWithValidation();
-            var mockComms = new MockActionComms();
             var testAction = new EmptyTestActionAsync(true);
             var service = new ActionServiceAsync<int, Tag, SimpleTagDtoAsync>(dummyDb, testAction);
 
@@ -169,7 +167,7 @@ namespace Tests.UnitTests.Group10Actions
                 Name = "test",
                 Slug = "test"
             };
-            var status = await service.DoActionAsync(mockComms, dto);
+            var status = await service.DoActionAsync(dto);
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
@@ -184,7 +182,6 @@ namespace Tests.UnitTests.Group10Actions
         {
             //SETUP  
             var dummyDb = new DummyIDbContextWithValidation();
-            var mockComms = new MockActionComms();
             var testAction = new EmptyTestActionAsync(true);
             var service = new ActionServiceAsync<int, Tag, SimpleTagDtoAsync>(dummyDb, testAction);
 
@@ -195,7 +192,7 @@ namespace Tests.UnitTests.Group10Actions
                 Name = "test",
                 Slug = "test"
             };
-            var status = await service.DoActionAsync(mockComms, dto);
+            var status = await service.DoActionAsync(dto);
 
             //VERIFY
             status.IsValid.ShouldEqual(false, status.Errors);

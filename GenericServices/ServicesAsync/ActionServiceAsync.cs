@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using GenericServices.Actions.Internal;
 using GenericServices.Core;
-using GenericServices.Services;
 
 namespace GenericServices.ServicesAsync
 {
@@ -22,15 +21,14 @@ namespace GenericServices.ServicesAsync
         /// <summary>
         /// This runs a action that returns a result. 
         /// </summary>
-        /// <param name="actionComms">The actionComms to allow progress reports and cancellation</param>
         /// <param name="actionData">Data that the action takes in to undertake the action</param>
         /// <returns>A Task containing status, which has a result if Valid</returns>
-        public async Task<ISuccessOrErrors<TActionOut>> DoActionAsync(IActionComms actionComms, TActionIn actionData)
+        public async Task<ISuccessOrErrors<TActionOut>> DoActionAsync(TActionIn actionData)
         {
 
             try
             {
-                var status = await _actionToRun.DoActionAsync(actionComms, actionData);
+                var status = await _actionToRun.DoActionAsync(actionData);
                 return status.AskedToSaveChanges(_actionToRun)
                     ? await status.SaveChangesAttemptAsync(actionData, _db)
                     : status;
@@ -67,10 +65,9 @@ namespace GenericServices.ServicesAsync
         /// This runs an action that does not write to the database. 
         /// It first converts the dto to the TActionIn format and then runs the action
         /// </summary>
-        /// <param name="actionComms">The actioncomms to allow progress reports and cancellation</param>
         /// <param name="dto">The dto to be converted to the TActionIn class</param>
         /// <returns>A Task containing status, which has a result if Valid</returns>
-        public async Task<ISuccessOrErrors<TActionOut>> DoActionAsync(IActionComms actionComms, TDto dto)
+        public async Task<ISuccessOrErrors<TActionOut>> DoActionAsync(TDto dto)
         {
             ISuccessOrErrors<TActionOut> status = new SuccessOrErrors<TActionOut>();
 
@@ -84,7 +81,7 @@ namespace GenericServices.ServicesAsync
 
             try
             {
-                status = await _actionToRun.DoActionAsync(actionComms, actionInData);
+                status = await _actionToRun.DoActionAsync(actionInData);
                 return status.AskedToSaveChanges(_actionToRun)
                     ? await status.SaveChangesAttemptAsync(actionInData, _db)
                     : status;

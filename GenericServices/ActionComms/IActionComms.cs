@@ -1,7 +1,10 @@
-﻿using GenericServices.Actions;
+﻿using System;
 
-namespace GenericServices
+namespace GenericServices.ActionComms
 {
+    [Flags]
+    public enum ActionFlags { Normal = 0, ExitOnSuccess = 1, NoProgressSent = 2, NoMessagesSent = 4, CancelNotSupported = 8 }
+
     public interface IActionComms
     {
 

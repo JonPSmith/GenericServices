@@ -1,4 +1,5 @@
 ﻿using System;
+using GenericServices.ActionComms;
 using GenericServices.Actions.Internal;
 using GenericServices.Core;
 
@@ -21,15 +22,14 @@ namespace GenericServices.Services
         /// <summary>
         /// This runs a action that returns a result. 
         /// </summary>
-        /// <param name="actionComms">The actionComms to allow progress reports and cancellation</param>
         /// <param name="actionData">Data that the action takes in to undertake the action</param>
         /// <returns>The status, with a result if Valid</returns>
-        public ISuccessOrErrors<TActionOut> DoAction(IActionComms actionComms, TActionIn actionData)
+        public ISuccessOrErrors<TActionOut> DoAction(TActionIn actionData)
         {
 
             try
             {
-                var status = _actionToRun.DoAction(actionComms, actionData);
+                var status = _actionToRun.DoAction(actionData);
                 return status.AskedToSaveChanges(_actionToRun)
                     ? status.SaveChangesAttempt(actionData, _db)
                     : status;
@@ -69,10 +69,9 @@ namespace GenericServices.Services
         /// This runs an action that does not write to the database. 
         /// It first converts the dto to the TActionIn format and then runs the action
         /// </summary>
-        /// <param name="actionComms">The actioncomms to allow progress reports and cancellation</param>
         /// <param name="dto">The dto to be converted to the TActionIn class</param>
         /// <returns>The status, with a result if the status is valid</returns>
-        public ISuccessOrErrors<TActionOut> DoAction(IActionComms actionComms, TDto dto)
+        public ISuccessOrErrors<TActionOut> DoAction(TDto dto)
         {
             ISuccessOrErrors<TActionOut> status = new SuccessOrErrors<TActionOut>();
 
@@ -86,7 +85,7 @@ namespace GenericServices.Services
 
             try
             {
-                status = _actionToRun.DoAction(actionComms, actionInData);
+                status = _actionToRun.DoAction(actionInData);
                 return status.AskedToSaveChanges(_actionToRun)
                     ? status.SaveChangesAttempt(actionInData, _db)
                     : status;

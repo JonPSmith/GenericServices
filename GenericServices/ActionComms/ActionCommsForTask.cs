@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Threading;
+using GenericServices.Actions;
 
-namespace GenericServices.Actions
+namespace GenericServices.ActionComms
 {
     public class ActionCommsForTask : IActionComms
     {

@@ -27,7 +27,7 @@ namespace Tests.UnitTests.Group10Actions
         }
 
         [Test]
-        public void Check02RunActionServiceSuccessOk()
+        public void Check02RunActionDisposedCalledOk()
         {
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
@@ -39,7 +39,27 @@ namespace Tests.UnitTests.Group10Actions
             {
                 TagId = -456
             };
-            var status = service.DoAction(null, data);
+            var status = service.DoAction(data);
+
+            //VERIFY
+            status.IsValid.ShouldEqual(true, status.Errors);
+            testAction.DisposeWasCalled.ShouldEqual(true);
+        }
+
+        [Test]
+        public void Check03RunActionServiceSuccessOk()
+        {
+            //SETUP
+            var dummyDb = new DummyIDbContextWithValidation();
+            var testAction = new EmptyTestAction(false);
+            var service = new ActionService<int, Tag>(dummyDb, testAction);
+
+            //ATTEMPT
+            var data = new Tag
+            {
+                TagId = -456
+            };
+            var status = service.DoAction(data);
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
@@ -48,7 +68,7 @@ namespace Tests.UnitTests.Group10Actions
         }
 
         [Test]
-        public void Check03RunActionServiceCallSubmitOk()
+        public void Check04RunActionServiceCallSubmitOk()
         {
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
@@ -57,7 +77,7 @@ namespace Tests.UnitTests.Group10Actions
 
             //ATTEMPT
             var data = new Tag();
-            var status = service.DoAction(null, data);
+            var status = service.DoAction(data);
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
@@ -67,7 +87,7 @@ namespace Tests.UnitTests.Group10Actions
         }
 
         [Test]
-        public void Check04RunActionServiceWarningsButSumbitOk()
+        public void Check05RunActionServiceWarningsButSubmitOk()
         {
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
@@ -79,7 +99,7 @@ namespace Tests.UnitTests.Group10Actions
             {
                 TagId = 1 //means a warning
             };
-            var status = service.DoAction(null, data);
+            var status = service.DoAction(data);
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
@@ -89,7 +109,7 @@ namespace Tests.UnitTests.Group10Actions
         }
 
         [Test]
-        public void Check05RunActionServiceWarningsNoSubmitOk()
+        public void Check06RunActionServiceWarningsNoSubmitOk()
         {
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
@@ -101,7 +121,7 @@ namespace Tests.UnitTests.Group10Actions
             {
                 TagId = 1 //means a warning
             };
-            var status = service.DoAction(null, data);
+            var status = service.DoAction(data);
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
@@ -111,7 +131,7 @@ namespace Tests.UnitTests.Group10Actions
         }
 
         [Test]
-        public void Check06RunActionServiceFailNoSubmitOk()
+        public void Check07RunActionServiceFailNoSubmitOk()
         {
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
@@ -123,7 +143,7 @@ namespace Tests.UnitTests.Group10Actions
             {
                 TagId = 3 //will fail
             };
-            var status = service.DoAction(null, data);
+            var status = service.DoAction(data);
 
             //VERIFY
             status.IsValid.ShouldEqual(false, status.Errors);
@@ -138,7 +158,6 @@ namespace Tests.UnitTests.Group10Actions
         {
             //SETUP  
             var dummyDb = new DummyIDbContextWithValidation();
-            var mockComms = new MockActionComms();
             var testAction = new EmptyTestAction(false);
             var service = new ActionService<int, Tag, SimpleTagDto>(dummyDb, testAction);
 
@@ -149,7 +168,7 @@ namespace Tests.UnitTests.Group10Actions
                 Name = "test", 
                 Slug = "test"
             };
-            var status = service.DoAction(mockComms, dto);
+            var status = service.DoAction(dto);
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
@@ -162,7 +181,6 @@ namespace Tests.UnitTests.Group10Actions
         {
             //SETUP  
             var dummyDb = new DummyIDbContextWithValidation();
-            var mockComms = new MockActionComms();
             var testAction = new EmptyTestAction(true);
             var service = new ActionService<int, Tag, SimpleTagDto>(dummyDb, testAction);
 
@@ -173,7 +191,7 @@ namespace Tests.UnitTests.Group10Actions
                 Name = "test",
                 Slug = "test"
             };
-            var status = service.DoAction(mockComms, dto);
+            var status = service.DoAction(dto);
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
@@ -188,7 +206,6 @@ namespace Tests.UnitTests.Group10Actions
         {
             //SETUP  
             var dummyDb = new DummyIDbContextWithValidation();
-            var mockComms = new MockActionComms();
             var testAction = new EmptyTestAction(true);
             var service = new ActionService<int, Tag, SimpleTagDto>(dummyDb, testAction);
 
@@ -199,7 +216,7 @@ namespace Tests.UnitTests.Group10Actions
                 Name = "test", 
                 Slug = "test"
             };
-            var status = service.DoAction(mockComms, dto);
+            var status = service.DoAction(dto);
 
             //VERIFY
             status.IsValid.ShouldEqual(false, status.Errors);

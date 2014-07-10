@@ -64,10 +64,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Actions\EmptyTestActionAsync.cs" />
-    <Compile Include="Actions\IGTestActionDto.cs" />
-    <Compile Include="Actions\MockActionComms.cs" />
-    <Compile Include="Actions\GTestAction.cs" />
-    <Compile Include="Actions\GTestActionData.cs" />
     <Compile Include="DataClasses\Concrete\Blog.cs" />
     <Compile Include="DataClasses\Concrete\Helpers\TrackUpdate.cs" />
     <Compile Include="DataClasses\Concrete\Post.cs" />
@@ -117,7 +113,6 @@
     <Compile Include="UnitTests\Group05GenericLogger\Test04Log4NetGenericLogger.cs" />
     <Compile Include="UnitTests\Group10Actions\Test05ActionServiceEmptyActionAsync.cs" />
     <Compile Include="UnitTests\Group10Actions\Test02ActionServiceEmptyAction.cs" />
-    <Compile Include="UnitTests\Group10Actions\Test03ActionServiceGTestAction.cs" />
     <Compile Include="UnitTests\Group10Actions\Test01CheckTestAction.cs" />
     <Compile Include="UnitTests\Group08CrudServices\Test01AutoMapper.cs" />
     <Compile Include="UnitTests\Group08CrudServices\Test02aPostTagGradeDirect.cs" />

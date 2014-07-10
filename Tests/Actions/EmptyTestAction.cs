@@ -1,7 +1,7 @@
-﻿using GenericServices;
+﻿using System;
+using GenericServices;
 using GenericServices.Actions;
 using GenericServices.Core;
-using GenericServices.Services;
 using Tests.DataClasses.Concrete;
 
 namespace Tests.Actions
@@ -11,10 +11,12 @@ namespace Tests.Actions
     }
 
 
-    public class EmptyTestAction : ActionBase, IEmptyTestAction
+    public class EmptyTestAction : ActionBase, IEmptyTestAction, IDisposable
     {
 
         private readonly bool _submitChangesOnSuccess;
+
+        public bool DisposeWasCalled { get; private set; }
 
         /// <summary>
         /// If true then the caller should call EF SubmitChanges if the method exited with status IsValid and
@@ -22,15 +24,6 @@ namespace Tests.Actions
         /// and there are warnings then it does not call SubmitChanges
         /// </summary>
         public override bool SubmitChangesOnSuccess { get { return _submitChangesOnSuccess; } }
-
-        /// <summary>
-        /// This allows the action to configure what it supports, which then affects what the user sees
-        /// Note: it must be a constant as it is read just after the action is created
-        /// </summary>
-        public override ActionFlags ActionConfig
-        {
-            get { return ActionFlags.NoProgressSent | ActionFlags.NoMessagesSent | ActionFlags.CancelNotSupported; }
-        }
 
         //ctor
         public EmptyTestAction(bool submitChangesOnSuccess)
@@ -40,12 +33,12 @@ namespace Tests.Actions
 
         //-------------------------------------------
 
-        public ISuccessOrErrors<int> DoAction(IActionComms actionComms, Tag actionData)
+        public ISuccessOrErrors<int> DoAction(Tag actionData)
         {
             ISuccessOrErrors<int> status = new SuccessOrErrors<int>();
 
             //we use the TagId for testing
-            //0 means success
+            //<=0 means success
             //1 means success, but with warning
             //2 and above mean fail
 
@@ -55,6 +48,11 @@ namespace Tests.Actions
             return actionData.TagId <= 1
                 ? status.SetSuccessWithResult(actionData.TagId, "Successful")
                 : status.AddSingleError("forced fail");
+        }
+
+        public void Dispose()
+        {
+            DisposeWasCalled = true;
         }
     }
 }
