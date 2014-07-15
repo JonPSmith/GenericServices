@@ -22,7 +22,8 @@ namespace Tests.Helpers
 
         public static async Task ListEfDirectAsync<T>(this SampleWebAppDb db, int id) where T : class
         {
-            var list = await db.Set<T>().AsNoTracking().ToListAsync();
+            var num = (await db.Set<T>().AsNoTracking().ToListAsync()).Count;
+
         }
 
         public static void ListPostEfViaDto(this SampleWebAppDb db, int id)

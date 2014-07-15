@@ -66,6 +66,34 @@ namespace Tests.UnitTests.Group80Performance
 
         }
 
+        [Test]
+        public async void Perf20NCompareEfSyncAndAsyncOk()
+        {
+            new SimplePostDto().CacheSetup();
+            new DetailPostDto().CacheSetup();
+
+            Console.WriteLine("Compare Ef access, sync and Async");
+            RunEfPerformanceTests(10, ResetDatabaseNAll);
+            await Task.WhenAll(RunEfPerformanceTestsAsync(10, ResetDatabaseNAll));
+            Console.WriteLine("----------------------------------------");
+            RunEfPerformanceTests(100, ResetDatabaseNAll);
+            await Task.WhenAll(RunEfPerformanceTestsAsync(100, ResetDatabaseNAll));
+        }
+
+        [Test]
+        public async void Perf21NCompareGenericSyncAndAsyncOk()
+        {
+            new SimplePostDto().CacheSetup();
+            new DetailPostDto().CacheSetup();
+
+            Console.WriteLine("Compare Generic access, sync and Async");
+            RunGenericPerformanceTests(10, ResetDatabaseNAll);
+            await Task.WhenAll(RunGenericPerformanceTestsAsync(10, ResetDatabaseNAll));
+            Console.WriteLine("----------------------------------------");
+            RunGenericPerformanceTests(100, ResetDatabaseNAll);
+            await Task.WhenAll(RunGenericPerformanceTestsAsync(100, ResetDatabaseNAll));
+        }
+
         private async Task RunGenericPerformanceTestsAsync(int numInDatabase, Func<int, int> clearDatabaseAction)
         {
             Console.WriteLine("Generic, with {0} in database -----------------------", numInDatabase);
