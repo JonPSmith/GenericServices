@@ -37,13 +37,12 @@ namespace GenericServices.Core
 
         /// <summary>
         /// This returns the TData item that fits the key(s) in the DTO.
-        /// Override if you want to include other relationships for deep level updates
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
         internal protected virtual async Task<TData> FindItemTrackedAsync(IDbContextWithValidation context)
         {
-            return await context.Set<TData>().FindAsync(GetKeyValues());
+            return await context.Set<TData>().FindAsync(GetKeyValues(context));
         }
 
 

@@ -36,13 +36,12 @@ namespace GenericServices.Core
 
         /// <summary>
         /// This returns the TData item that fits the key(s) in the DTO.
-        /// Override if you want to include other relationships for deep level updates
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
         internal protected virtual TData FindItemTracked(IDbContextWithValidation context)
         {
-            return context.Set<TData>().Find(GetKeyValues());
+            return context.Set<TData>().Find(GetKeyValues(context));
         }
 
         /// <summary>
@@ -101,42 +100,6 @@ namespace GenericServices.Core
                 throw new ArgumentException("We could not find an entry using the given predicate");
 
             return dto;
-        }
-
-        //---------------------------------------------------------------
-        //protected methods
-
-
-        protected object[] GetKeyValues()
-        {
-            var keyProperies = typeof(TDto).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                    .Where(x => x.GetCustomAttribute<KeyAttribute>() != null).ToArray();
-            if (!keyProperies.Any())
-                throw new MissingPrimaryKeyException("You must mark the primary key(s) in the DTO with the [Key] attribute");
-
-            return keyProperies.Select(x => x.GetValue(this)).ToArray();
-        }
-
-
-        protected static void CreateDatatoDtoMapping()
-        {
-            Mapper.CreateMap<TData, TDto>();
-        }
-
-        protected static void CreateDtoToDataMapping()
-        {
-            Mapper.CreateMap<TDto, TData>()
-                .ForAllMembers(opt => opt.Condition(CheckIfSourceSetterIsPublic));
-        }
-
-        //----------------------------------------------------------------
-        //private methods
-
-        private static bool CheckIfSourceSetterIsPublic(ResolutionContext mapContext)
-        {
-            return mapContext.PropertyMap.SourceMember != null 
-                   && ((PropertyInfo)mapContext.PropertyMap.SourceMember).SetMethod != null
-                   && ((PropertyInfo)mapContext.PropertyMap.SourceMember).SetMethod.IsPublic;
         }
 
     }

@@ -59,6 +59,7 @@
     <Compile Include="ActionComms\ProgressWithOptionalMessage.cs" />
     <Compile Include="Core\EfGenericDtoAsync.cs" />
     <Compile Include="Actions\Internal\ActionServiceHelper.cs" />
+    <Compile Include="Core\Internal\EfKeyFinder.cs" />
     <Compile Include="GenericLoggerSetup.cs" />
     <Compile Include="IActionAsync.cs" />
     <Compile Include="IActionService.cs" />

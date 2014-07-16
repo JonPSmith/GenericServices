@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using GenericServices.Core.Internal;
 
 [assembly: InternalsVisibleTo("Tests")]
 
@@ -85,14 +86,17 @@ namespace GenericServices.Core
         //---------------------------------------------------------------
         //protected methods
 
-        protected object[] GetKeyValues()
+        protected object[] GetKeyValues(IDbContextWithValidation context)
         {
-            var keyProperies = typeof(TDto).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                    .Where(x => x.GetCustomAttribute<KeyAttribute>() != null).ToArray();
-            if (!keyProperies.Any())
-                throw new MissingPrimaryKeyException("You must mark the primary key(s) in the DTO with the [Key] attribute");
+            var efkeyPropertyNames = context.GetKeyProperties<TData>().Select(x => x.Name).ToArray();
 
-            return keyProperies.Select(x => x.GetValue(this)).ToArray();
+            var dtoKeyProperies = typeof(TDto).GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                    .Where(x => efkeyPropertyNames.Any( y => y == x.Name)).ToArray();
+
+            if (efkeyPropertyNames.Length != dtoKeyProperies.Length)
+                throw new MissingPrimaryKeyException("The dto did not ");
+
+            return dtoKeyProperies.Select(x => x.GetValue(this)).ToArray();
         }
 
         protected static void CreateDatatoDtoMapping()
