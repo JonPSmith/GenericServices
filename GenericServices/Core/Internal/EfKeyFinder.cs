@@ -13,14 +13,18 @@ using System.Runtime.CompilerServices;
 
 namespace GenericServices.Core.Internal
 {
-    /// <summary>
-    /// This class 
-    /// </summary>
+
     internal static class EfKeyFinder
     {
 
         private static readonly ConcurrentDictionary<Type, IReadOnlyCollection<PropertyInfo>> KeyCache = new ConcurrentDictionary<Type, IReadOnlyCollection<PropertyInfo>>();
 
+        /// <summary>
+        /// This returns PropertyInfos for all the properties in the class that are found in the entity framework metadata 
+        /// </summary>
+        /// <typeparam name="TClass">The class must belong to a class that entity framework has in its metadata</typeparam>
+        /// <param name="context"></param>
+        /// <returns></returns>
         public static IReadOnlyCollection<PropertyInfo> GetKeyProperties<TClass>(this IDbContextWithValidation context) where TClass : class
         {
             return KeyCache.GetOrAdd(typeof(TClass), type => FindKeys(type, context));
