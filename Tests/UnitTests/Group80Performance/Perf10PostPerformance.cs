@@ -81,7 +81,21 @@ namespace Tests.UnitTests.Group80Performance
         }
 
         [Test]
-        public async void Perf21NCompareGenericSyncAndAsyncOk()
+        public async void Perf21NCompareEfSyncAndAsync1000Ok()
+        {
+            new SimplePostDto().CacheSetup();
+            new DetailPostDto().CacheSetup();
+
+            Console.WriteLine("Compare Ef access, sync and Async");
+            RunEfPerformanceTests(10, ResetDatabaseNAll);
+            await Task.WhenAll(RunEfPerformanceTestsAsync(10, ResetDatabaseNAll));
+            Console.WriteLine("----------------------------------------");
+            RunEfPerformanceTests(1000, ResetDatabaseNAll);
+            await Task.WhenAll(RunEfPerformanceTestsAsync(1000, ResetDatabaseNAll));
+        }
+
+        [Test]
+        public async void Perf25NCompareGenericSyncAndAsyncOk()
         {
             new SimplePostDto().CacheSetup();
             new DetailPostDto().CacheSetup();
