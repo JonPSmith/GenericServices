@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<package >
+  <!-- Steps to making a Nuget package.
+   1. Update version 
+   2. Update release notes
+   3. Run the following command lines
+      cd <the directory this file is in>
+      C:\Users\Jon\Nuget pack GenericServices.nuspec
+   -->
+  <metadata>
+    <id>GenericServices</id>
+    <version>1.0.0-beta1</version>
+    <title>GenericServices</title>
+    <authors>Jon Smith</authors>
+    <owners>Jon Smith</owners>
+    <licenseUrl>https://github.com/JonPSmith/GenericServices/blob/master/licence.txt</licenseUrl>
+    <projectUrl>https://github.com/JonPSmith/GenericServices</projectUrl>
+    <!--<iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>-->
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>
+      Generic Services is a .NET class library to help build a service layer, i.e. a layer that acts as a facard/adapter between your business/data service layers and your User Interface or HTTP service.
+    </description>
+    <releaseNotes>First release.</releaseNotes>
+    <copyright>Copyright 2014</copyright>
+    <dependencies>
+      <dependency id="AutoMapper" version="3.2.1" />
+      <dependency id="EntityFramework" version="6.1.0" />
+    </dependencies>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System.Core" targetFramework="net451" />
+    </frameworkAssemblies>
+  </metadata>
+  <files>
+    <file src="..\bin\Release\GenericServices.dll" target="lib" />
+    <file src="..\bin\Release\GenericServices.xml" target="lib" />
+    <file src="..\bin\Release\GenericServices.pdb" target="lib" />
+  </files>
+</package>

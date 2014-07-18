@@ -28,6 +28,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\GenericServices.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoMapper">
@@ -59,7 +60,6 @@
     <Compile Include="ActionComms\ProgressWithOptionalMessage.cs" />
     <Compile Include="Core\EfGenericDtoAsync.cs" />
     <Compile Include="Actions\Internal\ActionServiceHelper.cs" />
-    <Compile Include="Core\NuGetVersioning.cs" />
     <Compile Include="Core\Internal\EfKeyFinder.cs" />
     <Compile Include="GenericLoggerSetup.cs" />
     <Compile Include="IActionAsync.cs" />
@@ -119,6 +119,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="NuGet\GenericServices.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
