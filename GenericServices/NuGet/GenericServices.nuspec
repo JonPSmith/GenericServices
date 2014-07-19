@@ -6,6 +6,11 @@
    3. Run the following two command lines
       cd <the directory this file is in>
       C:\Users\Jon\Nuget pack GenericServices.nuspec
+   To Test locally
+   1. Copy to C:\Users\Jon\LocalNuget
+   2. Set Package manager->Package Source to All, or <your local source>
+   2. Use the following package manager command in target 
+      Install-Package GenericServices -Pre -Project <projectname>
    -->
   <metadata>
     <id>GenericServices</id>
