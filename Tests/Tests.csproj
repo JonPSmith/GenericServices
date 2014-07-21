@@ -115,7 +115,7 @@
     <Compile Include="UnitTests\Group05GenericLogger\Test02SetupLogger.cs" />
     <Compile Include="UnitTests\Group05GenericLogger\Test06TraceGenericLogger.cs" />
     <Compile Include="UnitTests\Group05GenericLogger\Test04Log4NetGenericLogger.cs" />
-    <Compile Include="UnitTests\Group15CrudServiceFinder\Test05CreateDtoServices.cs" />
+    <Compile Include="UnitTests\Group15CrudServiceFinder\Test05CreateDirectServicesAsync.cs" />
     <Compile Include="UnitTests\Group15CrudServiceFinder\Test04CreateDirectServices.cs" />
     <Compile Include="UnitTests\Group20Actions\Test05ActionServiceEmptyActionAsync.cs" />
     <Compile Include="UnitTests\Group20Actions\Test02ActionServiceEmptyAction.cs" />

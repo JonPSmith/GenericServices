@@ -87,9 +87,6 @@ namespace Tests.UnitTests.Group08CrudServices
             }
         }
 
-
-
-
         [Test]
         public void Check05UpdateSetupOk()
         {

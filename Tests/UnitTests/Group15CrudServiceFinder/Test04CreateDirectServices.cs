@@ -46,6 +46,28 @@ namespace Tests.UnitTests.Group15CrudServiceFinder
         }
 
         [Test]
+        public void Check02ListPostDtoOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var service = new ListService(db);
+
+                //ATTEMPT
+                var query = service.GetList<SimplePostDto>();
+                var list = query.ToList();
+
+                //VERIFY
+                list.Count.ShouldEqual(3);
+                list[0].Title.ShouldEqual("First great post");
+                list[0].BloggerName.ShouldEqual("Jon Smith");
+                list[0].TagNames.ShouldEqual("Ugly post, Good post");
+                list[0].LastUpdatedUtc.Kind.ShouldEqual(DateTimeKind.Utc);
+
+            }
+        }
+
+        [Test]
         public void Check03DetailDirectPostOk()
         {
             using (var db = new SampleWebAppDb())
@@ -60,6 +82,65 @@ namespace Tests.UnitTests.Group15CrudServiceFinder
                 //VERIFY
                 item.PostId.ShouldEqual(firstPost.PostId);
                 item.Title.ShouldEqual(firstPost.Title);
+            }
+        }
+
+        [Test]
+        public void Check04DetailDirectDtoOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var service = new DetailService(db);
+                var firstPost = db.Posts.Include(x => x.Tags).AsNoTracking().First();
+
+                //ATTEMPT
+                var dto = service.GetDetail<SimplePostDto>(firstPost.PostId);
+
+                //VERIFY
+                dto.PostId.ShouldEqual(firstPost.PostId);
+                dto.BloggerName.ShouldEqual(firstPost.Blogger.Name);
+                dto.Title.ShouldEqual(firstPost.Title);
+                CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), dto.Tags.Select(x => x.TagId));
+            }
+        }
+
+        //-------------
+        //update
+
+        [Test]
+        public void Check05UpdateSetupServicePost()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var firstPostUntracked = db.Posts.AsNoTracking().First();
+                var service = new UpdateSetupService(db);
+
+                //ATTEMPT
+                var result = service.GetOriginal<Post>(firstPostUntracked.PostId);
+
+                //VERIFY
+                result.ShouldNotEqualNull();
+                result.PostId.ShouldEqual(firstPostUntracked.PostId);
+            }
+        }
+
+        [Test]
+        public void Check05UpdateSetupServiceDto()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var firstPostUntracked = db.Posts.AsNoTracking().First();
+                var service = new UpdateSetupService(db);
+
+                //ATTEMPT
+                var result = service.GetOriginal<SimplePostDto>(firstPostUntracked.PostId);
+
+                //VERIFY
+                result.ShouldNotEqualNull();
+                result.PostId.ShouldEqual(firstPostUntracked.PostId);
             }
         }
 
@@ -86,49 +167,31 @@ namespace Tests.UnitTests.Group15CrudServiceFinder
         }
 
         [Test]
-        public void Check07UpdateDirectPostCorrectOk()
+        public void Check07UpdateDirectDtoOk()
         {
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
                 var firstPostUntrackedNoIncludes = db.Posts.AsNoTracking().First();
-                var firstPostUntrackedWithIncludes = db.Posts.AsNoTracking().Include(x => x.Tags).First();
                 var service = new UpdateService(db);
+                var dto = (new UpdateSetupService(db)).GetOriginal<SimplePostDto>(firstPostUntrackedNoIncludes.PostId);
 
                 //ATTEMPT
-                firstPostUntrackedNoIncludes.Title = Guid.NewGuid().ToString();
-                var status = service.Update(firstPostUntrackedNoIncludes);
+                dto.Title = Guid.NewGuid().ToString();
+                var status = service.Update(dto);
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
                 snap.CheckSnapShot(db);
                 var updatedPost = db.Posts.Include(x => x.Tags).First();
-                updatedPost.Title.ShouldEqual(firstPostUntrackedNoIncludes.Title);
-                updatedPost.Content.ShouldEqual(firstPostUntrackedWithIncludes.Content);
-                updatedPost.Blogger.ShouldNotEqualNull();
-                updatedPost.Blogger.Name.ShouldEqual(firstPostUntrackedWithIncludes.Blogger.Name);
-                CollectionAssert.AreEqual(firstPostUntrackedWithIncludes.Tags.Select(x => x.TagId), updatedPost.Tags.Select(x => x.TagId));
+                updatedPost.Title.ShouldEqual(dto.Title);
+                updatedPost.Content.ShouldEqual(firstPostUntrackedNoIncludes.Content);
             }
         }
 
-        [Test]
-        public void Check08UpdateSetupServiceDto()
-        {
-            using (var db = new SampleWebAppDb())
-            {
-                //SETUP
-                var firstPostUntracked = db.Posts.AsNoTracking().First();
-                var service = new UpdateSetupService(db);
-
-                //ATTEMPT
-                firstPostUntracked.Title = "Can't I ask a question?";
-                var result = service.GetOriginal<Post>(firstPostUntracked.PostId);
-
-                //VERIFY
-                result.ShouldNotEqualNull();
-            }
-        }
+        //--------------------------------------------
+        //create
 
         [Test]
         public void Check10CreateSetupDtoOk()
