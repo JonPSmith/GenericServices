@@ -24,7 +24,7 @@ namespace GenericServices.Services
         /// Type must be a type either an EF data class or one of the EfGenericDto's</typeparam>
         /// <param name="keys">The keys must be given in the same order as entity framework has them</param>
         /// <returns>Data class as read from database (not tracked)</returns>
-        public T GetDetail<T>(params object[] keys) where T : class
+        public T GetDetail<T>(params object[] keys) where T : class, new()
         {
             var service = DecodeToService<DetailService>.CreateCorrectService<T>(WhatItShouldBe.SyncAnything, _db);
             return service.GetDetail(keys);

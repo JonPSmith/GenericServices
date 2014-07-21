@@ -15,7 +15,7 @@ namespace GenericServices
         /// Type must be a type either an EF data class or one of the EfGenericDto's</typeparam>
         /// <param name="keys">The keys must be given in the same order as entity framework has them</param>
         /// <returns>Data class as read from database (not tracked)</returns>
-        T GetDetail<T>(params object[] keys) where T : class;
+        T GetDetail<T>(params object[] keys) where T : class, new();
     }
 
     public interface IDetailService<TData> where TData : class

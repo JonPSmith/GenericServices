@@ -41,7 +41,7 @@ namespace Tests.UnitTests.Group80Performance
                 var service = new DetailServiceAsync<Post, SimplePostDtoAsync>(db);
 
                 //ATTEMPT
-                var dto = await service.GetDetailAsync(x => x.PostId == postId);
+                var dto = await service.GetDetailAsync(postId);
                 dto.LogSpecificName("End");
 
                 //VERIFY
@@ -62,7 +62,7 @@ namespace Tests.UnitTests.Group80Performance
                 var service = new UpdateSetupServiceAsync<Post, SimplePostDtoAsync>(db);
 
                 //ATTEMPT
-                var dto = await service.GetOriginalAsync(x => x.PostId == postId);
+                var dto = await service.GetOriginalAsync(postId);
                 dto.LogSpecificName("End");
 
                 //VERIFY
@@ -80,12 +80,11 @@ namespace Tests.UnitTests.Group80Performance
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
-                var snap = new DbSnapShot(db);
                 var service = new UpdateServiceAsync<Post, SimplePostDtoAsync>(db);
                 var setupService = new UpdateSetupServiceAsync<Post, SimplePostDtoAsync>(db);
 
                 //ATTEMPT
-                var dto = await setupService.GetOriginalAsync(x => x.PostId == postId);
+                var dto = await setupService.GetOriginalAsync(postId);
                 dto.Title = Guid.NewGuid().ToString();
                 var status = await service.UpdateAsync(dto);
                 dto.LogSpecificName("End");

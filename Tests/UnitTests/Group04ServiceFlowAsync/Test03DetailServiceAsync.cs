@@ -33,7 +33,7 @@ namespace Tests.UnitTests.Group04ServiceFlowAsync
                 var firstTag = db.Tags.First();
 
                 //ATTEMPT
-                var dto = await service.GetDetailAsync(x => x.TagId == firstTag.TagId);
+                var dto = await service.GetDetailAsync(firstTag.TagId);
 
                 //VERIFY
                 dto.FunctionsCalledCommaDelimited.ShouldEqual("CreateDtoAndCopyDataInAsync");

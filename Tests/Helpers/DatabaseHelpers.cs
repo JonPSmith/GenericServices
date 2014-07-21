@@ -221,7 +221,7 @@ namespace Tests.Helpers
         public static async Task UpdatePostGenericDirectAsync(this SampleWebAppDb db, int postId)
         {
             var setupService = new DetailServiceAsync<Post>(db);
-            var post = await setupService.GetDetailAsync(x => x.PostId == postId);
+            var post = await setupService.GetDetailAsync(postId);
 
             var guidString = Guid.NewGuid().ToString("N");
             post.Title = guidString;
@@ -251,7 +251,7 @@ namespace Tests.Helpers
         public static async Task UpdatePostGenericViaDtoAsync(this SampleWebAppDb db, int postId)
         {
             var setupService = new UpdateSetupServiceAsync<Post, DetailPostDtoAsync>(db);
-            var dto = await setupService.GetOriginalAsync(x => x.PostId == postId);
+            var dto = await setupService.GetOriginalAsync(postId);
 
             var guidString = Guid.NewGuid().ToString("N");
             dto.Title = guidString;

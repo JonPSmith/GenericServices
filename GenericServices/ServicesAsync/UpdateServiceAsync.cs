@@ -2,11 +2,12 @@
 using System.Data.Entity;
 using System.Threading.Tasks;
 using GenericServices.Core;
+using GenericServices.Core.Internal;
 
 namespace GenericServices.ServicesAsync
 {
-    public class UpdateServiceAsync<TData> : IUpdateServiceAsync<TData>
-        where TData : class
+
+    public class UpdateServiceAsync : IUpdateServiceAsync
     {
         private readonly IDbContextWithValidation _db;
 
@@ -15,6 +16,39 @@ namespace GenericServices.ServicesAsync
             _db = db;
         }
 
+        /// <summary>
+        /// This updates the data in the database using the input data
+        /// </summary>
+        /// <typeparam name="T">The type of input data. 
+        /// Type must be a type either an EF data class or one of the EfGenericDto's</typeparam>
+        /// <param name="data">data to update the class. If Dto then copied over to data class</param>
+        /// <returns></returns>
+        public async Task<ISuccessOrErrors> UpdateAsync<T>(T data) where T : class
+        {
+            var service = DecodeToService<UpdateServiceAsync>.CreateCorrectService<T>(WhatItShouldBe.AsyncClassOrSpecificDto, _db);
+            return await service.UpdateAsync(data);
+        }
+    }
+
+    //--------------------------------
+    //direct
+
+    public class UpdateServiceAsync<TData> : IUpdateServiceAsync<TData>
+        where TData : class
+    {
+        private readonly IDbContextWithValidation _db;
+
+
+        public UpdateServiceAsync(IDbContextWithValidation db)
+        {
+            _db = db;
+        }
+
+        /// <summary>
+        /// This updates the entity data class directly
+        /// </summary>
+        /// <param name="itemToUpdate"></param>
+        /// <returns>status</returns>
         public async Task<ISuccessOrErrors> UpdateAsync(TData itemToUpdate)
         {
             if (itemToUpdate == null)
@@ -45,6 +79,12 @@ namespace GenericServices.ServicesAsync
             _db = db;
         }
 
+        /// <summary>
+        /// This updates the entity data by copying over the relevant dto data.
+        /// If it fails it resets the dto in case it is going to be shown again
+        /// </summary>
+        /// <param name="dto">If an error then its resets any secondary data so that you can reshow the dto</param>
+        /// <returns>status</returns>
         public async Task<ISuccessOrErrors> UpdateAsync(TDto dto)
         {
             ISuccessOrErrors result = new SuccessOrErrors();

@@ -29,6 +29,8 @@ namespace GenericServices.Services
         }
     }
 
+    //--------------------------------
+    //direct
 
     public class UpdateService<TData> : IUpdateService<TData> where TData : class
     {

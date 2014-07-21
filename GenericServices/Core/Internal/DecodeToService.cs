@@ -19,10 +19,12 @@ namespace GenericServices.Core.Internal
         //sync versions
         SyncAnything = DataClass | AnyDto | IsSync,
         SyncAnyDto = AnyDto | IsSync,
-        SyncSpecficDto = IsSync | SpecificDto,
+        SyncClassOrSpecificDto = DataClass | SpecificDto | IsSync,
+        SyncSpecificDto = IsSync | SpecificDto,
         //Async versions
         AsyncAnything = DataClass | AnyDto | IsAsync,
         AsyncAnyDto = AnyDto | IsAsync,
+        AsyncClassOrSpecificDto = DataClass | SpecificDto | IsAsync,
         AsyncSpecificDto = IsAsync | SpecificDto
     }
 
@@ -55,6 +57,8 @@ namespace GenericServices.Core.Internal
 
             var genericServiceString = syncAsync.BuildTypeString(dataTypes.Length);
             var serviceGenericType = Type.GetType(genericServiceString);
+            if (serviceGenericType == null)
+                throw new InvalidOperationException("Failed to create the type. Is the DTO of the correct type?");
             var serviceType = serviceGenericType.MakeGenericType(dataTypes);
             return Activator.CreateInstance(serviceType, ctorParams);
         }

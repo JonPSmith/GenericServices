@@ -45,7 +45,7 @@ namespace Tests.UnitTests.Group80Performance
                 var service = new DetailServiceAsync<Post, DetailPostDtoAsync>(db);
 
                 //ATTEMPT
-                var dto = await service.GetDetailAsync(x => x.PostId == postId);
+                var dto = await service.GetDetailAsync(postId);
                 dto.LogSpecificName("End");
 
                 //VERIFY
@@ -113,7 +113,7 @@ namespace Tests.UnitTests.Group80Performance
                 var setupService = new UpdateSetupServiceAsync<Post, DetailPostDtoAsync>(db);
 
                 //ATTEMPT
-                var dto = await setupService.GetOriginalAsync(x => x.PostId == postId);
+                var dto = await setupService.GetOriginalAsync(postId);
                 dto.LogSpecificName("End");
 
                 //VERIFY
@@ -137,7 +137,7 @@ namespace Tests.UnitTests.Group80Performance
                 var updateService = new UpdateServiceAsync<Post, DetailPostDtoAsync>(db);
 
                 //ATTEMPT
-                var dto = await setupService.GetOriginalAsync(x => x.PostId == postId);
+                var dto = await setupService.GetOriginalAsync(postId);
                 dto.Title = Guid.NewGuid().ToString();
                 dto.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
                 dto.UserChosenTags.FinalSelection = db.Tags.Take(3).ToList().Select(x => x.TagId.ToString("D")).ToArray();

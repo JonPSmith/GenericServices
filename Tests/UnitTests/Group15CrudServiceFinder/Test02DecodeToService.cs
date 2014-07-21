@@ -95,7 +95,7 @@ namespace Tests.UnitTests.Group15CrudServiceFinder
             //ATTEMPT
 
             var ex = Assert.Throws<InvalidOperationException>(
-                () => DecodeToService<DetailService>.CreateCorrectService<SimplePostDtoAsync>(WhatItShouldBe.SyncSpecficDto, new object[] { null }));
+                () => DecodeToService<DetailService>.CreateCorrectService<SimplePostDtoAsync>(WhatItShouldBe.SyncSpecificDto, new object[] { null }));
 
             //VERIFY
             ex.Message.ShouldEqual("This service needs a class which inherited from EfGenericDto`2.");

@@ -1,8 +1,32 @@
 ﻿using System.Threading.Tasks;
 using GenericServices.Core;
+using GenericServices.Core.Internal;
 
 namespace GenericServices.ServicesAsync
 {
+
+    public class CreateSetupServiceAsync : ICreateSetupServiceAsync
+    {
+        private readonly IDbContextWithValidation _db;
+
+        public CreateSetupServiceAsync(IDbContextWithValidation db)
+        {
+            _db = db;
+        }
+
+        /// <summary>
+        /// This returns the dto with any data that is needs for the view setup in it
+        /// </summary>
+        /// <typeparam name="TDto">The type of the data to output. This must be EfGeneric Dto</typeparam>
+        /// <returns>The dto with any secondary data filled in</returns>
+        public async Task<TDto> GetDtoAsync<TDto>() where TDto : class
+        {
+            var service = DecodeToService<CreateSetupServiceAsync>.CreateCorrectService<TDto>(WhatItShouldBe.AsyncSpecificDto, _db);
+            return await service.GetDtoAsync();
+        }
+    }
+
+
     public class CreateSetupServiceAsync<TData, TDto> : ICreateSetupServiceAsync<TData, TDto> 
         where TData : class
         where TDto : EfGenericDtoAsync<TData, TDto>, new()

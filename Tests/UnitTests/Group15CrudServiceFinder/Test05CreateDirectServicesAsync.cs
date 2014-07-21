@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using GenericServices.Services;
+using GenericServices.ServicesAsync;
 using NUnit.Framework;
 using Tests.DataClasses;
 using Tests.DataClasses.Concrete;
@@ -12,8 +14,6 @@ namespace Tests.UnitTests.Group15CrudServiceFinder
 {
     class Test05CreateDirectServicesAsync
     {
-
-
         [TestFixtureSetUp]
         public void SetUpFixture()
         {
@@ -25,40 +25,35 @@ namespace Tests.UnitTests.Group15CrudServiceFinder
             }
         }
 
-
         [Test]
-        public void Check01ListDtoPostOk()
+        public async Task Check03DetailDirectPostOk()
         {
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
-                var service = new ListService(db);
+                var service = new DetailServiceAsync(db);
+                var firstPost = db.Posts.First();
 
                 //ATTEMPT
-                var query = service.GetList<SimplePostDto>();
-                var list = query.ToList();
+                var item = await service.GetDetailAsync<Post>(firstPost.PostId);
 
                 //VERIFY
-                list.Count.ShouldEqual(3);
-                list[0].Title.ShouldEqual("First great post");
-                list[0].BloggerName.ShouldEqual("Jon Smith");
-                list[0].TagNames.ShouldEqual("Ugly post, Good post");
-                list[0].LastUpdatedUtc.Kind.ShouldEqual(DateTimeKind.Utc);
-
+                item.PostId.ShouldEqual(firstPost.PostId);
+                item.Title.ShouldEqual(firstPost.Title);
             }
         }
 
         [Test]
-        public void Check02DetailPostOk()
+        public async Task Check04DetailDirectDtoOk()
         {
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
-                var service = new DetailService(db);
+                var service = new DetailServiceAsync(db);
                 var firstPost = db.Posts.Include(x => x.Tags).AsNoTracking().First();
 
                 //ATTEMPT
-                var dto = service.GetDetail<SimplePostDto>(firstPost.PostId);
+                var dto = await service.GetDetailAsync<SimplePostDtoAsync>(firstPost.PostId);
 
                 //VERIFY
                 dto.PostId.ShouldEqual(firstPost.PostId);
@@ -68,41 +63,104 @@ namespace Tests.UnitTests.Group15CrudServiceFinder
             }
         }
 
-        //[Test]
-        //public void Check06UpdateDirectOk()
-        //{
-        //    using (var db = new SampleWebAppDb())
-        //    {
-        //        //SETUP
-        //        var snap = new DbSnapShot(db);
-        //        var firstPostUntracked = db.Posts.AsNoTracking().First();
-        //        var service = new UpdateService<Post>(db);
-
-        //        //ATTEMPT
-        //        firstPostUntracked.Title = Guid.NewGuid().ToString();
-        //        var status = service.Update(firstPostUntracked);
-
-        //        //VERIFY
-        //        status.IsValid.ShouldEqual(true, status.Errors);
-        //        status.SuccessMessage.ShouldEqual("Successfully updated Post.");
-        //        snap.CheckSnapShot(db);
-
-        //    }
-        //}
-
+        //-------------
+        //update
 
         [Test]
-        public void Check08UpdateSetupServiceDto()
+        public async Task Check05UpdateSetupServicePost()
         {
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var firstPostUntracked = db.Posts.AsNoTracking().First();
-                var service = new UpdateSetupService(db);
+                var service = new UpdateSetupServiceAsync(db);
 
                 //ATTEMPT
-                firstPostUntracked.Title = "Can't I ask a question?";
-                var result = service.GetOriginal<Post>(firstPostUntracked.PostId);
+                var result = await service.GetOriginalAsync<Post>(firstPostUntracked.PostId);
+
+                //VERIFY
+                result.ShouldNotEqualNull();
+                result.PostId.ShouldEqual(firstPostUntracked.PostId);
+            }
+        }
+
+        [Test]
+        public async Task Check05UpdateSetupServiceDto()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var firstPostUntracked = db.Posts.AsNoTracking().First();
+                var service = new UpdateSetupServiceAsync(db);
+
+                //ATTEMPT
+                var result = await service.GetOriginalAsync<SimplePostDtoAsync>(firstPostUntracked.PostId);
+
+                //VERIFY
+                result.ShouldNotEqualNull();
+                result.PostId.ShouldEqual(firstPostUntracked.PostId);
+            }
+        }
+
+        [Test]
+        public async Task Check06UpdateDirectOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var snap = new DbSnapShot(db);
+                var firstPostUntracked = db.Posts.AsNoTracking().First();
+                var service = new UpdateServiceAsync(db);
+
+                //ATTEMPT
+                firstPostUntracked.Title = Guid.NewGuid().ToString();
+                var status = await service.UpdateAsync(firstPostUntracked);
+
+                //VERIFY
+                status.IsValid.ShouldEqual(true, status.Errors);
+                status.SuccessMessage.ShouldEqual("Successfully updated Post.");
+                snap.CheckSnapShot(db);
+
+            }
+        }
+
+        [Test]
+        public async Task Check07UpdateDirectDtoOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var snap = new DbSnapShot(db);
+                var firstPostUntrackedNoIncludes = db.Posts.AsNoTracking().First();
+                var service = new UpdateServiceAsync(db);
+                var dto = await (new UpdateSetupServiceAsync(db)).GetOriginalAsync<SimplePostDtoAsync>(firstPostUntrackedNoIncludes.PostId);
+
+                //ATTEMPT
+                dto.Title = Guid.NewGuid().ToString();
+                var status = await service.UpdateAsync(dto);
+
+                //VERIFY
+                status.IsValid.ShouldEqual(true, status.Errors);
+                snap.CheckSnapShot(db);
+                var updatedPost = db.Posts.Include(x => x.Tags).First();
+                updatedPost.Title.ShouldEqual(dto.Title);
+                updatedPost.Content.ShouldEqual(firstPostUntrackedNoIncludes.Content);
+            }
+        }
+
+        //--------------------------------------------
+        //create
+
+        [Test]
+        public async Task Check10CreateSetupDtoOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var service = new CreateSetupServiceAsync(db);
+
+                //ATTEMPT
+                var result = await service.GetDtoAsync<SimplePostDtoAsync>();
 
                 //VERIFY
                 result.ShouldNotEqualNull();
@@ -110,18 +168,28 @@ namespace Tests.UnitTests.Group15CrudServiceFinder
         }
 
         [Test]
-        public void Check10CreateSetupDtoOk()
+        public async Task Check11CreateDirectOk()
         {
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
-                var service = new CreateSetupService(db);
+                var snap = new DbSnapShot(db);
+                var service = new CreateServiceAsync(db);
+                var firstPostUntracked = db.Posts.Include(x => x.Tags).AsNoTracking().First();
+                var tagsTracked = db.Tags.ToList().Where(x => firstPostUntracked.Tags.Any(y => y.TagId == x.TagId)).ToList();
 
                 //ATTEMPT
-                var result = service.GetDto<SimplePostDto>();
+                firstPostUntracked.Title = Guid.NewGuid().ToString();
+                firstPostUntracked.Tags = tagsTracked;
+                var status = await service.CreateAsync(firstPostUntracked);
 
                 //VERIFY
-                result.ShouldNotEqualNull();
+                status.IsValid.ShouldEqual(true);
+                snap.CheckSnapShot(db, 1, 2);
+                var updatedPost = db.Posts.OrderByDescending(x => x.PostId).Include(x => x.Tags).First();
+                updatedPost.Title.ShouldEqual(firstPostUntracked.Title);
+                updatedPost.BlogId.ShouldEqual(firstPostUntracked.BlogId);
+                CollectionAssert.AreEqual(firstPostUntracked.Tags.Select(x => x.TagId), updatedPost.Tags.Select(x => x.TagId));
             }
         }
 

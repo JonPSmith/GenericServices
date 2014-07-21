@@ -53,7 +53,7 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 var firstPost = db.Posts.Include(x => x.Tags).AsNoTracking().First();
 
                 //ATTEMPT
-                var dto = await service.GetDetailAsync(x => x.PostId == firstPost.PostId);
+                var dto = await service.GetDetailAsync(firstPost.PostId);
                 dto.LogSpecificName("End");
 
                 //VERIFY
@@ -75,7 +75,7 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 var firstPost = db.Posts.Include(x => x.Tags).AsNoTracking().First();
 
                 //ATTEMPT
-                var dto = await service.GetOriginalAsync(x => x.PostId == firstPost.PostId);
+                var dto = await service.GetOriginalAsync(firstPost.PostId);
                 dto.LogSpecificName("End");
 
                 //VERIFY
@@ -99,7 +99,7 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 var setupService = new UpdateSetupServiceAsync<Post, SimplePostDtoAsync>(db);
 
                 //ATTEMPT
-                var dto = await setupService.GetOriginalAsync(x => x.PostId == firstPost.PostId);
+                var dto = await setupService.GetOriginalAsync(firstPost.PostId);
                 dto.Title = Guid.NewGuid().ToString();
                 var status = await service.UpdateAsync(dto);
                 dto.LogSpecificName("End");
@@ -123,7 +123,7 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 var setupService = new UpdateSetupServiceAsync<Post, SimplePostDtoAsync>(db);
 
                 //ATTEMPT
-                var dto = await setupService.GetOriginalAsync(x => x.PostId == firstPost.PostId);
+                var dto = await setupService.GetOriginalAsync(firstPost.PostId);
                 dto.Title = Guid.NewGuid().ToString();
                 var status = await service.UpdateAsync(dto);
                 dto.LogSpecificName("End");
@@ -149,7 +149,7 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 var setupService = new UpdateSetupServiceAsync<Post, SimplePostDtoAsync>(db);
 
                 //ATTEMPT
-                var dto = await setupService.GetOriginalAsync(x => x.PostId == firstPost.PostId);
+                var dto = await setupService.GetOriginalAsync(firstPost.PostId);
                 dto.Title = "Can't I ask a question?";
                 var status = await service.UpdateAsync(dto);
                 dto.LogSpecificName("End");

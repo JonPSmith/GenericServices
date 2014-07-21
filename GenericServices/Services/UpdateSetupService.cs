@@ -26,7 +26,7 @@ namespace GenericServices.Services
         /// <returns>Data class as read from database (not tracked)</returns>
         public T GetOriginal<T>(params object[] keys) where T : class
         {
-            var service = DecodeToService<UpdateSetupService>.CreateCorrectService<T>(WhatItShouldBe.SyncAnything, _db);
+            var service = DecodeToService<UpdateSetupService>.CreateCorrectService<T>(WhatItShouldBe.SyncClassOrSpecificDto, _db);
             return service.GetOriginal(keys);
         }
     }
@@ -90,7 +90,6 @@ namespace GenericServices.Services
         {
             return GetOriginalUsingWhere(BuildFilter.CreateFilter<TData>(_db.GetKeyProperties<TData>(), keys));
         }
-
 
         /// <summary>
         /// This gets a single entry using the lambda expression as a where part. It also calls

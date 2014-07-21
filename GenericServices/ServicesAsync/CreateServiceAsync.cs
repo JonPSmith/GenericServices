@@ -1,8 +1,37 @@
 ﻿using System.Threading.Tasks;
 using GenericServices.Core;
+using GenericServices.Core.Internal;
 
 namespace GenericServices.ServicesAsync
 {
+
+
+    public class CreateServiceAsync : ICreateServiceAsync
+    {
+        private readonly IDbContextWithValidation _db;
+
+        public CreateServiceAsync(IDbContextWithValidation db)
+        {
+            _db = db;
+        }
+
+        /// <summary>
+        /// This adds a new entity class to the database with error checking
+        /// </summary>
+        /// <typeparam name="T">The type of the data to output. 
+        /// Type must be a type either an EF data class or one of the EfGenericDto's</typeparam>
+        /// <param name="newItem">either entity class or dto to create the data item with</param>
+        /// <returns>status</returns>
+        public async Task<ISuccessOrErrors> CreateAsync<T>(T newItem) where T : class
+        {
+            var service = DecodeToService<CreateServiceAsync>.CreateCorrectService<T>(WhatItShouldBe.AsyncAnything, _db);
+            return await service.CreateAsync(newItem);
+        }
+    }
+
+    //-----------------------------
+    //direct
+
     public class CreateServiceAsync<TData> : ICreateServiceAsync<TData> where TData : class
     {
         private readonly IDbContextWithValidation _db;
@@ -12,6 +41,11 @@ namespace GenericServices.ServicesAsync
             _db = db;
         }
 
+        /// <summary>
+        /// This adds a new entity class to the database with error checking
+        /// </summary>
+        /// <param name="newItem"></param>
+        /// <returns>status</returns>
         public async Task<ISuccessOrErrors> CreateAsync(TData newItem)
         {
             _db.Set<TData>().Add(newItem);
@@ -39,6 +73,12 @@ namespace GenericServices.ServicesAsync
             _db = db;
         }
 
+
+        /// <summary>
+        /// This uses a dto to create a data class which it writes to the database with error checking
+        /// </summary>
+        /// <param name="dto">If an error then its resets any secondary data so that you can reshow the dto</param>
+        /// <returns>status</returns>
         public async Task<ISuccessOrErrors> CreateAsync(TDto dto)
         {
             ISuccessOrErrors result = new SuccessOrErrors();

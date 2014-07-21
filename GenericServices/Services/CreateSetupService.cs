@@ -22,7 +22,7 @@ namespace GenericServices.Services
         /// <returns>The dto with any secondary data filled in</returns>
         public TDto GetDto<TDto>() where TDto : class
         {
-            var service = DecodeToService<CreateSetupService>.CreateCorrectService<TDto>(WhatItShouldBe.SyncAnyDto, _db);
+            var service = DecodeToService<CreateSetupService>.CreateCorrectService<TDto>(WhatItShouldBe.SyncSpecificDto, _db);
             return service.GetDto();
         }
     }
