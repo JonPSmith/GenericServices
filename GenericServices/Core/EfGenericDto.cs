@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Runtime.CompilerServices;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using GenericServices.Services;
 
 [assembly: InternalsVisibleTo("Tests")]
 
@@ -97,7 +93,7 @@ namespace GenericServices.Core
             Mapper.CreateMap<TData, TDto>();
             var dto = GetDataUntracked(context).Where(predicate).Project().To<TDto>().SingleOrDefault();
             if (dto == null)
-                throw new ArgumentException("We could not find an entry using the given predicate");
+                throw new ArgumentException("We could not find an entry using that filter. Has it been deleted by someone else?");
 
             return dto;
         }

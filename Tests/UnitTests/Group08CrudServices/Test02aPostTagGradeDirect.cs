@@ -28,11 +28,11 @@ namespace Tests.UnitTests.Group08CrudServices
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
-                var service = new DeleteService<PostTagGrade>(db);
+                var service = new DeleteService(db);
                 var firstPtgUntracked = db.PostTagGrades.AsNoTracking().First();
 
                 //ATTEMPT
-                var status = service.Delete(firstPtgUntracked.PostId, firstPtgUntracked.TagId);
+                var status = service.Delete<PostTagGrade>(firstPtgUntracked.PostId, firstPtgUntracked.TagId);
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);

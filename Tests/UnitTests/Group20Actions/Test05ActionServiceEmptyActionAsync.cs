@@ -1,14 +1,13 @@
-﻿using GenericServices;
-using GenericServices.Services;
+﻿using GenericServices.ServicesAsync;
 using NUnit.Framework;
 using Tests.Actions;
 using Tests.DataClasses.Concrete;
 using Tests.DTOs.Concrete;
 using Tests.Helpers;
 
-namespace Tests.UnitTests.Group10Actions
+namespace Tests.UnitTests.Group20Actions
 {
-    class Test02ActionServiceEmptyAction
+    class Test05ActionServiceEmptyActionAsync
     {
 
         [Test]
@@ -18,48 +17,28 @@ namespace Tests.UnitTests.Group10Actions
             //SETUP    
 
             //ATTEMPT
-            IActionService<int, Tag> actionService = new ActionService<int, Tag>(null, new EmptyTestAction(false));
-            IActionService<int, Tag, SimpleTagDto> actionDtoService =
-                new ActionService<int, Tag, SimpleTagDto>(null, new EmptyTestAction(false));
+            IActionServiceAsync<int, Tag> actionService = new ActionServiceAsync<int, Tag>(null, new EmptyTestActionAsync(false));
+            IActionServiceAsync<int, Tag, SimpleTagDtoAsync> actionDtoService =
+                new ActionServiceAsync<int, Tag, SimpleTagDtoAsync>(null, new EmptyTestActionAsync(false));
 
             //VERIFY
-            (actionService is ActionService<int, Tag>).ShouldEqual(true);
+            (actionService is ActionServiceAsync<int, Tag>).ShouldEqual(true);
         }
 
         [Test]
-        public void Check02RunActionDisposedCalledOk()
+        public async void Check02RunActionServiceSuccessOk()
         {
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
-            var testAction = new EmptyTestAction(false);
-            var service = new ActionService<int, Tag>(dummyDb, testAction);
+            var testAction = new EmptyTestActionAsync(false);
+            var service = new ActionServiceAsync<int, Tag>(dummyDb, testAction);
 
             //ATTEMPT
             var data = new Tag
             {
                 TagId = -456
             };
-            var status = service.DoAction(data);
-
-            //VERIFY
-            status.IsValid.ShouldEqual(true, status.Errors);
-            testAction.DisposeWasCalled.ShouldEqual(true);
-        }
-
-        [Test]
-        public void Check03RunActionServiceSuccessOk()
-        {
-            //SETUP
-            var dummyDb = new DummyIDbContextWithValidation();
-            var testAction = new EmptyTestAction(false);
-            var service = new ActionService<int, Tag>(dummyDb, testAction);
-
-            //ATTEMPT
-            var data = new Tag
-            {
-                TagId = -456
-            };
-            var status = service.DoAction(data);
+            var status = await service.DoActionAsync(data);
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
@@ -68,16 +47,16 @@ namespace Tests.UnitTests.Group10Actions
         }
 
         [Test]
-        public void Check04RunActionServiceCallSubmitOk()
+        public async void Check03RunActionServiceCallSubmitOk()
         {
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
-            var testAction = new EmptyTestAction(true);
-            var service = new ActionService<int, Tag>(dummyDb, testAction);
+            var testAction = new EmptyTestActionAsync(true);
+            var service = new ActionServiceAsync<int, Tag>(dummyDb, testAction);
 
             //ATTEMPT
             var data = new Tag();
-            var status = service.DoAction(data);
+            var status = await service.DoActionAsync(data);
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
@@ -87,19 +66,19 @@ namespace Tests.UnitTests.Group10Actions
         }
 
         [Test]
-        public void Check05RunActionServiceWarningsButSubmitOk()
+        public async void Check04RunActionServiceWarningsButSumbitOk()
         {
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
-            var testAction = new EmptyTestAction(true);
-            var service = new ActionService<int, Tag>(dummyDb, testAction);
+            var testAction = new EmptyTestActionAsync(true);
+            var service = new ActionServiceAsync<int, Tag>(dummyDb, testAction);
 
             //ATTEMPT
             var data = new Tag(true)
             {
                 TagId = 1 //means a warning
             };
-            var status = service.DoAction(data);
+            var status = await service.DoActionAsync(data);
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
@@ -109,19 +88,19 @@ namespace Tests.UnitTests.Group10Actions
         }
 
         [Test]
-        public void Check06RunActionServiceWarningsNoSubmitOk()
+        public async void Check05RunActionServiceWarningsNoSubmitOk()
         {
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
-            var testAction = new EmptyTestAction(true);
-            var service = new ActionService<int, Tag>(dummyDb, testAction);
+            var testAction = new EmptyTestActionAsync(true);
+            var service = new ActionServiceAsync<int, Tag>(dummyDb, testAction);
 
             //ATTEMPT
             var data = new Tag()
             {
                 TagId = 1 //means a warning
             };
-            var status = service.DoAction(data);
+            var status = await service.DoActionAsync(data);
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
@@ -131,44 +110,41 @@ namespace Tests.UnitTests.Group10Actions
         }
 
         [Test]
-        public void Check07RunActionServiceFailNoSubmitOk()
+        public async void Check06RunActionServiceFailNoSubmitOk()
         {
             //SETUP
             var dummyDb = new DummyIDbContextWithValidation();
-            var testAction = new EmptyTestAction(true);
-            var service = new ActionService<int, Tag>(dummyDb, testAction);
+            var testAction = new EmptyTestActionAsync(true);
+            var service = new ActionServiceAsync<int, Tag>(dummyDb, testAction);
 
             //ATTEMPT
             var data = new Tag
             {
                 TagId = 3 //will fail
             };
-            var status = service.DoAction(data);
+            var status = await service.DoActionAsync(data);
 
             //VERIFY
             status.IsValid.ShouldEqual(false, status.Errors);
             dummyDb.SaveChangesWithValidationCalled.ShouldEqual(false);
         }
 
-        //----------------------------------------
-        //now the dto versions
-
         [Test]
-        public void Check10RunActionDtoSuccessOk()
+        public async void Check10RunActionDtoSuccessOk()
         {
             //SETUP  
             var dummyDb = new DummyIDbContextWithValidation();
-            var testAction = new EmptyTestAction(false);
-            var service = new ActionService<int, Tag, SimpleTagDto>(dummyDb, testAction);
+            var testAction = new EmptyTestActionAsync(false);
+            var service = new ActionServiceAsync<int, Tag, SimpleTagDtoAsync>(dummyDb, testAction);
 
             //ATTEMPT
-            var dto = new SimpleTagDto
+            var dto = new SimpleTagDtoAsync
             {
                 TagId = -123,
-                Name = "test", 
+                Name = "test",
                 Slug = "test"
             };
-            var status = service.DoAction(dto);
+            var status = await service.DoActionAsync(dto);
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
@@ -177,21 +153,21 @@ namespace Tests.UnitTests.Group10Actions
         }
 
         [Test]
-        public void Check11RunActionDtoSubmitOk()
+        public async void Check11RunActionDtoSubmitOk()
         {
             //SETUP  
             var dummyDb = new DummyIDbContextWithValidation();
-            var testAction = new EmptyTestAction(true);
-            var service = new ActionService<int, Tag, SimpleTagDto>(dummyDb, testAction);
+            var testAction = new EmptyTestActionAsync(true);
+            var service = new ActionServiceAsync<int, Tag, SimpleTagDtoAsync>(dummyDb, testAction);
 
             //ATTEMPT
-            var dto = new SimpleTagDto
+            var dto = new SimpleTagDtoAsync
             {
                 TagId = -123,
                 Name = "test",
                 Slug = "test"
             };
-            var status = service.DoAction(dto);
+            var status = await service.DoActionAsync(dto);
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
@@ -202,21 +178,21 @@ namespace Tests.UnitTests.Group10Actions
 
 
         [Test] 
-        public void Check12RunActionDtoFailNoSubmitOk()
+        public async void Check12RunActionDtoFailNoSubmitOk()
         {
             //SETUP  
             var dummyDb = new DummyIDbContextWithValidation();
-            var testAction = new EmptyTestAction(true);
-            var service = new ActionService<int, Tag, SimpleTagDto>(dummyDb, testAction);
+            var testAction = new EmptyTestActionAsync(true);
+            var service = new ActionServiceAsync<int, Tag, SimpleTagDtoAsync>(dummyDb, testAction);
 
             //ATTEMPT
-            var dto = new SimpleTagDto
+            var dto = new SimpleTagDtoAsync
             {
-                TagId = 3,           //will fail,
-                Name = "test", 
+                TagId = 3,           //will fail
+                Name = "test",
                 Slug = "test"
             };
-            var status = service.DoAction(dto);
+            var status = await service.DoActionAsync(dto);
 
             //VERIFY
             status.IsValid.ShouldEqual(false, status.Errors);

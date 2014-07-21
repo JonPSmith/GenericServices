@@ -1,9 +1,35 @@
 ﻿using System;
 using System.Data.Entity;
 using GenericServices.Core;
+using GenericServices.Core.Internal;
 
 namespace GenericServices.Services
 {
+
+    public class UpdateService : IUpdateService
+    {
+        private readonly IDbContextWithValidation _db;
+
+        public UpdateService(IDbContextWithValidation db)
+        {
+            _db = db;
+        }
+
+        /// <summary>
+        /// This updates the data in the database using the input data
+        /// </summary>
+        /// <typeparam name="T">The type of input data. 
+        /// Type must be a type either an EF data class or one of the EfGenericDto's</typeparam>
+        /// <param name="data">data to update the class. If Dto then copied over to data class</param>
+        /// <returns></returns>
+        public ISuccessOrErrors Update<T>(T data) where T : class
+        {
+            var service = DecodeToService<UpdateService>.CreateCorrectService<T>(WhatItShouldBe.SyncAnything, _db);
+            return service.Update(data);
+        }
+    }
+
+
     public class UpdateService<TData> : IUpdateService<TData> where TData : class
     {
         private readonly IDbContextWithValidation _db;
@@ -13,6 +39,11 @@ namespace GenericServices.Services
             _db = db;
         }
 
+        /// <summary>
+        /// This updates the entity data class directly
+        /// </summary>
+        /// <param name="itemToUpdate"></param>
+        /// <returns>status</returns>
         public ISuccessOrErrors Update(TData itemToUpdate)
         {
             if (itemToUpdate == null)
@@ -43,6 +74,11 @@ namespace GenericServices.Services
             _db = db;
         }
 
+        /// <summary>
+        /// This updates the entity data by copying over the relevant dto data.
+        /// </summary>
+        /// <param name="dto">If an error then its resets any secondary data so that you can reshow the dto</param>
+        /// <returns>status</returns>
         public ISuccessOrErrors Update(TDto dto)
         {
             ISuccessOrErrors result = new SuccessOrErrors();

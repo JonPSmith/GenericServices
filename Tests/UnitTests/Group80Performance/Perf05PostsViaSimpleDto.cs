@@ -41,7 +41,7 @@ namespace Tests.UnitTests.Group80Performance
                 var service = new DetailService<Post, SimplePostDto>(db);
 
                 //ATTEMPT
-                var dto = service.GetDetail(x => x.PostId == postId);
+                var dto = service.GetDetailUsingWhere(x => x.PostId == postId);
                 dto.LogSpecificName("End");
 
                 //VERIFY
@@ -62,7 +62,7 @@ namespace Tests.UnitTests.Group80Performance
                 var service = new UpdateSetupService<Post, SimplePostDto>(db);
 
                 //ATTEMPT
-                var dto = service.GetOriginal(x => x.PostId == postId);
+                var dto = service.GetOriginal(postId);
                 dto.LogSpecificName("End");
 
                 //VERIFY
@@ -85,7 +85,7 @@ namespace Tests.UnitTests.Group80Performance
                 var setupService = new UpdateSetupService<Post, SimplePostDto>(db);
 
                 //ATTEMPT
-                var dto = setupService.GetOriginal(x => x.PostId == postId);
+                var dto = setupService.GetOriginal(postId);
                 dto.Title = Guid.NewGuid().ToString();
                 var status = service.Update(dto);
                 dto.LogSpecificName("End");

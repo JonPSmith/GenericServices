@@ -206,7 +206,7 @@ namespace Tests.Helpers
         public static void UpdatePostGenericDirect(this SampleWebAppDb db, int postId)
         {
             var setupService = new DetailService<Post>(db);
-            var post = setupService.GetDetail(x => x.PostId == postId);
+            var post = setupService.GetDetailUsingWhere(x => x.PostId == postId);
 
             var guidString = Guid.NewGuid().ToString("N");
             post.Title = guidString;
@@ -236,7 +236,7 @@ namespace Tests.Helpers
         public static void UpdatePostGenericViaDto(this SampleWebAppDb db, int postId)
         {
             var setupService = new UpdateSetupService<Post,DetailPostDto>(db);
-            var dto = setupService.GetOriginal(x => x.PostId == postId);
+            var dto = setupService.GetOriginal(postId);
 
             var guidString = Guid.NewGuid().ToString("N");
             dto.Title = guidString;
@@ -267,8 +267,8 @@ namespace Tests.Helpers
 
         public static void DeletePostGenericDirect(this SampleWebAppDb db, int postId)
         {
-            var service = new DeleteService<Post>(db);
-            var status = service.Delete(postId);
+            var service = new DeleteService(db);
+            var status = service.Delete<Post>(postId);
             status.IsValid.ShouldEqual(true, status.Errors);
         }
 

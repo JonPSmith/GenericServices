@@ -3,7 +3,7 @@ using Tests.Actions;
 using Tests.DataClasses.Concrete;
 using Tests.Helpers;
 
-namespace Tests.UnitTests.Group10Actions
+namespace Tests.UnitTests.Group20Actions
 {
     class Test01CheckTestAction
     {

@@ -76,7 +76,7 @@ namespace Tests.UnitTests.Group08CrudServices
                 var firstPost = db.Posts.Include(x => x.Tags).AsNoTracking().First();
 
                 //ATTEMPT
-                var dto = service.GetDetail(x => x.PostId == firstPost.PostId);
+                var dto = service.GetDetailUsingWhere(x => x.PostId == firstPost.PostId);
                 dto.LogSpecificName("End");
 
                 //VERIFY
@@ -100,7 +100,7 @@ namespace Tests.UnitTests.Group08CrudServices
                 var firstPost = db.Posts.Include(x => x.Tags).AsNoTracking().First();
 
                 //ATTEMPT
-                var dto = service.GetOriginal(x => x.PostId == firstPost.PostId);
+                var dto = service.GetOriginal(firstPost.PostId);
                 dto.LogSpecificName("End");
 
                 //VERIFY
@@ -124,7 +124,7 @@ namespace Tests.UnitTests.Group08CrudServices
                 var setupService = new UpdateSetupService<Post, SimplePostDto>(db);
 
                 //ATTEMPT
-                var dto = setupService.GetOriginal(x => x.PostId == firstPost.PostId);
+                var dto = setupService.GetOriginal(firstPost.PostId);
                 dto.Title = Guid.NewGuid().ToString();
                 var status = service.Update(dto);
                 dto.LogSpecificName("End");
@@ -148,7 +148,7 @@ namespace Tests.UnitTests.Group08CrudServices
                 var setupService = new UpdateSetupService<Post, SimplePostDto>(db);
 
                 //ATTEMPT
-                var dto = setupService.GetOriginal(x => x.PostId == firstPost.PostId);
+                var dto = setupService.GetOriginal(firstPost.PostId);
                 dto.Title = Guid.NewGuid().ToString();
                 var status = service.Update(dto);
                 dto.LogSpecificName("End");

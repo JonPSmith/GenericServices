@@ -80,7 +80,7 @@ namespace Tests.Helpers
 
         internal static void IsA<T>(this object actualValue, string errorMessage = null) where T : class
         {
-            Assert.True(actualValue.GetType() == typeof(T));
+            Assert.True(actualValue.GetType() == typeof(T), "expected type {0}, but was of type {1}", typeof(T).Name, actualValue.GetType().Name);
         }
     }
 }

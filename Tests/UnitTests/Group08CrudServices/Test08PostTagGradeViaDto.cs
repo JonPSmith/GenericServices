@@ -61,7 +61,7 @@ namespace Tests.UnitTests.Group08CrudServices
                 var firstGrade = db.PostTagGrades.Include(x => x.TagPart).Include(x => x.PostPart).First();
 
                 //ATTEMPT
-                var dto = service.GetDetail(x => x.PostId == firstGrade.PostId && x.TagId == firstGrade.TagId);
+                var dto = service.GetDetailUsingWhere(x => x.PostId == firstGrade.PostId && x.TagId == firstGrade.TagId);
                 dto.LogSpecificName("End");
 
                 //VERIFY
@@ -81,7 +81,7 @@ namespace Tests.UnitTests.Group08CrudServices
                 var firstGrade = db.PostTagGrades.Include(x => x.TagPart).Include(x => x.PostPart).First();
 
                 //ATTEMPT
-                var dto = service.GetOriginal(x => x.PostId == firstGrade.PostId && x.TagId == firstGrade.TagId);
+                var dto = service.GetOriginal(firstGrade.PostId, firstGrade.TagId);
                 dto.LogSpecificName("End");
 
                 //VERIFY
@@ -104,7 +104,7 @@ namespace Tests.UnitTests.Group08CrudServices
                 var setupService = new UpdateSetupService<PostTagGrade, SimplePostTagGradeDto>(db);
 
                 //ATTEMPT
-                var dto = setupService.GetOriginal(x => x.PostId == firstGrade.PostId && x.TagId == firstGrade.TagId);
+                var dto = setupService.GetOriginal(firstGrade.PostId, firstGrade.TagId);
                 dto.Grade = 999;
                 var status = service.Update(dto);
                 dto.LogSpecificName("End");

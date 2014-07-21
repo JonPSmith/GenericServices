@@ -81,7 +81,7 @@ namespace Tests.UnitTests.Group08CrudServices
                 var firstPost = db.Posts.Include( x => x.Tags).AsNoTracking().First();
 
                 //ATTEMPT
-                var dto = service.GetDetail(x => x.PostId == firstPost.PostId);
+                var dto = service.GetDetailUsingWhere(x => x.PostId == firstPost.PostId);
 
                 //VERIFY
                 dto.PostId.ShouldEqual(firstPost.PostId);
@@ -239,7 +239,7 @@ namespace Tests.UnitTests.Group08CrudServices
                 var firstPost = db.Posts.First();
 
                 //ATTEMPT
-                var dto = setupService.GetOriginal(x => x.PostId == firstPost.PostId);
+                var dto = setupService.GetOriginal(firstPost.PostId);
 
                 //VERIFY
                 dto.Bloggers.KeyValueList.Count.ShouldEqual(db.Blogs.Count() + 1);
@@ -260,7 +260,7 @@ namespace Tests.UnitTests.Group08CrudServices
                 var firstPost = db.Posts.First();
 
                 //ATTEMPT
-                var dto = setupService.GetOriginal(x => x.PostId == firstPost.PostId);
+                var dto = setupService.GetOriginal(firstPost.PostId);
                 dto.Title = Guid.NewGuid().ToString();
                 dto.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
                 dto.UserChosenTags.FinalSelection = db.Tags.Take(2).ToList().Select(x => x.TagId.ToString("D")).ToArray();
@@ -290,7 +290,7 @@ namespace Tests.UnitTests.Group08CrudServices
                 var firstPost = db.Posts.First();
 
                 //ATTEMPT
-                var dto = setupService.GetOriginal(x => x.PostId == firstPost.PostId);
+                var dto = setupService.GetOriginal(firstPost.PostId);
                 dto.Title = Guid.NewGuid().ToString();
                 dto.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
                 dto.UserChosenTags.FinalSelection = db.Tags.Take(1).ToList().Select(x => x.TagId.ToString("D")).ToArray();
@@ -319,7 +319,7 @@ namespace Tests.UnitTests.Group08CrudServices
                 var firstPost = db.Posts.First();
 
                 //ATTEMPT
-                var dto = setupService.GetOriginal(x => x.PostId == firstPost.PostId);
+                var dto = setupService.GetOriginal(firstPost.PostId);
                 dto.Title = Guid.NewGuid().ToString();
                 dto.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
                 dto.UserChosenTags.FinalSelection = db.Tags.Take(3).ToList().Select(x => x.TagId.ToString("D")).ToArray();
@@ -347,7 +347,7 @@ namespace Tests.UnitTests.Group08CrudServices
                 var firstPost = db.Posts.First();
 
                 //ATTEMPT
-                var dto = setupService.GetOriginal(x => x.PostId == firstPost.PostId);
+                var dto = setupService.GetOriginal(firstPost.PostId);
                 dto.Title = null;                   //that will fail
                 dto.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
                 dto.UserChosenTags.FinalSelection = db.Tags.Take(3).ToList().Select(x => x.TagId.ToString("D")).ToArray();

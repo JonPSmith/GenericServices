@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Linq;
-using GenericServices;
 using GenericServices.Services;
 using NUnit.Framework;
 using Tests.DataClasses;
 using Tests.DataClasses.Concrete;
+using Tests.DTOs.Concrete;
 using Tests.Helpers;
 
-namespace Tests.UnitTests.Group08CrudServices
+namespace Tests.UnitTests.Group15CrudServiceFinder
 {
-    class Test02PostsDirect
+    class Test04CreateDirectServices
     {
-
         [TestFixtureSetUp]
         public void SetUpFixture()
         {
@@ -25,32 +24,16 @@ namespace Tests.UnitTests.Group08CrudServices
         }
 
         [Test]
-        public void Check01DirectReferenceOk()
-        {
-
-            //SETUP    
-
-            //ATTEMPT
-            ICreateService<Post> createService = new CreateService<Post>(null);
-            IDetailService<Post> detailService = new DetailService<Post>(null);
-            IListService<Post> listService = new ListService<Post>(null);
-            IUpdateService<Post> updateService = new UpdateService<Post>(null);
-
-            //VERIFY
-            (listService is IListService<Post>).ShouldEqual(true);
-        }
-
-        [Test]
         public void Check02ListDirectPostOk()
         {
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
-                var service = new ListService<Post>(db);
+                var service = new ListService(db);
                 var firstPost = db.Posts.Include(x => x.Blogger).First();
 
                 //ATTEMPT
-                var query = service.GetList().Include(x => x.Blogger);
+                var query = service.GetList<Post>().Include(x => x.Blogger);
                 var list = query.ToList();
 
                 //VERIFY
@@ -68,11 +51,11 @@ namespace Tests.UnitTests.Group08CrudServices
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
-                var service = new DetailService<Post>(db);
+                var service = new DetailService(db);
                 var firstPost = db.Posts.First();
 
                 //ATTEMPT
-                var item = service.GetDetailUsingWhere(x => x.PostId == firstPost.PostId);
+                var item = service.GetDetail<Post>(firstPost.PostId);
 
                 //VERIFY
                 item.PostId.ShouldEqual(firstPost.PostId);
@@ -88,7 +71,7 @@ namespace Tests.UnitTests.Group08CrudServices
                 //SETUP
                 var snap = new DbSnapShot(db);
                 var firstPostUntracked = db.Posts.AsNoTracking().First();
-                var service = new UpdateService<Post>(db);
+                var service = new UpdateService(db);
 
                 //ATTEMPT
                 firstPostUntracked.Title = Guid.NewGuid().ToString();
@@ -98,7 +81,7 @@ namespace Tests.UnitTests.Group08CrudServices
                 status.IsValid.ShouldEqual(true, status.Errors);
                 status.SuccessMessage.ShouldEqual("Successfully updated Post.");
                 snap.CheckSnapShot(db);
-                
+
             }
         }
 
@@ -110,8 +93,8 @@ namespace Tests.UnitTests.Group08CrudServices
                 //SETUP
                 var snap = new DbSnapShot(db);
                 var firstPostUntrackedNoIncludes = db.Posts.AsNoTracking().First();
-                var firstPostUntrackedWithIncludes = db.Posts.AsNoTracking().Include( x => x.Tags).First();
-                var service = new UpdateService<Post>(db);
+                var firstPostUntrackedWithIncludes = db.Posts.AsNoTracking().Include(x => x.Tags).First();
+                var service = new UpdateService(db);
 
                 //ATTEMPT
                 firstPostUntrackedNoIncludes.Title = Guid.NewGuid().ToString();
@@ -126,40 +109,52 @@ namespace Tests.UnitTests.Group08CrudServices
                 updatedPost.Blogger.ShouldNotEqualNull();
                 updatedPost.Blogger.Name.ShouldEqual(firstPostUntrackedWithIncludes.Blogger.Name);
                 CollectionAssert.AreEqual(firstPostUntrackedWithIncludes.Tags.Select(x => x.TagId), updatedPost.Tags.Select(x => x.TagId));
-
             }
         }
 
         [Test]
-        public void Check08UpdateWithListDtoBad()
+        public void Check08UpdateSetupServiceDto()
         {
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var firstPostUntracked = db.Posts.AsNoTracking().First();
-                var service = new UpdateService<Post>(db);
+                var service = new UpdateSetupService(db);
 
                 //ATTEMPT
                 firstPostUntracked.Title = "Can't I ask a question?";
-                var status = service.Update(firstPostUntracked);
+                var result = service.GetOriginal<Post>(firstPostUntracked.PostId);
 
                 //VERIFY
-                status.IsValid.ShouldEqual(false);
-                status.Errors.Count.ShouldEqual(1);
-                status.Errors[0].ErrorMessage.ShouldEqual("Sorry, but you can't ask a question, i.e. the title can't end with '?'.");
-
+                result.ShouldNotEqualNull();
             }
         }
 
         [Test]
-        public void Check08CreateDirectOk()
+        public void Check10CreateSetupDtoOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var service = new CreateSetupService(db);
+
+                //ATTEMPT
+                var result = service.GetDto<SimplePostDto>();
+
+                //VERIFY
+                result.ShouldNotEqualNull();
+            }
+        }
+
+        [Test]
+        public void Check11CreateDirectOk()
         {
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
                 var snap = new DbSnapShot(db);
-                var service = new CreateService<Post>(db);
-                var firstPostUntracked = db.Posts.Include( x => x.Tags).AsNoTracking().First();
+                var service = new CreateService(db);
+                var firstPostUntracked = db.Posts.Include(x => x.Tags).AsNoTracking().First();
                 var tagsTracked = db.Tags.ToList().Where(x => firstPostUntracked.Tags.Any(y => y.TagId == x.TagId)).ToList();
 
                 //ATTEMPT
@@ -169,31 +164,11 @@ namespace Tests.UnitTests.Group08CrudServices
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true);
-                snap.CheckSnapShot(db,1,2);
-                var updatedPost = db.Posts.OrderByDescending( x => x.PostId).Include(x => x.Tags).First();
+                snap.CheckSnapShot(db, 1, 2);
+                var updatedPost = db.Posts.OrderByDescending(x => x.PostId).Include(x => x.Tags).First();
                 updatedPost.Title.ShouldEqual(firstPostUntracked.Title);
                 updatedPost.BlogId.ShouldEqual(firstPostUntracked.BlogId);
                 CollectionAssert.AreEqual(firstPostUntracked.Tags.Select(x => x.TagId), updatedPost.Tags.Select(x => x.TagId));
-            }
-        }
-
-        [Test]
-        public void Check10DeleteDirectOk()
-        {
-            using (var db = new SampleWebAppDb())
-            {
-                //SETUP
-                var snap = new DbSnapShot(db);
-                var firstPostUntracked = db.Posts.AsNoTracking().First();
-                var service = new DeleteService(db);
-
-                //ATTEMPT
-                var status = service.Delete<Post>(firstPostUntracked.PostId);
-
-                //VERIFY
-                status.IsValid.ShouldEqual(true, status.Errors);
-                status.SuccessMessage.ShouldEqual("Successfully deleted Post.");
-                snap.CheckSnapShot(db, -1,-2, 0, 0, -2);
             }
         }
 

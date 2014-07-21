@@ -86,6 +86,7 @@
     <Compile Include="DTOs\ISimplePostDto.cs" />
     <Compile Include="DTOs\Concrete\SimpleBlogWithPostsDto.cs" />
     <Compile Include="DTOs\Concrete\SimplePostDto.cs" />
+    <Compile Include="Helpers\TimerToConsole.cs" />
     <Compile Include="Helpers\TraceGenericLogger.cs" />
     <Compile Include="Helpers\DatabaseHelpers.cs" />
     <Compile Include="Helpers\DbSnapShot.cs" />
@@ -96,10 +97,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UiHelpers\DropDownListType.cs" />
     <Compile Include="UiHelpers\MultiSelectListType.cs" />
+    <Compile Include="UnitTests\Group01DataClasses\Tests12BuildFilter.cs" />
     <Compile Include="UnitTests\Group01DataClasses\Tests10CheckKeyFind.cs" />
     <Compile Include="UnitTests\Group01DataClasses\Tests01Setup.cs" />
     <Compile Include="UnitTests\Group01DataClasses\Tests02Validation.cs" />
     <Compile Include="UnitTests\Group01DataClasses\Tests04ReadWrite.cs" />
+    <Compile Include="UnitTests\Group15CrudServiceFinder\Test02DecodeToService.cs" />
     <Compile Include="UnitTests\Group02Validation\Test01SuccessOrErrors.cs" />
     <Compile Include="UnitTests\Group02Validation\Test03SuccessOrErrorsT.cs" />
     <Compile Include="UnitTests\Group03ServiceFlow\Test01CreateService.cs" />
@@ -112,9 +115,11 @@
     <Compile Include="UnitTests\Group05GenericLogger\Test02SetupLogger.cs" />
     <Compile Include="UnitTests\Group05GenericLogger\Test06TraceGenericLogger.cs" />
     <Compile Include="UnitTests\Group05GenericLogger\Test04Log4NetGenericLogger.cs" />
-    <Compile Include="UnitTests\Group10Actions\Test05ActionServiceEmptyActionAsync.cs" />
-    <Compile Include="UnitTests\Group10Actions\Test02ActionServiceEmptyAction.cs" />
-    <Compile Include="UnitTests\Group10Actions\Test01CheckTestAction.cs" />
+    <Compile Include="UnitTests\Group15CrudServiceFinder\Test05CreateDtoServices.cs" />
+    <Compile Include="UnitTests\Group15CrudServiceFinder\Test04CreateDirectServices.cs" />
+    <Compile Include="UnitTests\Group20Actions\Test05ActionServiceEmptyActionAsync.cs" />
+    <Compile Include="UnitTests\Group20Actions\Test02ActionServiceEmptyAction.cs" />
+    <Compile Include="UnitTests\Group20Actions\Test01CheckTestAction.cs" />
     <Compile Include="UnitTests\Group08CrudServices\Test01AutoMapper.cs" />
     <Compile Include="UnitTests\Group08CrudServices\Test02aPostTagGradeDirect.cs" />
     <Compile Include="UnitTests\Group08CrudServices\Test02PostsDirect.cs" />

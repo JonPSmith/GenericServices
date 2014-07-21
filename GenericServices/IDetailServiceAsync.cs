@@ -2,10 +2,22 @@ using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using GenericServices.Core;
-using GenericServices.ServicesAsync;
 
 namespace GenericServices
 {
+    public interface IDetailServiceAsync
+    {
+        /// <summary>
+        /// This works out what sort of service is needed from the type provided
+        /// and returns a single entry using the lambda expression as a where part
+        /// </summary>
+        /// <typeparam name="T">The type of the data to output. 
+        /// Type must be a type either an EF data class or a class based on EfGenericDtoAsync</typeparam>
+        /// <param name="whereExpression">Should be a 'where' expression that returns one item</param>
+        /// <returns>Data class as read from database (not tracked)</returns>
+        T GetDetail<T>(Expression<Func<T, bool>> whereExpression) where T : class;
+    }
+
     public interface IDetailServiceAsync<TData>
         where TData : class
     {

@@ -1,7 +1,32 @@
-﻿using GenericServices.Core;
+﻿using System.Linq;
+using GenericServices.Core;
+using GenericServices.Core.Internal;
 
 namespace GenericServices.Services
 {
+
+    public class CreateSetupService : ICreateSetupService
+    {
+
+        private readonly IDbContextWithValidation _db;
+
+        public CreateSetupService(IDbContextWithValidation db)
+        {
+            _db = db;
+        }
+
+        /// <summary>
+        /// This returns the dto with any data that is needs for the view setup in it
+        /// </summary>
+        /// <typeparam name="TDto">The type of the data to output. This must be EfGeneric Dto</typeparam>
+        /// <returns>The dto with any secondary data filled in</returns>
+        public TDto GetDto<TDto>() where TDto : class
+        {
+            var service = DecodeToService<CreateSetupService>.CreateCorrectService<TDto>(WhatItShouldBe.SyncAnyDto, _db);
+            return service.GetDto();
+        }
+    }
+
     public class CreateSetupService<TData, TDto> : ICreateSetupService<TData, TDto> where TData : class
         where TDto : EfGenericDto<TData, TDto>, new()
     {

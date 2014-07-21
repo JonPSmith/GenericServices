@@ -33,7 +33,7 @@ namespace Tests.UnitTests.Group03ServiceFlow
                 var firstTag = db.Tags.First();
 
                 //ATTEMPT
-                var dto = service.GetDetail(x => x.TagId == firstTag.TagId);
+                var dto = service.GetDetailUsingWhere(x => x.TagId == firstTag.TagId);
 
                 //VERIFY
                 dto.FunctionsCalledCommaDelimited.ShouldEqual("CreateDtoAndCopyDataIn");

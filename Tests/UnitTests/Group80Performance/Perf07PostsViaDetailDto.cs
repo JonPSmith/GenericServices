@@ -44,7 +44,7 @@ namespace Tests.UnitTests.Group80Performance
                 var service = new DetailService<Post, DetailPostDto>(db);
 
                 //ATTEMPT
-                var dto = service.GetDetail(x => x.PostId == postId);
+                var dto = service.GetDetailUsingWhere(x => x.PostId == postId);
                 dto.LogSpecificName("End");
 
                 //VERIFY
@@ -112,7 +112,7 @@ namespace Tests.UnitTests.Group80Performance
                 var setupService = new UpdateSetupService<Post, DetailPostDto>(db);
 
                 //ATTEMPT
-                var dto = setupService.GetOriginal(x => x.PostId == postId);
+                var dto = setupService.GetOriginal(postId);
                 dto.LogSpecificName("End");
 
                 //VERIFY
@@ -136,7 +136,7 @@ namespace Tests.UnitTests.Group80Performance
                 var updateService = new UpdateService<Post, DetailPostDto>(db);
 
                 //ATTEMPT
-                var dto = setupService.GetOriginal(x => x.PostId == postId);
+                var dto = setupService.GetOriginal(postId);
                 dto.Title = Guid.NewGuid().ToString();
                 dto.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
                 dto.UserChosenTags.FinalSelection = db.Tags.Take(3).ToList().Select(x => x.TagId.ToString("D")).ToArray();

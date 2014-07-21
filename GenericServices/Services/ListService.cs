@@ -1,9 +1,34 @@
 ﻿using System;
 using System.Linq;
 using GenericServices.Core;
+using GenericServices.Core.Internal;
 
 namespace GenericServices.Services
 {
+
+    public class ListService : IListService
+    {
+        private readonly IDbContextWithValidation _db;
+
+        public ListService(IDbContextWithValidation db)
+        {
+            _db = db;
+        }
+
+        /// <summary>
+        /// This returns an IQueryable list of all items of the given type
+        /// </summary>
+        /// <typeparam name="T">The type of the data to output. 
+        /// Type must be a type either an EF data class or a class inherited from the EfGenericDto or EfGenericDtoAsync</typeparam>
+        /// <returns>note: the list items are not tracked</returns>
+        public IQueryable<T> GetList<T>() where T : class, new()
+        {
+            var service = DecodeToService<ListService>.CreateCorrectService<T>(WhatItShouldBe.SyncAnything, _db);
+            return service.GetList();
+        }
+    }
+
+
     public class ListService<TData> : IListService<TData> where TData : class
     {
         private readonly IDbContextWithValidation _db;
@@ -16,7 +41,7 @@ namespace GenericServices.Services
         /// <summary>
         /// This returns an IQueryable list of all items of the given type
         /// </summary>
-        /// <returns>note: items are not tracked</returns>
+        /// <returns>note: the list items are not tracked</returns>
         public IQueryable<TData> GetList()
         {
             return _db.Set<TData>().AsNoTracking();
@@ -41,7 +66,7 @@ namespace GenericServices.Services
         /// <summary>
         /// This returns an IQueryable list of all items of the given TData, but transformed into TDto data type
         /// </summary>
-        /// <returns></returns>
+        /// <returns>note: the list items are not tracked</returns>
         public IQueryable<TDto> GetList()
         {
             var tDto = new TDto();
