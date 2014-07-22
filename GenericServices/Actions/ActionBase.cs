@@ -1,7 +1,6 @@
 ﻿using System;
 using GenericServices.ActionComms;
 using GenericServices.Logger;
-using GenericServices.Services;
 
 namespace GenericServices.Actions
 {
@@ -11,11 +10,11 @@ namespace GenericServices.Actions
         private readonly IGenericLogger _logger;
 
         /// <summary>
-        /// If true then the caller should call EF SubmitChanges if the method exited with status IsValid and
-        /// it looks to see if the data part has a ICheckIfWarnings and if the WriteEvenIfWarning is false
-        /// and there are warnings then it does not call SubmitChanges
+        /// Override this to return true if you want the calling service to write to database.
+        /// If the method exited with status IsValid and the warning check (see ICheckIfWarings)
+        /// passes the it will call SubmitChanges to commit any data to the database
         /// </summary>
-        public abstract bool SubmitChangesOnSuccess { get; }
+        public virtual bool SubmitChangesOnSuccess { get { return false; } }
       
         /// <summary>
         /// This controls the lower value sent back to reportProgress
