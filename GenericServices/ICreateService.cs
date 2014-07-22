@@ -1,6 +1,3 @@
-using GenericServices.Core;
-using GenericServices.Services;
-
 namespace GenericServices
 {
     public interface ICreateService
@@ -14,5 +11,4 @@ namespace GenericServices
         /// <returns>status</returns>
         ISuccessOrErrors Create<T>(T newItem) where T : class;
     }
-
 }

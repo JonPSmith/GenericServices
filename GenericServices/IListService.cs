@@ -1,6 +1,4 @@
 ﻿using System.Linq;
-using GenericServices.Core;
-using GenericServices.Services;
 
 namespace GenericServices
 {
@@ -16,5 +14,4 @@ namespace GenericServices
         /// <returns>note: the list items are not tracked</returns>
         IQueryable<T> GetList<T>() where T : class, new();
     }
-
 }

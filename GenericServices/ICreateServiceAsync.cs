@@ -1,6 +1,4 @@
 using System.Threading.Tasks;
-using GenericServices.Core;
-using GenericServices.ServicesAsync;
 
 namespace GenericServices
 {
@@ -15,5 +13,4 @@ namespace GenericServices
         /// <returns>status</returns>
         Task<ISuccessOrErrors> CreateAsync<T>(T newItem) where T : class;
     }
-
 }

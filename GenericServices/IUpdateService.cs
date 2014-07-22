@@ -1,5 +1,3 @@
-using GenericServices.Core;
-
 namespace GenericServices
 {
 
@@ -14,5 +12,4 @@ namespace GenericServices
         /// <returns></returns>
         ISuccessOrErrors Update<T>(T data) where T : class;
     }
-
 }

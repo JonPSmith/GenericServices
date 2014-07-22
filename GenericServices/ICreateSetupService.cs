@@ -1,5 +1,3 @@
-using GenericServices.Core;
-
 namespace GenericServices
 {
     public interface ICreateSetupService
@@ -11,5 +9,4 @@ namespace GenericServices
         /// <returns>The dto with any secondary data filled in</returns>
         TDto GetDto<TDto>() where TDto : class;
     }
-
 }
