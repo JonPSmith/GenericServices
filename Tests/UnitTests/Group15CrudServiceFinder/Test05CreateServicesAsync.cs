@@ -2,18 +2,17 @@
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
-using GenericServices.Services;
-using GenericServices.ServicesAsync;
 using GenericServices.ServicesAsync.Concrete;
 using NUnit.Framework;
 using Tests.DataClasses;
 using Tests.DataClasses.Concrete;
 using Tests.DTOs.Concrete;
 using Tests.Helpers;
+using Tests.UiHelpers;
 
 namespace Tests.UnitTests.Group15CrudServiceFinder
 {
-    class Test05CreateDirectServicesAsync
+    class Test05CreateServicesAsync
     {
         [TestFixtureSetUp]
         public void SetUpFixture()
@@ -149,6 +148,24 @@ namespace Tests.UnitTests.Group15CrudServiceFinder
             }
         }
 
+        [Test]
+        public async Task Check08UpdateResetDtoOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var service = new UpdateServiceAsync(db);
+                var dto = new DetailPostDtoAsync();
+
+                //ATTEMPT
+                await service.ResetDtoAsync(dto);
+
+                //VERIFY
+                dto.Bloggers.ShouldNotEqualNull();
+                dto.Bloggers.KeyValueList.Count.ShouldNotEqual(0);
+            }
+        }
+
         //--------------------------------------------
         //create
 
@@ -194,5 +211,22 @@ namespace Tests.UnitTests.Group15CrudServiceFinder
             }
         }
 
+        [Test]
+        public async Task Check12CreateResetDtoOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var service = new CreateServiceAsync(db);
+                var dto = new DetailPostDtoAsync();
+
+                //ATTEMPT
+                await service.ResetDtoAsync(dto);
+
+                //VERIFY
+                dto.Bloggers.ShouldNotEqualNull();
+                dto.Bloggers.KeyValueList.Count.ShouldNotEqual(0);
+            }
+        }
     }
 }

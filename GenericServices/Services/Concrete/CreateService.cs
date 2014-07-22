@@ -24,6 +24,18 @@ namespace GenericServices.Services.Concrete
             var service = DecodeToService<CreateService>.CreateCorrectService<T>(WhatItShouldBe.SyncAnything, _db);
             return service.Create(newItem);
         }
+
+        /// <summary>
+        /// This is available to reset any secondary data in the dto. Call this if the ModelState was invalid and
+        /// you need to display the view again with errors
+        /// </summary>
+        /// <param name="dto">Must be a dto inherited from EfGenericDto</param>
+        /// <returns></returns>
+        public T ResetDto<T>(T dto) where T : class
+        {
+            var service = DecodeToService<UpdateService>.CreateCorrectService<T>(WhatItShouldBe.SyncSpecificDto, _db);
+            return service.ResetDto(dto);
+        }
     }
     
     //-----------------------------------------------

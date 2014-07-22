@@ -11,5 +11,13 @@ namespace GenericServices
         /// <param name="data">data to update the class. If Dto then copied over to data class</param>
         /// <returns></returns>
         ISuccessOrErrors Update<T>(T data) where T : class;
+
+        /// <summary>
+        /// This is available to reset any secondary data in the dto. Call this if the ModelState was invalid and
+        /// you need to display the view again with errors
+        /// </summary>
+        /// <param name="dto">Must be a dto inherited from EfGenericDtoAsync</param>
+        /// <returns></returns>
+        T ResetDto<T>(T dto) where T : class;
     }
 }

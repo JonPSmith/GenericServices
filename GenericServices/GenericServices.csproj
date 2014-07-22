@@ -71,6 +71,7 @@
     <Compile Include="IActionSetupServiceAsync.cs" />
     <Compile Include="Logger\IGenericLogger.cs" />
     <Compile Include="Logger\NoLoggingGenericLogger.cs" />
+    <Compile Include="NuGet\AssemblyVersionPart.cs" />
     <Compile Include="ServicesAsync\Concrete\ActionSetupServiceAsync.cs" />
     <Compile Include="ServicesAsync\Concrete\CreateSetupServiceAsync.cs" />
     <Compile Include="ServicesAsync\Concrete\DeleteServiceAsync.cs" />

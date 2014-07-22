@@ -10,5 +10,13 @@ namespace GenericServices
         /// <param name="newItem">either entity class or dto to create the data item with</param>
         /// <returns>status</returns>
         ISuccessOrErrors Create<T>(T newItem) where T : class;
+
+        /// <summary>
+        /// This is available to reset any secondary data in the dto. Call this if the ModelState was invalid and
+        /// you need to display the view again with errors
+        /// </summary>
+        /// <param name="dto">Must be a dto inherited from EfGenericDto</param>
+        /// <returns></returns>
+        T ResetDto<T>(T dto) where T : class;
     }
 }

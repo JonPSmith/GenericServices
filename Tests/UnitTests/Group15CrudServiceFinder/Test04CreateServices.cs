@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Linq;
-using GenericServices.Services;
 using GenericServices.Services.Concrete;
 using NUnit.Framework;
 using Tests.DataClasses;
 using Tests.DataClasses.Concrete;
 using Tests.DTOs.Concrete;
 using Tests.Helpers;
+using Tests.UiHelpers;
 
 namespace Tests.UnitTests.Group15CrudServiceFinder
 {
-    class Test04CreateDirectServices
+    class Test04CreateServices
     {
         [TestFixtureSetUp]
         public void SetUpFixture()
@@ -25,7 +25,7 @@ namespace Tests.UnitTests.Group15CrudServiceFinder
         }
 
         [Test]
-        public void Check02ListDirectPostOk()
+        public void Check02ListPostOk()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -69,7 +69,7 @@ namespace Tests.UnitTests.Group15CrudServiceFinder
         }
 
         [Test]
-        public void Check03DetailDirectPostOk()
+        public void Check03DetailPostOk()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -87,7 +87,7 @@ namespace Tests.UnitTests.Group15CrudServiceFinder
         }
 
         [Test]
-        public void Check04DetailDirectDtoOk()
+        public void Check04DetailDtoOk()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -146,7 +146,7 @@ namespace Tests.UnitTests.Group15CrudServiceFinder
         }
 
         [Test]
-        public void Check06UpdateDirectOk()
+        public void Check06UpdateOk()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -168,7 +168,7 @@ namespace Tests.UnitTests.Group15CrudServiceFinder
         }
 
         [Test]
-        public void Check07UpdateDirectDtoOk()
+        public void Check07UpdateDtoOk()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -188,6 +188,24 @@ namespace Tests.UnitTests.Group15CrudServiceFinder
                 var updatedPost = db.Posts.Include(x => x.Tags).First();
                 updatedPost.Title.ShouldEqual(dto.Title);
                 updatedPost.Content.ShouldEqual(firstPostUntrackedNoIncludes.Content);
+            }
+        }
+
+        [Test]
+        public void Check08UpdateResetDtoOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var service = new UpdateService(db);
+                var dto = new DetailPostDto();
+
+                //ATTEMPT
+                service.ResetDto(dto);
+
+                //VERIFY
+                dto.Bloggers.ShouldNotEqualNull();
+                dto.Bloggers.KeyValueList.Count.ShouldNotEqual(0);
             }
         }
 
@@ -233,6 +251,24 @@ namespace Tests.UnitTests.Group15CrudServiceFinder
                 updatedPost.Title.ShouldEqual(firstPostUntracked.Title);
                 updatedPost.BlogId.ShouldEqual(firstPostUntracked.BlogId);
                 CollectionAssert.AreEqual(firstPostUntracked.Tags.Select(x => x.TagId), updatedPost.Tags.Select(x => x.TagId));
+            }
+        }
+
+        [Test]
+        public void Check12CreateResetDtoOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var service = new CreateService(db);
+                var dto = new DetailPostDto();
+
+                //ATTEMPT
+                service.ResetDto(dto);
+
+                //VERIFY
+                dto.Bloggers.ShouldNotEqualNull();
+                dto.Bloggers.KeyValueList.Count.ShouldNotEqual(0);
             }
         }
 

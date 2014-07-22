@@ -28,6 +28,18 @@ namespace GenericServices.ServicesAsync.Concrete
             var service = DecodeToService<UpdateServiceAsync>.CreateCorrectService<T>(WhatItShouldBe.AsyncClassOrSpecificDto, _db);
             return await service.UpdateAsync(data);
         }
+
+        /// <summary>
+        /// This is available to reset any secondary data in the dto. Call this if the ModelState was invalid and
+        /// you need to display the view again with errors
+        /// </summary>
+        /// <param name="dto">Must be a dto inherited from EfGenericDtoAsync</param>
+        /// <returns></returns>
+        public async Task<T> ResetDtoAsync<T>(T dto) where T : class
+        {
+            var service = DecodeToService<UpdateServiceAsync>.CreateCorrectService<T>(WhatItShouldBe.AsyncSpecificDto, _db);
+            return await service.ResetDtoAsync(dto);
+        }
     }
 
     //--------------------------------
