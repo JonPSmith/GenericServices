@@ -34,7 +34,7 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
             //ATTEMPT
             ICreateServiceAsync<Post> createService = new CreateServiceAsync<Post>(null);
             IDetailServiceAsync<Post> detailService = new DetailServiceAsync<Post>(null);
-            IDeleteServiceAsync<Post> deleteService = new DeleteServiceAsync<Post>(null);
+            IDeleteServiceAsync deleteService = new DeleteServiceAsync(null);
             IUpdateServiceAsync<Post> updateService = new UpdateServiceAsync<Post>(null);
 
             //VERIFY
@@ -147,10 +147,10 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 //SETUP
                 var snap = new DbSnapShot(db);
                 var firstPostUntracked = db.Posts.AsNoTracking().First();
-                var service = new DeleteServiceAsync<Post>(db);
+                var service = new DeleteServiceAsync(db);
 
                 //ATTEMPT
-                var status = await service.DeleteAsync(firstPostUntracked.PostId);
+                var status = await service.DeleteAsync<Post>(firstPostUntracked.PostId);
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);

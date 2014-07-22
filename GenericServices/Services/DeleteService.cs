@@ -1,19 +1,9 @@
 ﻿using System;
 using System.Data.Entity;
-using GenericServices.Core;
 using GenericServices.Core.Internal;
 
 namespace GenericServices.Services
 {
-    public interface IDeleteService
-    {
-        /// <summary>
-        /// This will delete an item from the database
-        /// </summary>
-        /// <param name="keys">The keys must be given in the same order as entity framework has them</param>
-        /// <returns></returns>
-        ISuccessOrErrors Delete<TData>(params object[] keys) where TData : class, new();
-    }
 
     public class DeleteService : IDeleteService
     {
@@ -42,7 +32,7 @@ namespace GenericServices.Services
                 keyProperty.SetValue(entityToDelete, keys[paramCount++]);
 
             _db.Entry(entityToDelete).State = EntityState.Deleted;
-            ISuccessOrErrors result = _db.SaveChangesWithValidation();
+            var result = _db.SaveChangesWithValidation();
             if (result.IsValid)
                 result.SetSuccessMessage("Successfully deleted {0}.", typeof(TData).Name);
 

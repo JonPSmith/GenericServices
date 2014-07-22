@@ -274,8 +274,8 @@ namespace Tests.Helpers
 
         public static async Task DeletePostGenericDirectAsync(this SampleWebAppDb db, int postId)
         {
-            var service = new DeleteServiceAsync<Post>(db);
-            var status = await service.DeleteAsync(postId);
+            var service = new DeleteServiceAsync(db);
+            var status = await service.DeleteAsync<Post>(postId);
             status.IsValid.ShouldEqual(true, status.Errors);
         }
 

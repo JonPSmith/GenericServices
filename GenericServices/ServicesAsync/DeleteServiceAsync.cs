@@ -1,9 +1,12 @@
-﻿using System.Threading.Tasks;
-using GenericServices.Core;
+﻿using System;
+using System.Data.Entity;
+using System.Threading.Tasks;
+using GenericServices.Core.Internal;
 
 namespace GenericServices.ServicesAsync
 {
-    public class DeleteServiceAsync<TData> : IDeleteServiceAsync<TData> where TData : class, new()                                            
+
+    public class DeleteServiceAsync : IDeleteServiceAsync
     {
         private readonly IDbContextWithValidation _db;
 
@@ -12,21 +15,28 @@ namespace GenericServices.ServicesAsync
             _db = db;
         }
 
-        public async Task<ISuccessOrErrors> DeleteAsync(params object [] keys)
+        /// <summary>
+        /// This will delete an item from the database
+        /// </summary>
+        /// <param name="keys">The keys must be given in the same order as entity framework has them</param>
+        /// <returns></returns>
+        public async Task<ISuccessOrErrors> DeleteAsync<TData>(params object[] keys) where TData : class, new()  
         {
-            ISuccessOrErrors result = new SuccessOrErrors();
+            var keyProperties = _db.GetKeyProperties<TData>();
+            if (keyProperties.Count != keys.Length)
+                throw new ArgumentException("The number of keys in the data entry did not match the number of keys provided");
 
-            var itemToDelete = await _db.Set<TData>().FindAsync(keys);
-            if (itemToDelete == null)
-                return result.AddSingleError("Could not find the {0} you asked to delete.", typeof(TData).Name);
+            var entityToDelete = new TData();
+            int paramCount = 0;
+            foreach (var keyProperty in keyProperties)
+                keyProperty.SetValue(entityToDelete, keys[paramCount++]);
 
-            _db.Set<TData>().Remove(itemToDelete);
-            result = await _db.SaveChangesWithValidationAsync();
+            _db.Entry(entityToDelete).State = EntityState.Deleted;
+            var result = await _db.SaveChangesWithValidationAsync();
             if (result.IsValid)
                 result.SetSuccessMessage("Successfully deleted {0}.", typeof(TData).Name);
 
             return result;
-
         }
 
     }
