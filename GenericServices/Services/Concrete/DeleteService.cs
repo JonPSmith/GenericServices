@@ -2,7 +2,7 @@
 using System.Data.Entity;
 using GenericServices.Core.Internal;
 
-namespace GenericServices.Services
+namespace GenericServices.Services.Concrete
 {
 
     public class DeleteService : IDeleteService

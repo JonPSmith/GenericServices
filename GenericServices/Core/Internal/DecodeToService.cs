@@ -2,7 +2,9 @@
 using System.Dynamic;
 using System.Runtime.CompilerServices;
 using GenericServices.Services;
+using GenericServices.Services.Concrete;
 using GenericServices.ServicesAsync;
+using GenericServices.ServicesAsync.Concrete;
 
 [assembly: InternalsVisibleTo("Tests")]
 

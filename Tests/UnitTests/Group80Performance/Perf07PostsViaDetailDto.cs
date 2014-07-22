@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using System.Linq;
 using GenericServices.Services;
+using GenericServices.Services.Concrete;
 using NUnit.Framework;
 using Tests.DataClasses;
 using Tests.DataClasses.Concrete;

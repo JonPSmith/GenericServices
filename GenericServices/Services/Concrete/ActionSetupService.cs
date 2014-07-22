@@ -1,6 +1,6 @@
 ﻿using GenericServices.Core;
 
-namespace GenericServices.Services
+namespace GenericServices.Services.Concrete
 {
 
     public class ActionSetupService<TData, TDto> : CreateSetupService<TData, TDto>, IActionSetupService<TData, TDto>

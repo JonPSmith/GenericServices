@@ -71,10 +71,10 @@
     <Compile Include="IActionSetupServiceAsync.cs" />
     <Compile Include="Logger\IGenericLogger.cs" />
     <Compile Include="Logger\NoLoggingGenericLogger.cs" />
-    <Compile Include="ServicesAsync\ActionSetupServiceAsync.cs" />
-    <Compile Include="ServicesAsync\CreateSetupServiceAsync.cs" />
-    <Compile Include="ServicesAsync\DeleteServiceAsync.cs" />
-    <Compile Include="ServicesAsync\DetailServiceAsync.cs" />
+    <Compile Include="ServicesAsync\Concrete\ActionSetupServiceAsync.cs" />
+    <Compile Include="ServicesAsync\Concrete\CreateSetupServiceAsync.cs" />
+    <Compile Include="ServicesAsync\Concrete\DeleteServiceAsync.cs" />
+    <Compile Include="ServicesAsync\Concrete\DetailServiceAsync.cs" />
     <Compile Include="ICreateServiceAsync.cs" />
     <Compile Include="ICreateSetupServiceAsync.cs" />
     <Compile Include="IDetailServiceAsync.cs" />
@@ -83,30 +83,35 @@
     <Compile Include="IUpdateServiceAsync.cs" />
     <Compile Include="IUpdateSetupServiceAsync.cs" />
     <Compile Include="IActionServiceAsync.cs" />
-    <Compile Include="ServicesAsync\UpdateServiceAsync.cs" />
-    <Compile Include="ServicesAsync\UpdateSetupServiceAsync.cs" />
-    <Compile Include="ServicesAsync\ActionServiceAsync.cs" />
-    <Compile Include="Services\ActionService.cs" />
-    <Compile Include="Services\ActionSetupService.cs" />
+    <Compile Include="ServicesAsync\Concrete\UpdateServiceAsync.cs" />
+    <Compile Include="ServicesAsync\Concrete\UpdateSetupServiceAsync.cs" />
+    <Compile Include="ServicesAsync\Concrete\ActionServiceAsync.cs" />
+    <Compile Include="ServicesAsync\ICreateServiceAsync.cs" />
+    <Compile Include="ServicesAsync\ICreateSetupServiceAsync.cs" />
+    <Compile Include="ServicesAsync\IDetailServiceAsync.cs" />
+    <Compile Include="ServicesAsync\IUpdateServiceAsync.cs" />
+    <Compile Include="ServicesAsync\IUpdateSetupServiceAsync.cs" />
+    <Compile Include="Services\Concrete\ActionService.cs" />
+    <Compile Include="Services\Concrete\ActionSetupService.cs" />
     <Compile Include="IActionSetupService.cs" />
-    <Compile Include="Services\CreateService.cs" />
+    <Compile Include="Services\Concrete\CreateService.cs" />
     <Compile Include="Core\EfGenericDtoBase.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Core\InstrumentedLog.cs" />
-    <Compile Include="ServicesAsync\CreateServiceAsync.cs" />
+    <Compile Include="ServicesAsync\Concrete\CreateServiceAsync.cs" />
     <Compile Include="Core\InstrumentedEfGenericDto.cs" />
     <Compile Include="ICheckIfWarnings.cs" />
     <Compile Include="IUpdateSetupService.cs" />
-    <Compile Include="Services\UpdateSetupService.cs" />
-    <Compile Include="Services\CreateSetupService.cs" />
-    <Compile Include="Services\DeleteService.cs" />
-    <Compile Include="Services\DetailService.cs" />
+    <Compile Include="Services\Concrete\UpdateSetupService.cs" />
+    <Compile Include="Services\Concrete\CreateSetupService.cs" />
+    <Compile Include="Services\Concrete\DeleteService.cs" />
+    <Compile Include="Services\Concrete\DetailService.cs" />
     <Compile Include="Core\EfGenericDto.cs" />
     <Compile Include="ICreateSetupService.cs" />
-    <Compile Include="Services\ListService.cs" />
+    <Compile Include="Services\Concrete\ListService.cs" />
     <Compile Include="Core\SuccessOrErrors.cs" />
-    <Compile Include="Services\UpdateService.cs" />
+    <Compile Include="Services\Concrete\UpdateService.cs" />
     <Compile Include="ICreateService.cs" />
     <Compile Include="IDbContextWithValidation.cs" />
     <Compile Include="IDeleteService.cs" />
@@ -119,6 +124,12 @@
     <Compile Include="IActionSync.cs" />
     <Compile Include="ActionComms\ProgressMessage.cs" />
     <Compile Include="Actions\ActionBase.cs" />
+    <Compile Include="Services\ICreateService.cs" />
+    <Compile Include="Services\ICreateSetupService.cs" />
+    <Compile Include="Services\IDetailService.cs" />
+    <Compile Include="Services\IListService.cs" />
+    <Compile Include="Services\IUpdateService.cs" />
+    <Compile Include="Services\IUpdateSetupService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

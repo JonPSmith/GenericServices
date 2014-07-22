@@ -1,20 +1,19 @@
 ﻿using System;
-using GenericServices.ActionComms;
+using System.Threading.Tasks;
 using GenericServices.Actions.Internal;
 using GenericServices.Core;
 
-namespace GenericServices.Services
+namespace GenericServices.ServicesAsync.Concrete
 {
-    public class ActionService<TActionOut, TActionIn> : IActionService<TActionOut, TActionIn>
+    public class ActionServiceAsync<TActionOut, TActionIn> : IActionServiceAsync<TActionOut, TActionIn> 
     {
         private readonly IDbContextWithValidation _db;
-        private readonly IActionSync<TActionOut, TActionIn> _actionToRun;
+        private readonly IActionAsync<TActionOut, TActionIn> _actionToRun;
 
-        public ActionService(IDbContextWithValidation db, IActionSync<TActionOut, TActionIn> actionToRun)
+        public ActionServiceAsync(IDbContextWithValidation db, IActionAsync<TActionOut, TActionIn> actionToRun)
         {
             if (actionToRun == null)
-                throw new NullReferenceException(
-                    "Dependecy injection did not find the action. Check you have added IActionSync<TActionOut, TActionIn> to the classe's interface.");
+                throw new NullReferenceException("Dependecy injection did not find the action. Check you have added IActionSync<TActionOut, TActionIn> to the classe's interface.");
             _db = db;
             _actionToRun = actionToRun;
         }
@@ -23,15 +22,15 @@ namespace GenericServices.Services
         /// This runs a action that returns a result. 
         /// </summary>
         /// <param name="actionData">Data that the action takes in to undertake the action</param>
-        /// <returns>The status, with a result if Valid</returns>
-        public ISuccessOrErrors<TActionOut> DoAction(TActionIn actionData)
+        /// <returns>A Task containing status, which has a result if Valid</returns>
+        public async Task<ISuccessOrErrors<TActionOut>> DoActionAsync(TActionIn actionData)
         {
 
             try
             {
-                var status = _actionToRun.DoAction(actionData);
+                var status = await _actionToRun.DoActionAsync(actionData);
                 return status.AskedToSaveChanges(_actionToRun)
-                    ? status.SaveChangesAttempt(actionData, _db)
+                    ? await status.SaveChangesAttemptAsync(actionData, _db)
                     : status;
             }
             finally
@@ -41,26 +40,23 @@ namespace GenericServices.Services
                     disposable.Dispose();
             }
         }
-
-
     }
 
     //---------------------------------------------------------------------------
     //DTO version
 
-    public class ActionService<TActionOut, TActionIn, TDto> : IActionService<TActionOut, TActionIn, TDto>
+    public class ActionServiceAsync<TActionOut, TActionIn, TDto> : IActionServiceAsync<TActionOut, TActionIn, TDto>
         where TActionIn : class, new()
-        where TDto : EfGenericDto<TActionIn, TDto>
+        where TDto : EfGenericDtoAsync<TActionIn, TDto>
     {
 
         private readonly IDbContextWithValidation _db;
-        private readonly IActionSync<TActionOut, TActionIn> _actionToRun;
+        private readonly IActionAsync<TActionOut, TActionIn> _actionToRun;
 
-        public ActionService(IDbContextWithValidation db, IActionSync<TActionOut, TActionIn> actionToRun)
+        public ActionServiceAsync(IDbContextWithValidation db, IActionAsync<TActionOut, TActionIn> actionToRun)
         {
             if (actionToRun == null)
-                throw new NullReferenceException(
-                    "Dependecy injection did not find the action. Check you have added IActionSync<TActionOut, TActionIn> to the classe's interface.");
+                throw new NullReferenceException("Dependecy injection did not find the action. Check you have added IActionSync<TActionOut, TActionIn> to the classe's interface.");
             _db = db;
             _actionToRun = actionToRun;
         }
@@ -70,8 +66,8 @@ namespace GenericServices.Services
         /// It first converts the dto to the TActionIn format and then runs the action
         /// </summary>
         /// <param name="dto">The dto to be converted to the TActionIn class</param>
-        /// <returns>The status, with a result if the status is valid</returns>
-        public ISuccessOrErrors<TActionOut> DoAction(TDto dto)
+        /// <returns>A Task containing status, which has a result if Valid</returns>
+        public async Task<ISuccessOrErrors<TActionOut>> DoActionAsync(TDto dto)
         {
             ISuccessOrErrors<TActionOut> status = new SuccessOrErrors<TActionOut>();
 
@@ -79,15 +75,15 @@ namespace GenericServices.Services
                 return status.AddSingleError("Running an action is not setup for this data.");
 
             var actionInData = new TActionIn();
-            var nonResultStatus = dto.CopyDtoToData(_db, dto, actionInData); //convert Tdto into TActionIn format
-            if (!nonResultStatus.IsValid)
-                return SuccessOrErrors<TActionOut>.ConvertNonResultStatus(nonResultStatus);
+            var nonResultStatus = await dto.CopyDtoToDataAsync(_db, dto, actionInData); //convert Tdto into TActionIn format
+            if (!nonResultStatus.IsValid) 
+                return SuccessOrErrors<TActionOut>.ConvertNonResultStatus( nonResultStatus);
 
             try
             {
-                status = _actionToRun.DoAction(actionInData);
+                status = await _actionToRun.DoActionAsync(actionInData);
                 return status.AskedToSaveChanges(_actionToRun)
-                    ? status.SaveChangesAttempt(actionInData, _db)
+                    ? await status.SaveChangesAttemptAsync(actionInData, _db)
                     : status;
             }
             finally
@@ -104,11 +100,11 @@ namespace GenericServices.Services
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        public TDto ResetDto(TDto dto)
+        public async Task<TDto> ResetDtoAsync(TDto dto)
         {
             if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
                 //we reset any secondary data as we expect the view to be reshown with the errors
-                dto.SetupSecondaryData(_db, dto);
+                await dto.SetupSecondaryDataAsync(_db, dto);
 
             return dto;
         }

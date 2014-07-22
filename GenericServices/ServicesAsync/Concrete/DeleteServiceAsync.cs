@@ -3,7 +3,7 @@ using System.Data.Entity;
 using System.Threading.Tasks;
 using GenericServices.Core.Internal;
 
-namespace GenericServices.ServicesAsync
+namespace GenericServices.ServicesAsync.Concrete
 {
 
     public class DeleteServiceAsync : IDeleteServiceAsync

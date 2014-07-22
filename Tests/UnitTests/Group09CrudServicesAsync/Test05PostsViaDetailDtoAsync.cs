@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Linq;
 using GenericServices;
 using GenericServices.ServicesAsync;
+using GenericServices.ServicesAsync.Concrete;
 using NUnit.Framework;
 using Tests.DataClasses;
 using Tests.DataClasses.Concrete;

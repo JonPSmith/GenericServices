@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Data.Entity;
-using System.Threading.Tasks;
 using GenericServices.Core;
 using GenericServices.Core.Internal;
 
-namespace GenericServices.ServicesAsync
+namespace GenericServices.Services.Concrete
 {
 
-    public class UpdateServiceAsync : IUpdateServiceAsync
+    public class UpdateService : IUpdateService
     {
         private readonly IDbContextWithValidation _db;
 
-        public UpdateServiceAsync(IDbContextWithValidation db)
+        public UpdateService(IDbContextWithValidation db)
         {
             _db = db;
         }
@@ -23,23 +22,21 @@ namespace GenericServices.ServicesAsync
         /// Type must be a type either an EF data class or one of the EfGenericDto's</typeparam>
         /// <param name="data">data to update the class. If Dto then copied over to data class</param>
         /// <returns></returns>
-        public async Task<ISuccessOrErrors> UpdateAsync<T>(T data) where T : class
+        public ISuccessOrErrors Update<T>(T data) where T : class
         {
-            var service = DecodeToService<UpdateServiceAsync>.CreateCorrectService<T>(WhatItShouldBe.AsyncClassOrSpecificDto, _db);
-            return await service.UpdateAsync(data);
+            var service = DecodeToService<UpdateService>.CreateCorrectService<T>(WhatItShouldBe.SyncAnything, _db);
+            return service.Update(data);
         }
     }
 
     //--------------------------------
     //direct
 
-    public class UpdateServiceAsync<TData> : IUpdateServiceAsync<TData>
-        where TData : class
+    public class UpdateService<TData> : IUpdateService<TData> where TData : class
     {
         private readonly IDbContextWithValidation _db;
 
-
-        public UpdateServiceAsync(IDbContextWithValidation db)
+        public UpdateService(IDbContextWithValidation db)
         {
             _db = db;
         }
@@ -49,7 +46,7 @@ namespace GenericServices.ServicesAsync
         /// </summary>
         /// <param name="itemToUpdate"></param>
         /// <returns>status</returns>
-        public async Task<ISuccessOrErrors> UpdateAsync(TData itemToUpdate)
+        public ISuccessOrErrors Update(TData itemToUpdate)
         {
             if (itemToUpdate == null)
                 throw new ArgumentNullException("itemToUpdate", "The item provided was null.");
@@ -57,7 +54,7 @@ namespace GenericServices.ServicesAsync
             //Set the entry as modified
             _db.Entry(itemToUpdate).State = EntityState.Modified;
 
-            var result = await _db.SaveChangesWithValidationAsync();
+            var result = _db.SaveChangesWithValidation();
             if (result.IsValid)
                 result.SetSuccessMessage("Successfully updated {0}.", typeof(TData).Name);
 
@@ -68,37 +65,36 @@ namespace GenericServices.ServicesAsync
     //------------------------------------------------------------------------
     //DTO version
 
-    public class UpdateServiceAsync<TData, TDto> : IUpdateServiceAsync<TData,TDto>
+    public class UpdateService<TData, TDto> : IUpdateService<TData, TDto>
         where TData : class
-        where TDto : EfGenericDtoAsync<TData, TDto>
+        where TDto : EfGenericDto<TData, TDto>
     {
         private readonly IDbContextWithValidation _db;
 
-        public UpdateServiceAsync(IDbContextWithValidation db)
+        public UpdateService(IDbContextWithValidation db)
         {
             _db = db;
         }
 
         /// <summary>
         /// This updates the entity data by copying over the relevant dto data.
-        /// If it fails it resets the dto in case it is going to be shown again
         /// </summary>
         /// <param name="dto">If an error then its resets any secondary data so that you can reshow the dto</param>
         /// <returns>status</returns>
-        public async Task<ISuccessOrErrors> UpdateAsync(TDto dto)
+        public ISuccessOrErrors Update(TDto dto)
         {
             ISuccessOrErrors result = new SuccessOrErrors();
             if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.Update))
                 return result.AddSingleError("Delete of a {0} is not supported in this mode.", dto.DataItemName);
 
-            var itemToUpdate = await dto.FindItemTrackedAsync(_db);
+            var itemToUpdate = dto.FindItemTracked(_db);
             if (itemToUpdate == null)
                 return result.AddSingleError("Could not find the {0} you requested.", dto.DataItemName);
 
-            result = await dto.CopyDtoToDataAsync(_db, dto, itemToUpdate); //update those properties we want to change
+            result = dto.CopyDtoToData(_db, dto, itemToUpdate); //update those properties we want to change
             if (result.IsValid)
             {
-                result = await _db.SaveChangesWithValidationAsync();
+                result = _db.SaveChangesWithValidation();
                 if (result.IsValid)
                     return result.SetSuccessMessage("Successfully updated {0}.", dto.DataItemName);
             }
@@ -106,7 +102,7 @@ namespace GenericServices.ServicesAsync
             //otherwise there are errors
             if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
                 //we reset any secondary data as we expect the view to be reshown with the errors
-                await dto.SetupSecondaryDataAsync(_db, dto);
+                dto.SetupSecondaryData(_db, dto);
             return result;
         }
 
@@ -116,11 +112,11 @@ namespace GenericServices.ServicesAsync
         /// </summary>
         /// <param name="dto"></param>
         /// <returns></returns>
-        public async Task<TDto> ResetDtoAsync(TDto dto)
+        public TDto ResetDto(TDto dto)
         {
             if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
                 //we reset any secondary data as we expect the view to be reshown with the errors
-                await dto.SetupSecondaryDataAsync(_db, dto);
+                dto.SetupSecondaryData(_db, dto);
 
             return dto;
         }

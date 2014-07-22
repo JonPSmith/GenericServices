@@ -1,7 +1,7 @@
 ﻿using GenericServices.Core;
 using GenericServices.Core.Internal;
 
-namespace GenericServices.Services
+namespace GenericServices.Services.Concrete
 {
     public class CreateService : ICreateService
     {

@@ -1,7 +1,6 @@
-﻿using System.Threading.Tasks;
-using GenericServices.Core;
+﻿using GenericServices.Core;
 
-namespace GenericServices.ServicesAsync
+namespace GenericServices.ServicesAsync.Concrete
 {
 
     public class ActionSetupServiceAsync<TData, TDto> : CreateSetupServiceAsync<TData, TDto>, IActionSetupServiceAsync<TData, TDto>
