@@ -14,6 +14,9 @@ namespace Tests.Helpers
 {
     static class DatabaseHelpers
     {
+        #region EF methods
+
+        //Various db methods using the best hand-coded EF methods
 
         public static void ListEfDirect<T>(this SampleWebAppDb db, int id) where T : class
         {
@@ -23,7 +26,6 @@ namespace Tests.Helpers
         public static async Task ListEfDirectAsync<T>(this SampleWebAppDb db, int id) where T : class
         {
             var num = (await db.Set<T>().AsNoTracking().ToListAsync()).Count;
-
         }
 
         public static void ListPostEfViaDto(this SampleWebAppDb db, int id)
@@ -138,8 +140,11 @@ namespace Tests.Helpers
             status.IsValid.ShouldEqual(true, status.Errors);
         }
 
+        #endregion
+
+        #region Generic versions
         //=====================================================
-        //now the generic versions
+        //now the self-selecting
 
         public static void ListGenericDirect<T>(this SampleWebAppDb db, int id) where T : class
         {
@@ -279,6 +284,137 @@ namespace Tests.Helpers
             status.IsValid.ShouldEqual(true, status.Errors);
         }
 
+        #endregion
+
+        #region GSelect services, self selecting
+        //=====================================================
+        //now the generic versions
+
+        public static void ListGSelectDirect<T>(this SampleWebAppDb db, int id) where T : class, new()
+        {
+            var service = new ListService(db);
+            var num = service.GetList<T>().ToList().Count;
+        }
+
+        public static async Task ListGSelectDirectAsync<T>(this SampleWebAppDb db, int id) where T : class, new()
+        {
+            var service = new ListService(db);
+            var list = await service.GetList<T>().ToListAsync();
+        }
+
+        public static void ListPostGSelectViaDto(this SampleWebAppDb db, int id)
+        {
+            var service = new ListService(db);
+            var num = service.GetList<SimplePostDto>().ToList().Count;
+        }
+
+        public static async Task ListPostGSelectViaDtoAsync(this SampleWebAppDb db, int id)
+        {
+            var service = new ListService(db);
+            var list = await service.GetList<SimplePostDto>().ToListAsync();
+        }
+
+        //--------
+
+        public static void CreatePostGSelectDirect(this SampleWebAppDb db, int id)
+        {
+
+            var guidString = Guid.NewGuid().ToString("N");
+            var postClass = new Post
+            {
+                Title = guidString,
+                Content = guidString,
+                Blogger = db.Blogs.First(),
+                Tags = new Collection<Tag> {db.Tags.First()}
+            };
+
+            var service = new CreateService(db);
+            var status = service.Create(postClass);
+            status.IsValid.ShouldEqual(true, status.Errors);
+        }
+
+        public static async Task CreatePostGSelectDirectAsync(this SampleWebAppDb db, int id)
+        {
+
+            var guidString = Guid.NewGuid().ToString("N");
+            var postClass = new Post
+            {
+                Title = guidString,
+                Content = guidString,
+                Blogger = db.Blogs.First(),
+                Tags = new Collection<Tag> { db.Tags.First() }
+            };
+
+            var service = new CreateServiceAsync(db);
+            var status = await service.CreateAsync(postClass);
+            status.IsValid.ShouldEqual(true, status.Errors);
+        }
+
+        //-----------------
+
+        public static void UpdatePostGSelectDirect(this SampleWebAppDb db, int postId)
+        {
+            var setupService = new DetailService(db);
+            var post = setupService.GetDetail<Post>(postId);
+
+            var guidString = Guid.NewGuid().ToString("N");
+            post.Title = guidString;
+            post.Content = guidString;
+            post.Tags = new Collection<Tag> { db.Tags.First() };
+
+            var service = new UpdateService(db);
+            var status = service.Update(post);
+            status.IsValid.ShouldEqual(true, status.Errors);
+        }
+
+        public static async Task UpdatePostGSelectDirectAsync(this SampleWebAppDb db, int postId)
+        {
+            var setupService = new DetailServiceAsync(db);
+            var post = await setupService.GetDetailAsync<Post>(postId);
+
+            var guidString = Guid.NewGuid().ToString("N");
+            post.Title = guidString;
+            post.Content = guidString;
+            post.Tags = new Collection<Tag> { db.Tags.First() };
+
+            var service = new UpdateServiceAsync<Post>(db);
+            var status = await service.UpdateAsync(post);
+            status.IsValid.ShouldEqual(true, status.Errors);
+        }
+
+        public static void UpdatePostGSelectViaDto(this SampleWebAppDb db, int postId)
+        {
+            var setupService = new UpdateSetupService(db);
+            var dto = setupService.GetOriginal<DetailPostDto>(postId);
+
+            var guidString = Guid.NewGuid().ToString("N");
+            dto.Title = guidString;
+            dto.Content = guidString;
+            dto.Tags = new Collection<Tag> { db.Tags.First() };
+
+            var service = new UpdateService(db);
+            var status = service.Update(dto);
+            status.IsValid.ShouldEqual(true, status.Errors);
+        }
+
+        public static async Task UpdatePostGSelectViaDtoAsync(this SampleWebAppDb db, int postId)
+        {
+            var setupService = new UpdateSetupServiceAsync(db);
+            var dto = await setupService.GetOriginalAsync<DetailPostDtoAsync>(postId);
+
+            var guidString = Guid.NewGuid().ToString("N");
+            dto.Title = guidString;
+            dto.Content = guidString;
+            dto.Tags = new Collection<Tag> { db.Tags.First() };
+
+            var service = new UpdateServiceAsync(db);
+            var status = await service.UpdateAsync(dto);
+            status.IsValid.ShouldEqual(true, status.Errors);
+        }
+
+        #endregion
+
+        //-------------------------------------------
 
         public static void FillComputedNAll(this SampleWebAppDb db, int totalOfEach)
         {

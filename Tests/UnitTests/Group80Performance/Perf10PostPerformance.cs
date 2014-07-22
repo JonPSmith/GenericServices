@@ -23,22 +23,7 @@ namespace Tests.UnitTests.Group80Performance
         }
 
         [Test]
-        public void Perf01NAllDatabaseOk()
-        {
-            new SimplePostDto().CacheSetup();
-            new DetailPostDto().CacheSetup();
-
-            Console.WriteLine("Testing with N of each class in database");
-            RunEfPerformanceTests(10, ResetDatabaseNAll);
-            RunGenericPerformanceTests(10, ResetDatabaseNAll);
-            Console.WriteLine("----------------------------------------");
-            RunEfPerformanceTests(100, ResetDatabaseNAll);
-            RunGenericPerformanceTests(100, ResetDatabaseNAll);
-
-        }
-
-        [Test]
-        public void Perf02NPostDatabaseOk()
+        public void Perf01NPostDatabaseOk()
         {
             new SimplePostDto().CacheSetup();
             new DetailPostDto().CacheSetup();
@@ -49,6 +34,34 @@ namespace Tests.UnitTests.Group80Performance
             Console.WriteLine("----------------------------------------");
             RunEfPerformanceTests(100, ResetDatabaseNPost);
             RunGenericPerformanceTests(100, ResetDatabaseNPost);
+        }
+
+        [Test]
+        public void Perf02NAllGenericAgainstEfOk()
+        {
+            new SimplePostDto().CacheSetup();
+            new DetailPostDto().CacheSetup();
+
+            Console.WriteLine("Testing with N of each class in database");
+            RunEfPerformanceTests(10, ResetDatabaseNAll);
+            RunGenericPerformanceTests(10, ResetDatabaseNAll);
+            Console.WriteLine("----------------------------------------");
+            RunEfPerformanceTests(100, ResetDatabaseNAll);
+            RunGenericPerformanceTests(100, ResetDatabaseNAll);
+        }
+
+        [Test]
+        public void Perf02NAllSelfSelectAgainstEfOk()
+        {
+            new SimplePostDto().CacheSetup();
+            new DetailPostDto().CacheSetup();
+
+            Console.WriteLine("Testing with N of each class in database");
+            RunEfPerformanceTests(10, ResetDatabaseNAll);
+            RunGSelectPerformanceTests(10, ResetDatabaseNAll);
+            Console.WriteLine("----------------------------------------");
+            RunEfPerformanceTests(100, ResetDatabaseNAll);
+            RunGSelectPerformanceTests(100, ResetDatabaseNAll);
         }
 
         [Test]
@@ -63,7 +76,6 @@ namespace Tests.UnitTests.Group80Performance
             Console.WriteLine("----------------------------------------");
             await Task.WhenAll(RunEfPerformanceTestsAsync(100, ResetDatabaseNAll));
             await Task.WhenAll(RunGenericPerformanceTestsAsync(100, ResetDatabaseNAll));
-
         }
 
         [Test]
@@ -108,17 +120,18 @@ namespace Tests.UnitTests.Group80Performance
             await Task.WhenAll(RunGenericPerformanceTestsAsync(100, ResetDatabaseNAll));
         }
 
-        private async Task RunGenericPerformanceTestsAsync(int numInDatabase, Func<int, int> clearDatabaseAction)
-        {
-            Console.WriteLine("Generic, with {0} in database -----------------------", numInDatabase);
-            _firstPostId = clearDatabaseAction(numInDatabase);
+        //-----------------------------------
+        //EF test groups
 
-            await Task.WhenAll(RunTestAsync(numInDatabase, "Async List all, Generic Direct", DatabaseHelpers.ListGenericDirectAsync<Post>));
-            await Task.WhenAll(RunTestAsync(numInDatabase, "Async List all, Generic Dto", DatabaseHelpers.ListPostGenericViaDtoAsync));
-            await Task.WhenAll(RunTestAsync(numInDatabase, "Async Create, Generic Direct", DatabaseHelpers.CreatePostGenericDirectAsync));
-            await Task.WhenAll(RunTestAsync(numInDatabase, "Async Update, Generic Direct", DatabaseHelpers.UpdatePostGenericDirectAsync));
-            await Task.WhenAll(RunTestAsync(numInDatabase, "Async Update, Generic Dto", DatabaseHelpers.UpdatePostGenericViaDtoAsync));
-            await Task.WhenAll(RunTestAsync(numInDatabase, "Async Delete, Generic Direct", DatabaseHelpers.DeletePostGenericDirectAsync));
+        private void RunEfPerformanceTests(int numInDatabase, Func<int, int> clearDatabaseAction)
+        {
+            Console.WriteLine("EF, with {0} in database -----------------------", numInDatabase);
+            _firstPostId = clearDatabaseAction(numInDatabase);
+            RunTest(numInDatabase, "List all, Ef Direct", DatabaseHelpers.ListEfDirect<Post>);
+            RunTest(numInDatabase, "List all, Ef Dto", DatabaseHelpers.ListPostEfViaDto);
+            RunTest(numInDatabase, "Create, Ef Direct", DatabaseHelpers.CreatePostEfDirect);
+            RunTest(numInDatabase, "Update, Ef Direct", DatabaseHelpers.UpdatePostEfDirect);
+            RunTest(numInDatabase, "Delete, Ef Direct", DatabaseHelpers.DeletePostEfDirect);
         }
 
         private async Task RunEfPerformanceTestsAsync(int numInDatabase, Func<int, int> clearDatabaseAction)
@@ -132,6 +145,21 @@ namespace Tests.UnitTests.Group80Performance
             await Task.WhenAll(RunTestAsync(numInDatabase, "Async Delete, Ef Direct", DatabaseHelpers.DeletePostEfDirectAsync));
         }
 
+        //-----------------------------------
+        //Generic test groups
+
+        private async Task RunGenericPerformanceTestsAsync(int numInDatabase, Func<int, int> clearDatabaseAction)
+        {
+            Console.WriteLine("Generic, with {0} in database -----------------------", numInDatabase);
+            _firstPostId = clearDatabaseAction(numInDatabase);
+
+            await Task.WhenAll(RunTestAsync(numInDatabase, "Async List all, Generic Direct", DatabaseHelpers.ListGenericDirectAsync<Post>));
+            await Task.WhenAll(RunTestAsync(numInDatabase, "Async List all, Generic Dto", DatabaseHelpers.ListPostGenericViaDtoAsync));
+            await Task.WhenAll(RunTestAsync(numInDatabase, "Async Create, Generic Direct", DatabaseHelpers.CreatePostGenericDirectAsync));
+            await Task.WhenAll(RunTestAsync(numInDatabase, "Async Update, Generic Direct", DatabaseHelpers.UpdatePostGenericDirectAsync));
+            await Task.WhenAll(RunTestAsync(numInDatabase, "Async Update, Generic Dto", DatabaseHelpers.UpdatePostGenericViaDtoAsync));
+            await Task.WhenAll(RunTestAsync(numInDatabase, "Async Delete, Generic Direct", DatabaseHelpers.DeletePostGenericDirectAsync));
+        }
 
         private void RunGenericPerformanceTests(int numInDatabase, Func<int,int> clearDatabaseAction)
         {
@@ -146,16 +174,35 @@ namespace Tests.UnitTests.Group80Performance
             RunTest(numInDatabase, "Delete, Generic Direct", DatabaseHelpers.DeletePostGenericDirect);
         }
 
-        private void RunEfPerformanceTests(int numInDatabase, Func<int, int> clearDatabaseAction)
+        //---------------------------------------------
+        //Generic, self-select tets groups
+
+        private void RunGSelectPerformanceTests(int numInDatabase, Func<int, int> clearDatabaseAction)
         {
-            Console.WriteLine("EF, with {0} in database -----------------------", numInDatabase);
+            Console.WriteLine("Generic with self-select, with {0} in database -----------------------", numInDatabase);
             _firstPostId = clearDatabaseAction(numInDatabase);
-            RunTest(numInDatabase, "List all, Ef Direct", DatabaseHelpers.ListEfDirect<Post>);
-            RunTest(numInDatabase, "List all, Ef Dto", DatabaseHelpers.ListPostEfViaDto);
-            RunTest(numInDatabase, "Create, Ef Direct", DatabaseHelpers.CreatePostEfDirect);
-            RunTest(numInDatabase, "Update, Ef Direct", DatabaseHelpers.UpdatePostEfDirect);
-            RunTest(numInDatabase, "Delete, Ef Direct", DatabaseHelpers.DeletePostEfDirect);
+
+            RunTest(numInDatabase, "List all, GSelect Direct", DatabaseHelpers.ListGSelectDirect<Post>);
+            RunTest(numInDatabase, "List all, GSelect Dto", DatabaseHelpers.ListPostGSelectViaDto);
+            RunTest(numInDatabase, "Create, GSelect Direct", DatabaseHelpers.CreatePostGSelectDirect);
+            RunTest(numInDatabase, "Update, GSelect Direct", DatabaseHelpers.UpdatePostGSelectDirect);
+            RunTest(numInDatabase, "Update, GSelect Dto", DatabaseHelpers.UpdatePostGSelectViaDto);
+            RunTest(numInDatabase, "Delete, Generic Direct", DatabaseHelpers.DeletePostGenericDirect);
         }
+
+        private async Task RunGSelectPerformanceTestsAsync(int numInDatabase, Func<int, int> clearDatabaseAction)
+        {
+            Console.WriteLine("Generic with self-select, with {0} in database -----------------------", numInDatabase);
+            _firstPostId = clearDatabaseAction(numInDatabase);
+
+            await Task.WhenAll(RunTestAsync(numInDatabase, "Async List all, GSelect Direct", DatabaseHelpers.ListGSelectDirectAsync<Post>));
+            await Task.WhenAll(RunTestAsync(numInDatabase, "Async List all, GSelect Dto", DatabaseHelpers.ListPostGSelectViaDtoAsync));
+            await Task.WhenAll(RunTestAsync(numInDatabase, "Async Create, GSelect Direct", DatabaseHelpers.CreatePostGSelectDirectAsync));
+            await Task.WhenAll(RunTestAsync(numInDatabase, "Async Update, GSelect Direct", DatabaseHelpers.UpdatePostGSelectDirectAsync));
+            await Task.WhenAll(RunTestAsync(numInDatabase, "Async Update, GSelect Dto", DatabaseHelpers.UpdatePostGSelectViaDtoAsync));
+            await Task.WhenAll(RunTestAsync(numInDatabase, "Async Delete, Generic Direct", DatabaseHelpers.DeletePostGenericDirectAsync));
+        }
+
 
         private static int ResetDatabaseNAll(int numToPutInDatabase)
         {
