@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data.Entity;
 using NUnit.Framework;
 using Tests.DataClasses;
 using Tests.DataClasses.Concrete;
@@ -21,13 +23,12 @@ namespace Tests.UnitTests.Group01DataClasses
                 DataLayerInitialise.InitialiseThis();
                 var filepath = TestFileHelpers.GetTestFileFilePath("DbContentSimple.xml");
                 DataLayerInitialise.ResetDatabaseToTestData(db, filepath);
-                db.PostTagGrades.RemoveRange(db.PostTagGrades);
                 db.SaveChanges();
             }
         }
 
         [Test]
-        public void Check01DeleteFailBecauseOfForeignKeyOk()
+        public void Check01DeleteFailBecauseOfForeignKeyBad()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -46,12 +47,14 @@ namespace Tests.UnitTests.Group01DataClasses
                 //VERIFY
                 status.IsValid.ShouldEqual(false);
                 status.Errors.Count.ShouldEqual(1);
+                status.Errors[0].ErrorMessage.ShouldEqual("This operation failed because another data entry uses this entry.");
             }
         }
 
 
         [Test]
-        public void Check02UniqueKeyErrorOk()
+        [Ignore("Only run if ValidateEntity in SampleWebAppDb has been commented out")]
+        public void Check02UniqueKeyErrorBad()
         {
             //NOTE: To test this I needed to comment out the ValidateEntity method in SampleWebAppDb
 
@@ -72,12 +75,14 @@ namespace Tests.UnitTests.Group01DataClasses
                 //VERIFY
                 status.IsValid.ShouldEqual(false);
                 status.Errors.Count.ShouldEqual(1);
+                status.Errors[0].ErrorMessage.ShouldEqual("One of the properties is marked as Unique index and there is already an entry with that value.");
             }
         }
 
 
         [Test]
-        public void Check05CauseBothErrorsOk()
+        [Ignore("Only run if ValidateEntity in SampleWebAppDb has been commented out")]
+        public void Check05CauseBothErrorsBad()
         {
             //NOTE: To test this I needed to comment out the ValidateEntity method in SampleWebAppDb
 
@@ -101,7 +106,27 @@ namespace Tests.UnitTests.Group01DataClasses
                 //VERIFY
                 status.IsValid.ShouldEqual(false);
                 status.Errors.Count.ShouldEqual(1);         //for these two cases we only get one error
+                status.Errors[0].ErrorMessage.ShouldEqual("One of the properties is marked as Unique index and there is already an entry with that value.");
             }
         }
+
+        //-----------------------------------
+
+        [Test]
+        public void Check10UniqueKeyPostTagBad()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var firstPostTag = db.PostTagGrades.Include(x => x.PostPart).Include(x => x.TagPart).First();
+          
+                //ATTEMPT
+                db.PostTagGrades.Add(new PostTagGrade{ PostPart = firstPostTag.PostPart, TagPart = firstPostTag.TagPart });
+                var ex = Assert.Throws<DbUpdateException>(  () => db.SaveChangesWithValidation());
+
+                //VERIFY
+            }
+        }
+
     }
 }
