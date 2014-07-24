@@ -19,11 +19,11 @@ namespace Tests.DataClasses
 
         public static void ResetDatabaseToTestData(SampleWebAppDb context, string filepathOfXmlFile)
         {
-
             context.Posts.RemoveRange( context.Posts);
             context.Tags.RemoveRange( context.Tags);
             context.Blogs.RemoveRange( context.Blogs);
             context.PostTagGrades.RemoveRange(context.PostTagGrades);
+            context.PostLinks.RemoveRange(context.PostLinks);
             context.SaveChanges();
 
             var loader = new LoadDbDataFromXml(filepathOfXmlFile);

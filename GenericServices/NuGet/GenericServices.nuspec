@@ -1,29 +1,37 @@
 <?xml version="1.0"?>
 <package >
   <!-- Steps to making a Nuget package.
+   
    To create nuget package
    =======================
    1. Update version numbers
       a. In the AssemblyVersionPart in NuGet folder 
       b. Update the version field below 
-   2. RECOMPILE THE MODULE RELEASE MODE
+   2. RECOMPILE GenericServices in RELEASE MODE
    3. Update release notes
    4. Run the following two command lines
       cd <the directory this file is in>
       C:\Users\Jon\Nuget pack GenericServices.nuspec
+   
    To Test locally
    ===============
    1. Copy to C:\Users\Jon\LocalNuget
-   2. Set Package manager->Package Source to All, or <your local source>
-   2. Use the following package manager command in target 
+   2. Go to SampleMvcWebApp
+   3. Set Package manager->Package Source to All, or <your local source>
+   4. Use the following package manager command in target 
       Install-Package GenericServices -Pre -Project <projectname>
+      or
+      Update-Package GenericServices -Pre
+   
    To test via staging
    ===================
    1. Go to http://staging.nuget.org/ and log on normally
    2. Upload the package
+   
    To upload to NuGet
    ==================
    ???
+   
    -->
   <metadata>
     <id>GenericServices</id>

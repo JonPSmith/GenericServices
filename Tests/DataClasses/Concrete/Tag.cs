@@ -12,6 +12,7 @@ namespace Tests.DataClasses.Concrete
         [MaxLength(64)]
         [Required]
         [RegularExpression(@"\w*", ErrorMessage = "The slug must not contain spaces or non-alphanumeric characters.")]
+        [Index(IsClustered = false, IsUnique = true)]
         public string Slug { get; set; }
 
         [MaxLength(128)]
