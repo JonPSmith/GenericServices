@@ -110,6 +110,21 @@ namespace Tests.DataClasses
             return base.ValidateEntity(entityEntry, items);
         }
 
+        
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+
+            //We need to override the Cascade deletes so we can check out delete of entry that has non-nullable foreign key pointing to it
+            modelBuilder.Entity<PostLink>()
+                .HasRequired( x => x.PostPart)
+                .WithMany()
+                .HasForeignKey(x => x.PostId)
+                .WillCascadeOnDelete(false);
+        }
+
+        //--------------------------------------------------
+        //private helpers
+
         /// <summary>
         /// This handles going through all the entities that have changed and seeing if they need any special handling.
         /// </summary>
@@ -134,18 +149,6 @@ namespace Tests.DataClasses
                 trackUpdateClass.UpdateTrackingInfo();
             }
         }
-
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<PostLink>()
-                .HasRequired( x => x.PostPart)
-                .WithMany()
-                .HasForeignKey(x => x.PostId)
-                .WillCascadeOnDelete(false);
-        }
-
-        //--------------------------------------------------
-        //private helpers
 
         private static readonly Dictionary<int,string> SqlErrorTextDict = new Dictionary<int, string>
         {
