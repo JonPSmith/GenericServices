@@ -66,22 +66,12 @@ You can see examples of a ASP.NET MVC controller using these commands:
 - DTO (DetailedPostDtoAsync), async [PostsAsyncController](https://github.com/JonPSmith/SampleMvcWebApp/blob/master/SampleWebApp/Controllers/PostsAsyncController.cs)
 
 #### Full list of commands
+
 1. **ListService**: This returns an IQueryable list of the type T. Where T is either data class or DTO. Note that the ListService is not sync or async, but returns IQueryable. The LINQ command you put on the end, e.g .ToList() or .ToListAsync(), determines whether it is async or not.
-- 
-```
-GetList<T>()
-```
+- GetList<T>()
 
 2. **DetailService** or **DetailServiceAsync** : This returns an item of type T. Where T is either a data class or a DTO of the right type. The commands are:
-- 
-```
-GetDetail<T>( PrimaryKey(s))
-``` 
-- sync
-- 
-```
-GetDetailAsync<T>( PrimaryKey(s))
-``` 
-- async
+- GetDetail<T>( PrimaryKey(s)) - sync
+- GetDetailAsync<T>( PrimaryKey(s)) - async
 
 ... more to come (sorry, got busy)
