@@ -6,7 +6,7 @@ Generic Services is a .NET class library to help build a [service layer](http://
 #### Go to the [live example web site](http://samplemvcwebapp.net/) for live demostrations of GenericServices working in an ASP.NET MVC5 application.
 
 
-### What is the motivation behind building GenericServices? 
+### What is the motivation behind building GenericServices?
 
 I develop fairly complex analysing, modelling and data visualisation web applications (see [Spatial Modeller](http://selectiveanalytics.com/about-us/spatial-modeller/)). These require a Domain-Driven Design approach to the data and business objects, while the visualisation needs a comprehensive user interface which I implement using a [Single Page Application - SPA](http://en.wikipedia.org/wiki/Single-page_application). This means there often a mismatch between what the business/data layers classes and what the user interface needs.
 
@@ -34,12 +34,12 @@ GenericServices has standard patterns for running business methods. The features
 
 #### 3. What frameworks are GenericServices is designed to work with?
 
-- GenericServices is designed work as a service layer framework in any .NET application, such as: 
+- GenericServices is designed work as a service layer framework in any .NET application, such as:
   - [ASP.NET MVC](http://www.asp.net/mvc/tutorials/mvc-5/introduction/getting-started)
   - [Widows Azure Web apps](https://azure.microsoft.com/en-us/services/web-sites/)
-  - etc. 
+  - etc.
 - GenericServices assumed a disconnected state model, e.g. a web site or a Http RESTful service .
-- GenericServices assumes a horizontal scaling model, e.g. scale by having multiple web instances. 
+- GenericServices assumes a horizontal scaling model, e.g. scale by having multiple web instances.
 - GenericServices uses the following .NET frameworks/systems.
 
   - It needs .NET 4.5 for the new [async/await](http://msdn.microsoft.com/en-gb/library/hh191443.aspx) tasking format introduced in .NET 4.5
@@ -56,3 +56,22 @@ GenericServices has standard patterns for running business methods. The features
 
 
 ### List of commands
+#### Summary
+The commands listed below work on either a class that is used in the EF database, called data class from now on, or a DTO class that inherits from EfGenericDto or EfGenericDtoAsync. Most commands can work with either a data class or a DTO
+
+You can see examples of a ASP.NET MVC controller using these commands:
+- Data class (Tag), synchonous [TagsController](https://github.com/JonPSmith/SampleMvcWebApp/blob/master/SampleWebApp/Controllers/TagsController.cs)
+- Data class (Tag), async [TagsAsyncController](https://github.com/JonPSmith/SampleMvcWebApp/blob/master/SampleWebApp/Controllers/TagsAsyncController.cs)
+- DTO (DetailPostDto), sync [PostsController](https://github.com/JonPSmith/SampleMvcWebApp/blob/master/SampleWebApp/Controllers/PostsController.cs)
+- DTO (DetailedPostDtoAsync), async [PostsAsyncController](https://github.com/JonPSmith/SampleMvcWebApp/blob/master/SampleWebApp/Controllers/PostsAsyncController.cs)
+
+#### Full list of commands
+1. ListService: This returns an IQueryable list of the type T. Where T is either data class or DTO. Note that the ListService is not sync or async, but returns IQueryable. What LINQ command you put on the end, e.g .ToList() or .ToListAsync(), determines whether it is async or not. Command is:
+  - GetList<T>()
+
+2. **DetailService** or **DetailServiceAsync** : This returns an item of type T. Where T is either a data class or a DTO of the right type. The commands are:
+    - GetDetail<T>( PrimaryKey(s)) - sync
+    - GetDetailAsync<T>( PrimaryKey(s)) - async
+
+
+... more to come (sorry, got busy)
