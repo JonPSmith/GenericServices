@@ -76,10 +76,12 @@ GetList<T>()
 - 
 ```
 GetDetail<T>( PrimaryKey(s))
-``` - sync
+``` 
+- sync
 - 
 ```
 GetDetailAsync<T>( PrimaryKey(s))
-``` - async
+``` 
+- async
 
 ... more to come (sorry, got busy)
