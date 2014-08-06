@@ -67,11 +67,119 @@ You can see examples of a ASP.NET MVC controller using these commands:
 
 #### Full list of commands
 
-1. **ListService**: This returns an IQueryable list of the type T. Where T is either data class or DTO. Note that the ListService is not sync or async, but returns IQueryable. The LINQ command you put on the end, e.g .ToList() or .ToListAsync(), determines whether it is async or not.
-- GetList<T>()
+##### ListService: 
+This returns an IQueryable list of the type T. Where T is either data class or DTO. 
+Note that the ListService is not sync or async, but returns `IQueryable`. 
+The LINQ command you put on the end, e.g `.ToList()` or `.ToListAsync()`, 
+determines whether it is async or not.
 
-2. **DetailService** or **DetailServiceAsync** : This returns an item of type T. Where T is either a data class or a DTO of the right type. The commands are:
-- GetDetail<T>( PrimaryKey(s)) - sync
-- GetDetailAsync<T>( PrimaryKey(s)) - async
+- `IQueryable<T> GetList<T>()`
 
-... more to come (sorry, got busy)
+
+##### DetailService/DetailServiceAsync : 
+This finds an item in the database using its primary key(s). You specify what type of
+class you want returned by providing the type T.
+If T is the data class then it simply returns that. If T is a DTO inherited from either EfGenericDto (sync)
+or EfGenericDtoAsync (async). The commands are:
+
+- `T GetDetail<T>( param object [] keys)` - sync
+- `Task<T> GetDetailAsync<T>( param object [] keys)` - async
+
+
+##### CreateSetupService/CreateSetupServiceAsync: 
+This is used to get a class to show to the user so they can 
+fill in the properties etc to create a new data item. 
+You define what you require by providing of type T, 
+where T is either a data class or a DTO of the right type. 
+
+If the item is a DTO then the data is copied from the linked data
+class and the method `SetupSecondaryData` is optionally called. This allows the developer to
+overide `SetupSecondaryData` and calculate any other properties needed in the Dto.
+Where T is either a data class or a DTO of the right type. 
+See an example of a DTO based Create action in
+[PostsAsyncController](https://github.com/JonPSmith/SampleMvcWebApp/blob/master/SampleWebApp/Controllers/PostsAsyncController.cs).
+The commands are:
+
+- `T GetDto<T>()` - sync
+- `Task<T> GetDtoAsync<T>()` - async
+
+##### CreateService/CreateServiceAsync
+This creates a new data item from the class it is provided. 
+The provided class should be either a class used in the EF database or
+a DTO which must be inherited from `EfGenericDto` or `EfGenericDtoAsync` respectively.
+This class must contain a property, or properties, that are the primary keys of the class 
+and these keys must already been filled in (see CreateSetupService/CreateSetupServiceAsync above).
+
+If the data T is a DTO then it calls the `CopyDtoToData` method which only copies over the 
+properties in the DTO that have public setters into the original data. This gives the developer 
+the option of excluding updates of certain properties if they so which. 
+Also the developer can override the method `CopyDtoToData` to incorportate their own 
+processes to set the right values of the properties before calling `base.CopyDtoToData`
+(see example in [DetailPostDto](https://github.com/JonPSmith/SampleMvcWebApp/blob/master/ServiceLayer/PostServices/Concrete/DetailPostDto.cs)).
+The commands are:
+
+- `ISuccessOrErrors Create( newData)` - sync
+- `Task<ISuccessOrErrors> CreateAsync( newData)` - async
+
+The `ISuccessOrErrors` class returns a status. If successful the property `.IsValid` is true and
+the property `SuccessMessage` has a confirmation message. If `.IsValid` is false then the List `Errors`
+contains a list of errors. If the status is not valid then the command calls `SetupSecondaryData`
+to ensure any secondary properties needed to create the item are set (see CreateSetupServices above).
+
+One other command exists in the DTO version, called `ResetDto( dto)`. 
+This should be called if there any model errors as, if required, it calls `SetupSecondaryData`
+to ensure any secondary properties needed to create the item are set. 
+
+- `TDto ResetDto( dto)`
+- `TDto ResetDtoAsync( dto)`
+
+ 
+##### UpdateSetupService/UpdateSetupServiceAsync
+This reads the data of an existing item in the database using its primary key(s). 
+You specify what type of class you want returned by providing the type T.
+If T is the data class then it simply returns that. If T is a DTO inherited from either EfGenericDto (sync)
+or EfGenericDtoAsync (async). 
+
+Like the CreateSetupService if the item is a DTO then the data is copied from the linked data
+class and the method `SetupSecondaryData` is optionally called. This allows the developer to
+overide `SetupSecondaryData` and calculate any other properties needed in the Dto.
+Where T is either a data class or a DTO of the right type. 
+See an example of a DTO based UpdateSetup/Update action in
+[PostsAsyncController](https://github.com/JonPSmith/SampleMvcWebApp/blob/master/SampleWebApp/Controllers/PostsAsyncController.cs).
+The commands are:
+
+- `T GetOriginal<T>( param object [] keys)` - sync
+- `Task<T> GetOriginalAsync<T>( param object [] keys)` - async
+
+##### UpdateService/UpdateServiceAsync
+This updates a data item in the database using the data handed to it. The data, which can be a data class
+or DTO which inherits from EfGenericDto/EfGenericDtoAsync, must have the primary key(s) of the
+item to update correctly set. 
+
+In the case of a data item it simply replaces all the data in the original data item. 
+In the case of a DTO then the method loads the original data item and then it copies over the 
+properties in the DTO that have public setters into the original data. 
+This gives the developer the option of excluding updates of certain properties if they so which. 
+Also, just like in the CreateService, the developer can override the 
+method `CopyDtoToData` to incorportate their own processes to set the right values of the properties.
+(see example in [DetailPostDto](https://github.com/JonPSmith/SampleMvcWebApp/blob/master/ServiceLayer/PostServices/Concrete/DetailPostDto.cs)).
+The commands are:
+
+- `ISuccessOrErrors Update( updatedData)` - sync
+- `Task<ISuccessOrErrors> UpdateAsync( updatedDto)` - async
+- `TDto ResetDto( dto)`
+- `TDto ResetDtoAsync( dto)`
+
+See CreateService/CreateServiceAsync for explanation of `ISuccessOrErrors` and `ResetDto()`. 
+
+
+##### DeleteService/DeleteAsyncService
+The delete service deletes a data item from the database using its primary key(s). 
+The commands are:
+
+- `ISuccessOrErrors Delete<T>( param object [] keys)` - sync
+- `Task<ISuccessOrErrors> DeleteAsync<T>( param object [] keys)` - async
+
+See CreateService/CreateServiceAsync for explanation of `ISuccessOrErrors`. 
+Note that if a data item with the given key(s) is not present in the database then 
+it will throw an Exception.
