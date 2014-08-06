@@ -69,18 +69,28 @@ You can see examples of a ASP.NET MVC controller using these commands:
 
 ##### ListService: 
 This returns an IQueryable list of the type T. Where T is either data class or DTO. 
+If T is the data class then it simply returns that. 
+If T is a DTO inherited from either EfGenericDto (sync) or EfGenericDtoAsync (async)
+then the data properties are copied over using a convention-based object-object mapping 
+(see [AutoMapper](http://automapper.org/)). This allows data to be shown to be 'shaped'.
+
 Note that the ListService is not sync or async, but returns `IQueryable`. 
 The LINQ command you put on the end, e.g `.ToList()` or `.ToListAsync()`, 
-determines whether it is async or not.
+determines whether it is async or not. 
+
+The command is:
 
 - `IQueryable<T> GetList<T>()`
 
 
 ##### DetailService/DetailServiceAsync : 
 This finds an item in the database using its primary key(s). You specify what type of
-class you want returned by providing the type T.
-If T is the data class then it simply returns that. If T is a DTO inherited from either EfGenericDto (sync)
-or EfGenericDtoAsync (async). The commands are:
+class you want returned by providing the type T. 
+If T is the data class then it simply returns that. 
+If T is a DTO inherited from either EfGenericDto (sync) or EfGenericDtoAsync (async)
+then the data properties are copied over using a convention-based object-object mapping 
+(see [AutoMapper](http://automapper.org/)). This allows data to be shown to be 'shaped'.
+The commands are:
 
 - `T GetDetail<T>( param object [] keys)` - sync
 - `Task<T> GetDetailAsync<T>( param object [] keys)` - async
@@ -92,8 +102,9 @@ fill in the properties etc to create a new data item.
 You define what you require by providing of type T, 
 where T is either a data class or a DTO of the right type. 
 
-If the item is a DTO then the data is copied from the linked data
-class and the method `SetupSecondaryData` is optionally called. This allows the developer to
+If the item is a DTO then the data is copied from the linked data class 
+using convention-based object-object mapping(see [AutoMapper](http://automapper.org/))
+and the method `SetupSecondaryData` is optionally called. This allows the developer to
 overide `SetupSecondaryData` and calculate any other properties needed in the Dto.
 Where T is either a data class or a DTO of the right type. 
 See an example of a DTO based Create action in
@@ -129,6 +140,7 @@ to ensure any secondary properties needed to create the item are set (see Create
 One other command exists in the DTO version, called `ResetDto( dto)`. 
 This should be called if there any model errors as, if required, it calls `SetupSecondaryData`
 to ensure any secondary properties needed to create the item are set. 
+The two versions of this command are:
 
 - `TDto ResetDto( dto)`
 - `TDto ResetDtoAsync( dto)`
@@ -140,8 +152,9 @@ You specify what type of class you want returned by providing the type T.
 If T is the data class then it simply returns that. If T is a DTO inherited from either EfGenericDto (sync)
 or EfGenericDtoAsync (async). 
 
-Like the CreateSetupService if the item is a DTO then the data is copied from the linked data
-class and the method `SetupSecondaryData` is optionally called. This allows the developer to
+Like the CreateSetupService if the item is a DTO then the data is copied from the linked data class 
+using convention-based object-object mapping(see [AutoMapper](http://automapper.org/))
+and the method `SetupSecondaryData` is optionally called. This allows the developer to
 overide `SetupSecondaryData` and calculate any other properties needed in the Dto.
 Where T is either a data class or a DTO of the right type. 
 See an example of a DTO based UpdateSetup/Update action in
