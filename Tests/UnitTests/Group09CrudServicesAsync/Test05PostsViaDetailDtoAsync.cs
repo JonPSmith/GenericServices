@@ -128,7 +128,7 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 dto.Title = Guid.NewGuid().ToString();
                 dto.Content = "something to fill it as can't be empty";
                 dto.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
-                dto.UserChosenTags.FinalSelection = db.Tags.Take(2).ToList().Select(x => x.TagId.ToString("D")).ToArray();
+                dto.UserChosenTags.FinalSelection = db.Tags.OrderBy(x => x.TagId).Take(2).ToList().Select(x => x.TagId.ToString("D")).ToArray();
                 var status = await service.CreateAsync(dto);
 
                 //VERIFY
@@ -137,7 +137,7 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 var post = db.Posts.Include(x => x.Tags).OrderByDescending( x => x.PostId).First();
                 post.Title.ShouldEqual(dto.Title);
                 post.BlogId.ShouldEqual(db.Blogs.First().BlogId);
-                CollectionAssert.AreEqual(db.Tags.Take(2).Select(x => x.TagId), post.Tags.Select(x => x.TagId));
+                CollectionAssert.AreEqual(db.Tags.OrderBy(x => x.TagId).Take(2).Select(x => x.TagId), post.Tags.Select(x => x.TagId));
             }
         }
 
@@ -215,13 +215,13 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 var snap = new DbSnapShot(db);
                 var setupService = new UpdateSetupServiceAsync<Post, DetailPostDtoAsync>(db);
                 var updateService = new UpdateServiceAsync<Post, DetailPostDtoAsync>(db);
-                var firstPost = db.Posts.First();
+                var firstPost = db.Posts.Include(x => x.Tags).First();
 
                 //ATTEMPT
                 var dto = await setupService.GetOriginalAsync(firstPost.PostId);
                 dto.Title = Guid.NewGuid().ToString();
                 dto.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
-                dto.UserChosenTags.FinalSelection = db.Tags.Take(2).ToList().Select(x => x.TagId.ToString("D")).ToArray();
+                dto.UserChosenTags.FinalSelection = firstPost.Tags.Select(x => x.TagId.ToString("D")).ToArray();
                 var status = await updateService.UpdateAsync(dto);
 
                 //VERIFY
@@ -230,7 +230,7 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 var post = db.Posts.Include(x => x.Tags).Single(x => x.PostId == firstPost.PostId);
                 post.Title.ShouldEqual(dto.Title);
                 post.BlogId.ShouldEqual(db.Blogs.First().BlogId);
-                CollectionAssert.AreEqual(db.Tags.Take(2).Select(x => x.TagId), post.Tags.Select(x => x.TagId));
+                CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), post.Tags.Select(x => x.TagId));
             }
         }
 
