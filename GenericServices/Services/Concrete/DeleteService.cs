@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.Entity;
+using GenericServices.Core;
 using GenericServices.Core.Internal;
 
 namespace GenericServices.Services.Concrete
@@ -26,12 +27,13 @@ namespace GenericServices.Services.Concrete
             if (keyProperties.Count != keys.Length)
                 throw new ArgumentException("The number of keys in the data entry did not match the number of keys provided");
 
-            var entityToDelete = new TData();
-            int paramCount = 0;
-            foreach (var keyProperty in keyProperties)
-                keyProperty.SetValue(entityToDelete, keys[paramCount++]);
+            var entityToDelete = _db.Set<TData>().Find(keys);
+            if (entityToDelete == null)
+                return
+                    new SuccessOrErrors().AddSingleError(
+                        "Could not delete entry as it was not in the database. Could it have been deleted by someone else?");
 
-            _db.Entry(entityToDelete).State = EntityState.Deleted;
+            _db.Set<TData>().Remove(entityToDelete);
             var result = _db.SaveChangesWithValidation();
             if (result.IsValid)
                 result.SetSuccessMessage("Successfully deleted {0}.", typeof(TData).Name);

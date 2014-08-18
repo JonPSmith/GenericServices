@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Threading.Tasks;
+using GenericServices.Core;
 using GenericServices.Core.Internal;
 
 namespace GenericServices.ServicesAsync.Concrete
@@ -26,12 +27,13 @@ namespace GenericServices.ServicesAsync.Concrete
             if (keyProperties.Count != keys.Length)
                 throw new ArgumentException("The number of keys in the data entry did not match the number of keys provided");
 
-            var entityToDelete = new TData();
-            int paramCount = 0;
-            foreach (var keyProperty in keyProperties)
-                keyProperty.SetValue(entityToDelete, keys[paramCount++]);
+            var entityToDelete = await _db.Set<TData>().FindAsync(keys);
+            if (entityToDelete == null)
+                return
+                    new SuccessOrErrors().AddSingleError(
+                        "Could not delete entry as it was not in the database. Could it have been deleted by someone else?");
 
-            _db.Entry(entityToDelete).State = EntityState.Deleted;
+            _db.Set<TData>().Remove(entityToDelete);
             var result = await _db.SaveChangesWithValidationAsync();
             if (result.IsValid)
                 result.SetSuccessMessage("Successfully deleted {0}.", typeof(TData).Name);

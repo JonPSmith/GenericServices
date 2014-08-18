@@ -195,5 +195,3 @@ The commands are:
 - `Task<ISuccessOrErrors> DeleteAsync<T>( param object [] keys)` - async
 
 See CreateService/CreateServiceAsync for explanation of `ISuccessOrErrors`. 
-Note that if a data item with the given key(s) is not present in the database then 
-it will throw an Exception.
