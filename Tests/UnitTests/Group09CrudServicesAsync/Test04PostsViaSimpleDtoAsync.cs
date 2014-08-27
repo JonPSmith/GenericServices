@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using System.Linq;
 using GenericServices;
+using GenericServices.Services.Concrete;
 using GenericServices.ServicesAsync;
 using GenericServices.ServicesAsync.Concrete;
 using NUnit.Framework;
@@ -86,6 +87,24 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 status.Result.BloggerName.ShouldEqual(firstPost.Blogger.Name);
                 status.Result.Title.ShouldEqual(firstPost.Title);
                 CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), status.Result.Tags.Select(x => x.TagId));
+            }
+        }
+
+        [Test]
+        public async void Check05UpdateSetupNotFoundBad()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var service = new UpdateSetupServiceAsync<Post, SimplePostDtoAsync>(db);
+
+                //ATTEMPT
+                var status = await service.GetOriginalAsync(0);
+
+                //VERIFY
+                status.IsValid.ShouldEqual(false);
+                status.Errors.Count.ShouldEqual(1);
+                status.Errors[0].ErrorMessage.ShouldEqual("We could not find an entry using that filter. Has it been deleted by someone else?");
             }
         }
 

@@ -142,6 +142,7 @@ namespace Tests.UnitTests.Group08CrudServices
                 status.Result.LogSpecificName("End");
 
                 //VERIFY
+                status.IsValid.ShouldEqual(true, status.Errors);
                 status.Result.PostId.ShouldEqual(firstPost.PostId);
                 status.Result.BloggerName.ShouldEqual(firstPost.Blogger.Name);
                 status.Result.Title.ShouldEqual(firstPost.Title);
@@ -149,6 +150,23 @@ namespace Tests.UnitTests.Group08CrudServices
             }
         }
 
+        [Test]
+        public void Check05UpdateSetupNotFoundBad()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var service = new UpdateSetupService<Post, SimplePostDto>(db);
+
+                //ATTEMPT
+                var status = service.GetOriginal(0);
+
+                //VERIFY
+                status.IsValid.ShouldEqual(false);
+                status.Errors.Count.ShouldEqual(1);
+                status.Errors[0].ErrorMessage.ShouldEqual("We could not find an entry using that filter. Has it been deleted by someone else?");
+            }
+        }
 
         [Test]
         public void Check06UpdateWithListDtoOk()
