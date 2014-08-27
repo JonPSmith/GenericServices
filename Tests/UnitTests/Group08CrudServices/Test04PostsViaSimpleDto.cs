@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using System.Linq;
 using GenericServices;
+using GenericServices.Core;
 using GenericServices.Services;
 using GenericServices.Services.Concrete;
 using NUnit.Framework;
@@ -54,21 +55,42 @@ namespace Tests.UnitTests.Group08CrudServices
                 var service = new ListService<Post, SimplePostDto>(db);
 
                 //ATTEMPT
-                var query = service.GetList();
-                var list = query.ToList();
+                var status = service.GetMany().TryManyWithPermissionChecking();
 
                 //VERIFY
-                list.Count.ShouldEqual(3);
-                list[0].Title.ShouldEqual("First great post");
-                list[0].BloggerName.ShouldEqual("Jon Smith");
-                list[0].TagNames.ShouldEqual("Ugly post, Good post");
-                list[0].LastUpdatedUtc.Kind.ShouldEqual(DateTimeKind.Utc);
+                status.IsValid.ShouldEqual(true, status.Errors);
+                status.Result.Count().ShouldEqual(3);
+                status.Result.First().Title.ShouldEqual("First great post");
+                status.Result.First().BloggerName.ShouldEqual("Jon Smith");
+                status.Result.First().TagNames.ShouldEqual("Ugly post, Good post");
+                status.Result.First().LastUpdatedUtc.Kind.ShouldEqual(DateTimeKind.Utc);
 
             }
         }
 
         [Test]
         public void Check02DetailPostOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var service = new DetailService<Post, SimplePostDto>(db);
+                var firstPost = db.Posts.Include(x => x.Tags).AsNoTracking().First();
+
+                //ATTEMPT
+                var status = service.GetDetail(firstPost.PostId);
+                status.Result.LogSpecificName("End");
+
+                //VERIFY
+                status.Result.PostId.ShouldEqual(firstPost.PostId);
+                status.Result.BloggerName.ShouldEqual(firstPost.Blogger.Name);
+                status.Result.Title.ShouldEqual(firstPost.Title);
+                CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), status.Result.Tags.Select(x => x.TagId));
+            }
+        }
+
+        [Test]
+        public void Check03DetailPostWhereOk()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -85,6 +107,24 @@ namespace Tests.UnitTests.Group08CrudServices
                 status.Result.BloggerName.ShouldEqual(firstPost.Blogger.Name);
                 status.Result.Title.ShouldEqual(firstPost.Title);
                 CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), status.Result.Tags.Select(x => x.TagId));
+            }
+        }
+
+        [Test]
+        public void Check04DetailDirectPostNotFoundBad()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var service = new DetailService<Post, SimplePostDto>(db);
+
+                //ATTEMPT
+                var status = service.GetDetail(0);
+
+                //VERIFY
+                status.IsValid.ShouldEqual(false, status.Errors);
+                status.Errors.Count.ShouldEqual(1);
+                status.Errors[0].ErrorMessage.ShouldEqual("We could not find an entry using that filter. Has it been deleted by someone else?");
             }
         }
 
@@ -168,7 +208,7 @@ namespace Tests.UnitTests.Group08CrudServices
             {
                 //SETUP
                 var listService = new ListService<Post, SimplePostDto>(db);
-                var firstPostUntracked = listService.GetList().First();
+                var firstPostUntracked = listService.GetMany().First();
                 var service = new UpdateService<Post, SimplePostDto>(db);
 
                 //ATTEMPT

@@ -96,7 +96,7 @@ namespace GenericServices.ServicesAsync.Concrete
             var status = await dto.CreateDtoAndCopyDataInAsync(_db, whereExpression);
             if (!status.IsValid) return status;
 
-            if (!status.Result.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
+            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
                 await status.Result.SetupSecondaryDataAsync(_db, status.Result);
             return status;
         }

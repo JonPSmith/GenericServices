@@ -10,7 +10,7 @@ namespace GenericServices.Services
         /// This returns an IQueryable list of all items of the given type
         /// </summary>
         /// <returns>note: the list items are not tracked</returns>
-        IQueryable<TData> GetList();
+        IQueryable<TData> GetMany();
     }
 
     public interface IListService<TData, out TDto>
@@ -21,6 +21,6 @@ namespace GenericServices.Services
         /// This returns an IQueryable list of all items of the given type
         /// </summary>
         /// <returns>note: the list items are not tracked</returns>
-        IQueryable<TDto> GetList();
+        IQueryable<TDto> GetMany();
     }
 }

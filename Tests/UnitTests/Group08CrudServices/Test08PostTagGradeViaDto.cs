@@ -1,5 +1,6 @@
 ﻿using System.Data.Entity;
 using System.Linq;
+using GenericServices.Core;
 using GenericServices.Services;
 using GenericServices.Services.Concrete;
 using NUnit.Framework;
@@ -41,13 +42,13 @@ namespace Tests.UnitTests.Group08CrudServices
                 var firstGrade = db.PostTagGrades.Include(x => x.TagPart).Include(x => x.PostPart).First();
 
                 //ATTEMPT
-                var query = service.GetList();
-                var list = query.ToList();
+                var status = service.GetMany().TryManyWithPermissionChecking();
 
                 //VERIFY
-                list.Count.ShouldEqual(2);
-                list[0].PostPartTitle.ShouldEqual(firstGrade.PostPart.Title);
-                list[0].TagPartName.ShouldEqual(firstGrade.TagPart.Name);
+                status.IsValid.ShouldEqual(true, status.Errors);
+                status.Result.Count().ShouldEqual(2);
+                status.Result.First().PostPartTitle.ShouldEqual(firstGrade.PostPart.Title);
+                status.Result.First().TagPartName.ShouldEqual(firstGrade.TagPart.Name);
 
             }
         }

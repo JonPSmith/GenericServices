@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using GenericServices;
+using GenericServices.Core;
 using GenericServices.Services;
 using GenericServices.Services.Concrete;
 using GenericServices.ServicesAsync;
@@ -53,15 +55,70 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 var firstPost = db.Posts.Include(x => x.Blogger).First();
 
                 //ATTEMPT
-                var query = service.GetList().Include(x => x.Blogger);
-                var list = await query.ToListAsync();
+                var status = await service.GetMany().Include(x => x.Blogger).TryManyWithPermissionCheckingAsync();
 
                 //VERIFY
-                list.Count.ShouldEqual(3);
-                list[0].Title.ShouldEqual(firstPost.Title);
-                list[0].Blogger.Name.ShouldEqual(firstPost.Blogger.Name);
-                list[0].Tags.ShouldEqual(null);
+                status.IsValid.ShouldEqual(true, status.Errors);
+                status.Result.Count().ShouldEqual(3);
+                status.Result.First().Title.ShouldEqual(firstPost.Title);
+                status.Result.First().Blogger.Name.ShouldEqual(firstPost.Blogger.Name);
+                status.Result.First().Tags.ShouldEqual(null);
+            }
+        }
 
+        [Test]
+        public async Task Check03DetailDirectPostWhereOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var service = new DetailServiceAsync<Post>(db);
+                var firstPost = db.Posts.First();
+
+                //ATTEMPT
+                var status = await service.GetDetailUsingWhereAsync(x => x.PostId == firstPost.PostId);
+
+                //VERIFY
+                status.IsValid.ShouldEqual(true, status.Errors);
+                status.Result.PostId.ShouldEqual(firstPost.PostId);
+                status.Result.Title.ShouldEqual(firstPost.Title);
+            }
+        }
+
+        [Test]
+        public async Task Check03DetailDirectPostKeyOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var service = new DetailServiceAsync<Post>(db);
+                var firstPost = db.Posts.First();
+
+                //ATTEMPT
+                var status = await service.GetDetailAsync(firstPost.PostId);
+
+                //VERIFY
+                status.IsValid.ShouldEqual(true, status.Errors);
+                status.Result.PostId.ShouldEqual(firstPost.PostId);
+                status.Result.Title.ShouldEqual(firstPost.Title);
+            }
+        }
+
+        [Test]
+        public async Task Check05DetailDirectPostNotFoundBad()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var service = new DetailServiceAsync<Post>(db);
+
+                //ATTEMPT
+                var status = await service.GetDetailUsingWhereAsync(x => x.PostId == 0);
+
+                //VERIFY
+                status.IsValid.ShouldEqual(false, status.Errors);
+                status.Errors.Count.ShouldEqual(1);
+                status.Errors[0].ErrorMessage.ShouldEqual("We could not find an entry using that filter. Has it been deleted by someone else?");
             }
         }
 

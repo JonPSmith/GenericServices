@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using System.Linq;
 using GenericServices;
+using GenericServices.Core;
 using GenericServices.Services;
 using GenericServices.Services.Concrete;
 using NUnit.Framework;
@@ -51,14 +52,14 @@ namespace Tests.UnitTests.Group08CrudServices
                 var firstPost = db.Posts.Include(x => x.Blogger).First();
 
                 //ATTEMPT
-                var query = service.GetList().Include(x => x.Blogger);
-                var list = query.ToList();
-
+                var status = service.GetMany().Include(x => x.Blogger).TryManyWithPermissionChecking();
+                
                 //VERIFY
-                list.Count.ShouldEqual(3);
-                list[0].Title.ShouldEqual(firstPost.Title);
-                list[0].Blogger.Name.ShouldEqual(firstPost.Blogger.Name);
-                list[0].Tags.ShouldEqual(null);
+                status.IsValid.ShouldEqual(true, status.Errors);
+                status.Result.Count().ShouldEqual(3);
+                status.Result.First().Title.ShouldEqual(firstPost.Title);
+                status.Result.First().Blogger.Name.ShouldEqual(firstPost.Blogger.Name);
+                status.Result.First().Tags.ShouldEqual(null);
 
             }
         }
@@ -73,12 +74,49 @@ namespace Tests.UnitTests.Group08CrudServices
                 var firstPost = db.Posts.First();
 
                 //ATTEMPT
+                var status = service.GetDetail(firstPost.PostId);
+
+                //VERIFY
+                status.IsValid.ShouldEqual(true, status.Errors);
+                status.Result.PostId.ShouldEqual(firstPost.PostId);
+                status.Result.Title.ShouldEqual(firstPost.Title);
+            }
+        }
+
+        [Test]
+        public void Check03DetailDirectPostWhereOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var service = new DetailService<Post>(db);
+                var firstPost = db.Posts.First();
+
+                //ATTEMPT
                 var status = service.GetDetailUsingWhere(x => x.PostId == firstPost.PostId);
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
                 status.Result.PostId.ShouldEqual(firstPost.PostId);
                 status.Result.Title.ShouldEqual(firstPost.Title);
+            }
+        }
+
+        [Test]
+        public void Check05DetailDirectPostNotFoundBad()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var service = new DetailService<Post>(db);
+
+                //ATTEMPT
+                var status = service.GetDetailUsingWhere(x => x.PostId == 0);
+
+                //VERIFY
+                status.IsValid.ShouldEqual(false, status.Errors);
+                status.Errors.Count.ShouldEqual(1);
+                status.Errors[0].ErrorMessage.ShouldEqual("We could not find an entry using that filter. Has it been deleted by someone else?");
             }
         }
 

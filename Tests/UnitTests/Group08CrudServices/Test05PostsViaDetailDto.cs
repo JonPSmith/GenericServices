@@ -2,6 +2,7 @@
 using System.Data.Entity;
 using System.Linq;
 using GenericServices;
+using GenericServices.Core;
 using GenericServices.Services;
 using GenericServices.Services.Concrete;
 using NUnit.Framework;
@@ -58,17 +59,17 @@ namespace Tests.UnitTests.Group08CrudServices
                 var service = new ListService<Post, DetailPostDto>(db);
 
                 //ATTEMPT
-                var query = service.GetList();
-                var list = query.ToList();
+                var status = service.GetMany().TryManyWithPermissionChecking();
 
                 //VERIFY
-                list.Count.ShouldEqual(3);
-                var firstPost = db.Posts.Include(x => x.Tags).ToList().First(x => x.PostId == list[0].PostId);
-                list[0].Title.ShouldEqual(firstPost.Title);
-                list[0].Content.ShouldEqual(firstPost.Content);
-                list[0].BloggerName.ShouldEqual(firstPost.Blogger.Name);
-                list[0].TagNames.ShouldEqual("Ugly post, Good post");
-                list[0].LastUpdatedUtc.Kind.ShouldEqual(DateTimeKind.Utc);
+                status.IsValid.ShouldEqual(true, status.Errors);
+                status.Result.Count().ShouldEqual(3);
+                var firstPost = db.Posts.Include(x => x.Tags).ToList().First(x => x.PostId == status.Result.First().PostId);
+                status.Result.First().Title.ShouldEqual(firstPost.Title);
+                status.Result.First().Content.ShouldEqual(firstPost.Content);
+                status.Result.First().BloggerName.ShouldEqual(firstPost.Blogger.Name);
+                status.Result.First().TagNames.ShouldEqual("Ugly post, Good post");
+                status.Result.First().LastUpdatedUtc.Kind.ShouldEqual(DateTimeKind.Utc);
             }
         }
 

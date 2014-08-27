@@ -151,25 +151,25 @@ namespace Tests.Helpers
         public static void ListGenericDirect<T>(this SampleWebAppDb db, int id) where T : class
         {
             var service = new ListService<T>(db);
-            var num = service.GetList().ToList().Count;
+            var num = service.GetMany().ToList().Count;
         }
 
         public static async Task ListGenericDirectAsync<T>(this SampleWebAppDb db, int id) where T : class
         {
             var service = new ListService<T>(db);
-            var list = await service.GetList().ToListAsync();
+            var list = await service.GetMany().ToListAsync();
         }
 
         public static void ListPostGenericViaDto(this SampleWebAppDb db, int id)
         {
             var service = new ListService<Post,SimplePostDto>(db);
-            var num = service.GetList().ToList().Count;
+            var num = service.GetMany().ToList().Count;
         }
 
         public static async Task ListPostGenericViaDtoAsync(this SampleWebAppDb db, int id)
         {
             var service = new ListService<Post, SimplePostDto>(db);
-            var list = await service.GetList().ToListAsync();
+            var list = await service.GetMany().ToListAsync();
         }
 
         //--------
@@ -299,25 +299,25 @@ namespace Tests.Helpers
         public static void ListGSelectDirect<T>(this SampleWebAppDb db, int id) where T : class, new()
         {
             var service = new ListService(db);
-            var num = service.GetList<T>().ToList().Count;
+            var num = service.GetMany<T>().ToList().Count;
         }
 
         public static async Task ListGSelectDirectAsync<T>(this SampleWebAppDb db, int id) where T : class, new()
         {
             var service = new ListService(db);
-            var list = await service.GetList<T>().ToListAsync();
+            var list = await service.GetMany<T>().ToListAsync();
         }
 
         public static void ListPostGSelectViaDto(this SampleWebAppDb db, int id)
         {
             var service = new ListService(db);
-            var num = service.GetList<SimplePostDto>().ToList().Count;
+            var num = service.GetMany<SimplePostDto>().ToList().Count;
         }
 
         public static async Task ListPostGSelectViaDtoAsync(this SampleWebAppDb db, int id)
         {
             var service = new ListService(db);
-            var list = await service.GetList<SimplePostDto>().ToListAsync();
+            var list = await service.GetMany<SimplePostDto>().ToListAsync();
         }
 
         //--------

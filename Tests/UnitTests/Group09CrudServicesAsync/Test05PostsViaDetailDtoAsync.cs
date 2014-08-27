@@ -2,6 +2,8 @@
 using System.Data.Entity;
 using System.Linq;
 using GenericServices;
+using GenericServices.Core;
+using GenericServices.Services.Concrete;
 using GenericServices.ServicesAsync;
 using GenericServices.ServicesAsync.Concrete;
 using NUnit.Framework;
@@ -48,28 +50,28 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
             (createService is CreateServiceAsync<Post, DetailPostDtoAsync>).ShouldEqual(true);
         }
 
-        //[Test]
-        //public async void Check02ListPostOk()
-        //{
-        //    using (var db = new SampleWebAppDb())
-        //    {
-        //        //SETUP
-        //        var service = new ListService<Post, DetailPostDtoAsync>(db);
+        [Test]
+        public async void Check02ListPostOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var service = new ListService<Post, DetailPostDtoAsync>(db);
 
-        //        //ATTEMPT
-        //        var query = await service.GetList();
-        //        var list = query.ToList();
+                //ATTEMPT
+                var status = await service.GetMany().TryManyWithPermissionCheckingAsync();
 
-        //        //VERIFY
-        //        list.Count.ShouldEqual(3);
-        //        var firstPost = db.Posts.Include(x => x.Tags).ToList().First(x => x.PostId == list[0].PostId);
-        //        list[0].Title.ShouldEqual(firstPost.Title);
-        //        list[0].Content.ShouldEqual(firstPost.Content);
-        //        list[0].BloggerName.ShouldEqual(firstPost.Blogger.Name);
-        //        list[0].TagNames.ShouldEqual("Ugly post, Good post");
-        //        list[0].LastUpdatedUtc.Kind.ShouldEqual(DateTimeKind.Utc);
-        //    }
-        //}
+                //VERIFY
+                status.IsValid.ShouldEqual(true, status.Errors);
+                status.Result.Count().ShouldEqual(3);
+                var firstPost = db.Posts.Include(x => x.Tags).ToList().First(x => x.PostId == status.Result.First().PostId);
+                status.Result.First().Title.ShouldEqual(firstPost.Title);
+                status.Result.First().Content.ShouldEqual(firstPost.Content);
+                status.Result.First().BloggerName.ShouldEqual(firstPost.Blogger.Name);
+                status.Result.First().TagNames.ShouldEqual("Ugly post, Good post");
+                status.Result.First().LastUpdatedUtc.Kind.ShouldEqual(DateTimeKind.Utc);
+            }
+        }
 
         [Test]
         public async void Check03DetailPostOk()

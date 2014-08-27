@@ -12,6 +12,6 @@ namespace GenericServices
         /// <typeparam name="T">The type of the data to output. 
         /// Type must be a type either an EF data class or a class inherited from the EfGenericDto or EfGenericDtoAsync</typeparam>
         /// <returns>note: the list items are not tracked</returns>
-        IQueryable<T> GetList<T>() where T : class, new();
+        IQueryable<T> GetMany<T>() where T : class, new();
     }
 }

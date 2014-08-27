@@ -1,6 +1,7 @@
 ﻿using System.Data.Entity;
 using System.Linq;
 using GenericServices;
+using GenericServices.Core;
 using GenericServices.Services;
 using GenericServices.Services.Concrete;
 using NUnit.Framework;
@@ -54,16 +55,16 @@ namespace Tests.UnitTests.Group08CrudServices
                 var service = new ListService<Blog, SimpleBlogWithPostsDto>(db);
 
                 //ATTEMPT
-                var query = service.GetList();
-                var list = query.ToList();
+                var status = service.GetMany().TryManyWithPermissionChecking();
 
                 //VERIFY
-                list.Count.ShouldEqual(2);
+                status.IsValid.ShouldEqual(true, status.Errors);
+                status.Result.Count().ShouldEqual(2);
                 var firstBlog = db.Blogs.Include(x => x.Posts).AsNoTracking().First();
-                list[0].Name.ShouldEqual(firstBlog.Name);
-                list[0].EmailAddress.ShouldEqual(firstBlog.EmailAddress);
-                list[0].Posts.ShouldNotEqualNull();
-                CollectionAssert.AreEquivalent(firstBlog.Posts.Select(x => x.PostId), list[0].Posts.Select(x => x.PostId));
+                status.Result.First().Name.ShouldEqual(firstBlog.Name);
+                status.Result.First().EmailAddress.ShouldEqual(firstBlog.EmailAddress);
+                status.Result.First().Posts.ShouldNotEqualNull();
+                CollectionAssert.AreEquivalent(firstBlog.Posts.Select(x => x.PostId), status.Result.First().Posts.Select(x => x.PostId));
             }
         }
 

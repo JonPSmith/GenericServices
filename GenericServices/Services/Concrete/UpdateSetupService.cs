@@ -105,7 +105,7 @@ namespace GenericServices.Services.Concrete
             var status = dto.CreateDtoAndCopyDataIn(_db, whereExpression);
             if (!status.IsValid) return status;
 
-            if (!status.Result.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
+            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
                 status.Result.SetupSecondaryData(_db, status.Result);
             return status;
         }
