@@ -74,16 +74,21 @@ If T is a DTO inherited from either EfGenericDto (sync) or EfGenericDtoAsync (as
 then the data properties are copied over using a convention-based object-object mapping 
 (see [AutoMapper](http://automapper.org/)). This allows the data to be 'shaped'. 
 See [SimplePostDto](https://github.com/JonPSmith/SampleMvcWebApp/blob/master/ServiceLayer/PostServices/Concrete/SimplePostDto.cs)
-for an example of this.
+for an example of this. The commands are:
+
+- `IQueryable<T> GetMany<T>()`
 
 Note that the ListService is not sync or async, but returns `IQueryable`. 
-The LINQ command you put on the end, e.g `.ToList()` or `.ToListAsync()`, 
-determines whether it is async or not. 
+You can either:
 
-The command is:
+- Put a LINQ command you put on the end, e.g `.ToList()` or `.ToListAsync()`
+- Use the commands `.TryManyWithPermissionChecking()` or `.TryManyWithPermissionCheckingAsync()` 
+at the end. These return an `ISuccessErrors<T>` which contains any error messages caused by sql security.
 
-- `IQueryable<T> GetList<T>()`
+!!!! Need to put in link to example of using `.TryManyWithPermissionChecking()`.
 
+Note that the status result is an empty collection if there is an error, 
+so you can ignore the error if you don't want to feed back to the user.
 
 ##### DetailService/DetailServiceAsync : 
 This finds an item in the database using its primary key(s). You specify what type of
@@ -96,8 +101,11 @@ See [DetailPostDto](https://github.com/JonPSmith/SampleMvcWebApp/blob/master/Ser
 for an example of this.
 The commands are:
 
-- `T GetDetail<T>( param object [] keys)` - sync
-- `Task<T> GetDetailAsync<T>( param object [] keys)` - async
+- `ISuccessErrors<T> GetDetail<T>( param object [] keys)` - sync
+- `Task<ISuccessErrors<T>> GetDetailAsync<T>( param object [] keys)` - async
+
+Note that the status contains any errors caused by missing data or sql security errors. 
+If there is an error then the result will be null, so you have to check the status.
 
 
 ##### CreateSetupService/CreateSetupServiceAsync: 
@@ -162,8 +170,11 @@ See an example of a DTO based UpdateSetup/Update action in
 [PostsAsyncController](https://github.com/JonPSmith/SampleMvcWebApp/blob/master/SampleWebApp/Controllers/PostsAsyncController.cs).
 The commands are:
 
-- `T GetOriginal<T>( param object [] keys)` - sync
-- `Task<T> GetOriginalAsync<T>( param object [] keys)` - async
+- `ISuccessErrors<T> GetOriginal<T>( param object [] keys)` - sync
+- `Task<ISuccessErrors<T>> GetOriginalAsync<T>( param object [] keys)` - async
+
+Note that the status contains any errors caused by missing data or sql security errors. 
+If there is an error then the result will be null, so you have to check the status.
 
 ##### UpdateService/UpdateServiceAsync
 This updates a data item in the database using the data handed to it. The data, which can be a data class
