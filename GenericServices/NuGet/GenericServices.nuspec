@@ -10,7 +10,7 @@
    2. RECOMPILE GenericServices in RELEASE MODE
    3. Update release notes
    4. Run the following two command lines
-      cd <the directory this file is in>
+      cd C:\Users\Jon\Documents\Visual Studio 2013\Projects\GenericServices\GenericServices\NuGet
       C:\Users\Jon\Nuget pack GenericServices.nuspec
    
    To Test locally
@@ -35,7 +35,7 @@
    -->
   <metadata>
     <id>GenericServices</id>
-    <version>1.0.0-beta7</version>
+    <version>1.0.0-beta11</version>
     <title>GenericServices</title>
     <authors>Jon Smith</authors>
     <owners>Jon Smith</owners>
@@ -49,7 +49,7 @@
     <releaseNotes>First release.</releaseNotes>
     <copyright>Copyright 2014</copyright>
     <dependencies>
-      <dependency id="EntityFramework" version="6.1.0" />
+      <dependency id="EntityFramework" version="(6.1.0]" />
     </dependencies>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.Core" targetFramework="net451" />
