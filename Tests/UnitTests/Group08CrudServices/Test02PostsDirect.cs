@@ -73,11 +73,12 @@ namespace Tests.UnitTests.Group08CrudServices
                 var firstPost = db.Posts.First();
 
                 //ATTEMPT
-                var item = service.GetDetailUsingWhere(x => x.PostId == firstPost.PostId);
+                var status = service.GetDetailUsingWhere(x => x.PostId == firstPost.PostId);
 
                 //VERIFY
-                item.PostId.ShouldEqual(firstPost.PostId);
-                item.Title.ShouldEqual(firstPost.Title);
+                status.IsValid.ShouldEqual(true, status.Errors);
+                status.Result.PostId.ShouldEqual(firstPost.PostId);
+                status.Result.Title.ShouldEqual(firstPost.Title);
             }
         }
 

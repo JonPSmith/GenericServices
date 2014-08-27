@@ -18,13 +18,13 @@ namespace GenericServices.Services.Concrete
         }
 
         /// <summary>
-        /// This returns a single entry using the primary keys to find it.
+        /// This returns a status which, if Valid, contains a single entry found using its primary keys.
         /// </summary>
         /// <typeparam name="T">The type of the data to output. 
         /// Type must be a type either an EF data class or one of the EfGenericDto's</typeparam>
         /// <param name="keys">The keys must be given in the same order as entity framework has them</param>
-        /// <returns>Data class as read from database (not tracked)</returns>
-        public T GetDetail<T>(params object[] keys) where T : class, new()
+        /// <returns>Status. If valid Result holds data (not tracked), otherwise null</returns>
+        public ISuccessOrErrors<T> GetDetail<T>(params object[] keys) where T : class, new()
         {
             var service = DecodeToService<DetailService>.CreateCorrectService<T>(WhatItShouldBe.SyncAnything, _db);
             return service.GetDetail(keys);
@@ -44,24 +44,21 @@ namespace GenericServices.Services.Concrete
         }
 
         /// <summary>
-        /// This gets a single entry using the lambda expression as a where part
+        /// This gets a single entry using the lambda expression as a where part. Checks for problems
         /// </summary>
         /// <param name="whereExpression">Should be a 'where' expression that returns one item</param>
-        /// <returns>Data class as read from database (not tracked)</returns>
-        public TData GetDetailUsingWhere(Expression<Func<TData, bool>> whereExpression)
+        /// <returns>Status. If valid Result is data as read from database (not tracked), otherwise null</returns>
+        public ISuccessOrErrors<TData> GetDetailUsingWhere(Expression<Func<TData, bool>> whereExpression)
         {
-            var result = _db.Set<TData>().Where(whereExpression).AsNoTracking().SingleOrDefault();
-            if (result == null)
-                throw new ArgumentException("We could not find an entry using that filter. Has it been deleted by someone else?");
-            return result;
+            return _db.Set<TData>().Where(whereExpression).AsNoTracking().TrySingleWithPermissionChecking();
         }
 
         /// <summary>
         /// This finds an entry using the primary key(s) in the data
         /// </summary>
         /// <param name="keys">The keys must be given in the same order as entity framework has them</param>
-        /// <returns>Data class as read from database (not tracked)</returns>
-        public TData GetDetail(params object[] keys)
+        /// <returns>Status. If valid Result is data as read from database (not tracked), otherwise null</returns>
+        public ISuccessOrErrors<TData> GetDetail(params object[] keys)
         {
             return GetDetailUsingWhere(BuildFilter.CreateFilter<TData>(_db.GetKeyProperties<TData>(), keys));
         }
@@ -85,8 +82,8 @@ namespace GenericServices.Services.Concrete
         /// This gets a single entry using the lambda expression as a where part
         /// </summary>
         /// <param name="whereExpression">Should be a 'where' expression that returns one item</param>
-        /// <returns>TDto type with properties copyed over</returns>
-        public TDto GetDetailUsingWhere(Expression<Func<TData, bool>> whereExpression)
+        /// <returns>Status. If Valid then TDto type with properties copyed over, else null</returns>
+        public ISuccessOrErrors<TDto> GetDetailUsingWhere(Expression<Func<TData, bool>> whereExpression)
         {
             var dto = new TDto();
             if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.Detail))
@@ -99,8 +96,8 @@ namespace GenericServices.Services.Concrete
         /// This finds an entry using the primary key(s) in the data
         /// </summary>
         /// <param name="keys">The keys must be given in the same order as entity framework has them</param>
-        /// <returns>TDto type with properties copied over</returns>
-        public TDto GetDetail(params object[] keys)
+        /// <returns>Status. If Valid then TDto type with properties copyed over, else null</returns>
+        public ISuccessOrErrors<TDto> GetDetail(params object[] keys)
         {
             return GetDetailUsingWhere(BuildFilter.CreateFilter<TData>(_db.GetKeyProperties<TData>(), keys));
         }

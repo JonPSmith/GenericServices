@@ -159,16 +159,29 @@ namespace GenericServices.Core
             }
         }
 
-        protected internal override TDto CreateDtoAndCopyDataIn(IDbContextWithValidation context, Expression<Func<TData, bool>> predicate)
+        /// <summary>
+        /// This copies an existing TData into a new the dto using a Lambda expression to define the where clause
+        /// It copies TData properties into all TDto properties that have accessable setters, i.e. not private
+        /// </summary>
+        /// <returns>status. If valid result is dto. Otherwise null if not found</returns>
+        internal protected override ISuccessOrErrors<TDto> CreateDtoAndCopyDataIn(IDbContextWithValidation context,
+            Expression<Func<TData, bool>> predicate)
         {
             LogCaller(CallTypes.Start);
-            var newDto = base.CreateDtoAndCopyDataIn(context, predicate);
-            var instDto = newDto as InstrumentedEfGenericDto<TData, TDto>;
-            instDto._timer = _timer;
-            instDto._logOfCalls = _logOfCalls;
-            instDto._whereToFail = _whereToFail;
-            instDto.LogCaller(CallTypes.End);
-            return instDto as TDto;
+            var status = base.CreateDtoAndCopyDataIn(context, predicate);
+            if (status.IsValid)
+            {
+                var instDto = status.Result as InstrumentedEfGenericDto<TData, TDto>;
+                instDto._timer = _timer;
+                instDto._logOfCalls = _logOfCalls;
+                instDto._whereToFail = _whereToFail;
+                instDto.LogCaller(CallTypes.End);            
+                return new SuccessOrErrors<TDto>(instDto as TDto, status.SuccessMessage);
+            }
+
+            //else the dto is null so we can't turn it into a new instrumented dto
+            return status;
+
         }
 
     }

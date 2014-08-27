@@ -36,10 +36,11 @@ namespace Tests.UnitTests.Group04ServiceFlowAsync
                 var firstTag = db.Tags.First();
 
                 //ATTEMPT
-                var dto = await service.GetOriginalAsync(firstTag.TagId);
+                var status = await service.GetOriginalAsync(firstTag.TagId);
 
                 //VERIFY
-                dto.FunctionsCalledCommaDelimited.ShouldEqual("CreateDtoAndCopyDataInAsync,SetupSecondaryDataAsync");
+                status.IsValid.ShouldEqual(true, status.Errors);
+                status.Result.FunctionsCalledCommaDelimited.ShouldEqual("CreateDtoAndCopyDataInAsync,SetupSecondaryDataAsync");
             }
         }
 

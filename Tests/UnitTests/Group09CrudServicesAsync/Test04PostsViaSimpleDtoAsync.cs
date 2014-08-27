@@ -54,14 +54,15 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 var firstPost = db.Posts.Include(x => x.Tags).AsNoTracking().First();
 
                 //ATTEMPT
-                var dto = await service.GetDetailAsync(firstPost.PostId);
-                dto.LogSpecificName("End");
+                var status = await service.GetDetailAsync(firstPost.PostId);
+                status.Result.LogSpecificName("End");
 
                 //VERIFY
-                dto.PostId.ShouldEqual(firstPost.PostId);
-                dto.BloggerName.ShouldEqual(firstPost.Blogger.Name);
-                dto.Title.ShouldEqual(firstPost.Title);
-                CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), dto.Tags.Select(x => x.TagId));
+                status.IsValid.ShouldEqual(true, status.Errors);
+                status.Result.PostId.ShouldEqual(firstPost.PostId);
+                status.Result.BloggerName.ShouldEqual(firstPost.Blogger.Name);
+                status.Result.Title.ShouldEqual(firstPost.Title);
+                CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), status.Result.Tags.Select(x => x.TagId));
             }
         }
 
@@ -76,14 +77,15 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 var firstPost = db.Posts.Include(x => x.Tags).AsNoTracking().First();
 
                 //ATTEMPT
-                var dto = await service.GetOriginalAsync(firstPost.PostId);
-                dto.LogSpecificName("End");
+                var status = await service.GetOriginalAsync(firstPost.PostId);
+                status.Result.LogSpecificName("End");
 
                 //VERIFY
-                dto.PostId.ShouldEqual(firstPost.PostId);
-                dto.BloggerName.ShouldEqual(firstPost.Blogger.Name);
-                dto.Title.ShouldEqual(firstPost.Title);
-                CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), dto.Tags.Select(x => x.TagId));
+                status.IsValid.ShouldEqual(true, status.Errors);
+                status.Result.PostId.ShouldEqual(firstPost.PostId);
+                status.Result.BloggerName.ShouldEqual(firstPost.Blogger.Name);
+                status.Result.Title.ShouldEqual(firstPost.Title);
+                CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), status.Result.Tags.Select(x => x.TagId));
             }
         }
 
@@ -100,10 +102,11 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 var setupService = new UpdateSetupServiceAsync<Post, SimplePostDtoAsync>(db);
 
                 //ATTEMPT
-                var dto = await setupService.GetOriginalAsync(firstPost.PostId);
-                dto.Title = Guid.NewGuid().ToString();
-                var status = await service.UpdateAsync(dto);
-                dto.LogSpecificName("End");
+                var setupStatus = await setupService.GetOriginalAsync(firstPost.PostId);
+                setupStatus.IsValid.ShouldEqual(true, setupStatus.Errors);
+                setupStatus.Result.Title = Guid.NewGuid().ToString();
+                var status = await service.UpdateAsync(setupStatus.Result);
+                setupStatus.Result.LogSpecificName("End");
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
@@ -124,15 +127,16 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 var setupService = new UpdateSetupServiceAsync<Post, SimplePostDtoAsync>(db);
 
                 //ATTEMPT
-                var dto = await setupService.GetOriginalAsync(firstPost.PostId);
-                dto.Title = Guid.NewGuid().ToString();
-                var status = await service.UpdateAsync(dto);
-                dto.LogSpecificName("End");
+                var setupStatus = await setupService.GetOriginalAsync(firstPost.PostId);
+                setupStatus.IsValid.ShouldEqual(true, setupStatus.Errors);
+                setupStatus.Result.Title = Guid.NewGuid().ToString();
+                var status = await service.UpdateAsync(setupStatus.Result);
+                setupStatus.Result.LogSpecificName("End");
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
                 var updatedPost = db.Posts.Include(x => x.Tags).First();
-                updatedPost.Title.ShouldEqual(dto.Title);
+                updatedPost.Title.ShouldEqual(setupStatus.Result.Title);
                 updatedPost.Blogger.ShouldNotEqualNull();
                 CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), updatedPost.Tags.Select(x => x.TagId));
 
@@ -150,10 +154,11 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 var setupService = new UpdateSetupServiceAsync<Post, SimplePostDtoAsync>(db);
 
                 //ATTEMPT
-                var dto = await setupService.GetOriginalAsync(firstPost.PostId);
-                dto.Title = "Can't I ask a question?";
-                var status = await service.UpdateAsync(dto);
-                dto.LogSpecificName("End");
+                var setupStatus = await setupService.GetOriginalAsync(firstPost.PostId);
+                setupStatus.IsValid.ShouldEqual(true, setupStatus.Errors);
+                setupStatus.Result.Title = "Can't I ask a question?";
+                var status = await service.UpdateAsync(setupStatus.Result);
+                setupStatus.Result.LogSpecificName("End");
 
                 //VERIFY
                 status.IsValid.ShouldEqual(false);

@@ -19,6 +19,12 @@ namespace GenericServices.Core
         //ctors
         public SuccessOrErrors() :base() {}
 
+        public SuccessOrErrors(T result, string successformat, params object[] args) : base()
+        {
+            Result = result;
+            base.SetSuccessMessage(successformat, args);
+        }
+
         private SuccessOrErrors(ISuccessOrErrors nonResultStatus)
             : base(nonResultStatus) {}
 

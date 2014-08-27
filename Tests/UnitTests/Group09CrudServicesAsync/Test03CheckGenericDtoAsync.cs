@@ -148,16 +148,17 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 var firstPost = db.Posts.Include( x => x.Blogger).Include(x => x.Tags).AsNoTracking().First();
 
                 //ATTEMPT
-                var newDto = await new SimplePostDtoAsync().CreateDtoAndCopyDataInAsync(db, x => x.PostId == firstPost.PostId);
+                var status = await new SimplePostDtoAsync().CreateDtoAndCopyDataInAsync(db, x => x.PostId == firstPost.PostId);
 
                 //VERIFY
-                newDto.PostId.ShouldEqual(firstPost.PostId);
-                newDto.Title.ShouldEqual(firstPost.Title);
-                newDto.LastUpdated.ShouldEqual(firstPost.LastUpdated);
-                newDto.LastUpdatedUtc.Kind.ShouldEqual(DateTimeKind.Utc);
+                status.IsValid.ShouldEqual(true, status.Errors);
+                status.Result.PostId.ShouldEqual(firstPost.PostId);
+                status.Result.Title.ShouldEqual(firstPost.Title);
+                status.Result.LastUpdated.ShouldEqual(firstPost.LastUpdated);
+                status.Result.LastUpdatedUtc.Kind.ShouldEqual(DateTimeKind.Utc);
 
-                newDto.BloggerName.ShouldEqual(firstPost.Blogger.Name);
-                CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), newDto.Tags.Select(x => x.TagId));
+                status.Result.BloggerName.ShouldEqual(firstPost.Blogger.Name);
+                CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), status.Result.Tags.Select(x => x.TagId));
             }
         }
     }

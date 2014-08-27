@@ -45,11 +45,11 @@ namespace Tests.UnitTests.Group80Performance
                 var service = new DetailService<Post, DetailPostDto>(db);
 
                 //ATTEMPT
-                var dto = service.GetDetailUsingWhere(x => x.PostId == postId);
-                dto.LogSpecificName("End");
+                var status = service.GetDetailUsingWhere(x => x.PostId == postId);
+                status.Result.LogSpecificName("End");
 
                 //VERIFY
-                foreach (var log in dto.LogOfCalls) { Console.WriteLine(log); }
+                foreach (var log in status.Result.LogOfCalls) { Console.WriteLine(log); }
             }
         }
 
@@ -113,11 +113,11 @@ namespace Tests.UnitTests.Group80Performance
                 var setupService = new UpdateSetupService<Post, DetailPostDto>(db);
 
                 //ATTEMPT
-                var dto = setupService.GetOriginal(postId);
-                dto.LogSpecificName("End");
+                var status = setupService.GetOriginal(postId);
+                status.Result.LogSpecificName("End");
 
                 //VERIFY
-                foreach (var log in dto.LogOfCalls) { Console.WriteLine(log); }
+                foreach (var log in status.Result.LogOfCalls) { Console.WriteLine(log); }
             }
         }
 
@@ -137,16 +137,16 @@ namespace Tests.UnitTests.Group80Performance
                 var updateService = new UpdateService<Post, DetailPostDto>(db);
 
                 //ATTEMPT
-                var dto = setupService.GetOriginal(postId);
-                dto.Title = Guid.NewGuid().ToString();
-                dto.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
-                dto.UserChosenTags.FinalSelection = db.Tags.Take(3).ToList().Select(x => x.TagId.ToString("D")).ToArray();
-                var status = updateService.Update(dto);
-                dto.LogSpecificName("End");
+                var setupStatus = setupService.GetOriginal(postId);
+                setupStatus.Result.Title = Guid.NewGuid().ToString();
+                setupStatus.Result.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
+                setupStatus.Result.UserChosenTags.FinalSelection = db.Tags.Take(3).ToList().Select(x => x.TagId.ToString("D")).ToArray();
+                var status = updateService.Update(setupStatus.Result);
+                setupStatus.Result.LogSpecificName("End");
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
-                foreach (var log in dto.LogOfCalls) { Console.WriteLine(log); }
+                foreach (var log in setupStatus.Result.LogOfCalls) { Console.WriteLine(log); }
             }
         }
 

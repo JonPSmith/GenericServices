@@ -42,11 +42,11 @@ namespace Tests.UnitTests.Group80Performance
                 var service = new DetailServiceAsync<Post, SimplePostDtoAsync>(db);
 
                 //ATTEMPT
-                var dto = await service.GetDetailAsync(postId);
-                dto.LogSpecificName("End");
+                var status = await service.GetDetailAsync(postId);
+                status.Result.LogSpecificName("End");
 
                 //VERIFY
-                foreach (var log in dto.LogOfCalls) { Console.WriteLine(log); }
+                foreach (var log in status.Result.LogOfCalls) { Console.WriteLine(log); }
             }
         }
 
@@ -63,11 +63,11 @@ namespace Tests.UnitTests.Group80Performance
                 var service = new UpdateSetupServiceAsync<Post, SimplePostDtoAsync>(db);
 
                 //ATTEMPT
-                var dto = await service.GetOriginalAsync(postId);
-                dto.LogSpecificName("End");
+                var status = await service.GetOriginalAsync(postId);
+                status.Result.LogSpecificName("End");
 
                 //VERIFY
-                foreach (var log in dto.LogOfCalls) { Console.WriteLine(log); }
+                foreach (var log in status.Result.LogOfCalls) { Console.WriteLine(log); }
             }
         }
 
@@ -85,14 +85,14 @@ namespace Tests.UnitTests.Group80Performance
                 var setupService = new UpdateSetupServiceAsync<Post, SimplePostDtoAsync>(db);
 
                 //ATTEMPT
-                var dto = await setupService.GetOriginalAsync(postId);
-                dto.Title = Guid.NewGuid().ToString();
-                var status = await service.UpdateAsync(dto);
-                dto.LogSpecificName("End");
+                var setupStatus = await setupService.GetOriginalAsync(postId);
+                setupStatus.Result.Title = Guid.NewGuid().ToString();
+                var status = await service.UpdateAsync(setupStatus.Result);
+                setupStatus.Result.LogSpecificName("End");
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
-                foreach (var log in dto.LogOfCalls) { Console.WriteLine(log); }
+                foreach (var log in setupStatus.Result.LogOfCalls) { Console.WriteLine(log); }
                 
             }
         }

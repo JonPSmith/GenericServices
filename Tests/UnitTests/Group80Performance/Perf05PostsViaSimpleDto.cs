@@ -42,11 +42,11 @@ namespace Tests.UnitTests.Group80Performance
                 var service = new DetailService<Post, SimplePostDto>(db);
 
                 //ATTEMPT
-                var dto = service.GetDetailUsingWhere(x => x.PostId == postId);
-                dto.LogSpecificName("End");
+                var status = service.GetDetailUsingWhere(x => x.PostId == postId);
+                status.Result.LogSpecificName("End");
 
                 //VERIFY
-                foreach (var log in dto.LogOfCalls) { Console.WriteLine(log); }
+                foreach (var log in status.Result.LogOfCalls) { Console.WriteLine(log); }
             }
         }
 
@@ -63,11 +63,11 @@ namespace Tests.UnitTests.Group80Performance
                 var service = new UpdateSetupService<Post, SimplePostDto>(db);
 
                 //ATTEMPT
-                var dto = service.GetOriginal(postId);
-                dto.LogSpecificName("End");
+                var status = service.GetOriginal(postId);
+                status.Result.LogSpecificName("End");
 
                 //VERIFY
-                foreach (var log in dto.LogOfCalls) { Console.WriteLine(log); }
+                foreach (var log in status.Result.LogOfCalls) { Console.WriteLine(log); }
             }
         }
 
@@ -86,14 +86,14 @@ namespace Tests.UnitTests.Group80Performance
                 var setupService = new UpdateSetupService<Post, SimplePostDto>(db);
 
                 //ATTEMPT
-                var dto = setupService.GetOriginal(postId);
-                dto.Title = Guid.NewGuid().ToString();
-                var status = service.Update(dto);
-                dto.LogSpecificName("End");
+                var setupStatus = setupService.GetOriginal(postId);
+                setupStatus.Result.Title = Guid.NewGuid().ToString();
+                var status = service.Update(setupStatus.Result);
+                setupStatus.Result.LogSpecificName("End");
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
-                foreach (var log in dto.LogOfCalls) { Console.WriteLine(log); }
+                foreach (var log in setupStatus.Result.LogOfCalls) { Console.WriteLine(log); }
                 
             }
         }

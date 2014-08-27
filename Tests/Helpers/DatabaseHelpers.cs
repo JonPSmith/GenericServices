@@ -213,60 +213,64 @@ namespace Tests.Helpers
         public static void UpdatePostGenericDirect(this SampleWebAppDb db, int postId)
         {
             var setupService = new DetailService<Post>(db);
-            var post = setupService.GetDetailUsingWhere(x => x.PostId == postId);
+            var setupStatus = setupService.GetDetailUsingWhere(x => x.PostId == postId);
+            setupStatus.IsValid.ShouldEqual(true, setupStatus.Errors);
 
             var guidString = Guid.NewGuid().ToString("N");
-            post.Title = guidString;
-            post.Content = guidString;
-            post.Tags = new Collection<Tag> { db.Tags.First() };
+            setupStatus.Result.Title = guidString;
+            setupStatus.Result.Content = guidString;
+            setupStatus.Result.Tags = new Collection<Tag> { db.Tags.First() };
 
             var service = new UpdateService<Post>(db);
-            var status = service.Update(post);
+            var status = service.Update(setupStatus.Result);
             status.IsValid.ShouldEqual(true, status.Errors);
         }
 
         public static async Task UpdatePostGenericDirectAsync(this SampleWebAppDb db, int postId)
         {
             var setupService = new DetailServiceAsync<Post>(db);
-            var post = await setupService.GetDetailAsync(postId);
+            var setupStatus = await setupService.GetDetailAsync(postId);
+            setupStatus.IsValid.ShouldEqual(true, setupStatus.Errors);
 
             var guidString = Guid.NewGuid().ToString("N");
-            post.Title = guidString;
-            post.Content = guidString;
-            post.Tags = new Collection<Tag> { db.Tags.First() };
+            setupStatus.Result.Title = guidString;
+            setupStatus.Result.Content = guidString;
+            setupStatus.Result.Tags = new Collection<Tag> { db.Tags.First() };
 
             var service = new UpdateServiceAsync<Post>(db);
-            var status = await service.UpdateAsync(post);
+            var status = await service.UpdateAsync(setupStatus.Result);
             status.IsValid.ShouldEqual(true, status.Errors);
         }
 
         public static void UpdatePostGenericViaDto(this SampleWebAppDb db, int postId)
         {
             var setupService = new UpdateSetupService<Post,DetailPostDto>(db);
-            var dto = setupService.GetOriginal(postId);
+            var setupStatus = setupService.GetOriginal(postId);
+            setupStatus.IsValid.ShouldEqual(true, setupStatus.Errors);
 
             var guidString = Guid.NewGuid().ToString("N");
-            dto.Title = guidString;
-            dto.Content = guidString;
-            dto.Tags = new Collection<Tag> { db.Tags.First() };
+            setupStatus.Result.Title = guidString;
+            setupStatus.Result.Content = guidString;
+            setupStatus.Result.Tags = new Collection<Tag> { db.Tags.First() }; 
 
             var service = new UpdateService<Post,DetailPostDto>(db);
-            var status = service.Update(dto);
+            var status = service.Update(setupStatus.Result);
             status.IsValid.ShouldEqual(true, status.Errors);
         }
 
         public static async Task UpdatePostGenericViaDtoAsync(this SampleWebAppDb db, int postId)
         {
             var setupService = new UpdateSetupServiceAsync<Post, DetailPostDtoAsync>(db);
-            var dto = await setupService.GetOriginalAsync(postId);
+            var setupStatus = await setupService.GetOriginalAsync(postId);
+            setupStatus.IsValid.ShouldEqual(true, setupStatus.Errors);
 
             var guidString = Guid.NewGuid().ToString("N");
-            dto.Title = guidString;
-            dto.Content = guidString;
-            dto.Tags = new Collection<Tag> { db.Tags.First() };
+            setupStatus.Result.Title = guidString;
+            setupStatus.Result.Content = guidString;
+            setupStatus.Result.Tags = new Collection<Tag> { db.Tags.First() }; 
 
             var service = new UpdateServiceAsync<Post, DetailPostDtoAsync>(db);
-            var status = await service.UpdateAsync(dto);
+            var status = await service.UpdateAsync(setupStatus.Result);
             status.IsValid.ShouldEqual(true, status.Errors);
         }
 
@@ -357,60 +361,64 @@ namespace Tests.Helpers
         public static void UpdatePostGSelectDirect(this SampleWebAppDb db, int postId)
         {
             var setupService = new DetailService(db);
-            var post = setupService.GetDetail<Post>(postId);
+            var setupStatus = setupService.GetDetail<Post>(postId);
+            setupStatus.IsValid.ShouldEqual(true, setupStatus.Errors);
 
             var guidString = Guid.NewGuid().ToString("N");
-            post.Title = guidString;
-            post.Content = guidString;
-            post.Tags = new Collection<Tag> { db.Tags.First() };
+            setupStatus.Result.Title = guidString;
+            setupStatus.Result.Content = guidString;
+            setupStatus.Result.Tags = new Collection<Tag> { db.Tags.First() };
 
             var service = new UpdateService(db);
-            var status = service.Update(post);
+            var status = service.Update(setupStatus.Result);
             status.IsValid.ShouldEqual(true, status.Errors);
         }
 
         public static async Task UpdatePostGSelectDirectAsync(this SampleWebAppDb db, int postId)
         {
             var setupService = new DetailServiceAsync(db);
-            var post = await setupService.GetDetailAsync<Post>(postId);
+            var setupStatus = await setupService.GetDetailAsync<Post>(postId);
+            setupStatus.IsValid.ShouldEqual(true, setupStatus.Errors);
 
             var guidString = Guid.NewGuid().ToString("N");
-            post.Title = guidString;
-            post.Content = guidString;
-            post.Tags = new Collection<Tag> { db.Tags.First() };
+            setupStatus.Result.Title = guidString;
+            setupStatus.Result.Content = guidString;
+            setupStatus.Result.Tags = new Collection<Tag> { db.Tags.First() };
 
             var service = new UpdateServiceAsync<Post>(db);
-            var status = await service.UpdateAsync(post);
+            var status = await service.UpdateAsync(setupStatus.Result);
             status.IsValid.ShouldEqual(true, status.Errors);
         }
 
         public static void UpdatePostGSelectViaDto(this SampleWebAppDb db, int postId)
         {
             var setupService = new UpdateSetupService(db);
-            var dto = setupService.GetOriginal<DetailPostDto>(postId);
+            var setupStatus = setupService.GetOriginal<DetailPostDto>(postId);
+            setupStatus.IsValid.ShouldEqual(true, setupStatus.Errors);
 
             var guidString = Guid.NewGuid().ToString("N");
-            dto.Title = guidString;
-            dto.Content = guidString;
-            dto.Tags = new Collection<Tag> { db.Tags.First() };
+            setupStatus.Result.Title = guidString;
+            setupStatus.Result.Content = guidString;
+            setupStatus.Result.Tags = new Collection<Tag> { db.Tags.First() };
 
             var service = new UpdateService(db);
-            var status = service.Update(dto);
+            var status = service.Update(setupStatus.Result);
             status.IsValid.ShouldEqual(true, status.Errors);
         }
 
         public static async Task UpdatePostGSelectViaDtoAsync(this SampleWebAppDb db, int postId)
         {
             var setupService = new UpdateSetupServiceAsync(db);
-            var dto = await setupService.GetOriginalAsync<DetailPostDtoAsync>(postId);
+            var setupStatus = await setupService.GetOriginalAsync<DetailPostDtoAsync>(postId);
+            setupStatus.IsValid.ShouldEqual(true, setupStatus.Errors);
 
             var guidString = Guid.NewGuid().ToString("N");
-            dto.Title = guidString;
-            dto.Content = guidString;
-            dto.Tags = new Collection<Tag> { db.Tags.First() };
+            setupStatus.Result.Title = guidString;
+            setupStatus.Result.Content = guidString;
+            setupStatus.Result.Tags = new Collection<Tag> { db.Tags.First() };
 
             var service = new UpdateServiceAsync(db);
-            var status = await service.UpdateAsync(dto);
+            var status = await service.UpdateAsync(setupStatus.Result);
             status.IsValid.ShouldEqual(true, status.Errors);
         }
 

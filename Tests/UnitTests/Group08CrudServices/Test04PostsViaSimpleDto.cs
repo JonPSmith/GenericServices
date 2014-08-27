@@ -77,14 +77,14 @@ namespace Tests.UnitTests.Group08CrudServices
                 var firstPost = db.Posts.Include(x => x.Tags).AsNoTracking().First();
 
                 //ATTEMPT
-                var dto = service.GetDetailUsingWhere(x => x.PostId == firstPost.PostId);
-                dto.LogSpecificName("End");
+                var status = service.GetDetailUsingWhere(x => x.PostId == firstPost.PostId);
+                status.Result.LogSpecificName("End");
 
                 //VERIFY
-                dto.PostId.ShouldEqual(firstPost.PostId);
-                dto.BloggerName.ShouldEqual(firstPost.Blogger.Name);
-                dto.Title.ShouldEqual(firstPost.Title);
-                CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), dto.Tags.Select(x => x.TagId));
+                status.Result.PostId.ShouldEqual(firstPost.PostId);
+                status.Result.BloggerName.ShouldEqual(firstPost.Blogger.Name);
+                status.Result.Title.ShouldEqual(firstPost.Title);
+                CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), status.Result.Tags.Select(x => x.TagId));
             }
         }
 
@@ -98,14 +98,14 @@ namespace Tests.UnitTests.Group08CrudServices
                 var firstPost = db.Posts.Include(x => x.Tags).AsNoTracking().First();
 
                 //ATTEMPT
-                var dto = service.GetOriginal(firstPost.PostId);
-                dto.LogSpecificName("End");
+                var status = service.GetOriginal(firstPost.PostId);
+                status.Result.LogSpecificName("End");
 
                 //VERIFY
-                dto.PostId.ShouldEqual(firstPost.PostId);
-                dto.BloggerName.ShouldEqual(firstPost.Blogger.Name);
-                dto.Title.ShouldEqual(firstPost.Title);
-                CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), dto.Tags.Select(x => x.TagId));
+                status.Result.PostId.ShouldEqual(firstPost.PostId);
+                status.Result.BloggerName.ShouldEqual(firstPost.Blogger.Name);
+                status.Result.Title.ShouldEqual(firstPost.Title);
+                CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), status.Result.Tags.Select(x => x.TagId));
             }
         }
 
@@ -122,10 +122,10 @@ namespace Tests.UnitTests.Group08CrudServices
                 var setupService = new UpdateSetupService<Post, SimplePostDto>(db);
 
                 //ATTEMPT
-                var dto = setupService.GetOriginal(firstPost.PostId);
-                dto.Title = Guid.NewGuid().ToString();
-                var status = service.Update(dto);
-                dto.LogSpecificName("End");
+                var setupStatus = setupService.GetOriginal(firstPost.PostId);
+                setupStatus.Result.Title = Guid.NewGuid().ToString();
+                var status = service.Update(setupStatus.Result);
+                setupStatus.Result.LogSpecificName("End");
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
@@ -146,15 +146,15 @@ namespace Tests.UnitTests.Group08CrudServices
                 var setupService = new UpdateSetupService<Post, SimplePostDto>(db);
 
                 //ATTEMPT
-                var dto = setupService.GetOriginal(firstPost.PostId);
-                dto.Title = Guid.NewGuid().ToString();
-                var status = service.Update(dto);
-                dto.LogSpecificName("End");
+                var setupStatus = setupService.GetOriginal(firstPost.PostId);
+                setupStatus.Result.Title = Guid.NewGuid().ToString();
+                var status = service.Update(setupStatus.Result);
+                setupStatus.Result.LogSpecificName("End");
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
                 var updatedPost = db.Posts.Include(x => x.Tags).First();
-                updatedPost.Title.ShouldEqual(dto.Title);
+                updatedPost.Title.ShouldEqual(setupStatus.Result.Title);
                 updatedPost.Blogger.ShouldNotEqualNull();
                 CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), updatedPost.Tags.Select(x => x.TagId));
 

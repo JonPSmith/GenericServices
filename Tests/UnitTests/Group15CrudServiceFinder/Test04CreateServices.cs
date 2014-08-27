@@ -78,11 +78,12 @@ namespace Tests.UnitTests.Group15CrudServiceFinder
                 var firstPost = db.Posts.First();
 
                 //ATTEMPT
-                var item = service.GetDetail<Post>(firstPost.PostId);
+                var status = service.GetDetail<Post>(firstPost.PostId);
 
                 //VERIFY
-                item.PostId.ShouldEqual(firstPost.PostId);
-                item.Title.ShouldEqual(firstPost.Title);
+                status.IsValid.ShouldEqual(true);
+                status.Result.PostId.ShouldEqual(firstPost.PostId);
+                status.Result.Title.ShouldEqual(firstPost.Title);
             }
         }
 
@@ -96,13 +97,14 @@ namespace Tests.UnitTests.Group15CrudServiceFinder
                 var firstPost = db.Posts.Include(x => x.Tags).AsNoTracking().First();
 
                 //ATTEMPT
-                var dto = service.GetDetail<SimplePostDto>(firstPost.PostId);
+                var status = service.GetDetail<SimplePostDto>(firstPost.PostId);
 
                 //VERIFY
-                dto.PostId.ShouldEqual(firstPost.PostId);
-                dto.BloggerName.ShouldEqual(firstPost.Blogger.Name);
-                dto.Title.ShouldEqual(firstPost.Title);
-                CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), dto.Tags.Select(x => x.TagId));
+                status.IsValid.ShouldEqual(true);
+                status.Result.PostId.ShouldEqual(firstPost.PostId);
+                status.Result.BloggerName.ShouldEqual(firstPost.Blogger.Name);
+                status.Result.Title.ShouldEqual(firstPost.Title);
+                CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), status.Result.Tags.Select(x => x.TagId));
             }
         }
 
@@ -119,11 +121,12 @@ namespace Tests.UnitTests.Group15CrudServiceFinder
                 var service = new UpdateSetupService(db);
 
                 //ATTEMPT
-                var result = service.GetOriginal<Post>(firstPostUntracked.PostId);
+                var status = service.GetOriginal<Post>(firstPostUntracked.PostId);
 
                 //VERIFY
-                result.ShouldNotEqualNull();
-                result.PostId.ShouldEqual(firstPostUntracked.PostId);
+                status.IsValid.ShouldEqual(true);
+                status.Result.ShouldNotEqualNull();
+                status.Result.PostId.ShouldEqual(firstPostUntracked.PostId);
             }
         }
 
@@ -137,11 +140,12 @@ namespace Tests.UnitTests.Group15CrudServiceFinder
                 var service = new UpdateSetupService(db);
 
                 //ATTEMPT
-                var result = service.GetOriginal<SimplePostDto>(firstPostUntracked.PostId);
+                var status = service.GetOriginal<SimplePostDto>(firstPostUntracked.PostId);
 
                 //VERIFY
-                result.ShouldNotEqualNull();
-                result.PostId.ShouldEqual(firstPostUntracked.PostId);
+                status.IsValid.ShouldEqual(true);
+                status.Result.ShouldNotEqualNull();
+                status.Result.PostId.ShouldEqual(firstPostUntracked.PostId);
             }
         }
 
@@ -176,17 +180,18 @@ namespace Tests.UnitTests.Group15CrudServiceFinder
                 var snap = new DbSnapShot(db);
                 var firstPostUntrackedNoIncludes = db.Posts.AsNoTracking().First();
                 var service = new UpdateService(db);
-                var dto = (new UpdateSetupService(db)).GetOriginal<SimplePostDto>(firstPostUntrackedNoIncludes.PostId);
+                var setupStatus = (new UpdateSetupService(db)).GetOriginal<SimplePostDto>(firstPostUntrackedNoIncludes.PostId);
+                setupStatus.IsValid.ShouldEqual(true, setupStatus.Errors);
 
                 //ATTEMPT
-                dto.Title = Guid.NewGuid().ToString();
-                var status = service.Update(dto);
+                setupStatus.Result.Title = Guid.NewGuid().ToString();
+                var status = service.Update(setupStatus.Result);
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
                 snap.CheckSnapShot(db);
                 var updatedPost = db.Posts.Include(x => x.Tags).First();
-                updatedPost.Title.ShouldEqual(dto.Title);
+                updatedPost.Title.ShouldEqual(setupStatus.Result.Title);
                 updatedPost.Content.ShouldEqual(firstPostUntrackedNoIncludes.Content);
             }
         }

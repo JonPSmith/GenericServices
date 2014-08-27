@@ -1,7 +1,4 @@
-﻿using System;
-using System.Data.Entity;
-using GenericServices.Core;
-using GenericServices.Core.Internal;
+﻿using GenericServices.Core;
 
 namespace GenericServices.Services.Concrete
 {
@@ -22,10 +19,6 @@ namespace GenericServices.Services.Concrete
         /// <returns></returns>
         public ISuccessOrErrors Delete<TData>(params object[] keys) where TData : class, new() 
         {
-
-            var keyProperties = _db.GetKeyProperties<TData>();
-            if (keyProperties.Count != keys.Length)
-                throw new ArgumentException("The number of keys in the data entry did not match the number of keys provided");
 
             var entityToDelete = _db.Set<TData>().Find(keys);
             if (entityToDelete == null)

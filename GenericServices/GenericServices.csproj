@@ -64,6 +64,7 @@
     <Compile Include="Core\Internal\BuildFilter.cs" />
     <Compile Include="Core\Internal\DecodeToService.cs" />
     <Compile Include="Core\Internal\EfKeyFinder.cs" />
+    <Compile Include="Core\SecurityHelper.cs" />
     <Compile Include="GenericLoggerSetup.cs" />
     <Compile Include="IActionAsync.cs" />
     <Compile Include="IActionService.cs" />

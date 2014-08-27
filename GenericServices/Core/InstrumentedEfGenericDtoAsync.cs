@@ -162,16 +162,23 @@ namespace GenericServices.Core
             }
         }
 
-        protected internal override async Task<TDto> CreateDtoAndCopyDataInAsync(IDbContextWithValidation context, Expression<Func<TData, bool>> predicate)
+        protected internal override async Task<ISuccessOrErrors<TDto>> CreateDtoAndCopyDataInAsync(
+            IDbContextWithValidation context, Expression<Func<TData, bool>> predicate)
         {
             LogCaller(CallTypes.Start);
-            var newDto = await base.CreateDtoAndCopyDataInAsync(context, predicate);
-            var instDto = newDto as InstrumentedEfGenericDtoAsync<TData, TDto>;
-            instDto._timer = _timer;
-            instDto._logOfCalls = _logOfCalls;
-            instDto._whereToFail = _whereToFail;
-            instDto.LogCaller(CallTypes.End);
-            return instDto as TDto;
+            var status = await base.CreateDtoAndCopyDataInAsync(context, predicate);
+            if (status.IsValid)
+            {
+                var instDto = status.Result as InstrumentedEfGenericDtoAsync<TData, TDto>;
+                instDto._timer = _timer;
+                instDto._logOfCalls = _logOfCalls;
+                instDto._whereToFail = _whereToFail;
+                instDto.LogCaller(CallTypes.End);
+                return new SuccessOrErrors<TDto>(instDto as TDto, status.SuccessMessage);
+            }
+
+            //else the dto is null so we can't turn it into a new instrumented dto
+            return status;
         }
 
 

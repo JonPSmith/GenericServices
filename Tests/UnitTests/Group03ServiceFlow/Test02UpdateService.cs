@@ -35,10 +35,11 @@ namespace Tests.UnitTests.Group03ServiceFlow
                 var firstTag = db.Tags.First();
 
                 //ATTEMPT
-                var dto = service.GetOriginal(firstTag.TagId);
+                var status = service.GetOriginal(firstTag.TagId);
 
                 //VERIFY
-                dto.FunctionsCalledCommaDelimited.ShouldEqual("CreateDtoAndCopyDataIn,SetupSecondaryData");
+                status.IsValid.ShouldEqual(true, status.Errors);
+                status.Result.FunctionsCalledCommaDelimited.ShouldEqual("CreateDtoAndCopyDataIn,SetupSecondaryData");
             }
         }
 

@@ -81,15 +81,16 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 var firstPost = db.Posts.Include( x => x.Tags).AsNoTracking().First();
 
                 //ATTEMPT
-                var dto = await service.GetDetailAsync(firstPost.PostId);
+                var status = await service.GetDetailAsync(firstPost.PostId);
 
                 //VERIFY
-                dto.PostId.ShouldEqual(firstPost.PostId);
-                dto.BlogId.ShouldEqual(firstPost.BlogId);
-                dto.BloggerName.ShouldEqual(firstPost.Blogger.Name);
-                dto.Title.ShouldEqual(firstPost.Title);
-                dto.Content.ShouldEqual(firstPost.Content);
-                CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), dto.Tags.Select(x => x.TagId));
+                status.IsValid.ShouldEqual(true, status.Errors);
+                status.Result.PostId.ShouldEqual(firstPost.PostId);
+                status.Result.BlogId.ShouldEqual(firstPost.BlogId);
+                status.Result.BloggerName.ShouldEqual(firstPost.Blogger.Name);
+                status.Result.Title.ShouldEqual(firstPost.Title);
+                status.Result.Content.ShouldEqual(firstPost.Content);
+                CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), status.Result.Tags.Select(x => x.TagId));
             }
         }
 
@@ -197,11 +198,12 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 var firstPost = db.Posts.First();
 
                 //ATTEMPT
-                var dto = await setupService.GetOriginalAsync(firstPost.PostId);
+                var status = await setupService.GetOriginalAsync(firstPost.PostId);
 
                 //VERIFY
-                dto.Bloggers.KeyValueList.Count.ShouldEqual(db.Blogs.Count() + 1);
-                dto.UserChosenTags.AllPossibleOptions.Count.ShouldEqual(db.Tags.Count());
+                status.IsValid.ShouldEqual(true, status.Errors);
+                status.Result.Bloggers.KeyValueList.Count.ShouldEqual(db.Blogs.Count() + 1);
+                status.Result.UserChosenTags.AllPossibleOptions.Count.ShouldEqual(db.Tags.Count());
             }
         }
 
@@ -218,17 +220,18 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 var firstPost = db.Posts.Include(x => x.Tags).First();
 
                 //ATTEMPT
-                var dto = await setupService.GetOriginalAsync(firstPost.PostId);
-                dto.Title = Guid.NewGuid().ToString();
-                dto.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
-                dto.UserChosenTags.FinalSelection = firstPost.Tags.Select(x => x.TagId.ToString("D")).ToArray();
-                var status = await updateService.UpdateAsync(dto);
+                var setupStatus = await setupService.GetOriginalAsync(firstPost.PostId);
+                setupStatus.IsValid.ShouldEqual(true, setupStatus.Errors);
+                setupStatus.Result.Title = Guid.NewGuid().ToString();
+                setupStatus.Result.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
+                setupStatus.Result.UserChosenTags.FinalSelection = firstPost.Tags.Select(x => x.TagId.ToString("D")).ToArray();
+                var status = await updateService.UpdateAsync(setupStatus.Result);
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
                 snap.CheckSnapShot(db);
                 var post = db.Posts.Include(x => x.Tags).Single(x => x.PostId == firstPost.PostId);
-                post.Title.ShouldEqual(dto.Title);
+                post.Title.ShouldEqual(setupStatus.Result.Title);
                 post.BlogId.ShouldEqual(db.Blogs.First().BlogId);
                 CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), post.Tags.Select(x => x.TagId));
             }
@@ -248,17 +251,18 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 var firstPost = db.Posts.First();
 
                 //ATTEMPT
-                var dto = await setupService.GetOriginalAsync(firstPost.PostId);
-                dto.Title = Guid.NewGuid().ToString();
-                dto.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
-                dto.UserChosenTags.FinalSelection = db.Tags.Take(1).ToList().Select(x => x.TagId.ToString("D")).ToArray();
-                var status = await updateService.UpdateAsync(dto);
+                var setupStatus = await setupService.GetOriginalAsync(firstPost.PostId);
+                setupStatus.IsValid.ShouldEqual(true, setupStatus.Errors);
+                setupStatus.Result.Title = Guid.NewGuid().ToString();
+                setupStatus.Result.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
+                setupStatus.Result.UserChosenTags.FinalSelection = db.Tags.Take(1).ToList().Select(x => x.TagId.ToString("D")).ToArray();
+                var status = await updateService.UpdateAsync(setupStatus.Result);
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
                 snap.CheckSnapShot(db, 0, -1);
                 var post = db.Posts.Include( x=> x.Tags).Single(x => x.PostId == firstPost.PostId);
-                post.Title.ShouldEqual(dto.Title);
+                post.Title.ShouldEqual(setupStatus.Result.Title);
                 post.BlogId.ShouldEqual(db.Blogs.First().BlogId);
                 CollectionAssert.AreEqual(db.Tags.Take(1).Select(x => x.TagId), post.Tags.Select(x => x.TagId));
             }
@@ -277,17 +281,18 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 var firstPost = db.Posts.First();
 
                 //ATTEMPT
-                var dto = await setupService.GetOriginalAsync(firstPost.PostId);
-                dto.Title = Guid.NewGuid().ToString();
-                dto.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
-                dto.UserChosenTags.FinalSelection = db.Tags.Take(3).ToList().Select(x => x.TagId.ToString("D")).ToArray();
-                var status = await updateService.UpdateAsync(dto);
+                var setupStatus = await setupService.GetOriginalAsync(firstPost.PostId);
+                setupStatus.IsValid.ShouldEqual(true, setupStatus.Errors);
+                setupStatus.Result.Title = Guid.NewGuid().ToString();
+                setupStatus.Result.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
+                setupStatus.Result.UserChosenTags.FinalSelection = db.Tags.Take(3).ToList().Select(x => x.TagId.ToString("D")).ToArray();
+                var status = await updateService.UpdateAsync(setupStatus.Result);
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
                 snap.CheckSnapShot(db, 0, 1);
                 var post = db.Posts.Include(x => x.Tags).Single(x => x.PostId == firstPost.PostId);
-                post.Title.ShouldEqual(dto.Title);
+                post.Title.ShouldEqual(setupStatus.Result.Title);
                 post.BlogId.ShouldEqual(db.Blogs.First().BlogId);
                 CollectionAssert.AreEquivalent(db.Tags.Take(3).Select(x => x.TagId), post.Tags.Select(x => x.TagId));
             }
@@ -305,16 +310,17 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 var firstPost = db.Posts.First();
 
                 //ATTEMPT
-                var dto = await setupService.GetOriginalAsync(firstPost.PostId);
-                dto.Title = null;                   //that will fail
-                dto.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
-                dto.UserChosenTags.FinalSelection = db.Tags.Take(3).ToList().Select(x => x.TagId.ToString("D")).ToArray();
-                var status = await updateService.UpdateAsync(dto);
+                var setupStatus = await setupService.GetOriginalAsync(firstPost.PostId);
+                setupStatus.IsValid.ShouldEqual(true, setupStatus.Errors);
+                setupStatus.Result.Title = null;                   //that will fail
+                setupStatus.Result.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
+                setupStatus.Result.UserChosenTags.FinalSelection = db.Tags.Take(3).ToList().Select(x => x.TagId.ToString("D")).ToArray();
+                var status = await updateService.UpdateAsync(setupStatus.Result);
 
                 //VERIFY
                 status.IsValid.ShouldEqual(false);
-                dto.Bloggers.KeyValueList.Count.ShouldEqual(db.Blogs.Count() + 1);
-                dto.UserChosenTags.AllPossibleOptions.Count.ShouldEqual(db.Tags.Count());
+                setupStatus.Result.Bloggers.KeyValueList.Count.ShouldEqual(db.Blogs.Count() + 1);
+                setupStatus.Result.UserChosenTags.AllPossibleOptions.Count.ShouldEqual(db.Tags.Count());
             }
         }
 

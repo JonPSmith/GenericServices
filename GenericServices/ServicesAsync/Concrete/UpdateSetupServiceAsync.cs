@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
@@ -19,13 +20,13 @@ namespace GenericServices.ServicesAsync.Concrete
         }
 
         /// <summary>
-        /// This returns a single entry using the primary keys to find it.
+        /// This returns a status which, if Valid, has single entry using the primary keys to find it.
         /// </summary>
         /// <typeparam name="T">The type of the data to output. 
         /// Type must be a type either an EF data class or one of the EfGenericDto's</typeparam>
         /// <param name="keys">The keys must be given in the same order as entity framework has them</param>
-        /// <returns>Data class as read from database (not tracked)</returns>
-        public async Task<T> GetOriginalAsync<T>(params object[] keys) where T : class
+        /// <returns>Task with Status. If valid Result holds data (not tracked), otherwise null</returns>
+        public async Task<ISuccessOrErrors<T>> GetOriginalAsync<T>(params object[] keys) where T : class
         {
             var service = DecodeToService<UpdateSetupServiceAsync>.CreateCorrectService<T>(WhatItShouldBe.AsyncClassOrSpecificDto, _db);
             return await service.GetOriginalAsync(keys);
@@ -48,21 +49,18 @@ namespace GenericServices.ServicesAsync.Concrete
         /// This gets a single entry using the lambda expression as a where part
         /// </summary>
         /// <param name="whereExpression">Should be a 'where' expression that returns one item</param>
-        /// <returns>Data class as read from database (not tracked)</returns>
-        public async Task<TData> GetOriginalUsingWhereAsync(Expression<Func<TData, bool>> whereExpression)
+        /// <returns>Task with Status. If valid Result holds data (not tracked), otherwise null</returns>
+        public async Task<ISuccessOrErrors<TData>> GetOriginalUsingWhereAsync(Expression<Func<TData, bool>> whereExpression)
         {
-            var result = await _db.Set<TData>().Where(whereExpression).AsNoTracking().SingleOrDefaultAsync();
-            if (result == null)
-                throw new ArgumentException("We could not find an entry using that filter. Has it been deleted by someone else?");
-            return result;
+            return await _db.Set<TData>().Where(whereExpression).AsNoTracking().TrySingleWithPermissionCheckingAsync();
         }
 
         /// <summary>
         /// This finds an entry using the primary key(s) in the data
         /// </summary>
         /// <param name="keys">The keys must be given in the same order as entity framework has them</param>
-        /// <returns>Data class as read from database (not tracked)</returns>
-        public async Task<TData> GetOriginalAsync(params object[] keys)
+        /// <returns>Task with Status. If valid Result holds data (not tracked), otherwise null</returns>
+        public async Task<ISuccessOrErrors<TData>> GetOriginalAsync(params object[] keys)
         {
             return await GetOriginalUsingWhereAsync(BuildFilter.CreateFilter<TData>(_db.GetKeyProperties<TData>(), keys));
         }
@@ -87,27 +85,30 @@ namespace GenericServices.ServicesAsync.Concrete
         /// the dto's SetupSecondaryData to setup any extra data needed
         /// </summary>
         /// <param name="whereExpression">Should be a 'where' expression that returns one item</param>
-        /// <returns>TDto type with properties copyed over and SetupSecondaryData called to set secondary data</returns>
-        public async Task<TDto> GetOriginalUsingWhereAsync(Expression<Func<TData, bool>> whereExpression)
+        /// <returns>Task with Status. If valid TDto type with properties copyed over and SetupSecondaryData called 
+        /// to set secondary data, otherwise null</returns>
+        public async Task<ISuccessOrErrors<TDto>> GetOriginalUsingWhereAsync(Expression<Func<TData, bool>> whereExpression)
         {
             var dto = new TDto();
             if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.Detail))
                 throw new InvalidOperationException("This DTO does not support a detailed view.");
 
-            dto = await dto.CreateDtoAndCopyDataInAsync(_db, whereExpression);
-            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
-                await dto.SetupSecondaryDataAsync(_db, dto);
-            return dto;
-        }
+            var status = await dto.CreateDtoAndCopyDataInAsync(_db, whereExpression);
+            if (!status.IsValid) return status;
 
+            if (!status.Result.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
+                await status.Result.SetupSecondaryDataAsync(_db, status.Result);
+            return status;
+        }
 
         /// <summary>
         /// This returns a single entry using the primary keys to find it. It also calls
         /// the dto's SetupSecondaryData to setup any extra data needed
         /// </summary>
         /// <param name="keys">The keys must be given in the same order as entity framework has them</param>
-        /// <returns>TDto type with properties copyed over and SetupSecondaryData called to set secondary data</returns>
-        public async Task<TDto> GetOriginalAsync(params object[] keys)
+        /// <returns>Task with Status. If valid TDto type with properties copyed over and SetupSecondaryData called 
+        /// to set secondary data, otherwise null</returns>
+        public async Task<ISuccessOrErrors<TDto>> GetOriginalAsync(params object[] keys)
         {
             return await GetOriginalUsingWhereAsync(BuildFilter.CreateFilter<TData>(_db.GetKeyProperties<TData>(), keys));
         }

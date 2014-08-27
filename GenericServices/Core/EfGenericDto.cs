@@ -87,15 +87,12 @@ namespace GenericServices.Core
         /// This copies an existing TData into a new the dto using a Lambda expression to define the where clause
         /// It copies TData properties into all TDto properties that have accessable setters, i.e. not private
         /// </summary>
-        /// <returns>dto, or null if not found</returns>
-        internal protected virtual TDto CreateDtoAndCopyDataIn(IDbContextWithValidation context, Expression<Func<TData, bool>> predicate)
+        /// <returns>status. If valid result is dto. Otherwise null</returns>
+        internal protected virtual ISuccessOrErrors<TDto> CreateDtoAndCopyDataIn(IDbContextWithValidation context, 
+            Expression<Func<TData, bool>> predicate)
         {
             Mapper.CreateMap<TData, TDto>();
-            var dto = GetDataUntracked(context).Where(predicate).Project().To<TDto>().SingleOrDefault();
-            if (dto == null)
-                throw new ArgumentException("We could not find an entry using that filter. Has it been deleted by someone else?");
-
-            return dto;
+            return GetDataUntracked(context).Where(predicate).Project().To<TDto>().TrySingleWithPermissionChecking();
         }
 
     }

@@ -62,13 +62,14 @@ namespace Tests.UnitTests.Group08CrudServices
                 var firstGrade = db.PostTagGrades.Include(x => x.TagPart).Include(x => x.PostPart).First();
 
                 //ATTEMPT
-                var dto = service.GetDetailUsingWhere(x => x.PostId == firstGrade.PostId && x.TagId == firstGrade.TagId);
-                dto.LogSpecificName("End");
+                var status = service.GetDetailUsingWhere(x => x.PostId == firstGrade.PostId && x.TagId == firstGrade.TagId);
+                status.Result.LogSpecificName("End");
 
                 //VERIFY
-                dto.PostId.ShouldEqual(firstGrade.PostId);
-                dto.TagPartName.ShouldEqual(firstGrade.TagPart.Name);
-                dto.PostPartTitle.ShouldEqual(firstGrade.PostPart.Title);
+                status.IsValid.ShouldEqual(true, status.Errors);
+                status.Result.PostId.ShouldEqual(firstGrade.PostId);
+                status.Result.TagPartName.ShouldEqual(firstGrade.TagPart.Name);
+                status.Result.PostPartTitle.ShouldEqual(firstGrade.PostPart.Title);
             }
         }
 
@@ -82,13 +83,14 @@ namespace Tests.UnitTests.Group08CrudServices
                 var firstGrade = db.PostTagGrades.Include(x => x.TagPart).Include(x => x.PostPart).First();
 
                 //ATTEMPT
-                var dto = service.GetOriginal(firstGrade.PostId, firstGrade.TagId);
-                dto.LogSpecificName("End");
+                var status = service.GetOriginal(firstGrade.PostId, firstGrade.TagId);
+                status.Result.LogSpecificName("End");
 
                 //VERIFY
-                dto.PostId.ShouldEqual(firstGrade.PostId);
-                dto.TagPartName.ShouldEqual(firstGrade.TagPart.Name);
-                dto.PostPartTitle.ShouldEqual(firstGrade.PostPart.Title);
+                status.IsValid.ShouldEqual(true, status.Errors);
+                status.Result.PostId.ShouldEqual(firstGrade.PostId);
+                status.Result.TagPartName.ShouldEqual(firstGrade.TagPart.Name);
+                status.Result.PostPartTitle.ShouldEqual(firstGrade.PostPart.Title);
             }
         }
 
@@ -105,10 +107,11 @@ namespace Tests.UnitTests.Group08CrudServices
                 var setupService = new UpdateSetupService<PostTagGrade, SimplePostTagGradeDto>(db);
 
                 //ATTEMPT
-                var dto = setupService.GetOriginal(firstGrade.PostId, firstGrade.TagId);
-                dto.Grade = 999;
-                var status = service.Update(dto);
-                dto.LogSpecificName("End");
+                var setupStatus = setupService.GetOriginal(firstGrade.PostId, firstGrade.TagId);
+                setupStatus.IsValid.ShouldEqual(true, setupStatus.Errors);
+                setupStatus.Result.Grade = 999;
+                var status = service.Update(setupStatus.Result);
+                setupStatus.Result.LogSpecificName("End");
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
