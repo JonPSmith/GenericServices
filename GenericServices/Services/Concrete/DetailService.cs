@@ -34,7 +34,7 @@ namespace GenericServices.Services.Concrete
     //--------------------------------
     //direct version
 
-    public class DetailService<TData> : IDetailService<TData> where TData : class
+    public class DetailService<TData> : IDetailService<TData> where TData : class, new()
     {
         private readonly IDbContextWithValidation _db;
 
@@ -68,7 +68,7 @@ namespace GenericServices.Services.Concrete
     //DTO version
 
     public class DetailService<TData, TDto> : IDetailService<TData, TDto>
-        where TData : class
+        where TData : class, new()
         where TDto : EfGenericDto<TData, TDto>, new()
     {
         private readonly IDbContextWithValidation _db;

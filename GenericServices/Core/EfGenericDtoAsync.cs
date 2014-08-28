@@ -16,8 +16,8 @@ namespace GenericServices.Core
 {
 
     public abstract class EfGenericDtoAsync<TData, TDto> : EfGenericDtoBase<TData, TDto>
-        where TData : class
-        where TDto : EfGenericDtoAsync<TData, TDto>
+        where TData : class, new()
+        where TDto : EfGenericDtoAsync<TData, TDto>, new()
     {
 
         

@@ -35,8 +35,8 @@ namespace GenericServices.ServicesAsync.Concrete
     //--------------------------------
     //direct
 
-    public class DetailServiceAsync<TData> : IDetailServiceAsync<TData> 
-        where TData : class
+    public class DetailServiceAsync<TData> : IDetailServiceAsync<TData>
+        where TData : class, new()
     {
         private readonly IDbContextWithValidation _db;
 
@@ -71,8 +71,8 @@ namespace GenericServices.ServicesAsync.Concrete
     //---------------------------------------------------------------------
     //DTO version
 
-    public class DetailServiceAsync<TData, TDto> : IDetailServiceAsync<TData, TDto> 
-        where TData : class
+    public class DetailServiceAsync<TData, TDto> : IDetailServiceAsync<TData, TDto>
+        where TData : class, new()
         where TDto : EfGenericDtoAsync<TData, TDto>, new()
     {
         private readonly IDbContextWithValidation _db;

@@ -14,8 +14,8 @@ namespace GenericServices.Core
         ForceActionFail = 4, ForceActionWarnWithWrite = 8, ForceActionkWarnNoWrite = 16 }
 
     public abstract class InstrumentedEfGenericDto<TData, TDto> : EfGenericDto<TData, TDto>, ICheckIfWarnings
-        where TData : class
-        where TDto : EfGenericDto<TData, TDto>
+        where TData : class, new()
+        where TDto : EfGenericDto<TData, TDto>, new()
     {
         /// <summary>
         /// Used to surround calls with using to catch start/end time

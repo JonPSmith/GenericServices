@@ -78,8 +78,8 @@ namespace GenericServices.Services.Concrete
     //DTO version
 
     public class UpdateService<TData, TDto> : IUpdateService<TData, TDto>
-        where TData : class
-        where TDto : EfGenericDto<TData, TDto>
+        where TData : class, new()
+        where TDto : EfGenericDto<TData, TDto>, new()
     {
         private readonly IDbContextWithValidation _db;
 

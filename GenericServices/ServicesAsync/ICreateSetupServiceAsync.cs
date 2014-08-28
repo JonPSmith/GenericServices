@@ -5,7 +5,7 @@ namespace GenericServices.ServicesAsync
 {
 
     public interface ICreateSetupServiceAsync<TData, TDto>
-        where TData : class
+        where TData : class, new()
         where TDto : EfGenericDtoAsync<TData, TDto>, new()
     {
         /// <summary>

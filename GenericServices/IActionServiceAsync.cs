@@ -19,7 +19,7 @@ namespace GenericServices.ServicesAsync
 {
     public interface IActionServiceAsync<TActionOut, TActionIn, TDto> 
         where TActionIn : class, new()
-        where TDto : EfGenericDtoAsync<TActionIn, TDto>
+        where TDto : EfGenericDtoAsync<TActionIn, TDto>, new()
     {
         /// <summary>
         /// This runs an action that does not write to the database. 

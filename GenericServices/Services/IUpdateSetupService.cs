@@ -24,8 +24,8 @@ namespace GenericServices.Services
 
 
     public interface IUpdateSetupService<TData, TDto>
-        where TData : class
-        where TDto : EfGenericDto<TData, TDto>
+        where TData : class, new()
+        where TDto : EfGenericDto<TData, TDto>, new()
     {
         /// <summary>
         /// This returns a single entry using the primary keys to find it. It also calls

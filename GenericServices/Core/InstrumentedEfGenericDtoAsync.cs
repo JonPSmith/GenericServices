@@ -11,8 +11,8 @@ namespace GenericServices.Core
 {
 
     public abstract class InstrumentedEfGenericDtoAsync<TData, TDto> : EfGenericDtoAsync<TData, TDto>, ICheckIfWarnings
-        where TData : class
-        where TDto : EfGenericDtoAsync<TData, TDto>
+        where TData : class, new()
+        where TDto : EfGenericDtoAsync<TData, TDto>, new()
     {
         /// <summary>
         /// Used to surround calls with using to catch start/end time

@@ -4,8 +4,8 @@ using GenericServices.Core;
 
 namespace GenericServices.Services
 {
-   
-    public interface IDetailService<TData> where TData : class
+
+    public interface IDetailService<TData> where TData : class, new()
     {
         /// <summary>
         /// This gets a single entry using the lambda expression as a where part
@@ -23,8 +23,8 @@ namespace GenericServices.Services
     }
 
     public interface IDetailService<TData, TDto>
-        where TData : class
-        where TDto : EfGenericDto<TData, TDto>
+        where TData : class, new()
+        where TDto : EfGenericDto<TData, TDto>, new()
     {
         /// <summary>
         /// This gets a single entry using the lambda expression as a where part

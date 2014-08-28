@@ -26,7 +26,8 @@ namespace GenericServices.Services.Concrete
         }
     }
 
-    public class CreateSetupService<TData, TDto> : ICreateSetupService<TData, TDto> where TData : class
+    public class CreateSetupService<TData, TDto> : ICreateSetupService<TData, TDto>
+        where TData : class, new()
         where TDto : EfGenericDto<TData, TDto>, new()
     {
         private readonly IDbContextWithValidation _db;

@@ -47,7 +47,7 @@ namespace GenericServices.ServicesAsync.Concrete
 
     public class ActionServiceAsync<TActionOut, TActionIn, TDto> : IActionServiceAsync<TActionOut, TActionIn, TDto>
         where TActionIn : class, new()
-        where TDto : EfGenericDtoAsync<TActionIn, TDto>
+        where TDto : EfGenericDtoAsync<TActionIn, TDto>, new()
     {
 
         private readonly IDbContextWithValidation _db;

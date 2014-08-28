@@ -36,7 +36,7 @@ namespace GenericServices.ServicesAsync.Concrete
     //--------------------------------
     //direct version
 
-    public class UpdateSetupServiceAsync<TData> : IUpdateSetupServiceAsync<TData> where TData : class
+    public class UpdateSetupServiceAsync<TData> : IUpdateSetupServiceAsync<TData> where TData : class, new()
     {
         private readonly IDbContextWithValidation _db;
 
@@ -69,8 +69,8 @@ namespace GenericServices.ServicesAsync.Concrete
     //------------------------------------
     //Dto version
 
-    public class UpdateSetupServiceAsync<TData, TDto> : IUpdateSetupServiceAsync<TData, TDto> 
-        where TData : class
+    public class UpdateSetupServiceAsync<TData, TDto> : IUpdateSetupServiceAsync<TData, TDto>
+        where TData : class, new()
         where TDto : EfGenericDtoAsync<TData, TDto>, new()
     {
         private readonly IDbContextWithValidation _db;

@@ -49,7 +49,7 @@ namespace GenericServices.Services.Concrete
 
     public class ActionService<TActionOut, TActionIn, TDto> : IActionService<TActionOut, TActionIn, TDto>
         where TActionIn : class, new()
-        where TDto : EfGenericDto<TActionIn, TDto>
+        where TDto : EfGenericDto<TActionIn, TDto>, new()
     {
 
         private readonly IDbContextWithValidation _db;

@@ -71,7 +71,7 @@ namespace GenericServices.Services.Concrete
 
     public class CreateService<TData, TDto> : ICreateService<TData, TDto>
         where TData : class, new()
-        where TDto : EfGenericDto<TData, TDto>
+        where TDto : EfGenericDto<TData, TDto>, new()
     {
         private readonly IDbContextWithValidation _db;
 

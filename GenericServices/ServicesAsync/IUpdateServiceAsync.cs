@@ -15,8 +15,8 @@ namespace GenericServices.ServicesAsync
     }
 
     public interface IUpdateServiceAsync<TData,TDto>
-        where TData : class
-        where TDto : EfGenericDtoAsync<TData, TDto>
+        where TData : class, new()
+        where TDto : EfGenericDtoAsync<TData, TDto>, new()
     {
         /// <summary>
         /// This updates the entity data by copying over the relevant dto data.

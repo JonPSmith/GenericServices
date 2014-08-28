@@ -16,7 +16,7 @@ namespace GenericServices.Services
 
     public interface ICreateService<TData, TDto>
         where TData : class, new()
-        where TDto : EfGenericDto<TData, TDto>
+        where TDto : EfGenericDto<TData, TDto>, new()
     {
         /// <summary>
         /// This uses a dto to create a data class which it writes to the database with error checking

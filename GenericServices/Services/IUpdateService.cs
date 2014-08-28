@@ -14,8 +14,8 @@ namespace GenericServices.Services
     }
 
     public interface IUpdateService<TData, TDto>
-        where TData : class
-        where TDto : EfGenericDto<TData, TDto>
+        where TData : class, new()
+        where TDto : EfGenericDto<TData, TDto>, new()
     {
         /// <summary>
         /// This updates the entity data by copying over the relevant dto data.

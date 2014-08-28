@@ -6,7 +6,7 @@ using GenericServices.Core;
 namespace GenericServices.ServicesAsync
 {
 
-    public interface IUpdateSetupServiceAsync<TData> where TData : class
+    public interface IUpdateSetupServiceAsync<TData> where TData : class, new()
     {
         /// <summary>
         /// This gets a single entry using the lambda expression as a where part
@@ -24,7 +24,7 @@ namespace GenericServices.ServicesAsync
     }
 
     public interface IUpdateSetupServiceAsync<TData, TDto>
-        where TData : class
+        where TData : class, new()
         where TDto : EfGenericDtoAsync<TData, TDto>, new()
     {
         /// <summary>

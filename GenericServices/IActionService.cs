@@ -14,7 +14,7 @@ namespace GenericServices
 
     public interface IActionService<TActionOut, TActionIn, TDto>
         where TActionIn : class, new()
-        where TDto : EfGenericDto<TActionIn, TDto>
+        where TDto : EfGenericDto<TActionIn, TDto>, new()
     {
         /// <summary>
         /// This converts the dto to the format that the method needs and then runs it

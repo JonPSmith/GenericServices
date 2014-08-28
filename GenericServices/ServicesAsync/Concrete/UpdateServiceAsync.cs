@@ -81,8 +81,8 @@ namespace GenericServices.ServicesAsync.Concrete
     //DTO version
 
     public class UpdateServiceAsync<TData, TDto> : IUpdateServiceAsync<TData,TDto>
-        where TData : class
-        where TDto : EfGenericDtoAsync<TData, TDto>
+        where TData : class, new()
+        where TDto : EfGenericDtoAsync<TData, TDto>, new()
     {
         private readonly IDbContextWithValidation _db;
 

@@ -35,7 +35,7 @@
    -->
   <metadata>
     <id>GenericServices</id>
-    <version>1.0.0-beta11</version>
+    <version>1.0.0-beta12</version>
     <title>GenericServices</title>
     <authors>Jon Smith</authors>
     <owners>Jon Smith</owners>
@@ -49,7 +49,7 @@
     <releaseNotes>First release.</releaseNotes>
     <copyright>Copyright 2014</copyright>
     <dependencies>
-      <dependency id="EntityFramework" version="(6.1.0]" />
+      <dependency id="EntityFramework" version="6.1" />
     </dependencies>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.Core" targetFramework="net451" />

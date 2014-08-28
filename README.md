@@ -105,7 +105,8 @@ The commands are:
 - `Task<ISuccessErrors<T>> GetDetailAsync<T>( param object [] keys)` - async
 
 Note that the status contains any errors caused by missing data or sql security errors. 
-If there is an error then the result will be null, so you have to check the status.
+If there is an error then the result will be a new, empty class. This may throw an error
+somewhere else due to not filled in items, so checking the status is best.
 
 
 ##### CreateSetupService/CreateSetupServiceAsync: 
@@ -174,7 +175,8 @@ The commands are:
 - `Task<ISuccessErrors<T>> GetOriginalAsync<T>( param object [] keys)` - async
 
 Note that the status contains any errors caused by missing data or sql security errors. 
-If there is an error then the result will be null, so you have to check the status.
+If there is an error then the result will be a new, empty class. This may throw an error
+somewhere else due to not filled in items, so checking the status is best.
 
 ##### UpdateService/UpdateServiceAsync
 This updates a data item in the database using the data handed to it. The data, which can be a data class

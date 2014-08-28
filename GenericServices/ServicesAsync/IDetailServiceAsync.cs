@@ -7,7 +7,7 @@ namespace GenericServices.ServicesAsync
 {
 
     public interface IDetailServiceAsync<TData>
-        where TData : class
+        where TData : class, new()
     {
         /// <summary>
         /// This gets a single entry using the lambda expression as a where part
@@ -25,7 +25,7 @@ namespace GenericServices.ServicesAsync
     }
 
     public interface IDetailServiceAsync<TData, TDto>
-        where TData : class
+        where TData : class, new()
         where TDto : EfGenericDtoAsync<TData, TDto>, new()
     {
         /// <summary>

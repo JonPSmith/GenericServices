@@ -3,8 +3,8 @@ using GenericServices.Core;
 namespace GenericServices.Services
 {   
 
-    public interface ICreateSetupService<TData, out TDto> 
-        where TData : class
+    public interface ICreateSetupService<TData, out TDto>
+        where TData : class, new()
         where TDto : EfGenericDto<TData, TDto>, new()
     {
         /// <summary>
