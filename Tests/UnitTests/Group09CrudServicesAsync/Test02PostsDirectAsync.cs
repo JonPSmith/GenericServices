@@ -119,6 +119,7 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 status.IsValid.ShouldEqual(false, status.Errors);
                 status.Errors.Count.ShouldEqual(1);
                 status.Errors[0].ErrorMessage.ShouldEqual("We could not find an entry using that filter. Has it been deleted by someone else?");
+                status.Result.ShouldNotEqualNull();
             }
         }
 

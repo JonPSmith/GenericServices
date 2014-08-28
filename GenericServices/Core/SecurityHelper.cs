@@ -80,7 +80,7 @@ namespace GenericServices.Core
         public static ISuccessOrErrors<T> TrySingleWithPermissionChecking<T>(
             this IQueryable<T> request, bool logIt = true, [CallerMemberName] string methodName = "") where T : class, new()
         {
-            var status = new SuccessOrErrors<T>();
+            var status = new SuccessOrErrors<T>(new T(), "we return empty class if it fails");
             try
             {
                 var result = request.SingleOrDefault();
@@ -93,12 +93,9 @@ namespace GenericServices.Core
             catch (System.Data.Entity.Core.EntityCommandExecutionException ex)
             {
                 if (ex.IsExceptionAboutPermissions(logIt, methodName))
-                {
-                    status.SetSuccessWithResult(new T(), "failed");         //we return an empty class if it fails
                     status.AddSingleError("This access was not allowed.");
-                }
                 else
-                    throw;      //do not understand the error so rethrow
+                    throw; //do not understand the error so rethrow
             }
             return status;
         }
@@ -115,7 +112,7 @@ namespace GenericServices.Core
         public static async Task<ISuccessOrErrors<T>> TrySingleWithPermissionCheckingAsync<T>(
             this IQueryable<T> request, bool logIt = true, [CallerMemberName] string methodName = "") where T : class, new()
         {
-            var status = new SuccessOrErrors<T>();
+            var status = new SuccessOrErrors<T>(new T(), "we return empty class if it fails");
             try
             {
                 var result = await request.SingleOrDefaultAsync();
