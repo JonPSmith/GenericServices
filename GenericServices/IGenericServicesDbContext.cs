@@ -7,11 +7,9 @@ using System.Threading.Tasks;
 
 namespace GenericServices
 {
-    public interface IDbContextWithValidation
+    public interface IGenericServicesDbContext
     {
 
-        ISuccessOrErrors SaveChangesWithValidation();
-        Task<ISuccessOrErrors> SaveChangesWithValidationAsync();
         int SaveChanges();
         Task<int> SaveChangesAsync();
 

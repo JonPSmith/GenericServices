@@ -34,7 +34,7 @@ namespace Tests.UnitTests.Group15CrudServiceFinder
                 var firstPost = db.Posts.Include(x => x.Blogger).First();
 
                 //ATTEMPT
-                var query = service.GetMany<Post>().Include(x => x.Blogger);
+                var query = service.GetAll<Post>().Include(x => x.Blogger);
                 var list = query.ToList();
 
                 //VERIFY
@@ -55,7 +55,7 @@ namespace Tests.UnitTests.Group15CrudServiceFinder
                 var service = new ListService(db);
 
                 //ATTEMPT
-                var query = service.GetMany<SimplePostDto>();
+                var query = service.GetAll<SimplePostDto>();
                 var list = query.ToList();
 
                 //VERIFY

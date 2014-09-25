@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.Entity;
+using GenericServices;
 using NUnit.Framework;
 using Tests.DataClasses;
 using Tests.DataClasses.Concrete;
@@ -42,7 +43,7 @@ namespace Tests.UnitTests.Group01DataClasses
             {
                 //ATTEMPT
                 db.Posts.Remove(db.Posts.First());
-                var status = db.SaveChangesWithValidation();
+                var status = db.SaveChangesWithChecking();
 
                 //VERIFY
                 status.IsValid.ShouldEqual(false);
@@ -70,7 +71,7 @@ namespace Tests.UnitTests.Group01DataClasses
             {
                 //ATTEMPT
                 db.Tags.Add(new Tag { Name = tagGuid, Slug = tagGuid });
-                var status = db.SaveChangesWithValidation();
+                var status = db.SaveChangesWithChecking();
 
                 //VERIFY
                 status.IsValid.ShouldEqual(false);
@@ -101,7 +102,7 @@ namespace Tests.UnitTests.Group01DataClasses
                 //ATTEMPT
                 db.Posts.Remove(db.Posts.First());
                 db.Tags.Add(new Tag { Name = tagGuid, Slug = tagGuid });
-                var status = db.SaveChangesWithValidation();
+                var status = db.SaveChangesWithChecking();
 
                 //VERIFY
                 status.IsValid.ShouldEqual(false);
@@ -122,7 +123,7 @@ namespace Tests.UnitTests.Group01DataClasses
           
                 //ATTEMPT
                 db.PostTagGrades.Add(new PostTagGrade{ PostPart = firstPostTag.PostPart, TagPart = firstPostTag.TagPart });
-                var ex = Assert.Throws<DbUpdateException>(  () => db.SaveChangesWithValidation());
+                var ex = Assert.Throws<DbUpdateException>(  () => db.SaveChangesWithChecking());
 
                 //VERIFY
             }

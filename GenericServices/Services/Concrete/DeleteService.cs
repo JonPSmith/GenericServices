@@ -5,9 +5,9 @@ namespace GenericServices.Services.Concrete
 
     public class DeleteService : IDeleteService
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
-        public DeleteService(IDbContextWithValidation db)
+        public DeleteService(IGenericServicesDbContext db)
         {
             _db = db;
         }
@@ -27,7 +27,7 @@ namespace GenericServices.Services.Concrete
                         "Could not delete entry as it was not in the database. Could it have been deleted by someone else?");
 
             _db.Set<TData>().Remove(entityToDelete);
-            var result = _db.SaveChangesWithValidation();
+            var result = _db.SaveChangesWithChecking();
             if (result.IsValid)
                 result.SetSuccessMessage("Successfully deleted {0}.", typeof(TData).Name);
 

@@ -31,7 +31,7 @@ namespace Tests.DTOs.Concrete
             get { return ServiceFunctions.List | ServiceFunctions.DoesNotNeedSetup; }
         }
 
-        protected override IQueryable<Blog> GetDataUntracked(IDbContextWithValidation context)
+        protected override IQueryable<Blog> GetDataUntracked(IGenericServicesDbContext context)
         {
             return base.GetDataUntracked(context).Include(x => x.Posts);
         }

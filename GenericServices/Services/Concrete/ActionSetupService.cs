@@ -7,7 +7,7 @@ namespace GenericServices.Services.Concrete
         where TData : class, new()
         where TDto : EfGenericDto<TData, TDto>, new()
     {
-        public ActionSetupService(IDbContextWithValidation db) : base(db)
+        public ActionSetupService(IGenericServicesDbContext db) : base(db)
         {
         }
     }

@@ -55,16 +55,15 @@ namespace Tests.UnitTests.Group08CrudServices
                 var service = new ListService<Blog, SimpleBlogWithPostsDto>(db);
 
                 //ATTEMPT
-                var status = service.GetMany().TryManyWithPermissionChecking();
+                var list = service.GetAll().ToList();
 
                 //VERIFY
-                status.IsValid.ShouldEqual(true, status.Errors);
-                status.Result.Count().ShouldEqual(2);
+                list.Count().ShouldEqual(2);
                 var firstBlog = db.Blogs.Include(x => x.Posts).AsNoTracking().First();
-                status.Result.First().Name.ShouldEqual(firstBlog.Name);
-                status.Result.First().EmailAddress.ShouldEqual(firstBlog.EmailAddress);
-                status.Result.First().Posts.ShouldNotEqualNull();
-                CollectionAssert.AreEquivalent(firstBlog.Posts.Select(x => x.PostId), status.Result.First().Posts.Select(x => x.PostId));
+                list.First().Name.ShouldEqual(firstBlog.Name);
+                list.First().EmailAddress.ShouldEqual(firstBlog.EmailAddress);
+                list.First().Posts.ShouldNotEqualNull();
+                CollectionAssert.AreEquivalent(firstBlog.Posts.Select(x => x.PostId), list.First().Posts.Select(x => x.PostId));
             }
         }
 

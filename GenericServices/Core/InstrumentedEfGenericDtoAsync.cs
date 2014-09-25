@@ -111,13 +111,13 @@ namespace GenericServices.Core
         //---------------------------------------------------------------------
         //overridden methods
 
-        protected internal override IQueryable<TDto> BuildListQueryUntracked(IDbContextWithValidation context)
+        protected internal override IQueryable<TDto> BuildListQueryUntracked(IGenericServicesDbContext context)
         {
             using (new LogStartStop( this))
                 return base.BuildListQueryUntracked(context);
         }
 
-        protected internal override async Task SetupSecondaryDataAsync(IDbContextWithValidation db, TDto dto)
+        protected internal override async Task SetupSecondaryDataAsync(IGenericServicesDbContext db, TDto dto)
         {
             LogCaller();
         }
@@ -128,13 +128,13 @@ namespace GenericServices.Core
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        internal protected override async Task<TData> FindItemTrackedAsync(IDbContextWithValidation context)
+        internal protected override async Task<TData> FindItemTrackedAsync(IGenericServicesDbContext context)
         {
             using (new LogStartStop(this))
                 return await context.Set<TData>().FindAsync(GetKeyValues(context));
         }
 
-        protected internal override async Task<ISuccessOrErrors> CopyDataToDtoAsync(IDbContextWithValidation context, TData source, TDto destination)
+        protected internal override async Task<ISuccessOrErrors> CopyDataToDtoAsync(IGenericServicesDbContext context, TData source, TDto destination)
         {
             using (new LogStartStop(this))
             {
@@ -145,7 +145,7 @@ namespace GenericServices.Core
             }
         }
 
-        protected internal override async Task<ISuccessOrErrors> CopyDtoToDataAsync(IDbContextWithValidation context, TDto source, TData destination)
+        protected internal override async Task<ISuccessOrErrors> CopyDtoToDataAsync(IGenericServicesDbContext context, TDto source, TData destination)
         {
             using (new LogStartStop(this))
             {
@@ -163,7 +163,7 @@ namespace GenericServices.Core
         }
 
         protected internal override async Task<ISuccessOrErrors<TDto>> CreateDtoAndCopyDataInAsync(
-            IDbContextWithValidation context, Expression<Func<TData, bool>> predicate)
+            IGenericServicesDbContext context, Expression<Func<TData, bool>> predicate)
         {
             LogCaller(CallTypes.Start);
             var status = await base.CreateDtoAndCopyDataInAsync(context, predicate);

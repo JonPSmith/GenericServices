@@ -8,9 +8,9 @@ namespace GenericServices.Services.Concrete
 
     public class UpdateService : IUpdateService
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
-        public UpdateService(IDbContextWithValidation db)
+        public UpdateService(IGenericServicesDbContext db)
         {
             _db = db;
         }
@@ -46,9 +46,9 @@ namespace GenericServices.Services.Concrete
 
     public class UpdateService<TData> : IUpdateService<TData> where TData : class
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
-        public UpdateService(IDbContextWithValidation db)
+        public UpdateService(IGenericServicesDbContext db)
         {
             _db = db;
         }
@@ -66,7 +66,7 @@ namespace GenericServices.Services.Concrete
             //Set the entry as modified
             _db.Entry(itemToUpdate).State = EntityState.Modified;
 
-            var result = _db.SaveChangesWithValidation();
+            var result = _db.SaveChangesWithChecking();
             if (result.IsValid)
                 result.SetSuccessMessage("Successfully updated {0}.", typeof(TData).Name);
 
@@ -81,9 +81,9 @@ namespace GenericServices.Services.Concrete
         where TData : class, new()
         where TDto : EfGenericDto<TData, TDto>, new()
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
-        public UpdateService(IDbContextWithValidation db)
+        public UpdateService(IGenericServicesDbContext db)
         {
             _db = db;
         }
@@ -106,7 +106,7 @@ namespace GenericServices.Services.Concrete
             result = dto.CopyDtoToData(_db, dto, itemToUpdate); //update those properties we want to change
             if (result.IsValid)
             {
-                result = _db.SaveChangesWithValidation();
+                result = _db.SaveChangesWithChecking();
                 if (result.IsValid)
                     return result.SetSuccessMessage("Successfully updated {0}.", dto.DataItemName);
             }

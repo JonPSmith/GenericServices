@@ -11,9 +11,9 @@ namespace GenericServices.ServicesAsync.Concrete
 
     public class DetailServiceAsync : IDetailServiceAsync
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
-        public DetailServiceAsync(IDbContextWithValidation db)
+        public DetailServiceAsync(IGenericServicesDbContext db)
         {
             _db = db;
         }
@@ -38,9 +38,9 @@ namespace GenericServices.ServicesAsync.Concrete
     public class DetailServiceAsync<TData> : IDetailServiceAsync<TData>
         where TData : class, new()
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
-        public DetailServiceAsync(IDbContextWithValidation db)
+        public DetailServiceAsync(IGenericServicesDbContext db)
         {
             _db = db;
         }
@@ -52,7 +52,7 @@ namespace GenericServices.ServicesAsync.Concrete
         /// <returns>Task with Status. If valid Result is data as read from database (not tracked), otherwise null</returns>
         public async Task<ISuccessOrErrors<TData>> GetDetailUsingWhereAsync(Expression<Func<TData, bool>> whereExpression)
         {
-            return await _db.Set<TData>().Where(whereExpression).AsNoTracking().TrySingleWithPermissionCheckingAsync();
+            return await _db.Set<TData>().Where(whereExpression).AsNoTracking().RealiseSingleWithErrorCheckingAsync();
         }
 
         /// <summary>
@@ -75,9 +75,9 @@ namespace GenericServices.ServicesAsync.Concrete
         where TData : class, new()
         where TDto : EfGenericDtoAsync<TData, TDto>, new()
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
-        public DetailServiceAsync(IDbContextWithValidation db)
+        public DetailServiceAsync(IGenericServicesDbContext db)
         {
             _db = db;
         }

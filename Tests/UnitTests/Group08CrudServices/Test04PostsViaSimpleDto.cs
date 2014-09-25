@@ -55,15 +55,14 @@ namespace Tests.UnitTests.Group08CrudServices
                 var service = new ListService<Post, SimplePostDto>(db);
 
                 //ATTEMPT
-                var status = service.GetMany().TryManyWithPermissionChecking();
+                var list = service.GetAll().ToList();
 
                 //VERIFY
-                status.IsValid.ShouldEqual(true, status.Errors);
-                status.Result.Count().ShouldEqual(3);
-                status.Result.First().Title.ShouldEqual("First great post");
-                status.Result.First().BloggerName.ShouldEqual("Jon Smith");
-                status.Result.First().TagNames.ShouldEqual("Ugly post, Good post");
-                status.Result.First().LastUpdatedUtc.Kind.ShouldEqual(DateTimeKind.Utc);
+                list.Count().ShouldEqual(3);
+                list.First().Title.ShouldEqual("First great post");
+                list.First().BloggerName.ShouldEqual("Jon Smith");
+                list.First().TagNames.ShouldEqual("Ugly post, Good post");
+                list.First().LastUpdatedUtc.Kind.ShouldEqual(DateTimeKind.Utc);
 
             }
         }
@@ -228,7 +227,7 @@ namespace Tests.UnitTests.Group08CrudServices
             {
                 //SETUP
                 var listService = new ListService<Post, SimplePostDto>(db);
-                var firstPostUntracked = listService.GetMany().First();
+                var firstPostUntracked = listService.GetAll().First();
                 var service = new UpdateService<Post, SimplePostDto>(db);
 
                 //ATTEMPT

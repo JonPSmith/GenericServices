@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using GenericServices;
 using GenericServices.Services;
 using GenericServices.Services.Concrete;
 using GenericServices.ServicesAsync;
@@ -67,7 +68,7 @@ namespace Tests.Helpers
                 Tags = new Collection<Tag> {  db.Tags.First()}
             };
             db.Posts.Add(postClass);
-            var status = db.SaveChangesWithValidation();
+            var status = db.SaveChangesWithChecking();
             status.IsValid.ShouldEqual(true, status.Errors);
         }
 
@@ -82,7 +83,7 @@ namespace Tests.Helpers
                 Tags = new Collection<Tag> { db.Tags.First() }
             };
             db.Posts.Add(postClass);
-            var status = await db.SaveChangesWithValidationAsync();
+            var status = await db.SaveChangesWithCheckingAsync();
             status.IsValid.ShouldEqual(true, status.Errors);
         }
 
@@ -99,7 +100,7 @@ namespace Tests.Helpers
             postClass.Blogger = db.Blogs.First();
             postClass.Tags = new Collection<Tag> {db.Tags.First()};
 
-            var status = db.SaveChangesWithValidation();
+            var status = db.SaveChangesWithChecking();
             status.IsValid.ShouldEqual(true, status.Errors);
         }
 
@@ -114,7 +115,7 @@ namespace Tests.Helpers
             postClass.Blogger = db.Blogs.First();
             postClass.Tags = new Collection<Tag> { db.Tags.First() };
 
-            var status = await db.SaveChangesWithValidationAsync();
+            var status = await db.SaveChangesWithCheckingAsync();
             status.IsValid.ShouldEqual(true, status.Errors);
         }
 
@@ -127,7 +128,7 @@ namespace Tests.Helpers
                 PostId = postId
             };
             db.Entry(postClass).State = EntityState.Deleted;
-            var status = db.SaveChangesWithValidation();
+            var status = db.SaveChangesWithChecking();
             status.IsValid.ShouldEqual(true, status.Errors);
         }
 
@@ -138,7 +139,7 @@ namespace Tests.Helpers
                 PostId = postId
             };
             db.Entry(postClass).State = EntityState.Deleted;
-            var status = await db.SaveChangesWithValidationAsync();
+            var status = await db.SaveChangesWithCheckingAsync();
             status.IsValid.ShouldEqual(true, status.Errors);
         }
 
@@ -151,25 +152,25 @@ namespace Tests.Helpers
         public static void ListGenericDirect<T>(this SampleWebAppDb db, int id) where T : class
         {
             var service = new ListService<T>(db);
-            var num = service.GetMany().ToList().Count;
+            var num = service.GetAll().ToList().Count;
         }
 
         public static async Task ListGenericDirectAsync<T>(this SampleWebAppDb db, int id) where T : class
         {
             var service = new ListService<T>(db);
-            var list = await service.GetMany().ToListAsync();
+            var list = await service.GetAll().ToListAsync();
         }
 
         public static void ListPostGenericViaDto(this SampleWebAppDb db, int id)
         {
             var service = new ListService<Post,SimplePostDto>(db);
-            var num = service.GetMany().ToList().Count;
+            var num = service.GetAll().ToList().Count;
         }
 
         public static async Task ListPostGenericViaDtoAsync(this SampleWebAppDb db, int id)
         {
             var service = new ListService<Post, SimplePostDto>(db);
-            var list = await service.GetMany().ToListAsync();
+            var list = await service.GetAll().ToListAsync();
         }
 
         //--------
@@ -299,25 +300,25 @@ namespace Tests.Helpers
         public static void ListGSelectDirect<T>(this SampleWebAppDb db, int id) where T : class, new()
         {
             var service = new ListService(db);
-            var num = service.GetMany<T>().ToList().Count;
+            var num = service.GetAll<T>().ToList().Count;
         }
 
         public static async Task ListGSelectDirectAsync<T>(this SampleWebAppDb db, int id) where T : class, new()
         {
             var service = new ListService(db);
-            var list = await service.GetMany<T>().ToListAsync();
+            var list = await service.GetAll<T>().ToListAsync();
         }
 
         public static void ListPostGSelectViaDto(this SampleWebAppDb db, int id)
         {
             var service = new ListService(db);
-            var num = service.GetMany<SimplePostDto>().ToList().Count;
+            var num = service.GetAll<SimplePostDto>().ToList().Count;
         }
 
         public static async Task ListPostGSelectViaDtoAsync(this SampleWebAppDb db, int id)
         {
             var service = new ListService(db);
-            var list = await service.GetMany<SimplePostDto>().ToListAsync();
+            var list = await service.GetAll<SimplePostDto>().ToListAsync();
         }
 
         //--------
@@ -439,7 +440,7 @@ namespace Tests.Helpers
             db.Posts.AddRange(posts);
             var grades = BuildGrades(tags, posts, totalOfEach);
             db.PostTagGrades.AddRange(grades);
-            var status = db.SaveChangesWithValidation();
+            var status = db.SaveChangesWithChecking();
             status.IsValid.ShouldEqual(true, status.Errors);
         }
 
@@ -460,7 +461,7 @@ namespace Tests.Helpers
             var posts = BuildNPosts(tag2, blogger2, totalOfEach);
             db.Posts.AddRange(posts);
 
-            var status = db.SaveChangesWithValidation();
+            var status = db.SaveChangesWithChecking();
             status.IsValid.ShouldEqual(true, status.Errors);
         }
 

@@ -9,9 +9,9 @@ namespace GenericServices.ServicesAsync.Concrete
 
     public class DeleteServiceAsync : IDeleteServiceAsync
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
-        public DeleteServiceAsync(IDbContextWithValidation db)
+        public DeleteServiceAsync(IGenericServicesDbContext db)
         {
             _db = db;
         }
@@ -34,7 +34,7 @@ namespace GenericServices.ServicesAsync.Concrete
                         "Could not delete entry as it was not in the database. Could it have been deleted by someone else?");
 
             _db.Set<TData>().Remove(entityToDelete);
-            var result = await _db.SaveChangesWithValidationAsync();
+            var result = await _db.SaveChangesWithCheckingAsync();
             if (result.IsValid)
                 result.SetSuccessMessage("Successfully deleted {0}.", typeof(TData).Name);
 

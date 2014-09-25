@@ -88,7 +88,7 @@ namespace Tests.DTOs.Concrete
         /// </summary>
         /// <param name="context"></param>
         /// <param name="dto"></param>
-        internal protected override void SetupSecondaryData(IDbContextWithValidation context, DetailPostDto dto)
+        internal protected override void SetupSecondaryData(IGenericServicesDbContext context, DetailPostDto dto)
         {
 
             dto.Bloggers.SetupDropDownListContent(
@@ -112,7 +112,7 @@ namespace Tests.DTOs.Concrete
                 context.Set<Tag>().ToList().Select(x => new KeyValuePair<string, int>(x.Name, x.TagId)), preselectedTags);
         }
 
-        internal protected override ISuccessOrErrors CopyDtoToData(IDbContextWithValidation context, DetailPostDto dto, Post post)
+        internal protected override ISuccessOrErrors CopyDtoToData(IGenericServicesDbContext context, DetailPostDto dto, Post post)
         {
 
             var db = context as SampleWebAppDb;

@@ -90,7 +90,7 @@ namespace Tests.DTOs.Concrete
         /// </summary>
         /// <param name="context"></param>
         /// <param name="dto"></param>
-        internal protected override async Task SetupSecondaryDataAsync(IDbContextWithValidation context, DetailPostDtoAsync dto)
+        internal protected override async Task SetupSecondaryDataAsync(IGenericServicesDbContext context, DetailPostDtoAsync dto)
         {
 
             var bloggers = await context.Set<Blog>().ToListAsync();
@@ -122,7 +122,7 @@ namespace Tests.DTOs.Concrete
                 context.Set<Tag>().ToList().Select(x => new KeyValuePair<string, int>(x.Name, x.TagId)), preselectedTags);
         }
 
-        internal protected override async Task<ISuccessOrErrors> CopyDtoToDataAsync(IDbContextWithValidation context, DetailPostDtoAsync dto, Post post)
+        internal protected override async Task<ISuccessOrErrors> CopyDtoToDataAsync(IGenericServicesDbContext context, DetailPostDtoAsync dto, Post post)
         {
 
             var db = context as SampleWebAppDb;

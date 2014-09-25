@@ -9,9 +9,9 @@ namespace GenericServices.ServicesAsync.Concrete
 
     public class UpdateServiceAsync : IUpdateServiceAsync
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
-        public UpdateServiceAsync(IDbContextWithValidation db)
+        public UpdateServiceAsync(IGenericServicesDbContext db)
         {
             _db = db;
         }
@@ -48,10 +48,10 @@ namespace GenericServices.ServicesAsync.Concrete
     public class UpdateServiceAsync<TData> : IUpdateServiceAsync<TData>
         where TData : class
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
 
-        public UpdateServiceAsync(IDbContextWithValidation db)
+        public UpdateServiceAsync(IGenericServicesDbContext db)
         {
             _db = db;
         }
@@ -69,7 +69,7 @@ namespace GenericServices.ServicesAsync.Concrete
             //Set the entry as modified
             _db.Entry(itemToUpdate).State = EntityState.Modified;
 
-            var result = await _db.SaveChangesWithValidationAsync();
+            var result = await _db.SaveChangesWithCheckingAsync();
             if (result.IsValid)
                 result.SetSuccessMessage("Successfully updated {0}.", typeof(TData).Name);
 
@@ -84,9 +84,9 @@ namespace GenericServices.ServicesAsync.Concrete
         where TData : class, new()
         where TDto : EfGenericDtoAsync<TData, TDto>, new()
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
-        public UpdateServiceAsync(IDbContextWithValidation db)
+        public UpdateServiceAsync(IGenericServicesDbContext db)
         {
             _db = db;
         }
@@ -110,7 +110,7 @@ namespace GenericServices.ServicesAsync.Concrete
             result = await dto.CopyDtoToDataAsync(_db, dto, itemToUpdate); //update those properties we want to change
             if (result.IsValid)
             {
-                result = await _db.SaveChangesWithValidationAsync();
+                result = await _db.SaveChangesWithCheckingAsync();
                 if (result.IsValid)
                     return result.SetSuccessMessage("Successfully updated {0}.", dto.DataItemName);
             }

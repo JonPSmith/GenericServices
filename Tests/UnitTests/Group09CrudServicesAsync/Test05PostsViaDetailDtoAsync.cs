@@ -59,17 +59,16 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 var service = new ListService<Post, DetailPostDtoAsync>(db);
 
                 //ATTEMPT
-                var status = await service.GetMany().TryManyWithPermissionCheckingAsync();
+                var list = await service.GetAll().ToListAsync();
 
                 //VERIFY
-                status.IsValid.ShouldEqual(true, status.Errors);
-                status.Result.Count().ShouldEqual(3);
-                var firstPost = db.Posts.Include(x => x.Tags).ToList().First(x => x.PostId == status.Result.First().PostId);
-                status.Result.First().Title.ShouldEqual(firstPost.Title);
-                status.Result.First().Content.ShouldEqual(firstPost.Content);
-                status.Result.First().BloggerName.ShouldEqual(firstPost.Blogger.Name);
-                status.Result.First().TagNames.ShouldEqual("Ugly post, Good post");
-                status.Result.First().LastUpdatedUtc.Kind.ShouldEqual(DateTimeKind.Utc);
+                list.Count().ShouldEqual(3);
+                var firstPost = db.Posts.Include(x => x.Tags).ToList().First(x => x.PostId == list.First().PostId);
+                list.First().Title.ShouldEqual(firstPost.Title);
+                list.First().Content.ShouldEqual(firstPost.Content);
+                list.First().BloggerName.ShouldEqual(firstPost.Blogger.Name);
+                list.First().TagNames.ShouldEqual("Ugly post, Good post");
+                list.First().LastUpdatedUtc.Kind.ShouldEqual(DateTimeKind.Utc);
             }
         }
 

@@ -8,9 +8,9 @@ namespace GenericServices.ServicesAsync.Concrete
 
     public class CreateServiceAsync : ICreateServiceAsync
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
-        public CreateServiceAsync(IDbContextWithValidation db)
+        public CreateServiceAsync(IGenericServicesDbContext db)
         {
             _db = db;
         }
@@ -46,9 +46,9 @@ namespace GenericServices.ServicesAsync.Concrete
 
     public class CreateServiceAsync<TData> : ICreateServiceAsync<TData> where TData : class
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
-        public CreateServiceAsync(IDbContextWithValidation db)
+        public CreateServiceAsync(IGenericServicesDbContext db)
         {
             _db = db;
         }
@@ -61,7 +61,7 @@ namespace GenericServices.ServicesAsync.Concrete
         public async Task<ISuccessOrErrors> CreateAsync(TData newItem)
         {
             _db.Set<TData>().Add(newItem);
-            var result = await _db.SaveChangesWithValidationAsync();
+            var result = await _db.SaveChangesWithCheckingAsync();
             if (result.IsValid)
                 result.SetSuccessMessage("Successfully created {0}.", typeof(TData).Name);
 
@@ -77,10 +77,10 @@ namespace GenericServices.ServicesAsync.Concrete
         where TData : class, new()
         where TDto : EfGenericDtoAsync<TData, TDto>, new()
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
 
-        public CreateServiceAsync(IDbContextWithValidation db)
+        public CreateServiceAsync(IGenericServicesDbContext db)
         {
             _db = db;
         }
@@ -102,7 +102,7 @@ namespace GenericServices.ServicesAsync.Concrete
             if (result.IsValid)
             {
                 _db.Set<TData>().Add(tData);
-                result = await _db.SaveChangesWithValidationAsync();
+                result = await _db.SaveChangesWithCheckingAsync();
                 if (result.IsValid)
                     return result.SetSuccessMessage("Successfully created {0}.", dto.DataItemName);
             }

@@ -65,7 +65,7 @@ namespace Tests.UnitTests.Group20Actions
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
             status.Result.ShouldEqual(-456);
-            dummyDb.SaveChangesWithValidationCalled.ShouldEqual(false);
+            dummyDb.SaveChangesCalled.ShouldEqual(false);
         }
 
         [Test]
@@ -83,7 +83,7 @@ namespace Tests.UnitTests.Group20Actions
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
             status.HasWarnings.ShouldEqual(false);
-            dummyDb.SaveChangesWithValidationCalled.ShouldEqual(true);
+            dummyDb.SaveChangesCalled.ShouldEqual(true);
             status.SuccessMessage.ShouldEndWith("... and written to database.");
         }
 
@@ -105,7 +105,7 @@ namespace Tests.UnitTests.Group20Actions
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
             status.HasWarnings.ShouldEqual(true);
-            dummyDb.SaveChangesWithValidationCalled.ShouldEqual(true);
+            dummyDb.SaveChangesCalled.ShouldEqual(true);
             status.SuccessMessage.ShouldEndWith("... and written to database. (has 1 warnings)");
         }
 
@@ -127,7 +127,7 @@ namespace Tests.UnitTests.Group20Actions
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
             status.HasWarnings.ShouldEqual(true);
-            dummyDb.SaveChangesWithValidationCalled.ShouldEqual(false);
+            dummyDb.SaveChangesCalled.ShouldEqual(false);
             status.SuccessMessage.ShouldEndWith("... but NOT written to database as warnings. (has 1 warnings)");
         }
 
@@ -148,7 +148,7 @@ namespace Tests.UnitTests.Group20Actions
 
             //VERIFY
             status.IsValid.ShouldEqual(false, status.Errors);
-            dummyDb.SaveChangesWithValidationCalled.ShouldEqual(false);
+            dummyDb.SaveChangesCalled.ShouldEqual(false);
         }
 
         //----------------------------------------
@@ -174,7 +174,7 @@ namespace Tests.UnitTests.Group20Actions
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
             status.Result.ShouldEqual(-123);
-            dummyDb.SaveChangesWithValidationCalled.ShouldEqual(false);
+            dummyDb.SaveChangesCalled.ShouldEqual(false);
         }
 
         [Test]
@@ -197,7 +197,7 @@ namespace Tests.UnitTests.Group20Actions
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
             status.Result.ShouldEqual(-123);
-            dummyDb.SaveChangesWithValidationCalled.ShouldEqual(true);
+            dummyDb.SaveChangesCalled.ShouldEqual(true);
             status.SuccessMessage.ShouldEndWith("... and written to database.");
         }
 
@@ -221,7 +221,7 @@ namespace Tests.UnitTests.Group20Actions
 
             //VERIFY
             status.IsValid.ShouldEqual(false, status.Errors);
-            dummyDb.SaveChangesWithValidationCalled.ShouldEqual(false);
+            dummyDb.SaveChangesCalled.ShouldEqual(false);
         }
 
 

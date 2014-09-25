@@ -76,19 +76,10 @@ then the data properties are copied over using a convention-based object-object 
 See [SimplePostDto](https://github.com/JonPSmith/SampleMvcWebApp/blob/master/ServiceLayer/PostServices/Concrete/SimplePostDto.cs)
 for an example of this. The commands are:
 
-- `IQueryable<T> GetMany<T>()`
+- `IQueryable<T> GetAll<T>()`
 
 Note that the ListService is not sync or async, but returns `IQueryable`. 
-You can either:
-
-- Put a LINQ command you put on the end, e.g `.ToList()` or `.ToListAsync()`
-- Use the commands `.TryManyWithPermissionChecking()` or `.TryManyWithPermissionCheckingAsync()` 
-at the end. These return an `ISuccessErrors<T>` which contains any error messages caused by sql security.
-
-!!!! Need to put in link to example of using `.TryManyWithPermissionChecking()`.
-
-Note that the status result is an empty collection if there is an error, 
-so you can ignore the error if you don't want to feed back to the user.
+Therefore you add a LINQ command on the end, e.g `.ToList()` or `.ToListAsync()`
 
 ##### DetailService/DetailServiceAsync : 
 This finds an item in the database using its primary key(s). You specify what type of
@@ -104,7 +95,8 @@ The commands are:
 - `ISuccessErrors<T> GetDetail<T>( param object [] keys)` - sync
 - `Task<ISuccessErrors<T>> GetDetailAsync<T>( param object [] keys)` - async
 
-Note that the status contains any errors caused by missing data or sql security errors. 
+Note that the status contains any errors caused by missing data 
+(or sql security errors if GenericSecurity is used). 
 If there is an error then the result will be a new, empty class. This may throw an error
 somewhere else due to not filled in items, so checking the status is best.
 
@@ -208,3 +200,44 @@ The commands are:
 - `Task<ISuccessOrErrors> DeleteAsync<T>( param object [] keys)` - async
 
 See CreateService/CreateServiceAsync for explanation of `ISuccessOrErrors`. 
+
+#### ServicesConfiguration
+GenericServices can be configured via the static classs ServicesConfiguration.
+The following static properties or methods are available via ServicesConfiguration, 
+e.g. ServicesConfiguration.SqlErrorDict(). 
+Note that the default GenericServices will provide all the normal commands. 
+Configuration just adds extra features, like logging.
+
+- SqlErrorDict items: default is sql error codes 547 (foreign key constraint) and 2601 (index constaint)
+  - `IReadOnlyDictionary<int, string> SqlErrorDict` This contains a dictionary which 
+the extention method `.SaveChangesWithChecking()` (sync and Async) checks when it gets
+a SQLException. This allows the developer to trap those errors and provide a user
+friendly errror message instead of an exception.
+  - `void ClearSqlErrorDict()` This clears the dictionary of all entries. 
+Note: By default SqlErrorDict contains two error codes.
+  - `void AddToSqlErrorDict(int sqlErrorNumber, string errorText)` This adds an
+entry in the table. If an entry for that key exist it updates that entry.
+- Logging items:  default is no logging.
+  - Property `Func<string, IGenericLogger> SetLoggerMethod` Providing a method of the required 
+signiture will allow logging to be accessed via `GetLogger` method (see next)
+  - `IGenericLogger GetLogger( string name)` This with create a logger with the name as
+given by the string. 
+- Catching exceptions via RealiseSingleWithChecking
+  - `RealiseSingleException RealiseSingleExceptionMethod` If you set this property to a method of
+the given delegate signiture then that method is called if an exception happens when 
+'.RealiseSingleWithChecking' is called inside GetDetails or GetOriginal. This can intercept 
+exceptions and turn them into errors. This property is used by GenericSecurity to catch
+permission errors.
+
+
+#### Other available commands 
+
+- `SaveChangesWithChecking()` (sync and Async) is used in all the GenericServices to 
+commit any changes to the database. It returns an ISuccessOrErrors status saying whether 
+the save was succesful. It catches Validation Errors and some SQL Errors 
+(see SqlErrorDict above) and returns Errors in the status rather than throwing an exception.
+- `ISuccessOrErrors<T> RealiseSingleWithErrorChecking<T>(this IQueryable<T> request)` (sync and Async)
+is used in various commands to produce a single or null item from an IQueryable request.
+It checks for certain exceptions using `RealiseSingleWithChecking(exception, callingMethodName)` 
+and will return an error rather than an exception if RealiseSingleWithChecking can turn the
+Exception into a useful error message.

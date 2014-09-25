@@ -114,24 +114,24 @@ namespace GenericServices.Core
         //---------------------------------------------------------------------
         //overridden methods
 
-        protected internal override IQueryable<TDto> BuildListQueryUntracked(IDbContextWithValidation context)
+        protected internal override IQueryable<TDto> BuildListQueryUntracked(IGenericServicesDbContext context)
         {
             using (new LogStartStop( this))
                 return base.BuildListQueryUntracked(context);
         }
 
-        protected internal override void SetupSecondaryData(IDbContextWithValidation db, TDto dto)
+        protected internal override void SetupSecondaryData(IGenericServicesDbContext db, TDto dto)
         {
             LogCaller();
         }
 
-        protected internal override TData FindItemTracked(IDbContextWithValidation context)
+        protected internal override TData FindItemTracked(IGenericServicesDbContext context)
         {
             using (new LogStartStop(this))
                 return base.FindItemTracked(context);
         }
 
-        protected internal override ISuccessOrErrors CopyDataToDto(IDbContextWithValidation context, TData source, TDto destination)
+        protected internal override ISuccessOrErrors CopyDataToDto(IGenericServicesDbContext context, TData source, TDto destination)
         {
             using (new LogStartStop(this))
             {
@@ -142,7 +142,7 @@ namespace GenericServices.Core
             }
         }
 
-        protected internal override ISuccessOrErrors CopyDtoToData(IDbContextWithValidation context, TDto source, TData destination)
+        protected internal override ISuccessOrErrors CopyDtoToData(IGenericServicesDbContext context, TDto source, TData destination)
         {
             using (new LogStartStop(this))
             {
@@ -164,7 +164,7 @@ namespace GenericServices.Core
         /// It copies TData properties into all TDto properties that have accessable setters, i.e. not private
         /// </summary>
         /// <returns>status. If valid result is dto. Otherwise null if not found</returns>
-        internal protected override ISuccessOrErrors<TDto> CreateDtoAndCopyDataIn(IDbContextWithValidation context,
+        internal protected override ISuccessOrErrors<TDto> CreateDtoAndCopyDataIn(IGenericServicesDbContext context,
             Expression<Func<TData, bool>> predicate)
         {
             LogCaller(CallTypes.Start);

@@ -7,9 +7,9 @@ namespace GenericServices.ServicesAsync.Concrete
 
     public class CreateSetupServiceAsync : ICreateSetupServiceAsync
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
-        public CreateSetupServiceAsync(IDbContextWithValidation db)
+        public CreateSetupServiceAsync(IGenericServicesDbContext db)
         {
             _db = db;
         }
@@ -31,9 +31,9 @@ namespace GenericServices.ServicesAsync.Concrete
         where TData : class, new()
         where TDto : EfGenericDtoAsync<TData, TDto>, new()
     {
-                private readonly IDbContextWithValidation _db;
+                private readonly IGenericServicesDbContext _db;
 
-        public CreateSetupServiceAsync(IDbContextWithValidation db)
+        public CreateSetupServiceAsync(IGenericServicesDbContext db)
         {
             _db = db;
         }

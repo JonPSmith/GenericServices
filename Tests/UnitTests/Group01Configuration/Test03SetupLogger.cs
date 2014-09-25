@@ -2,13 +2,11 @@
 using GenericServices.Logger;
 using NUnit.Framework;
 using Tests.Helpers;
-using Log4NetGenericLogger = Tests.Helpers.Log4NetGenericLogger;
 
-namespace Tests.UnitTests.Group05GenericLogger
+namespace Tests.UnitTests.Group01Configuration
 {
 
-
-    class Test02SetupLogger
+    class Test03SetupLogger
     {
         class FirstClass
         {
@@ -16,7 +14,7 @@ namespace Tests.UnitTests.Group05GenericLogger
 
             static FirstClass()
             {
-                Logger = GenericLoggerFactory.GetLogger("hello");
+                Logger = ServicesConfiguration.GetLogger("hello");
             }
         }
 
@@ -26,7 +24,7 @@ namespace Tests.UnitTests.Group05GenericLogger
 
             static SecondClass()
             {
-                Logger = GenericLoggerFactory.GetLogger("test");
+                Logger = ServicesConfiguration.GetLogger("test");
             }
         }
 
@@ -35,7 +33,7 @@ namespace Tests.UnitTests.Group05GenericLogger
         {
 
             //SETUP  
-            GenericLoggerFactory.SetLoggerMethod = name => new NoLoggingGenericLogger();
+            ServicesConfiguration.SetLoggerMethod = name => new NoLoggingGenericLogger();
 
             //ATTEMPT
             var classWithLogger = new FirstClass();
@@ -50,7 +48,7 @@ namespace Tests.UnitTests.Group05GenericLogger
         {
 
             //SETUP  
-            GenericLoggerFactory.SetLoggerMethod = name => new Log4NetGenericLogger(name);
+            ServicesConfiguration.SetLoggerMethod = name => new Log4NetGenericLogger(name);
 
             //ATTEMPT
             var classWithLogger = new SecondClass();

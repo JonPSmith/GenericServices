@@ -36,7 +36,7 @@ namespace GenericServices.Core
         /// </summary>
         /// <param name="context"></param>
         /// <returns>returns an IQueryable of the table TData as Untracked</returns>
-        protected virtual IQueryable<TData> GetDataUntracked(IDbContextWithValidation context)
+        protected virtual IQueryable<TData> GetDataUntracked(IGenericServicesDbContext context)
         {
             return context.Set<TData>().AsNoTracking();
         }
@@ -46,7 +46,7 @@ namespace GenericServices.Core
         /// Can be overridden if standard AutoMapping isn't good enough, or return null if not supported
         /// </summary>
         /// <returns></returns>
-        internal protected virtual IQueryable<TDto> BuildListQueryUntracked(IDbContextWithValidation context)
+        internal protected virtual IQueryable<TDto> BuildListQueryUntracked(IGenericServicesDbContext context)
         {
             CreateDatatoDtoMapping();
             return GetDataUntracked(context).Project().To<TDto>();
@@ -55,7 +55,7 @@ namespace GenericServices.Core
         //---------------------------------------------------------------
         //protected methods
 
-        protected object[] GetKeyValues(IDbContextWithValidation context)
+        protected object[] GetKeyValues(IGenericServicesDbContext context)
         {
             var efkeyPropertyNames = context.GetKeyProperties<TData>().Select(x => x.Name).ToArray();
 

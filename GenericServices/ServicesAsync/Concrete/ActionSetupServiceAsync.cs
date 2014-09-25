@@ -7,7 +7,7 @@ namespace GenericServices.ServicesAsync.Concrete
         where TData : class, new()
         where TDto : EfGenericDtoAsync<TData, TDto>, new()
     {
-        public ActionSetupServiceAsync(IDbContextWithValidation db) : base(db)
+        public ActionSetupServiceAsync(IGenericServicesDbContext db) : base(db)
         {
         }
     }

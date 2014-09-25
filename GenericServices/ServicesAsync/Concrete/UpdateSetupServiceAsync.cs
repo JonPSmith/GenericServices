@@ -12,9 +12,9 @@ namespace GenericServices.ServicesAsync.Concrete
 
     public class UpdateSetupServiceAsync : IUpdateSetupServiceAsync
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
-        public UpdateSetupServiceAsync(IDbContextWithValidation db)
+        public UpdateSetupServiceAsync(IGenericServicesDbContext db)
         {
             _db = db;
         }
@@ -38,9 +38,9 @@ namespace GenericServices.ServicesAsync.Concrete
 
     public class UpdateSetupServiceAsync<TData> : IUpdateSetupServiceAsync<TData> where TData : class, new()
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
-        public UpdateSetupServiceAsync(IDbContextWithValidation db)
+        public UpdateSetupServiceAsync(IGenericServicesDbContext db)
         {
             _db = db;
         }
@@ -52,7 +52,7 @@ namespace GenericServices.ServicesAsync.Concrete
         /// <returns>Task with Status. If valid Result holds data (not tracked), otherwise null</returns>
         public async Task<ISuccessOrErrors<TData>> GetOriginalUsingWhereAsync(Expression<Func<TData, bool>> whereExpression)
         {
-            return await _db.Set<TData>().Where(whereExpression).AsNoTracking().TrySingleWithPermissionCheckingAsync();
+            return await _db.Set<TData>().Where(whereExpression).AsNoTracking().RealiseSingleWithErrorCheckingAsync();
         }
 
         /// <summary>
@@ -73,9 +73,9 @@ namespace GenericServices.ServicesAsync.Concrete
         where TData : class, new()
         where TDto : EfGenericDtoAsync<TData, TDto>, new()
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
-        public UpdateSetupServiceAsync(IDbContextWithValidation db)
+        public UpdateSetupServiceAsync(IGenericServicesDbContext db)
         {
             _db = db;
         }

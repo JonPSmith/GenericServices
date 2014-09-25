@@ -6,7 +6,7 @@ using log4net.Config;
 using NUnit.Framework;
 using Tests.Helpers;
 
-namespace Tests.UnitTests.Group05GenericLogger
+namespace Tests.UnitTests.Group01Configuration
 {
     class Test04Log4NetGenericLogger
     {
@@ -20,9 +20,9 @@ namespace Tests.UnitTests.Group05GenericLogger
         {
             _log4NetMemoryLog = new MemoryAppender();
             BasicConfigurator.Configure(_log4NetMemoryLog);
-            GenericLoggerFactory.SetLoggerMethod = name => new Log4NetGenericLogger(name);
-            _loggerA = GenericLoggerFactory.GetLogger("A");
-            _loggerB = GenericLoggerFactory.GetLogger("B");
+            ServicesConfiguration.SetLoggerMethod = name => new Log4NetGenericLogger(name);
+            _loggerA = ServicesConfiguration.GetLogger("A");
+            _loggerB = ServicesConfiguration.GetLogger("B");
         }
 
         [SetUp]

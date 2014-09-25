@@ -25,12 +25,12 @@ namespace GenericServices.Core.Internal
         /// <typeparam name="TClass">The class must belong to a class that entity framework has in its metadata</typeparam>
         /// <param name="context"></param>
         /// <returns></returns>
-        public static IReadOnlyCollection<PropertyInfo> GetKeyProperties<TClass>(this IDbContextWithValidation context) where TClass : class
+        public static IReadOnlyCollection<PropertyInfo> GetKeyProperties<TClass>(this IGenericServicesDbContext context) where TClass : class
         {
             return KeyCache.GetOrAdd(typeof(TClass), type => FindKeys(type, context));
         }
 
-        private static List<PropertyInfo> FindKeys(Type type, IDbContextWithValidation context)
+        private static List<PropertyInfo> FindKeys(Type type, IGenericServicesDbContext context)
         {
             var metadata = ((IObjectContextAdapter)context).ObjectContext.MetadataWorkspace;
 

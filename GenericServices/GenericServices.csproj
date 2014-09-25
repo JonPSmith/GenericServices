@@ -65,7 +65,6 @@
     <Compile Include="Core\Internal\DecodeToService.cs" />
     <Compile Include="Core\Internal\EfKeyFinder.cs" />
     <Compile Include="Core\SecurityHelper.cs" />
-    <Compile Include="GenericLoggerSetup.cs" />
     <Compile Include="IActionAsync.cs" />
     <Compile Include="IActionService.cs" />
     <Compile Include="IActionBase.cs" />
@@ -73,6 +72,7 @@
     <Compile Include="Logger\IGenericLogger.cs" />
     <Compile Include="Logger\NoLoggingGenericLogger.cs" />
     <Compile Include="NuGet\AssemblyVersionPart.cs" />
+    <Compile Include="SaveChangesExtensions.cs" />
     <Compile Include="ServicesAsync\Concrete\ActionSetupServiceAsync.cs" />
     <Compile Include="ServicesAsync\Concrete\CreateSetupServiceAsync.cs" />
     <Compile Include="ServicesAsync\Concrete\DeleteServiceAsync.cs" />
@@ -93,6 +93,7 @@
     <Compile Include="ServicesAsync\IDetailServiceAsync.cs" />
     <Compile Include="ServicesAsync\IUpdateServiceAsync.cs" />
     <Compile Include="ServicesAsync\IUpdateSetupServiceAsync.cs" />
+    <Compile Include="ServicesConfiguration.cs" />
     <Compile Include="Services\Concrete\ActionService.cs" />
     <Compile Include="Services\Concrete\ActionSetupService.cs" />
     <Compile Include="IActionSetupService.cs" />
@@ -115,7 +116,7 @@
     <Compile Include="Core\SuccessOrErrors.cs" />
     <Compile Include="Services\Concrete\UpdateService.cs" />
     <Compile Include="ICreateService.cs" />
-    <Compile Include="IDbContextWithValidation.cs" />
+    <Compile Include="IGenericServicesDbContext.cs" />
     <Compile Include="IDeleteService.cs" />
     <Compile Include="IDetailService.cs" />
     <Compile Include="IListService.cs" />

@@ -24,7 +24,7 @@ namespace GenericServices.Core
         /// This function should be overridden if the dto needs additional data setup 
         /// </summary>
         /// <returns></returns>
-        internal protected virtual void SetupSecondaryData(IDbContextWithValidation db, TDto dto)
+        internal protected virtual void SetupSecondaryData(IGenericServicesDbContext db, TDto dto)
         {
             if (!SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
                 throw new InvalidOperationException("SupportedFunctions flags say that setup of secondary data is needed, but did not override the SetupSecondaryData method.");
@@ -35,7 +35,7 @@ namespace GenericServices.Core
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        internal protected virtual TData FindItemTracked(IDbContextWithValidation context)
+        internal protected virtual TData FindItemTracked(IGenericServicesDbContext context)
         {
             return context.Set<TData>().Find(GetKeyValues(context));
         }
@@ -48,7 +48,7 @@ namespace GenericServices.Core
         /// <param name="context"></param>
         /// <param name="source"></param>
         /// <param name="destination"></param>
-        internal protected virtual ISuccessOrErrors CopyDtoToData(IDbContextWithValidation context, TDto source, TData destination)
+        internal protected virtual ISuccessOrErrors CopyDtoToData(IGenericServicesDbContext context, TDto source, TData destination)
         {
             CreateDtoToDataMapping();
             Mapper.Map(source, destination);
@@ -73,7 +73,7 @@ namespace GenericServices.Core
         /// <param name="context"></param>
         /// <param name="source"></param>
         /// <param name="destination"></param>
-        internal protected virtual ISuccessOrErrors CopyDataToDto(IDbContextWithValidation context, TData source, TDto destination)
+        internal protected virtual ISuccessOrErrors CopyDataToDto(IGenericServicesDbContext context, TData source, TDto destination)
         {
             CreateDatatoDtoMapping();
             Mapper.Map(source, destination);
@@ -88,11 +88,11 @@ namespace GenericServices.Core
         /// It copies TData properties into all TDto properties that have accessable setters, i.e. not private
         /// </summary>
         /// <returns>status. If valid result is dto. Otherwise null</returns>
-        internal protected virtual ISuccessOrErrors<TDto> CreateDtoAndCopyDataIn(IDbContextWithValidation context, 
+        internal protected virtual ISuccessOrErrors<TDto> CreateDtoAndCopyDataIn(IGenericServicesDbContext context, 
             Expression<Func<TData, bool>> predicate)
         {
             Mapper.CreateMap<TData, TDto>();
-            return GetDataUntracked(context).Where(predicate).Project().To<TDto>().TrySingleWithPermissionChecking();
+            return GetDataUntracked(context).Where(predicate).Project().To<TDto>().RealiseSingleWithErrorChecking();
         }
 
     }

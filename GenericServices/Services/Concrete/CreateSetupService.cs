@@ -7,9 +7,9 @@ namespace GenericServices.Services.Concrete
     public class CreateSetupService : ICreateSetupService
     {
 
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
-        public CreateSetupService(IDbContextWithValidation db)
+        public CreateSetupService(IGenericServicesDbContext db)
         {
             _db = db;
         }
@@ -30,9 +30,9 @@ namespace GenericServices.Services.Concrete
         where TData : class, new()
         where TDto : EfGenericDto<TData, TDto>, new()
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
-        public CreateSetupService(IDbContextWithValidation db)
+        public CreateSetupService(IGenericServicesDbContext db)
         {
             _db = db;
         }

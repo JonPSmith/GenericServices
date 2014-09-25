@@ -6,10 +6,10 @@ namespace GenericServices.Services.Concrete
 {
     public class ActionService<TActionOut, TActionIn> : IActionService<TActionOut, TActionIn>
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
         private readonly IActionSync<TActionOut, TActionIn> _actionToRun;
 
-        public ActionService(IDbContextWithValidation db, IActionSync<TActionOut, TActionIn> actionToRun)
+        public ActionService(IGenericServicesDbContext db, IActionSync<TActionOut, TActionIn> actionToRun)
         {
             if (actionToRun == null)
                 throw new NullReferenceException(
@@ -52,10 +52,10 @@ namespace GenericServices.Services.Concrete
         where TDto : EfGenericDto<TActionIn, TDto>, new()
     {
 
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
         private readonly IActionSync<TActionOut, TActionIn> _actionToRun;
 
-        public ActionService(IDbContextWithValidation db, IActionSync<TActionOut, TActionIn> actionToRun)
+        public ActionService(IGenericServicesDbContext db, IActionSync<TActionOut, TActionIn> actionToRun)
         {
             if (actionToRun == null)
                 throw new NullReferenceException(

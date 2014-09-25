@@ -5,9 +5,9 @@ namespace GenericServices.Services.Concrete
 {
     public class CreateService : ICreateService
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
-        public CreateService(IDbContextWithValidation db)
+        public CreateService(IGenericServicesDbContext db)
         {
             _db = db;
         }
@@ -43,9 +43,9 @@ namespace GenericServices.Services.Concrete
 
     public class CreateService<TData> : ICreateService<TData> where TData : class
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
-        public CreateService(IDbContextWithValidation db)
+        public CreateService(IGenericServicesDbContext db)
         {
             _db = db;
         }
@@ -58,7 +58,7 @@ namespace GenericServices.Services.Concrete
         public ISuccessOrErrors Create(TData newItem)
         {
             _db.Set<TData>().Add(newItem);
-            var result = _db.SaveChangesWithValidation();
+            var result = _db.SaveChangesWithChecking();
             if (result.IsValid)
                 result.SetSuccessMessage("Successfully created {0}.", typeof(TData).Name);
 
@@ -73,10 +73,10 @@ namespace GenericServices.Services.Concrete
         where TData : class, new()
         where TDto : EfGenericDto<TData, TDto>, new()
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
 
-        public CreateService(IDbContextWithValidation db)
+        public CreateService(IGenericServicesDbContext db)
         {
             _db = db;
         }
@@ -97,7 +97,7 @@ namespace GenericServices.Services.Concrete
             if (result.IsValid)
             {
                 _db.Set<TData>().Add(tData);
-                result = _db.SaveChangesWithValidation();
+                result = _db.SaveChangesWithChecking();
                 if (result.IsValid)
                     return result.SetSuccessMessage("Successfully created {0}.", dto.DataItemName);
             }

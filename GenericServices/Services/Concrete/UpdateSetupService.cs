@@ -10,9 +10,9 @@ namespace GenericServices.Services.Concrete
 
     public class UpdateSetupService : IUpdateSetupService
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
-        public UpdateSetupService(IDbContextWithValidation db)
+        public UpdateSetupService(IGenericServicesDbContext db)
         {
             _db = db;
         }
@@ -36,9 +36,9 @@ namespace GenericServices.Services.Concrete
 
     public class UpdateSetupService<TData> : IUpdateSetupService<TData> where TData : class, new()
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
-        public UpdateSetupService(IDbContextWithValidation db)
+        public UpdateSetupService(IGenericServicesDbContext db)
         {
             _db = db;
         }
@@ -50,7 +50,7 @@ namespace GenericServices.Services.Concrete
         /// <returns>Status. If valid Result holds data (not tracked), otherwise null</returns>
         public ISuccessOrErrors<TData> GetOriginalUsingWhere(Expression<Func<TData, bool>> whereExpression)
         {
-            return _db.Set<TData>().Where(whereExpression).AsNoTracking().TrySingleWithPermissionChecking();
+            return _db.Set<TData>().Where(whereExpression).AsNoTracking().RealiseSingleWithErrorChecking();
         }
 
         /// <summary>
@@ -71,9 +71,9 @@ namespace GenericServices.Services.Concrete
         where TData : class, new()
         where TDto : EfGenericDto<TData, TDto>, new()
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
-        public UpdateSetupService(IDbContextWithValidation db)
+        public UpdateSetupService(IGenericServicesDbContext db)
         {
             _db = db;
         }

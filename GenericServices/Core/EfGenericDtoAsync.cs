@@ -29,7 +29,7 @@ namespace GenericServices.Core
         /// This function should be overridden if the dto needs additional data setup 
         /// </summary>
         /// <returns></returns>
-        internal protected virtual async Task SetupSecondaryDataAsync(IDbContextWithValidation db, TDto dto)
+        internal protected virtual async Task SetupSecondaryDataAsync(IGenericServicesDbContext db, TDto dto)
         {
             if (!SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
                 throw new InvalidOperationException("SupportedFunctions flags say that setup of secondary data is needed, but did not override the SetupSecondaryData method.");
@@ -40,7 +40,7 @@ namespace GenericServices.Core
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        internal protected virtual async Task<TData> FindItemTrackedAsync(IDbContextWithValidation context)
+        internal protected virtual async Task<TData> FindItemTrackedAsync(IGenericServicesDbContext context)
         {
             return await context.Set<TData>().FindAsync(GetKeyValues(context));
         }
@@ -54,7 +54,7 @@ namespace GenericServices.Core
         /// <param name="context"></param>
         /// <param name="source"></param>
         /// <param name="destination"></param>
-        internal protected virtual async Task<ISuccessOrErrors> CopyDtoToDataAsync(IDbContextWithValidation context, TDto source, TData destination)
+        internal protected virtual async Task<ISuccessOrErrors> CopyDtoToDataAsync(IGenericServicesDbContext context, TDto source, TData destination)
         {
             CreateDtoToDataMapping();
             Mapper.Map(source, destination);
@@ -79,7 +79,7 @@ namespace GenericServices.Core
         /// <param name="context"></param>
         /// <param name="source"></param>
         /// <param name="destination"></param>
-        internal protected virtual async Task<ISuccessOrErrors> CopyDataToDtoAsync(IDbContextWithValidation context, TData source, TDto destination)
+        internal protected virtual async Task<ISuccessOrErrors> CopyDataToDtoAsync(IGenericServicesDbContext context, TData source, TDto destination)
         {
             CreateDatatoDtoMapping();
             Mapper.Map(source, destination);
@@ -95,7 +95,7 @@ namespace GenericServices.Core
         /// </summary>
         /// <returns>status. If Valid then dto, otherwise null</returns>
         internal protected virtual async Task<ISuccessOrErrors<TDto>> CreateDtoAndCopyDataInAsync(
-            IDbContextWithValidation context, Expression<Func<TData, bool>> predicate)
+            IGenericServicesDbContext context, Expression<Func<TData, bool>> predicate)
         {
             Mapper.CreateMap<TData, TDto>();
             return
@@ -104,7 +104,7 @@ namespace GenericServices.Core
                         .Where(predicate)
                         .Project()
                         .To<TDto>()
-                        .TrySingleWithPermissionCheckingAsync();
+                        .RealiseSingleWithErrorCheckingAsync();
         }
     }
 }

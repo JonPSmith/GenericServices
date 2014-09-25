@@ -55,14 +55,14 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 var firstPost = db.Posts.Include(x => x.Blogger).First();
 
                 //ATTEMPT
-                var status = await service.GetMany().Include(x => x.Blogger).TryManyWithPermissionCheckingAsync();
+                var list = await service.GetAll().Include(x => x.Blogger).ToListAsync();
 
                 //VERIFY
-                status.IsValid.ShouldEqual(true, status.Errors);
-                status.Result.Count().ShouldEqual(3);
-                status.Result.First().Title.ShouldEqual(firstPost.Title);
-                status.Result.First().Blogger.Name.ShouldEqual(firstPost.Blogger.Name);
-                status.Result.First().Tags.ShouldEqual(null);
+
+                list.Count().ShouldEqual(3);
+                list.First().Title.ShouldEqual(firstPost.Title);
+                list.First().Blogger.Name.ShouldEqual(firstPost.Blogger.Name);
+                list.First().Tags.ShouldEqual(null);
             }
         }
 

@@ -10,9 +10,9 @@ namespace GenericServices.Services.Concrete
 
     public class DetailService : IDetailService
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
-        public DetailService(IDbContextWithValidation db)
+        public DetailService(IGenericServicesDbContext db)
         {
             _db = db;
         }
@@ -36,9 +36,9 @@ namespace GenericServices.Services.Concrete
 
     public class DetailService<TData> : IDetailService<TData> where TData : class, new()
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
-        public DetailService(IDbContextWithValidation db)
+        public DetailService(IGenericServicesDbContext db)
         {
             _db = db;
         }
@@ -50,7 +50,7 @@ namespace GenericServices.Services.Concrete
         /// <returns>Status. If valid Result is data as read from database (not tracked), otherwise null</returns>
         public ISuccessOrErrors<TData> GetDetailUsingWhere(Expression<Func<TData, bool>> whereExpression)
         {
-            return _db.Set<TData>().Where(whereExpression).AsNoTracking().TrySingleWithPermissionChecking();
+            return _db.Set<TData>().Where(whereExpression).AsNoTracking().RealiseSingleWithErrorChecking();
         }
 
         /// <summary>
@@ -71,9 +71,9 @@ namespace GenericServices.Services.Concrete
         where TData : class, new()
         where TDto : EfGenericDto<TData, TDto>, new()
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
 
-        public DetailService(IDbContextWithValidation db)
+        public DetailService(IGenericServicesDbContext db)
         {
             _db = db;
         }

@@ -42,13 +42,12 @@ namespace Tests.UnitTests.Group08CrudServices
                 var firstGrade = db.PostTagGrades.Include(x => x.TagPart).Include(x => x.PostPart).First();
 
                 //ATTEMPT
-                var status = service.GetMany().TryManyWithPermissionChecking();
+                var list = service.GetAll().ToList();
 
                 //VERIFY
-                status.IsValid.ShouldEqual(true, status.Errors);
-                status.Result.Count().ShouldEqual(2);
-                status.Result.First().PostPartTitle.ShouldEqual(firstGrade.PostPart.Title);
-                status.Result.First().TagPartName.ShouldEqual(firstGrade.TagPart.Name);
+                list.Count().ShouldEqual(2);
+                list.First().PostPartTitle.ShouldEqual(firstGrade.PostPart.Title);
+                list.First().TagPartName.ShouldEqual(firstGrade.TagPart.Name);
 
             }
         }

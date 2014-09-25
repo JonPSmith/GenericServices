@@ -98,6 +98,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UiHelpers\DropDownListType.cs" />
     <Compile Include="UiHelpers\MultiSelectListType.cs" />
+    <Compile Include="UnitTests\Group01Configuration\Test02SqlDict.cs" />
+    <Compile Include="UnitTests\Group01Configuration\Test10RealiseSingleException.cs" />
     <Compile Include="UnitTests\Group01DataClasses\Tests12BuildFilter.cs" />
     <Compile Include="UnitTests\Group01DataClasses\Tests10CheckKeyFind.cs" />
     <Compile Include="UnitTests\Group01DataClasses\Tests01Setup.cs" />
@@ -114,9 +116,9 @@
     <Compile Include="UnitTests\Group04ServiceFlowAsync\Test01CreateServiceAsync.cs" />
     <Compile Include="UnitTests\Group04ServiceFlowAsync\Test02UpdateServiceAsync.cs" />
     <Compile Include="UnitTests\Group04ServiceFlowAsync\Test03DetailServiceAsync.cs" />
-    <Compile Include="UnitTests\Group05GenericLogger\Test02SetupLogger.cs" />
-    <Compile Include="UnitTests\Group05GenericLogger\Test06TraceGenericLogger.cs" />
-    <Compile Include="UnitTests\Group05GenericLogger\Test04Log4NetGenericLogger.cs" />
+    <Compile Include="UnitTests\Group01Configuration\Test03SetupLogger.cs" />
+    <Compile Include="UnitTests\Group01Configuration\Test06TraceGenericLogger.cs" />
+    <Compile Include="UnitTests\Group01Configuration\Test04Log4NetGenericLogger.cs" />
     <Compile Include="UnitTests\Group15CrudServiceFinder\Test05CreateServicesAsync.cs" />
     <Compile Include="UnitTests\Group15CrudServiceFinder\Test04CreateServices.cs" />
     <Compile Include="UnitTests\Group20Actions\Test05ActionServiceEmptyActionAsync.cs" />

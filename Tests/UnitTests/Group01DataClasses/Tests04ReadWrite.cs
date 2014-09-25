@@ -4,6 +4,7 @@ using System.Data.Entity.Core.Objects;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Threading;
+using GenericServices;
 using NUnit.Framework;
 using Tests.DataClasses;
 using Tests.DataClasses.Concrete;
@@ -150,7 +151,7 @@ namespace Tests.UnitTests.Group01DataClasses
                 };
 
                 db.Posts.Add(newPost);
-                var status = db.SaveChangesWithValidation();
+                var status = db.SaveChangesWithChecking();
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
@@ -172,7 +173,7 @@ namespace Tests.UnitTests.Group01DataClasses
                 //ATTEMPT
                 var firstPost = db.Posts.First();
                 firstPost.Title = newGuid;
-                var status = db.SaveChangesWithValidation();
+                var status = db.SaveChangesWithChecking();
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
@@ -195,7 +196,7 @@ namespace Tests.UnitTests.Group01DataClasses
 
                 //ATTEMPT
                 firstPost.Title = Guid.NewGuid().ToString();
-                var status = db.SaveChangesWithValidation();
+                var status = db.SaveChangesWithChecking();
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
@@ -217,7 +218,7 @@ namespace Tests.UnitTests.Group01DataClasses
                 //ATTEMPT
                 db.Entry(firstPost).Collection( x => x.Tags).Load();
                 tagsNotInFirstPostTracked.ForEach( x => firstPost.Tags.Add( x));
-                var status = db.SaveChangesWithValidation();
+                var status = db.SaveChangesWithChecking();
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
@@ -240,7 +241,7 @@ namespace Tests.UnitTests.Group01DataClasses
                 //ATTEMPT
                 db.Entry(firstPost).Collection(x => x.Tags).Load();
                 firstPost.Tags = tagsNotInFirstPostTracked;
-                var status = db.SaveChangesWithValidation();
+                var status = db.SaveChangesWithChecking();
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
@@ -262,7 +263,7 @@ namespace Tests.UnitTests.Group01DataClasses
 
                 //ATTEMPT
                 db.Posts.Remove(lastPost);
-                var status = db.SaveChangesWithValidation();
+                var status = db.SaveChangesWithChecking();
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
@@ -284,7 +285,7 @@ namespace Tests.UnitTests.Group01DataClasses
                 var postToDelete = new Post {PostId = lastPost.PostId};
                 db.Posts.Attach(postToDelete);
                 db.Posts.Remove(postToDelete);
-                var status = db.SaveChangesWithValidation();
+                var status = db.SaveChangesWithChecking();
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
@@ -330,7 +331,7 @@ namespace Tests.UnitTests.Group01DataClasses
                 };
                 db.PostTagGrades.Attach(ptgToDelete);
                 ((IObjectContextAdapter)db).ObjectContext.DeleteObject(ptgToDelete);
-                var status = db.SaveChangesWithValidation();
+                var status = db.SaveChangesWithChecking();
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
@@ -355,7 +356,7 @@ namespace Tests.UnitTests.Group01DataClasses
                 };
                 db.PostTagGrades.Attach(ptgToDelete);
                 db.PostTagGrades.Remove(ptgToDelete);
-                var status = db.SaveChangesWithValidation();
+                var status = db.SaveChangesWithChecking();
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);

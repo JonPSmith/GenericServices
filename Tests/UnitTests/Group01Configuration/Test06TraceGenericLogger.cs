@@ -6,10 +6,9 @@ using System.Text;
 using GenericServices;
 using GenericServices.Logger;
 using NUnit.Framework;
-using Tests.Actions;
 using Tests.Helpers;
 
-namespace Tests.UnitTests.Group05GenericLogger
+namespace Tests.UnitTests.Group01Configuration
 {
     class Test06TraceGenericLogger
     {
@@ -24,9 +23,9 @@ namespace Tests.UnitTests.Group05GenericLogger
             var memoryWriter = new StringWriter(_loggedData);
             Trace.Listeners.Add(new TextWriterTraceListener(memoryWriter));
 
-            GenericLoggerFactory.SetLoggerMethod = name => new TraceGenericLogger(name);
-            _loggerA = GenericLoggerFactory.GetLogger("A");
-            _loggerB = GenericLoggerFactory.GetLogger("B");
+            ServicesConfiguration.SetLoggerMethod = name => new TraceGenericLogger(name);
+            _loggerA = ServicesConfiguration.GetLogger("A");
+            _loggerB = ServicesConfiguration.GetLogger("B");
         }
 
         [SetUp]

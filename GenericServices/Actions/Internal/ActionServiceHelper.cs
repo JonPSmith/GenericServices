@@ -5,7 +5,7 @@ namespace GenericServices.Actions.Internal
 {
    internal static class ActionServiceHelper
     {
-        public static ISuccessOrErrors<TActionOut> SaveChangesAttempt<TActionOut>(this ISuccessOrErrors<TActionOut> status, object actionData, IDbContextWithValidation db)
+        public static ISuccessOrErrors<TActionOut> SaveChangesAttempt<TActionOut>(this ISuccessOrErrors<TActionOut> status, object actionData, IGenericServicesDbContext db)
         {
             if (status.ShouldStopAsWarningsMatter(actionData))
                 //There were warnings and we are asked to not write to the database
@@ -13,13 +13,13 @@ namespace GenericServices.Actions.Internal
                     status.SuccessMessage);
 
             //we now need to save the changes to the database
-            var dataStatus = db.SaveChangesWithValidation();
+            var dataStatus = db.SaveChangesWithChecking();
             return dataStatus.IsValid
                 ? status.UpdateSuccessMessage("{0}... and written to database.", status.SuccessMessage)
                 : SuccessOrErrors<TActionOut>.ConvertNonResultStatus(dataStatus);
         }
 
-        public static async Task<ISuccessOrErrors<TActionOut>> SaveChangesAttemptAsync<TActionOut>(this ISuccessOrErrors<TActionOut> status, object actionData, IDbContextWithValidation db)
+        public static async Task<ISuccessOrErrors<TActionOut>> SaveChangesAttemptAsync<TActionOut>(this ISuccessOrErrors<TActionOut> status, object actionData, IGenericServicesDbContext db)
         {
 
             if (status.ShouldStopAsWarningsMatter(actionData))
@@ -28,7 +28,7 @@ namespace GenericServices.Actions.Internal
                     status.SuccessMessage);
 
             //we now need to save the changes to the database
-            var dataStatus = await db.SaveChangesWithValidationAsync();
+            var dataStatus = await db.SaveChangesWithCheckingAsync();
             return dataStatus.IsValid
                 ? status.UpdateSuccessMessage("{0}... and written to database.", status.SuccessMessage)
                 : SuccessOrErrors<TActionOut>.ConvertNonResultStatus(dataStatus);

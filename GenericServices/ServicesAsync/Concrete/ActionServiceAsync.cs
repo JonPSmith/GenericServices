@@ -7,10 +7,10 @@ namespace GenericServices.ServicesAsync.Concrete
 {
     public class ActionServiceAsync<TActionOut, TActionIn> : IActionServiceAsync<TActionOut, TActionIn> 
     {
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
         private readonly IActionAsync<TActionOut, TActionIn> _actionToRun;
 
-        public ActionServiceAsync(IDbContextWithValidation db, IActionAsync<TActionOut, TActionIn> actionToRun)
+        public ActionServiceAsync(IGenericServicesDbContext db, IActionAsync<TActionOut, TActionIn> actionToRun)
         {
             if (actionToRun == null)
                 throw new NullReferenceException("Dependecy injection did not find the action. Check you have added IActionSync<TActionOut, TActionIn> to the classe's interface.");
@@ -50,10 +50,10 @@ namespace GenericServices.ServicesAsync.Concrete
         where TDto : EfGenericDtoAsync<TActionIn, TDto>, new()
     {
 
-        private readonly IDbContextWithValidation _db;
+        private readonly IGenericServicesDbContext _db;
         private readonly IActionAsync<TActionOut, TActionIn> _actionToRun;
 
-        public ActionServiceAsync(IDbContextWithValidation db, IActionAsync<TActionOut, TActionIn> actionToRun)
+        public ActionServiceAsync(IGenericServicesDbContext db, IActionAsync<TActionOut, TActionIn> actionToRun)
         {
             if (actionToRun == null)
                 throw new NullReferenceException("Dependecy injection did not find the action. Check you have added IActionSync<TActionOut, TActionIn> to the classe's interface.");

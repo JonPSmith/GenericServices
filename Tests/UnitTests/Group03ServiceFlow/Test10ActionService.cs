@@ -39,7 +39,7 @@ namespace Tests.UnitTests.Group03ServiceFlow
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
-            dummyDb.SaveChangesWithValidationCalled.ShouldEqual(false);
+            dummyDb.SaveChangesCalled.ShouldEqual(false);
 
         }
 
@@ -57,7 +57,7 @@ namespace Tests.UnitTests.Group03ServiceFlow
 
             //VERIFY
             status.IsValid.ShouldEqual(true);
-            dummyDb.SaveChangesWithValidationCalled.ShouldEqual(true);
+            dummyDb.SaveChangesCalled.ShouldEqual(true);
 
         }
 
