@@ -33,11 +33,9 @@ using System.Threading.Tasks;
 
 namespace GenericServices
 {
-    public interface IGenericServicesDbContext
+    public interface IGenericServicesDbContext : IGenericServiceSaveChanges
     {
 
-        int SaveChanges();
-        Task<int> SaveChangesAsync();
 
         IEnumerable<DbEntityValidationResult> GetValidationErrors();
 

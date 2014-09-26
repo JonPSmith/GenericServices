@@ -47,7 +47,7 @@ namespace GenericServices
         /// </summary>
         /// <param name="db"></param>
         /// <returns>a status saying whether SaveChanges was successful or not. If not then holds errors</returns>
-        public static ISuccessOrErrors SaveChangesWithChecking(this IGenericServicesDbContext db)
+        public static ISuccessOrErrors SaveChangesWithChecking(this IGenericServiceSaveChanges db)
         {
             var result = new SuccessOrErrors();
             var numChanges = 0;
@@ -78,7 +78,7 @@ namespace GenericServices
         /// </summary>
         /// <param name="db"></param>
         /// <returns>Task containing status saying whether SaveChanges was successful or not. If not then holds errors</returns>
-        public static async Task<ISuccessOrErrors> SaveChangesWithCheckingAsync(this IGenericServicesDbContext db)
+        public static async Task<ISuccessOrErrors> SaveChangesWithCheckingAsync(this IGenericServiceSaveChanges db)
         {
             var result = new SuccessOrErrors();
             var numChanges = 0;

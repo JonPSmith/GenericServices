@@ -69,6 +69,7 @@
     <Compile Include="IActionService.cs" />
     <Compile Include="IActionBase.cs" />
     <Compile Include="IActionSetupServiceAsync.cs" />
+    <Compile Include="IGenericServiceSaveChanges.cs" />
     <Compile Include="Logger\IGenericLogger.cs" />
     <Compile Include="Logger\NoLoggingGenericLogger.cs" />
     <Compile Include="NuGet\AssemblyVersionPart.cs" />
