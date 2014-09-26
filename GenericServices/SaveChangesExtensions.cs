@@ -26,7 +26,6 @@
 #endregion
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
@@ -73,18 +72,6 @@ namespace GenericServices
         }
 
         /// <summary>
-        /// This extension will undertake a SaveChanges but will catch any validation errors 
-        /// or specific SqlException specified in ServicesConfiguration.SqlErrorDict and return
-        /// them as errors rather than throw an exception
-        /// </summary>
-        /// <param name="db"></param>
-        /// <returns>a status saying whether SaveChanges was successful or not. If not then holds errors</returns>
-        public static ISuccessOrErrors SaveChangesWithChecking(this DbContext db)
-        {
-            return ((IGenericServicesDbContext) db).SaveChangesWithChecking();
-        }
-
-        /// <summary>
         /// This extension will undertake a SaveChangesAsync but will catch any validation errors 
         /// or specific SqlException specified in ServicesConfiguration.SqlErrorDict and return
         /// them as errors
@@ -114,21 +101,6 @@ namespace GenericServices
 
             return result.SetSuccessMessage("Successfully added or updated {0} items", numChanges);
         }
-
-        /// <summary>
-        /// This extension will undertake a SaveChangesAsync but will catch any validation errors 
-        /// or specific SqlException specified in ServicesConfiguration.SqlErrorDict and return
-        /// them as errors
-        /// </summary>
-        /// <param name="db"></param>
-        /// <returns>Task containing status saying whether SaveChanges was successful or not. If not then holds errors</returns>
-        public static async Task<ISuccessOrErrors> SaveChangesWithCheckingAsync(this DbContext db)
-        {
-            return await ((IGenericServicesDbContext)db).SaveChangesWithCheckingAsync();
-        }
-
-        //----------------------------------------------
-        //private helpers
 
         /// <summary>
         /// This decodes the DbUpdateException. If there are any errors it can
