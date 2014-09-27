@@ -25,7 +25,6 @@
 // SOFTWARE.
 #endregion
 
-using System.Data.Entity;
 using GenericServices.Core;
 
 namespace GenericServices.Services.Concrete

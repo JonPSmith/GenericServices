@@ -75,7 +75,7 @@ namespace GenericServices.Core
         //--------------------------------------------------
         //ctors
 
-        public InstrumentedEfGenericDto()
+        protected InstrumentedEfGenericDto()
         {
             _timer.Start();
         }

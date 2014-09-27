@@ -132,18 +132,17 @@ namespace GenericServices.Core
 
     public class SuccessOrErrors : ISuccessOrErrors
     {
-
-        protected List<string> LocalWarnings = new List<string>();
-        protected List<ValidationResult> LocalErrors;
-        protected string LocalSuccessMessage;
+        private readonly List<string> _localWarnings = new List<string>();
+        private List<ValidationResult> _localErrors;
+        private string _localSuccessMessage;
 
         public SuccessOrErrors() { }
 
         protected SuccessOrErrors(ISuccessOrErrors nonResultStatus)
         {
             var status = (SuccessOrErrors)nonResultStatus;
-            LocalWarnings = status.LocalWarnings;
-            LocalErrors = status.LocalErrors;
+            _localWarnings = status._localWarnings;
+            _localErrors = status._localErrors;
         }
 
         /// <summary>
@@ -153,33 +152,33 @@ namespace GenericServices.Core
         {
             get
             {
-                if (LocalErrors == null)
+                if (_localErrors == null)
                     throw new InvalidOperationException("The status must have an error set or the success message set before you can access errors.");
-                return LocalErrors;
+                return _localErrors;
             }
         }
 
         /// <summary>
         /// This returns any warning messages
         /// </summary>
-        public IReadOnlyList<string> Warnings { get { return LocalWarnings; }}
+        public IReadOnlyList<string> Warnings { get { return _localWarnings; }}
 
         /// <summary>
         /// Returns true if not errors or not validated yet, else false. 
         /// </summary>
-        public bool IsValid { get { return (LocalErrors != null && Errors.Count == 0); }}
+        public bool IsValid { get { return (_localErrors != null && Errors.Count == 0); }}
 
         /// <summary>
         /// Returns true if not errors or not validated yet, else false. 
         /// </summary>
-        public bool HasWarnings { get { return (LocalWarnings.Count > 0); } }
+        public bool HasWarnings { get { return (_localWarnings.Count > 0); } }
 
         /// <summary>
         /// This returns the success message with suffix is nay warning messages
         /// </summary>
         public string SuccessMessage
         {
-            get { return HasWarnings ? string.Format("{0} (has {1} warnings)",LocalSuccessMessage,LocalWarnings.Count  ) : LocalSuccessMessage; }
+            get { return HasWarnings ? string.Format("{0} (has {1} warnings)",_localSuccessMessage,_localWarnings.Count  ) : _localSuccessMessage; }
         }
 
         //---------------------------------------------------
@@ -193,7 +192,7 @@ namespace GenericServices.Core
         /// <param name="args"></param>
         public void AddWarning(string warningformat, params object[] args)
         {
-            LocalWarnings.Add("Warning: " + string.Format(warningformat, args));
+            _localWarnings.Add("Warning: " + string.Format(warningformat, args));
         }
 
         /// <summary>
@@ -201,11 +200,11 @@ namespace GenericServices.Core
         /// </summary>
         public ISuccessOrErrors SetErrors(IEnumerable<DbEntityValidationResult> errors)
         {
-            LocalErrors = errors.SelectMany(
+            _localErrors = errors.SelectMany(
                     x => x.ValidationErrors.Select(y => new ValidationResult(y.ErrorMessage, new[] { y.PropertyName })))
                     .ToList();
 
-            LocalSuccessMessage = string.Empty;
+            _localSuccessMessage = string.Empty;
             return this;
         }
 
@@ -214,8 +213,8 @@ namespace GenericServices.Core
         /// </summary>
         public ISuccessOrErrors SetErrors(IEnumerable<ValidationResult> errors)
         {
-            LocalErrors = errors.ToList();
-            LocalSuccessMessage = string.Empty;
+            _localErrors = errors.ToList();
+            _localSuccessMessage = string.Empty;
             return this;
         }
 
@@ -225,8 +224,8 @@ namespace GenericServices.Core
         /// <param name="errors"></param>
         public ISuccessOrErrors SetErrors(IEnumerable<string> errors)
         {
-            LocalErrors = errors.Where(x => !string.IsNullOrEmpty(x)).Select(x => new ValidationResult(x)).ToList();
-            LocalSuccessMessage = string.Empty;
+            _localErrors = errors.Where(x => !string.IsNullOrEmpty(x)).Select(x => new ValidationResult(x)).ToList();
+            _localSuccessMessage = string.Empty;
             return this;
         }
 
@@ -238,10 +237,10 @@ namespace GenericServices.Core
         /// <returns></returns>
         public ISuccessOrErrors AddSingleError(string errorformat, params object[] args)
         {
-            if (LocalErrors == null)
-                LocalErrors = new List<ValidationResult>();
-            LocalErrors.Add(new ValidationResult(string.Format(errorformat, args)));
-            LocalSuccessMessage = string.Empty;
+            if (_localErrors == null)
+                _localErrors = new List<ValidationResult>();
+            _localErrors.Add(new ValidationResult(string.Format(errorformat, args)));
+            _localSuccessMessage = string.Empty;
             return this;
         }
 
@@ -254,10 +253,10 @@ namespace GenericServices.Core
         /// <returns></returns>
         public ISuccessOrErrors AddNamedParameterError(string parameterName, string errorformat, params object[] args)
         {
-            if (LocalErrors == null)
-                LocalErrors = new List<ValidationResult>();
-            LocalErrors.Add(new ValidationResult(string.Format(errorformat, args), new[] { parameterName }));
-            LocalSuccessMessage = string.Empty;
+            if (_localErrors == null)
+                _localErrors = new List<ValidationResult>();
+            _localErrors.Add(new ValidationResult(string.Format(errorformat, args), new[] { parameterName }));
+            _localSuccessMessage = string.Empty;
             return this;
         }
 
@@ -268,8 +267,8 @@ namespace GenericServices.Core
         /// <param name="args"></param>
         public virtual ISuccessOrErrors SetSuccessMessage(string successformat, params object [] args)
         {
-            LocalErrors = new List<ValidationResult>();         //empty list means its been validated and its Valid
-            LocalSuccessMessage = string.Format(successformat, args);
+            _localErrors = new List<ValidationResult>();         //empty list means its been validated and its Valid
+            _localSuccessMessage = string.Format(successformat, args);
             return this;
         }
 
@@ -291,11 +290,11 @@ namespace GenericServices.Core
         public override string ToString()
         {
             if (IsValid)
-                return LocalSuccessMessage ?? "The task completed successfully";
+                return _localSuccessMessage ?? "The task completed successfully";
 
-            return LocalErrors == null 
+            return _localErrors == null 
                 ? "Not currently setup"
-                : string.Format("Failed with {0} error{1}", LocalErrors.Count, LocalErrors.Count > 1 ? "s" : string.Empty);
+                : string.Format("Failed with {0} error{1}", _localErrors.Count, _localErrors.Count > 1 ? "s" : string.Empty);
         }
 
         /// <summary>

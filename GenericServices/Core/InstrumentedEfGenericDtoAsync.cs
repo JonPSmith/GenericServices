@@ -25,6 +25,7 @@
 // SOFTWARE.
 #endregion
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
@@ -99,7 +100,7 @@ namespace GenericServices.Core
         /// <summary>
         /// Instrumentation property which returns a list of instrumented call points with the time since the dto was created
         /// </summary>
-        public ReadOnlyCollection<InstrumentedLog> LogOfCalls { get { return new ReadOnlyCollection<InstrumentedLog>(_logOfCalls); } }
+        public IEnumerable<InstrumentedLog> LogOfCalls { get { return new ReadOnlyCollection<InstrumentedLog>(_logOfCalls); } }
 
 
         //---------------------------------------------------------------------
@@ -120,7 +121,7 @@ namespace GenericServices.Core
         /// </summary>
         /// <param name="callType">defaults to Point</param>
         /// <param name="callerName">Do not use. Filled in by system with the calling method name</param>
-        public void LogCaller( CallTypes callType = CallTypes.Point, [CallerMemberName] string callerName = "")
+        private void LogCaller( CallTypes callType = CallTypes.Point, [CallerMemberName] string callerName = "")
         {
             LogSpecificName(callerName, callType);
         }

@@ -65,7 +65,7 @@ namespace GenericServices.Core.Internal
             var syncAsync = new SyncAsyncDefiner(whatItShouldBe);
 
             var classType = typeof (TD);
-            Type[] dataTypes = null;
+            Type[] dataTypes;
             if (classType.IsSubclassOf(typeof (EfGenericDtoBase)))
             {
                 dataTypes = GetGenericTypesIfCorrectGeneric(classType, syncAsync.BaseGenericDtoType);
@@ -107,7 +107,7 @@ namespace GenericServices.Core.Internal
         }
 
             
-        class SyncAsyncDefiner
+        private class SyncAsyncDefiner
         {
             private const string UpdateServiceReplaceString = "UpdateService`1";
             private const string UpdateServiceAsyncReplaceString = "UpdateServiceAsync`1";

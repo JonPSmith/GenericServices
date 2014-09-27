@@ -41,7 +41,7 @@ namespace GenericServices
     /// <summary>
     /// This static class holds the GenericService configuration parts
     /// </summary>
-    public class ServicesConfiguration
+    public static class ServicesConfiguration
     {
 
         private static readonly Dictionary<int, string> PrivateSqlErrorDict = new Dictionary<int, string>

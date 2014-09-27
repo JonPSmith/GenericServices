@@ -26,7 +26,6 @@
 #endregion
 using System;
 using System.Threading;
-using GenericServices.Actions;
 
 namespace GenericServices.ActionComms
 {

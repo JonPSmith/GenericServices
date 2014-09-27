@@ -25,7 +25,6 @@
 // SOFTWARE.
 #endregion
 using System;
-using System.Data.Entity;
 using System.Threading.Tasks;
 using GenericServices.Core;
 using GenericServices.Core.Internal;

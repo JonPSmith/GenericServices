@@ -29,13 +29,15 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
-using System.Threading.Tasks;
 
 namespace GenericServices
 {
+    /// <summary>
+    /// This is the interface that the GenericServices uses in all its command.
+    /// It should be placed on the DbContext in your project that you want GenericServices to work with
+    /// </summary>
     public interface IGenericServicesDbContext : IGenericServiceSaveChanges
     {
-
 
         IEnumerable<DbEntityValidationResult> GetValidationErrors();
 
