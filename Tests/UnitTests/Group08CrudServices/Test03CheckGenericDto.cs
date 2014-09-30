@@ -124,46 +124,6 @@ namespace Tests.UnitTests.Group08CrudServices
         }
 
         [Test]
-        public void Check05CopyDataToDtoOk()
-        {
-
-            //SETUP
-            var data = new Post
-            {
-                PostId = 666,
-                Blogger = new Blog { Name = "Original Blog Name" },
-                BlogId = 777,
-                Title = "Original Title",
-                Content = "Original Content",
-                Tags = new Collection<Tag> { new Tag { Name = "Tag1", Slug = "one" }, new Tag { Name = "Tag2", Slug = "two" } }
-            };
-
-            //ATTEMPT
-            var newDto = new SimplePostDto
-            {
-                PostId = 123,
-                BloggerName = "this should be overwritten",
-                Title = "this should be overwritten",
-                LastUpdated = new DateTime(2000, 1, 1),
-                Tags = new Collection<Tag> { new Tag { Name = "this should be overwritten", Slug = "No" } }
-            };
-
-            var status = newDto.CopyDataToDto(null, data, newDto);
-
-            //VERIFY
-            status.IsValid.ShouldEqual(true, status.Errors);
-            newDto.PostId.ShouldEqual(666);
-            newDto.Title.ShouldEqual("Original Title");
-            newDto.LastUpdated.ShouldEqual(data.LastUpdated);
-            newDto.LastUpdatedUtc.Kind.ShouldEqual(DateTimeKind.Utc);
-
-            newDto.BloggerName.ShouldEqual("Original Blog Name");
-            newDto.Tags.Count.ShouldEqual(2);
-            string.Join(",", newDto.Tags.Select(x => x.Slug)).ShouldEqual("one,two");
-        }
-
-
-        [Test]
         public void Check06CreateDtoAndCopyInDataOk()
         {
             using (var db = new SampleWebAppDb())

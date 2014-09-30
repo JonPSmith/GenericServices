@@ -92,20 +92,6 @@ namespace GenericServices.Core
             return status;
         }
 
-        /// <summary>
-        /// This copies only the properties in TData that have public setter into the TDto
-        /// You can override this if you need a more complex copy
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="source"></param>
-        /// <param name="destination"></param>
-        internal protected virtual ISuccessOrErrors CopyDataToDto(IGenericServicesDbContext context, TData source, TDto destination)
-        {
-            CreateDatatoDtoMapping();
-            Mapper.Map(source, destination);
-            return SuccessOrErrors.Success("Successful copy of data");
-        }
-
         //---------------------------------------------------------------
         //helper methods
 
@@ -117,7 +103,7 @@ namespace GenericServices.Core
         internal protected virtual ISuccessOrErrors<TDto> CreateDtoAndCopyDataIn(IGenericServicesDbContext context, 
             Expression<Func<TData, bool>> predicate)
         {
-            Mapper.CreateMap<TData, TDto>();
+            CreateDatatoDtoMapping();
             return GetDataUntracked(context).Where(predicate).Project().To<TDto>().RealiseSingleWithErrorChecking();
         }
 

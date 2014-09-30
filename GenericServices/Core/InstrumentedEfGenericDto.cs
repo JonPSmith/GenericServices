@@ -156,17 +156,6 @@ namespace GenericServices.Core
                 return base.FindItemTracked(context);
         }
 
-        protected internal override ISuccessOrErrors CopyDataToDto(IGenericServicesDbContext context, TData source, TDto destination)
-        {
-            using (new LogStartStop(this))
-            {
-                if (_whereToFail.HasFlag(InstrumentedOpFlags.FailOnCopyDataToDto))
-                    return new SuccessOrErrors().AddSingleError("Flag was set to fail in CopyDataToDto.");
-
-                return base.CopyDataToDto(context, source, destination);
-            }
-        }
-
         protected internal override ISuccessOrErrors CopyDtoToData(IGenericServicesDbContext context, TDto source, TData destination)
         {
             using (new LogStartStop(this))
