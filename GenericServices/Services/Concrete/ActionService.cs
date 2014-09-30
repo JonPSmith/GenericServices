@@ -39,7 +39,7 @@ namespace GenericServices.Services.Concrete
         {
             if (actionToRun == null)
                 throw new NullReferenceException(
-                    "Dependecy injection did not find the action. Check you have added IActionSync<TActionOut, TActionIn> to the classe's interface.");
+                    "Dependecy injection did not find the action. Check you have added IActionSync<TActionOut, TActionIn> to the class's interface.");
             _db = db;
             _actionToRun = actionToRun;
         }
@@ -85,7 +85,7 @@ namespace GenericServices.Services.Concrete
         {
             if (actionToRun == null)
                 throw new NullReferenceException(
-                    "Dependecy injection did not find the action. Check you have added IActionSync<TActionOut, TActionIn> to the classe's interface.");
+                    "Dependecy injection did not find the action. Check you have added IActionSync<TActionOut, TActionIn> to the class's interface.");
             _db = db;
             _actionToRun = actionToRun;
         }

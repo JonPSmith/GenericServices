@@ -38,7 +38,7 @@ using AutoMapper.QueryableExtensions;
 namespace GenericServices.Core
 {
     public abstract class EfGenericDto<TData, TDto> : EfGenericDtoBase<TData, TDto>
-        where TData : class, new()
+        where TData : class
         where TDto : EfGenericDto<TData,TDto>, new()
     {
 
