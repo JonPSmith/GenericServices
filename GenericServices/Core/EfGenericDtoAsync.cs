@@ -97,23 +97,6 @@ namespace GenericServices.Core
         }
 
         /// <summary>
-        /// This copies only the properties in TData that have public setter into the TDto
-        /// You can override this if you need a more complex copy
-        /// </summary>
-        /// <param name="context"></param>
-        /// <param name="source"></param>
-        /// <param name="destination"></param>
-        internal protected virtual async Task<ISuccessOrErrors> CopyDataToDtoAsync(IGenericServicesDbContext context, TData source, TDto destination)
-        {
-            CreateDatatoDtoMapping();
-            Mapper.Map(source, destination);
-            return SuccessOrErrors.Success("Successful copy of data");
-        }
-
-        //---------------------------------------------------------------
-        //helper methods
-
-        /// <summary>
         /// This copies an existing TData into a new the dto using a Lambda expression to define the where clause
         /// It copies TData properties into all TDto properties that have accessable setters, i.e. not private
         /// </summary>

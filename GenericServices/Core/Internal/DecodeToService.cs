@@ -60,25 +60,16 @@ namespace GenericServices.Core.Internal
             return CreateService<TD>(whatItShouldBe, ctorParams);
         }
 
+        //public static Type[] DecodeTypes<TD>(WhatItShouldBe whatItShouldBe) where TD : class
+        //{
+        //    return GetTypesFromInitialType<TD>(whatItShouldBe, new SyncAsyncDefiner(whatItShouldBe));
+        //}
+
         private static dynamic CreateService<TD>(WhatItShouldBe whatItShouldBe, params object[] ctorParams) where TD : class
         {
             var syncAsync = new SyncAsyncDefiner(whatItShouldBe);
 
-            var classType = typeof (TD);
-            Type[] dataTypes;
-            if (classType.IsSubclassOf(typeof (EfGenericDtoBase)))
-            {
-                dataTypes = GetGenericTypesIfCorrectGeneric(classType, syncAsync.BaseGenericDtoType);
-                if (dataTypes == null)
-                    throw new InvalidOperationException(string.Format("This service needs a class which inherited from {0}.", syncAsync.BaseGenericDtoType.Name));
-            } 
-            else if (!whatItShouldBe.HasFlag(WhatItShouldBe.DataClass))
-                throw new InvalidOperationException("This type of service only works with some form of EfGenericDto.");
-            else
-            {
-                //Its a data class
-                dataTypes = new[] {typeof (TD)};
-            }
+            var dataTypes = GetTypesFromInitialType<TD>(whatItShouldBe, syncAsync);
 
             var genericServiceString = syncAsync.BuildTypeString(dataTypes.Length);
             var serviceGenericType = Type.GetType(genericServiceString);
@@ -88,18 +79,45 @@ namespace GenericServices.Core.Internal
             return Activator.CreateInstance(serviceType, ctorParams);
         }
 
+        /// <summary>
+        /// This decodes the type and returns an array of types. If the type is based on a GenericDto 
+        /// then it returns the Data type and the 
+        /// </summary>
+        /// <typeparam name="TD"></typeparam>
+        /// <param name="whatItShouldBe"></param>
+        /// <param name="syncAsync"></param>
+        /// <returns></returns>
+        private static Type[] GetTypesFromInitialType<TD>(WhatItShouldBe whatItShouldBe, SyncAsyncDefiner syncAsync)
+            where TD : class
+        {
+            var classType = typeof (TD);
+            Type[] dataTypes;
+            if (classType.IsSubclassOf(typeof (EfGenericDtoBase)))
+            {
+                dataTypes = GetGenericTypesIfCorrectGeneric(classType, syncAsync.BaseGenericDtoType);
+                if (dataTypes == null)
+                    throw new InvalidOperationException(string.Format("This service needs a class which inherited from {0}.",
+                        syncAsync.BaseGenericDtoType.Name));
+            }
+            else if (!whatItShouldBe.HasFlag(WhatItShouldBe.DataClass))
+                throw new InvalidOperationException("This type of service only works with some form of EfGenericDto.");
+            else
+            {
+                //Its a data class
+                dataTypes = new[] {typeof (TD)};
+            }
+            return dataTypes;
+        }
+
 
         /// <summary>
-        /// This checks whether the class is inherited from the correct version of EfGenericDto
+        /// This returns the two classes of used to form the EfGenericDto. Null if it doesn't match the expected type
         /// </summary>
         /// <param name="classType">class type to check</param>
         /// <param name="genericDtoClass">the type of the particular dto we are looking for, or EfGenericBase if either will do</param>
-        /// <returns>null class is not inherited from genericDto. True if inherited for the dto we expected, else false </returns>
+        /// <returns>array of two classes if ok. Null array if not inherited from the right sync/async GenericDtoType</returns>
         private static Type[] GetGenericTypesIfCorrectGeneric(Type classType, Type genericDtoClass)
         {
-            if (!classType.IsSubclassOf(typeof(EfGenericDtoBase)))
-                return null;
-
             while (classType.Name != genericDtoClass.Name && classType.BaseType != null)
                 classType = classType.BaseType;
 
@@ -109,8 +127,8 @@ namespace GenericServices.Core.Internal
             
         private class SyncAsyncDefiner
         {
-            private const string UpdateServiceReplaceString = "UpdateService`1";
-            private const string UpdateServiceAsyncReplaceString = "UpdateServiceAsync`1";
+            private static readonly string UpdateServiceReplaceString = typeof(UpdateService<>).Name;
+            private static readonly string UpdateServiceAsyncReplaceString = typeof(UpdateServiceAsync<>).Name;
 
             private static readonly string UpdateServiceAsyncAssemblyQualifiedName =
                 typeof(UpdateServiceAsync<>).AssemblyQualifiedName;

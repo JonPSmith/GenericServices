@@ -92,9 +92,6 @@ namespace GenericServices.Core
             return status;
         }
 
-        //---------------------------------------------------------------
-        //helper methods
-
         /// <summary>
         /// This copies an existing TData into a new the dto using a Lambda expression to define the where clause
         /// It copies TData properties into all TDto properties that have accessable setters, i.e. not private

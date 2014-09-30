@@ -160,17 +160,6 @@ namespace GenericServices.Core
                 return await context.Set<TData>().FindAsync(GetKeyValues(context));
         }
 
-        protected internal override async Task<ISuccessOrErrors> CopyDataToDtoAsync(IGenericServicesDbContext context, TData source, TDto destination)
-        {
-            using (new LogStartStop(this))
-            {
-                if (_whereToFail.HasFlag(InstrumentedOpFlags.FailOnCopyDataToDto))
-                    return new SuccessOrErrors().AddSingleError("Flag was set to fail in CopyDataToDtoAsync.");
-
-                return await base.CopyDataToDtoAsync(context, source, destination);
-            }
-        }
-
         protected internal override async Task<ISuccessOrErrors> CopyDtoToDataAsync(IGenericServicesDbContext context, TDto source, TData destination)
         {
             using (new LogStartStop(this))

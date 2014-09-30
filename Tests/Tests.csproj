@@ -106,6 +106,7 @@
     <Compile Include="UnitTests\Group01DataClasses\Tests02Validation.cs" />
     <Compile Include="UnitTests\Group01DataClasses\Tests04ReadWrite.cs" />
     <Compile Include="UnitTests\Group01DataClasses\Tests90CheckDbUpdateException.cs" />
+    <Compile Include="UnitTests\Group15CrudServiceFinder\Test01DecodeToTypes.cs" />
     <Compile Include="UnitTests\Group15CrudServiceFinder\Test02DecodeToService.cs" />
     <Compile Include="UnitTests\Group02Validation\Test01SuccessOrErrors.cs" />
     <Compile Include="UnitTests\Group02Validation\Test03SuccessOrErrorsT.cs" />
