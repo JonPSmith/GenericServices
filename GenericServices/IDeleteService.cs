@@ -33,6 +33,6 @@ namespace GenericServices
         /// </summary>
         /// <param name="keys">The keys must be given in the same order as entity framework has them</param>
         /// <returns></returns>
-        ISuccessOrErrors Delete<TData>(params object[] keys) where TData : class, new();
+        ISuccessOrErrors Delete<TData>(params object[] keys) where TData : class;
     }
 }

@@ -29,7 +29,7 @@ using GenericServices.Core;
 namespace GenericServices
 {
     public interface IActionSetupService<TData, out TDto>
-        where TData : class, new()
+        where TData : class
         where TDto : EfGenericDto<TData, TDto>, new()
     {
         /// <summary>

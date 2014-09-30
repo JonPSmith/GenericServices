@@ -40,7 +40,7 @@ namespace GenericServices.Services
     }
 
     public interface IUpdateService<TData, TDto>
-        where TData : class, new()
+        where TData : class
         where TDto : EfGenericDto<TData, TDto>, new()
     {
         /// <summary>

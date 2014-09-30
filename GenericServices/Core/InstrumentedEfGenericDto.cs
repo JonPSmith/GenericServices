@@ -39,7 +39,7 @@ namespace GenericServices.Core
         ForceActionFail = 4, ForceActionWarnWithWrite = 8, ForceActionkWarnNoWrite = 16 }
 
     public abstract class InstrumentedEfGenericDto<TData, TDto> : EfGenericDto<TData, TDto>, ICheckIfWarnings
-        where TData : class, new()
+        where TData : class
         where TDto : EfGenericDto<TData, TDto>, new()
     {
         /// <summary>

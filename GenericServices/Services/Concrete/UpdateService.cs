@@ -104,7 +104,7 @@ namespace GenericServices.Services.Concrete
     //DTO version
 
     public class UpdateService<TData, TDto> : IUpdateService<TData, TDto>
-        where TData : class, new()
+        where TData : class
         where TDto : EfGenericDto<TData, TDto>, new()
     {
         private readonly IGenericServicesDbContext _db;

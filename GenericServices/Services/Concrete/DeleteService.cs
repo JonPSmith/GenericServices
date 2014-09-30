@@ -44,7 +44,7 @@ namespace GenericServices.Services.Concrete
         /// </summary>
         /// <param name="keys">The keys must be given in the same order as entity framework has them</param>
         /// <returns></returns>
-        public ISuccessOrErrors Delete<TData>(params object[] keys) where TData : class, new() 
+        public ISuccessOrErrors Delete<TData>(params object[] keys) where TData : class 
         {
 
             var entityToDelete = _db.Set<TData>().Find(keys);

@@ -30,7 +30,7 @@ namespace GenericServices.Services
 {   
 
     public interface ICreateSetupService<TData, out TDto>
-        where TData : class, new()
+        where TData : class
         where TDto : EfGenericDto<TData, TDto>, new()
     {
         /// <summary>

@@ -28,9 +28,13 @@ using GenericServices.Core;
 
 namespace GenericServices.Services.Concrete
 {
-
+    /// <summary>
+    /// This will setup a dto prior to it being shown to the user
+    /// </summary>
+    /// <typeparam name="TData"></typeparam>
+    /// <typeparam name="TDto"></typeparam>
     public class ActionSetupService<TData, TDto> : CreateSetupService<TData, TDto>, IActionSetupService<TData, TDto>
-        where TData : class, new()
+        where TData : class
         where TDto : EfGenericDto<TData, TDto>, new()
     {
         public ActionSetupService(IGenericServicesDbContext db) : base(db)

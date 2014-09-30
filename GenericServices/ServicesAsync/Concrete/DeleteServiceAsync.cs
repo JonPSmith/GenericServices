@@ -46,7 +46,7 @@ namespace GenericServices.ServicesAsync.Concrete
         /// </summary>
         /// <param name="keys">The keys must be given in the same order as entity framework has them</param>
         /// <returns></returns>
-        public async Task<ISuccessOrErrors> DeleteAsync<TData>(params object[] keys) where TData : class, new()  
+        public async Task<ISuccessOrErrors> DeleteAsync<TData>(params object[] keys) where TData : class
         {
             var keyProperties = _db.GetKeyProperties<TData>();
             if (keyProperties.Count != keys.Length)

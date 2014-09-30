@@ -95,7 +95,7 @@ namespace GenericServices.ServicesAsync.Concrete
     //Dto version
 
     public class UpdateSetupServiceAsync<TData, TDto> : IUpdateSetupServiceAsync<TData, TDto>
-        where TData : class, new()
+        where TData : class
         where TDto : EfGenericDtoAsync<TData, TDto>, new()
     {
         private readonly IGenericServicesDbContext _db;
