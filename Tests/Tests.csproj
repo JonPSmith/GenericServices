@@ -69,7 +69,6 @@
     <Compile Include="DataClasses\Concrete\Post.cs" />
     <Compile Include="DataClasses\Concrete\PostTagGrade.cs" />
     <Compile Include="DataClasses\Concrete\Tag.cs" />
-    <Compile Include="DataClasses\CutDownValidation.cs" />
     <Compile Include="DataClasses\DataLayerInitialise.cs" />
     <Compile Include="DataClasses\Internal\LoadDbDataFromXml.cs" />
     <Compile Include="DataClasses\Concrete\PostLink.cs" />
