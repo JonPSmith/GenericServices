@@ -49,9 +49,9 @@ namespace Tests.UnitTests.Group01Configuration
             var memoryWriter = new StringWriter(_loggedData);
             Trace.Listeners.Add(new TextWriterTraceListener(memoryWriter));
 
-            ServicesConfiguration.SetLoggerMethod = name => new TraceGenericLogger(name);
-            _loggerA = ServicesConfiguration.GetLogger("A");
-            _loggerB = ServicesConfiguration.GetLogger("B");
+            GenericServicesConfig.SetLoggerMethod = name => new TraceGenericLogger(name);
+            _loggerA = GenericServicesConfig.GetLogger("A");
+            _loggerB = GenericServicesConfig.GetLogger("B");
         }
 
         [SetUp]

@@ -46,9 +46,9 @@ namespace Tests.UnitTests.Group01Configuration
         {
             _log4NetMemoryLog = new MemoryAppender();
             BasicConfigurator.Configure(_log4NetMemoryLog);
-            ServicesConfiguration.SetLoggerMethod = name => new Log4NetGenericLogger(name);
-            _loggerA = ServicesConfiguration.GetLogger("A");
-            _loggerB = ServicesConfiguration.GetLogger("B");
+            GenericServicesConfig.SetLoggerMethod = name => new Log4NetGenericLogger(name);
+            _loggerA = GenericServicesConfig.GetLogger("A");
+            _loggerB = GenericServicesConfig.GetLogger("B");
         }
 
         [SetUp]

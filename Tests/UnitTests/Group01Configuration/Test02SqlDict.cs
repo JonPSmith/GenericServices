@@ -43,7 +43,7 @@ namespace Tests.UnitTests.Group01Configuration
         {
             //This remembers the SqlErrorTextDict
             _rememberDefaultSqlErrorTextDict =
-                ServicesConfiguration.SqlErrorDict.Select(x => new KeyValuePair<int, string>(x.Key, x.Value))
+                GenericServicesConfig.SqlErrorDict.Select(x => new KeyValuePair<int, string>(x.Key, x.Value))
                     .ToList();
 
         }
@@ -57,7 +57,7 @@ namespace Tests.UnitTests.Group01Configuration
 
         private void RestoreSqlErrorTextDict()
         {
-            _rememberDefaultSqlErrorTextDict.ForEach(x => ServicesConfiguration.AddToSqlErrorDict(x.Key, x.Value));
+            _rememberDefaultSqlErrorTextDict.ForEach(x => GenericServicesConfig.AddToSqlErrorDict(x.Key, x.Value));
         }
 
         //---------------------
@@ -69,10 +69,10 @@ namespace Tests.UnitTests.Group01Configuration
             //SETUP  
 
             //ATTEMPT
-            ServicesConfiguration.ClearSqlErrorDict();
+            GenericServicesConfig.ClearSqlErrorDict();
 
             //VERIFY
-            ServicesConfiguration.SqlErrorDict.Count.ShouldEqual(0);
+            GenericServicesConfig.SqlErrorDict.Count.ShouldEqual(0);
         }
 
         [Test]
@@ -82,11 +82,11 @@ namespace Tests.UnitTests.Group01Configuration
             //SETUP  
 
             //ATTEMPT
-            ServicesConfiguration.ClearSqlErrorDict();
+            GenericServicesConfig.ClearSqlErrorDict();
             RestoreSqlErrorTextDict();
 
             //VERIFY
-            CollectionAssert.AreEquivalent(new[] {547, 2601}, ServicesConfiguration.SqlErrorDict.Keys);
+            CollectionAssert.AreEquivalent(new[] {547, 2601}, GenericServicesConfig.SqlErrorDict.Keys);
         }
 
         [Test]
@@ -96,12 +96,12 @@ namespace Tests.UnitTests.Group01Configuration
             //SETUP  
 
             //ATTEMPT
-            ServicesConfiguration.ClearSqlErrorDict();
-            ServicesConfiguration.AddToSqlErrorDict(-1, "A test");
+            GenericServicesConfig.ClearSqlErrorDict();
+            GenericServicesConfig.AddToSqlErrorDict(-1, "A test");
 
             //VERIFY
-            ServicesConfiguration.SqlErrorDict.Count.ShouldEqual(1);
-            ServicesConfiguration.SqlErrorDict[-1].ShouldEqual("A test");
+            GenericServicesConfig.SqlErrorDict.Count.ShouldEqual(1);
+            GenericServicesConfig.SqlErrorDict[-1].ShouldEqual("A test");
         }
 
         [Test]
@@ -111,13 +111,13 @@ namespace Tests.UnitTests.Group01Configuration
             //SETUP  
 
             //ATTEMPT
-            ServicesConfiguration.ClearSqlErrorDict();
-            ServicesConfiguration.AddToSqlErrorDict(-1, "A test");
-            ServicesConfiguration.AddToSqlErrorDict(-1, "Another test");
+            GenericServicesConfig.ClearSqlErrorDict();
+            GenericServicesConfig.AddToSqlErrorDict(-1, "A test");
+            GenericServicesConfig.AddToSqlErrorDict(-1, "Another test");
 
             //VERIFY
-            ServicesConfiguration.SqlErrorDict.Count.ShouldEqual(1);
-            ServicesConfiguration.SqlErrorDict[-1].ShouldEqual("Another test");
+            GenericServicesConfig.SqlErrorDict.Count.ShouldEqual(1);
+            GenericServicesConfig.SqlErrorDict[-1].ShouldEqual("Another test");
         }
 
     }

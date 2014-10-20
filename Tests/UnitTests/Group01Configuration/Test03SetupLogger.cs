@@ -40,7 +40,7 @@ namespace Tests.UnitTests.Group01Configuration
 
             static FirstClass()
             {
-                Logger = ServicesConfiguration.GetLogger("hello");
+                Logger = GenericServicesConfig.GetLogger("hello");
             }
         }
 
@@ -50,7 +50,7 @@ namespace Tests.UnitTests.Group01Configuration
 
             static SecondClass()
             {
-                Logger = ServicesConfiguration.GetLogger("test");
+                Logger = GenericServicesConfig.GetLogger("test");
             }
         }
 
@@ -59,7 +59,7 @@ namespace Tests.UnitTests.Group01Configuration
         {
 
             //SETUP  
-            ServicesConfiguration.SetLoggerMethod = name => new NoLoggingGenericLogger();
+            GenericServicesConfig.SetLoggerMethod = name => new NoLoggingGenericLogger();
 
             //ATTEMPT
             var classWithLogger = new FirstClass();
@@ -74,7 +74,7 @@ namespace Tests.UnitTests.Group01Configuration
         {
 
             //SETUP  
-            ServicesConfiguration.SetLoggerMethod = name => new Log4NetGenericLogger(name);
+            GenericServicesConfig.SetLoggerMethod = name => new Log4NetGenericLogger(name);
 
             //ATTEMPT
             var classWithLogger = new SecondClass();

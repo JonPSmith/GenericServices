@@ -94,7 +94,7 @@
     <Compile Include="ServicesAsync\IDetailServiceAsync.cs" />
     <Compile Include="ServicesAsync\IUpdateServiceAsync.cs" />
     <Compile Include="ServicesAsync\IUpdateSetupServiceAsync.cs" />
-    <Compile Include="ServicesConfiguration.cs" />
+    <Compile Include="GenericServicesConfig.cs" />
     <Compile Include="Services\Concrete\ActionService.cs" />
     <Compile Include="Services\Concrete\ActionSetupService.cs" />
     <Compile Include="IActionSetupService.cs" />

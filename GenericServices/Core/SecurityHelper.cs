@@ -57,9 +57,9 @@ namespace GenericServices.Core
             }
             catch (Exception ex)
             {
-                if (ServicesConfiguration.RealiseSingleExceptionMethod == null) throw;      //nothing to catch error
+                if (GenericServicesConfig.RealiseSingleExceptionMethod == null) throw;      //nothing to catch error
 
-                var errMsg = ServicesConfiguration.RealiseSingleExceptionMethod(ex, methodName);
+                var errMsg = GenericServicesConfig.RealiseSingleExceptionMethod(ex, methodName);
                 if (errMsg != null)
                     status.AddSingleError(errMsg);
                 else
@@ -90,9 +90,9 @@ namespace GenericServices.Core
             }
             catch (Exception ex)
             {
-                if (ServicesConfiguration.RealiseSingleExceptionMethod == null) throw;      //nothing to catch error
+                if (GenericServicesConfig.RealiseSingleExceptionMethod == null) throw;      //nothing to catch error
 
-                var errMsg = ServicesConfiguration.RealiseSingleExceptionMethod(ex, methodName);
+                var errMsg = GenericServicesConfig.RealiseSingleExceptionMethod(ex, methodName);
                 if (errMsg != null)
                     status.AddSingleError(errMsg);
                 else

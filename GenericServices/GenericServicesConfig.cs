@@ -41,7 +41,7 @@ namespace GenericServices
     /// <summary>
     /// This static class holds the GenericService configuration parts
     /// </summary>
-    public static class ServicesConfiguration
+    public static class GenericServicesConfig
     {
 
         private static readonly Dictionary<int, string> PrivateSqlErrorDict = new Dictionary<int, string>
@@ -81,7 +81,7 @@ namespace GenericServices
             return SetLoggerMethod(name);
         }
 
-        static ServicesConfiguration()
+        static GenericServicesConfig()
         {
             SetLoggerMethod = name => NoLoggerInstance;
         }

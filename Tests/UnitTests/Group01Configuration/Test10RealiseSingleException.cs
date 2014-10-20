@@ -56,7 +56,7 @@ namespace Tests.UnitTests.Group01Configuration
             {
                 //SETUP
                 var id = db.Posts.First().PostId;
-                ServicesConfiguration.RealiseSingleExceptionMethod = null;
+                GenericServicesConfig.RealiseSingleExceptionMethod = null;
 
                 //ATTEMPT
                 var status = db.Posts.Where(x => x.PostId == id).RealiseSingleWithErrorChecking();
@@ -72,7 +72,7 @@ namespace Tests.UnitTests.Group01Configuration
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
-                ServicesConfiguration.RealiseSingleExceptionMethod = null;
+                GenericServicesConfig.RealiseSingleExceptionMethod = null;
 
                 //ATTEMPT
                 var ex = Assert.Throws<InvalidOperationException>(() => db.Posts.RealiseSingleWithErrorChecking());
@@ -102,7 +102,7 @@ namespace Tests.UnitTests.Group01Configuration
             {
                 //SETUP
                 var id = db.Posts.First().PostId;
-                ServicesConfiguration.RealiseSingleExceptionMethod = TestExceptionCatch;
+                GenericServicesConfig.RealiseSingleExceptionMethod = TestExceptionCatch;
 
                 //ATTEMPT
                 var status = db.Posts.RealiseSingleWithErrorChecking();
@@ -120,7 +120,7 @@ namespace Tests.UnitTests.Group01Configuration
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
-                ServicesConfiguration.RealiseSingleExceptionMethod = TestExceptionNoCatch;
+                GenericServicesConfig.RealiseSingleExceptionMethod = TestExceptionNoCatch;
 
                 //ATTEMPT
                 var ex = Assert.Throws<InvalidOperationException>(() => db.Posts.RealiseSingleWithErrorChecking());
@@ -137,7 +137,7 @@ namespace Tests.UnitTests.Group01Configuration
             {
                 //SETUP
                 var id = db.Posts.First().PostId;
-                ServicesConfiguration.RealiseSingleExceptionMethod = TestExceptionCatch;
+                GenericServicesConfig.RealiseSingleExceptionMethod = TestExceptionCatch;
 
                 //ATTEMPT
                 var status = await db.Posts.RealiseSingleWithErrorCheckingAsync();
@@ -155,7 +155,7 @@ namespace Tests.UnitTests.Group01Configuration
             using (var db = new SampleWebAppDb())
             {
                 //SETUP
-                ServicesConfiguration.RealiseSingleExceptionMethod = TestExceptionNoCatch;
+                GenericServicesConfig.RealiseSingleExceptionMethod = TestExceptionNoCatch;
 
                 //ATTEMPT
                 try

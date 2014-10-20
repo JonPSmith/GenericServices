@@ -58,7 +58,7 @@ namespace GenericServices.Actions
         {
             LowerBound = 0;
             UpperBound = 100;
-            _logger = ServicesConfiguration.GetLogger(GetType().Name);       //give it the name of the inherited type
+            _logger = GenericServicesConfig.GetLogger(GetType().Name);       //give it the name of the inherited type
         }
 
         

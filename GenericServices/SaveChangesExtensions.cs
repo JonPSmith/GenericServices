@@ -121,7 +121,7 @@ namespace GenericServices
             {
                 var errorNum = sqlException.Errors[i].Number;
                 string errorText;
-                if (ServicesConfiguration.SqlErrorDict.TryGetValue(errorNum, out errorText))
+                if (GenericServicesConfig.SqlErrorDict.TryGetValue(errorNum, out errorText))
                     result.Add(new ValidationResult(errorText));
             }
             return result.Any() ? result : null;
