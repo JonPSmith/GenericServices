@@ -65,7 +65,7 @@ namespace Tests.UnitTests.Group03ServiceFlow
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
-                status.Result.FunctionsCalledCommaDelimited.ShouldEqual("CreateDtoAndCopyDataIn,SetupSecondaryData");
+                status.Result.FunctionsCalledCommaDelimited.ShouldEqual("DetailDtoFromDataIn,SetupSecondaryData");
             }
         }
 
@@ -90,8 +90,8 @@ namespace Tests.UnitTests.Group03ServiceFlow
             }
         }
 
-        [TestCase(InstrumentedOpFlags.NormalOperation, true, "FindItemTracked,CopyDtoToData")]
-        [TestCase(InstrumentedOpFlags.FailOnCopyDtoToData, false, "FindItemTracked,CopyDtoToData,SetupSecondaryData")]
+        [TestCase(InstrumentedOpFlags.NormalOperation, true, "FindItemTracked,CreateUpdateDataFromDto")]
+        [TestCase(InstrumentedOpFlags.FailOnCopyDtoToData, false, "FindItemTracked,CreateUpdateDataFromDto,SetupSecondaryData")]
         public void Check02UpdateFlow(InstrumentedOpFlags errorFlag, bool isValid, string expectedFunctionsCalled)
         {
             using (var db = new SampleWebAppDb())

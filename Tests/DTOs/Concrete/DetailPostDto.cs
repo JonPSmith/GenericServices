@@ -138,7 +138,7 @@ namespace Tests.DTOs.Concrete
                 context.Set<Tag>().ToList().Select(x => new KeyValuePair<string, int>(x.Name, x.TagId)), preselectedTags);
         }
 
-        internal protected override ISuccessOrErrors CopyDtoToData(IGenericServicesDbContext context, DetailPostDto dto, Post post)
+        internal protected override ISuccessOrErrors CreateUpdateDataFromDto(IGenericServicesDbContext context, DetailPostDto dto, Post post)
         {
 
             var db = context as SampleWebAppDb;
@@ -159,7 +159,7 @@ namespace Tests.DTOs.Concrete
 
             if (status.IsValid)
                 //now we copy the items to the right place
-                status = base.CopyDtoToData(context, dto, post);
+                status = base.CreateUpdateDataFromDto(context, dto, post);
 
             return status;
         }

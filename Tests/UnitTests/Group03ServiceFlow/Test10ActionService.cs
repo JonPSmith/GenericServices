@@ -107,10 +107,10 @@ namespace Tests.UnitTests.Group03ServiceFlow
 
         }
 
-        [TestCase(InstrumentedOpFlags.NormalOperation, true, "CopyDtoToData")]
-        [TestCase(InstrumentedOpFlags.FailOnCopyDtoToData, false, "CopyDtoToData")]
-        [TestCase(InstrumentedOpFlags.ForceActionFail, false, "CopyDtoToData")]
-        [TestCase(InstrumentedOpFlags.ForceActionWarnWithWrite, true, "CopyDtoToData")]
+        [TestCase(InstrumentedOpFlags.NormalOperation, true, "CreateUpdateDataFromDto")]
+        [TestCase(InstrumentedOpFlags.FailOnCopyDtoToData, false, "CreateUpdateDataFromDto")]
+        [TestCase(InstrumentedOpFlags.ForceActionFail, false, "CreateUpdateDataFromDto")]
+        [TestCase(InstrumentedOpFlags.ForceActionWarnWithWrite, true, "CreateUpdateDataFromDto")]
         public void Check05ActionFlowAction(InstrumentedOpFlags errorFlag, bool isValid, string expectedFunctionsCalled)
         {
             //SETUP

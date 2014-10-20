@@ -74,7 +74,7 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 Tags = new Collection<Tag> { new Tag { Name = "Original Tag name", Slug = "Yes" } }
             };
 
-            var status = await dto.CopyDtoToDataAsync(null, dto, newData);
+            var status = await dto.CreateUpdateDataFromDtoAsync(null, dto, newData);
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
@@ -98,7 +98,7 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
             //ATTEMPT
             var newData = new Tag();
 
-            var status = await dto.CopyDtoToDataAsync(null, dto, newData);
+            var status = await dto.CreateUpdateDataFromDtoAsync(null, dto, newData);
 
             //VERIFY
             status.IsValid.ShouldEqual(false, status.Errors);
@@ -117,7 +117,7 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
             //ATTEMPT
             var newData = new Tag();
 
-            var status = await dto.CopyDtoToDataAsync(null, dto, newData);
+            var status = await dto.CreateUpdateDataFromDtoAsync(null, dto, newData);
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
@@ -134,7 +134,7 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 var firstPost = db.Posts.Include( x => x.Blogger).Include(x => x.Tags).AsNoTracking().First();
 
                 //ATTEMPT
-                var status = await new SimplePostDtoAsync().CreateDtoAndCopyDataInAsync(db, x => x.PostId == firstPost.PostId);
+                var status = await new SimplePostDtoAsync().DetailDtoFromDataInAsync(db, x => x.PostId == firstPost.PostId);
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);

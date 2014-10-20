@@ -66,7 +66,7 @@ namespace Tests.UnitTests.Group04ServiceFlowAsync
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
-                status.Result.FunctionsCalledCommaDelimited.ShouldEqual("CreateDtoAndCopyDataInAsync,SetupSecondaryDataAsync");
+                status.Result.FunctionsCalledCommaDelimited.ShouldEqual("DetailDtoFromDataInAsync,SetupSecondaryDataAsync");
             }
         }
 
@@ -91,8 +91,8 @@ namespace Tests.UnitTests.Group04ServiceFlowAsync
             }
         }
 
-        [TestCase(InstrumentedOpFlags.NormalOperation, true, "FindItemTrackedAsync,CopyDtoToDataAsync")]
-        [TestCase(InstrumentedOpFlags.FailOnCopyDtoToData, false, "FindItemTrackedAsync,CopyDtoToDataAsync,SetupSecondaryDataAsync")]
+        [TestCase(InstrumentedOpFlags.NormalOperation, true, "FindItemTrackedAsync,CreateUpdateDataFromDtoAsync")]
+        [TestCase(InstrumentedOpFlags.FailOnCopyDtoToData, false, "FindItemTrackedAsync,CreateUpdateDataFromDtoAsync,SetupSecondaryDataAsync")]
         public async void Check02UpdateFlow(InstrumentedOpFlags errorFlag, bool isValid, string expectedFunctionsCalled)
         {
             using (var db = new SampleWebAppDb())

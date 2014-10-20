@@ -139,10 +139,10 @@ namespace GenericServices.Core
         //---------------------------------------------------------------------
         //overridden methods
 
-        protected internal override IQueryable<TDto> BuildListQueryUntracked(IGenericServicesDbContext context)
+        protected internal override IQueryable<TDto> ListQueryUntracked(IGenericServicesDbContext context)
         {
             using (new LogStartStop( this))
-                return base.BuildListQueryUntracked(context);
+                return base.ListQueryUntracked(context);
         }
 
         protected internal override void SetupSecondaryData(IGenericServicesDbContext db, TDto dto)
@@ -156,7 +156,7 @@ namespace GenericServices.Core
                 return base.FindItemTracked(context);
         }
 
-        protected internal override ISuccessOrErrors CopyDtoToData(IGenericServicesDbContext context, TDto source, TData destination)
+        protected internal override ISuccessOrErrors CreateUpdateDataFromDto(IGenericServicesDbContext context, TDto source, TData destination)
         {
             using (new LogStartStop(this))
             {
@@ -169,7 +169,7 @@ namespace GenericServices.Core
                 //Mapper.Map(source, destination);
                 //return SuccessOrErrors.Success("Successful copy of data");
 
-                return base.CopyDtoToData(context, source, destination);
+                return base.CreateUpdateDataFromDto(context, source, destination);
             }
         }
 
@@ -178,11 +178,11 @@ namespace GenericServices.Core
         /// It copies TData properties into all TDto properties that have accessable setters, i.e. not private
         /// </summary>
         /// <returns>status. If valid result is dto. Otherwise null if not found</returns>
-        internal protected override ISuccessOrErrors<TDto> CreateDtoAndCopyDataIn(IGenericServicesDbContext context,
+        internal protected override ISuccessOrErrors<TDto> DetailDtoFromDataIn(IGenericServicesDbContext context,
             Expression<Func<TData, bool>> predicate)
         {
             LogCaller(CallTypes.Start);
-            var status = base.CreateDtoAndCopyDataIn(context, predicate);
+            var status = base.DetailDtoFromDataIn(context, predicate);
             if (status.IsValid)
             {
                 var instDto = status.Result as InstrumentedEfGenericDto<TData, TDto>;

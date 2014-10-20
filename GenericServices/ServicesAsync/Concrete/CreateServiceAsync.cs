@@ -125,7 +125,7 @@ namespace GenericServices.ServicesAsync.Concrete
                 return result.AddSingleError("Create of a new {0} is not supported in this mode.", dto.DataItemName);
             
             var tData = new TData();
-            result = await dto.CopyDtoToDataAsync(_db, dto, tData);    //update those properties we want to change
+            result = await dto.CreateUpdateDataFromDtoAsync(_db, dto, tData);    //update those properties we want to change
             if (result.IsValid)
             {
                 _db.Set<TData>().Add(tData);

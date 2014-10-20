@@ -129,7 +129,7 @@ namespace GenericServices.Services.Concrete
             if (itemToUpdate == null)
                 return result.AddSingleError("Could not find the {0} you requested.", dto.DataItemName);
 
-            result = dto.CopyDtoToData(_db, dto, itemToUpdate); //update those properties we want to change
+            result = dto.CreateUpdateDataFromDto(_db, dto, itemToUpdate); //update those properties we want to change
             if (result.IsValid)
             {
                 result = _db.SaveChangesWithChecking();

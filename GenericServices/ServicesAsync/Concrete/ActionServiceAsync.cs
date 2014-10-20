@@ -101,7 +101,7 @@ namespace GenericServices.ServicesAsync.Concrete
                 return status.AddSingleError("Running an action is not setup for this data.");
 
             var actionInData = new TActionIn();
-            var nonResultStatus = await dto.CopyDtoToDataAsync(_db, dto, actionInData); //convert Tdto into TActionIn format
+            var nonResultStatus = await dto.CreateUpdateDataFromDtoAsync(_db, dto, actionInData); //convert Tdto into TActionIn format
             if (!nonResultStatus.IsValid) 
                 return SuccessOrErrors<TActionOut>.ConvertNonResultStatus( nonResultStatus);
 

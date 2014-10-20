@@ -99,7 +99,7 @@ namespace GenericServices.Services.Concrete
             if (!tDto.SupportedFunctions.HasFlag(ServiceFunctions.List))
                 throw new InvalidOperationException("This DTO does not support listings.");
 
-            return tDto.BuildListQueryUntracked(_db);
+            return tDto.ListQueryUntracked(_db);
         }
     }
 

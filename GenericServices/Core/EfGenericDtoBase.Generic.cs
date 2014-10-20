@@ -72,7 +72,7 @@ namespace GenericServices.Core
         /// Can be overridden if standard AutoMapping isn't good enough, or return null if not supported
         /// </summary>
         /// <returns></returns>
-        internal protected virtual IQueryable<TDto> BuildListQueryUntracked(IGenericServicesDbContext context)
+        internal protected virtual IQueryable<TDto> ListQueryUntracked(IGenericServicesDbContext context)
         {
             CreateDatatoDtoMapping();
             return GetDataUntracked(context).Project().To<TDto>();
@@ -89,7 +89,7 @@ namespace GenericServices.Core
                     .Where(x => efkeyPropertyNames.Any( y => y == x.Name)).ToArray();
 
             if (efkeyPropertyNames.Length != dtoKeyProperies.Length)
-                throw new MissingPrimaryKeyException("The dto did not ");
+                throw new MissingPrimaryKeyException("The dto must contain the key(s) properties from the data class.");
 
             return dtoKeyProperies.Select(x => x.GetValue(this)).ToArray();
         }

@@ -68,13 +68,13 @@ namespace GenericServices.Core
 
         /// <summary>
         /// This copies only the properties in TDto that have public setter into the TData.
-        /// It then validates the destination data unless the DoNotValidateonCopyDtoToData flag is set
-        /// You can override this if you need a more complex copy, but recommend calling this at the end to do the final copy and validate
+        /// You can override this if you need a more complex copy
+        /// Note: If SupportedFunctions has the flag ValidateonCopyDtoToData then it validates the data (used by Action methods)
         /// </summary>
         /// <param name="context"></param>
         /// <param name="source"></param>
         /// <param name="destination"></param>
-        internal protected virtual ISuccessOrErrors CopyDtoToData(IGenericServicesDbContext context, TDto source, TData destination)
+        internal protected virtual ISuccessOrErrors CreateUpdateDataFromDto(IGenericServicesDbContext context, TDto source, TData destination)
         {
             CreateDtoToDataMapping();
             Mapper.Map(source, destination);
@@ -97,7 +97,7 @@ namespace GenericServices.Core
         /// It copies TData properties into all TDto properties that have accessable setters, i.e. not private
         /// </summary>
         /// <returns>status. If valid result is dto. Otherwise null</returns>
-        internal protected virtual ISuccessOrErrors<TDto> CreateDtoAndCopyDataIn(IGenericServicesDbContext context, 
+        internal protected virtual ISuccessOrErrors<TDto> DetailDtoFromDataIn(IGenericServicesDbContext context, 
             Expression<Func<TData, bool>> predicate)
         {
             CreateDatatoDtoMapping();

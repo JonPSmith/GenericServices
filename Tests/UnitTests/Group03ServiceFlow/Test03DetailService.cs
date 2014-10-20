@@ -64,7 +64,7 @@ namespace Tests.UnitTests.Group03ServiceFlow
 
                 //VERIFY
                 status.IsValid.ShouldEqual(true, status.Errors);
-                status.Result.FunctionsCalledCommaDelimited.ShouldEqual("CreateDtoAndCopyDataIn");
+                status.Result.FunctionsCalledCommaDelimited.ShouldEqual("DetailDtoFromDataIn");
             }
         }
 

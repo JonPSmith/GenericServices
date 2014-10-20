@@ -104,7 +104,7 @@ namespace GenericServices.Services.Concrete
                 return status.AddSingleError("Running an action is not setup for this data.");
 
             var actionInData = new TActionIn();
-            var nonResultStatus = dto.CopyDtoToData(_db, dto, actionInData); //convert Tdto into TActionIn format
+            var nonResultStatus = dto.CreateUpdateDataFromDto(_db, dto, actionInData); //convert Tdto into TActionIn format
             if (!nonResultStatus.IsValid)
                 return SuccessOrErrors<TActionOut>.ConvertNonResultStatus(nonResultStatus);
 

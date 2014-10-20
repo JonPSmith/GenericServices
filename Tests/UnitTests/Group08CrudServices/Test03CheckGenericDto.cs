@@ -74,7 +74,7 @@ namespace Tests.UnitTests.Group08CrudServices
                 Tags = new Collection<Tag> { new Tag { Name = "Original Tag name", Slug = "Yes" } }
             };
 
-            var status = dto.CopyDtoToData(null, dto, newData);
+            var status = dto.CreateUpdateDataFromDto(null, dto, newData);
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
@@ -98,7 +98,7 @@ namespace Tests.UnitTests.Group08CrudServices
             //ATTEMPT
             var newData = new Tag();
 
-            var status = dto.CopyDtoToData(null, dto, newData);
+            var status = dto.CreateUpdateDataFromDto(null, dto, newData);
 
             //VERIFY
             status.IsValid.ShouldEqual(false, status.Errors);
@@ -117,7 +117,7 @@ namespace Tests.UnitTests.Group08CrudServices
             //ATTEMPT
             var newData = new Tag();
 
-            var status = dto.CopyDtoToData(null, dto, newData);
+            var status = dto.CreateUpdateDataFromDto(null, dto, newData);
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
@@ -132,7 +132,7 @@ namespace Tests.UnitTests.Group08CrudServices
                 var firstPost = db.Posts.Include( x => x.Blogger).Include(x => x.Tags).AsNoTracking().First();
 
                 //ATTEMPT
-                var status = new SimplePostDto().CreateDtoAndCopyDataIn(db, x => x.PostId == firstPost.PostId);
+                var status = new SimplePostDto().DetailDtoFromDataIn(db, x => x.PostId == firstPost.PostId);
 
                 //VERIFY
                 status.Result.PostId.ShouldEqual(firstPost.PostId);

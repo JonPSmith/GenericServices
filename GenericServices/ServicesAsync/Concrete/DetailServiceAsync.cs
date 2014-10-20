@@ -119,7 +119,7 @@ namespace GenericServices.ServicesAsync.Concrete
             if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.Detail))
                 throw new InvalidOperationException("This DTO does not support a detailed view.");
 
-            return await dto.CreateDtoAndCopyDataInAsync(_db, whereExpression);
+            return await dto.DetailDtoFromDataInAsync(_db, whereExpression);
         }
 
         /// <summary>

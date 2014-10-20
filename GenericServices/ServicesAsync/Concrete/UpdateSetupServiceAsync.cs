@@ -118,7 +118,7 @@ namespace GenericServices.ServicesAsync.Concrete
             if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.Detail))
                 throw new InvalidOperationException("This DTO does not support a detailed view.");
 
-            var status = await dto.CreateDtoAndCopyDataInAsync(_db, whereExpression);
+            var status = await dto.DetailDtoFromDataInAsync(_db, whereExpression);
             if (!status.IsValid) return status;
 
             if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))

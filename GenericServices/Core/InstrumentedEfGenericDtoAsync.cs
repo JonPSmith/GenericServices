@@ -137,10 +137,10 @@ namespace GenericServices.Core
         //---------------------------------------------------------------------
         //overridden methods
 
-        protected internal override IQueryable<TDto> BuildListQueryUntracked(IGenericServicesDbContext context)
+        protected internal override IQueryable<TDto> ListQueryUntracked(IGenericServicesDbContext context)
         {
             using (new LogStartStop( this))
-                return base.BuildListQueryUntracked(context);
+                return base.ListQueryUntracked(context);
         }
 
         protected internal override async Task SetupSecondaryDataAsync(IGenericServicesDbContext db, TDto dto)
@@ -160,7 +160,7 @@ namespace GenericServices.Core
                 return await context.Set<TData>().FindAsync(GetKeyValues(context));
         }
 
-        protected internal override async Task<ISuccessOrErrors> CopyDtoToDataAsync(IGenericServicesDbContext context, TDto source, TData destination)
+        protected internal override async Task<ISuccessOrErrors> CreateUpdateDataFromDtoAsync(IGenericServicesDbContext context, TDto source, TData destination)
         {
             using (new LogStartStop(this))
             {
@@ -173,15 +173,15 @@ namespace GenericServices.Core
                 //Mapper.Map(source, destination);
                 //return SuccessOrErrors.Success("Successful copy of data");
 
-                return await base.CopyDtoToDataAsync(context, source, destination);
+                return await base.CreateUpdateDataFromDtoAsync(context, source, destination);
             }
         }
 
-        protected internal override async Task<ISuccessOrErrors<TDto>> CreateDtoAndCopyDataInAsync(
+        protected internal override async Task<ISuccessOrErrors<TDto>> DetailDtoFromDataInAsync(
             IGenericServicesDbContext context, Expression<Func<TData, bool>> predicate)
         {
             LogCaller(CallTypes.Start);
-            var status = await base.CreateDtoAndCopyDataInAsync(context, predicate);
+            var status = await base.DetailDtoFromDataInAsync(context, predicate);
             if (status.IsValid)
             {
                 var instDto = status.Result as InstrumentedEfGenericDtoAsync<TData, TDto>;

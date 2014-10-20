@@ -88,8 +88,8 @@ namespace Tests.UnitTests.Group04ServiceFlowAsync
             }
         }
 
-        [TestCase(InstrumentedOpFlags.NormalOperation, true, "CopyDtoToDataAsync")]
-        [TestCase(InstrumentedOpFlags.FailOnCopyDtoToData, false, "CopyDtoToDataAsync,SetupSecondaryDataAsync")]  
+        [TestCase(InstrumentedOpFlags.NormalOperation, true, "CreateUpdateDataFromDtoAsync")]
+        [TestCase(InstrumentedOpFlags.FailOnCopyDtoToData, false, "CreateUpdateDataFromDtoAsync,SetupSecondaryDataAsync")]  
         public async void Check02CreateFlow(InstrumentedOpFlags errorFlag, bool isValid, string expectedFunctionsCalled)
         {
             using (var db = new SampleWebAppDb())

@@ -115,7 +115,7 @@ namespace GenericServices.Services.Concrete
             if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.Detail))
                 throw new InvalidOperationException("This DTO does not support a detailed view.");
 
-            return dto.CreateDtoAndCopyDataIn(_db, whereExpression);
+            return dto.DetailDtoFromDataIn(_db, whereExpression);
         }
 
         /// <summary>
