@@ -34,12 +34,14 @@ using System.Runtime.CompilerServices;
 namespace GenericServices.Core
 {
     [Flags]
-    public enum InstrumentedOpFlags { NormalOperation = 0, FailOnCopyDataToDto = 1, FailOnCopyDtoToData = 2,
+    public enum InstrumentedOpFlags
+    {
+        NormalOperation = 0, FailOnCopyDataToDto = 1, FailOnCreateDataFromDto = 2, FailOnUpdateDataFromDto = 4, 
         //these flags are not used in InstrumentedEfGenericDto, but inside unit tests
-        ForceActionFail = 4, ForceActionWarnWithWrite = 8, ForceActionkWarnNoWrite = 16 }
+        ForceActionFail = 16, ForceActionWarnWithWrite = 32, ForceActionkWarnNoWrite = 64 }
 
     public abstract class InstrumentedEfGenericDto<TData, TDto> : EfGenericDto<TData, TDto>, ICheckIfWarnings
-        where TData : class
+        where TData : class, new()
         where TDto : EfGenericDto<TData, TDto>, new()
     {
         /// <summary>
@@ -156,20 +158,25 @@ namespace GenericServices.Core
                 return base.FindItemTracked(context);
         }
 
-        protected internal override ISuccessOrErrors CreateUpdateDataFromDto(IGenericServicesDbContext context, TDto source, TData destination)
+        protected internal override ISuccessOrErrors<TData> CreateDataFromDto(IGenericServicesDbContext context, TDto source)
         {
             using (new LogStartStop(this))
             {
-                if (_whereToFail.HasFlag(InstrumentedOpFlags.FailOnCopyDtoToData))
-                    return new SuccessOrErrors().AddSingleError("Flag was set to fail in CopyDtoToData.");
+                if (_whereToFail.HasFlag(InstrumentedOpFlags.FailOnCreateDataFromDto))
+                    return SuccessOrErrors<TData>.ConvertNonResultStatus(new SuccessOrErrors().AddSingleError("Flag was set to fail in CreateDataFromDto."));
 
-                //Use the below code to instrument the inner parts of the mapping 
-                //CreateDtoToDataMapping();
-                //LogSpecificName("After CreateMap");
-                //Mapper.Map(source, destination);
-                //return SuccessOrErrors.Success("Successful copy of data");
+                return base.CreateDataFromDto(context, source);
+            }
+        }
 
-                return base.CreateUpdateDataFromDto(context, source, destination);
+        protected internal override ISuccessOrErrors UpdateDataFromDto(IGenericServicesDbContext context, TDto source, TData destination)
+        {
+            using (new LogStartStop(this))
+            {
+                if (_whereToFail.HasFlag(InstrumentedOpFlags.FailOnUpdateDataFromDto))
+                    return new SuccessOrErrors().AddSingleError("Flag was set to fail in UpdateDataFromDto.");
+
+                return base.UpdateDataFromDto(context, source, destination);
             }
         }
 

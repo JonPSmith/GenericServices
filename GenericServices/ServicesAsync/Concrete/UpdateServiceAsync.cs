@@ -107,7 +107,7 @@ namespace GenericServices.ServicesAsync.Concrete
     //DTO version
 
     public class UpdateServiceAsync<TData, TDto> : IUpdateServiceAsync<TData,TDto>
-        where TData : class
+        where TData : class, new()
         where TDto : EfGenericDtoAsync<TData, TDto>, new()
     {
         private readonly IGenericServicesDbContext _db;
@@ -133,7 +133,7 @@ namespace GenericServices.ServicesAsync.Concrete
             if (itemToUpdate == null)
                 return result.AddSingleError("Could not find the {0} you requested.", dto.DataItemName);
 
-            result = await dto.CreateUpdateDataFromDtoAsync(_db, dto, itemToUpdate); //update those properties we want to change
+            result = await dto.UpdateDataFromDtoAsync(_db, dto, itemToUpdate); //update those properties we want to change
             if (result.IsValid)
             {
                 result = await _db.SaveChangesWithCheckingAsync();

@@ -34,7 +34,7 @@ namespace GenericServices.Services.Concrete
     /// <typeparam name="TData"></typeparam>
     /// <typeparam name="TDto"></typeparam>
     public class ActionSetupService<TData, TDto> : CreateSetupService<TData, TDto>, IActionSetupService<TData, TDto>
-        where TData : class
+        where TData : class, new()
         where TDto : EfGenericDto<TData, TDto>, new()
     {
         public ActionSetupService(IGenericServicesDbContext db) : base(db)

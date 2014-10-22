@@ -24,10 +24,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #endregion
-using System;
+
 using GenericServices;
 using GenericServices.Core;
-using GenericServices.Services;
 using NUnit.Framework;
 using Tests.Helpers;
 
@@ -95,7 +94,7 @@ namespace Tests.UnitTests.Group02Validation
         }
 
         [Test]
-        public void Check10CheckAssignNonResultOk()
+        public void Check05CheckAssignNonResultOk()
         {
             //SETUP  
             ISuccessOrErrors status = new SuccessOrErrors<string>();
@@ -108,5 +107,64 @@ namespace Tests.UnitTests.Group02Validation
             ((SuccessOrErrors<string>)status).Result.ShouldEqual("The result");
         }
 
+        //--------------------------------------------------------------
+
+        [Test]
+        public void Check10CheckConvertResultToNormalStatusValidOk()
+        {
+            //SETUP  
+            var statusWithResult = new SuccessOrErrors<string>();
+            statusWithResult.SetSuccessWithResult("The result", "This is a message");
+
+            //ATTEMPT
+            var status = statusWithResult as ISuccessOrErrors;
+
+            //VERIFY
+            status.IsValid.ShouldEqual(true);
+        }
+
+        [Test]
+        public void Check11CheckConvertResultToNormalStatusNotValidOk()
+        {
+            //SETUP  
+            var statusWithResult = new SuccessOrErrors<string>();
+            statusWithResult.AddSingleError("There was an error");
+
+            //ATTEMPT
+            var status = statusWithResult as ISuccessOrErrors;
+
+            //VERIFY
+            status.IsValid.ShouldEqual(false);
+        }
+
+
+        [Test]
+        public void Check15CheckConvertNormalStatusToStatusValidOk()
+        {
+            //SETUP  
+            var statusWithResult = new SuccessOrErrors();
+            statusWithResult.SetSuccessMessage("This is a message");
+
+            //ATTEMPT
+            var status = SuccessOrErrors<string>.ConvertNonResultStatus(statusWithResult);
+
+            //VERIFY
+            status.IsValid.ShouldEqual(true);
+            status.Result.ShouldEqual(null);
+        }
+
+        [Test]
+        public void Check16CheckConvertResultToNormalStatusNotValidOk()
+        {
+            //SETUP  
+            var statusWithResult = new SuccessOrErrors();
+            statusWithResult.AddSingleError("error");
+
+            //ATTEMPT
+            var status = SuccessOrErrors<string>.ConvertNonResultStatus(statusWithResult);
+
+            //VERIFY
+            status.IsValid.ShouldEqual(false);
+        }
     }
 }

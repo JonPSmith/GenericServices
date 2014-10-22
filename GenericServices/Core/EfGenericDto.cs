@@ -38,7 +38,7 @@ using AutoMapper.QueryableExtensions;
 namespace GenericServices.Core
 {
     public abstract class EfGenericDto<TData, TDto> : EfGenericDtoBase<TData, TDto>
-        where TData : class
+        where TData : class, new()
         where TDto : EfGenericDto<TData,TDto>, new()
     {
 
@@ -67,21 +67,40 @@ namespace GenericServices.Core
         }
 
         /// <summary>
-        /// This copies only the properties in TDto that have public setter into the TData.
+        /// This is used in a create. It copies only the properties in TDto that have public setter into the TData.
+        /// You can override this if you need a more complex copy
+        /// Note: If SupportedFunctions has the flag ValidateonCopyDtoToData then it validates the data (used by Action methods)
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="source"></param>
+        /// <returns>status which, if Valid, has new TData with data from DTO copied in</returns>
+        internal protected virtual ISuccessOrErrors<TData> CreateDataFromDto(IGenericServicesDbContext context, TDto source)
+        {
+            var result = new TData();
+            var status = CreateUpdateDataFromDto(context, source, result);
+
+            return status.IsValid
+                ? new SuccessOrErrors<TData>(result, status.SuccessMessage)
+                : SuccessOrErrors<TData>.ConvertNonResultStatus(status);
+        }
+
+        /// <summary>
+        /// This is used in an update. It copies only the properties in TDto that have public setter into the TData.
         /// You can override this if you need a more complex copy
         /// Note: If SupportedFunctions has the flag ValidateonCopyDtoToData then it validates the data (used by Action methods)
         /// </summary>
         /// <param name="context"></param>
         /// <param name="source"></param>
         /// <param name="destination"></param>
-        internal protected virtual ISuccessOrErrors CreateUpdateDataFromDto(IGenericServicesDbContext context, TDto source, TData destination)
+        /// <return>status. destination is only valid if status.IsValid</return>
+        internal protected virtual ISuccessOrErrors UpdateDataFromDto(IGenericServicesDbContext context, TDto source, TData destination)
         {
             CreateDtoToDataMapping();
             Mapper.Map(source, destination);
 
             var status = SuccessOrErrors.Success("Successful copy of data");
             if (!SupportedFunctions.HasFlag(ServiceFunctions.ValidateonCopyDtoToData)) return status;
-            
+
             //we need to run a validation on the destination as it might have new or tigher validation rules
             var errors = new List<ValidationResult>();
             var vc = new ValidationContext(destination, null, null);

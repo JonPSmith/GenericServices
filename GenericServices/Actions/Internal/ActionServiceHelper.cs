@@ -32,9 +32,9 @@ namespace GenericServices.Actions.Internal
 {
    internal static class ActionServiceHelper
     {
-        public static ISuccessOrErrors<TActionOut> SaveChangesAttempt<TActionOut>(this ISuccessOrErrors<TActionOut> status, object actionData, IGenericServicesDbContext db)
+       public static ISuccessOrErrors<TActionOut> SaveChangesAttempt<TActionOut>(this ISuccessOrErrors<TActionOut> status, object actionInDto, IGenericServicesDbContext db)
         {
-            if (status.ShouldStopAsWarningsMatter(actionData))
+            if (status.ShouldStopAsWarningsMatter(actionInDto))
                 //There were warnings and we are asked to not write to the database
                 return status.UpdateSuccessMessage("{0}... but NOT written to database as warnings.",
                     status.SuccessMessage);
@@ -46,10 +46,10 @@ namespace GenericServices.Actions.Internal
                 : SuccessOrErrors<TActionOut>.ConvertNonResultStatus(dataStatus);
         }
 
-        public static async Task<ISuccessOrErrors<TActionOut>> SaveChangesAttemptAsync<TActionOut>(this ISuccessOrErrors<TActionOut> status, object actionData, IGenericServicesDbContext db)
+       public static async Task<ISuccessOrErrors<TActionOut>> SaveChangesAttemptAsync<TActionOut>(this ISuccessOrErrors<TActionOut> status, object actionInDto, IGenericServicesDbContext db)
         {
 
-            if (status.ShouldStopAsWarningsMatter(actionData))
+            if (status.ShouldStopAsWarningsMatter(actionInDto))
                 //There were warnings and we are asked to not write to the database
                 return status.UpdateSuccessMessage("{0}... but NOT written to database as warnings.",
                     status.SuccessMessage);

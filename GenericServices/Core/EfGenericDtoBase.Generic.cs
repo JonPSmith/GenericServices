@@ -24,6 +24,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #endregion
+
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
 using System.Reflection;
@@ -106,7 +109,33 @@ namespace GenericServices.Core
         }
 
         //----------------------------------------------------------------
-        //private methods
+        //protected/private methods
+
+        /// <summary>
+        /// This copies only the properties in TDto that have public setter into the TData.
+        /// You can override this if you need a more complex copy
+        /// Note: If SupportedFunctions has the flag ValidateonCopyDtoToData then it validates the data (used by Action methods)
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="source"></param>
+        /// <param name="destination"></param>
+        protected ISuccessOrErrors CreateUpdateDataFromDto(IGenericServicesDbContext context, TDto source, TData destination)
+        {
+            CreateDtoToDataMapping();
+            Mapper.Map(source, destination);
+
+            var status = SuccessOrErrors.Success("Successful copy of data");
+            if (!SupportedFunctions.HasFlag(ServiceFunctions.ValidateonCopyDtoToData)) return status;
+
+            //we need to run a validation on the destination as it might have new or tigher validation rules
+            var errors = new List<ValidationResult>();
+            var vc = new ValidationContext(destination, null, null);
+            var valid = Validator.TryValidateObject(destination, vc, errors, true);
+            if (!valid)
+                status.SetErrors(errors);
+
+            return status;
+        }
 
         private static bool CheckIfSourceSetterIsPublic(ResolutionContext mapContext)
         {

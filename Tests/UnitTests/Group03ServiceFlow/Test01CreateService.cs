@@ -87,8 +87,8 @@ namespace Tests.UnitTests.Group03ServiceFlow
             }
         }
 
-        [TestCase(InstrumentedOpFlags.NormalOperation, true, "CreateUpdateDataFromDto")]
-        [TestCase(InstrumentedOpFlags.FailOnCopyDtoToData, false, "CreateUpdateDataFromDto,SetupSecondaryData")]  
+        [TestCase(InstrumentedOpFlags.NormalOperation, true, "CreateDataFromDto")]
+        [TestCase(InstrumentedOpFlags.FailOnCreateDataFromDto, false, "CreateDataFromDto,SetupSecondaryData")]  
         public void Check02CreateFlow(InstrumentedOpFlags errorFlag, bool isValid, string expectedFunctionsCalled)
         {
             using (var db = new SampleWebAppDb())

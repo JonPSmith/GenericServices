@@ -40,7 +40,7 @@ namespace GenericServices.Core
 {
 
     public abstract class EfGenericDtoAsync<TData, TDto> : EfGenericDtoBase<TData, TDto>
-        where TData : class
+        where TData : class, new()
         where TDto : EfGenericDtoAsync<TData, TDto>, new()
     {
 
@@ -69,17 +69,34 @@ namespace GenericServices.Core
             return await context.Set<TData>().FindAsync(GetKeyValues(context));
         }
 
+        /// <summary>
+        /// This is used in a create. It copies only the properties in TDto that have public setter into the TData.
+        /// You can override this if you need a more complex copy
+        /// Note: If SupportedFunctions has the flag ValidateonCopyDtoToData then it validates the data (used by Action methods)
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="source"></param>
+        /// <returns>Task containing status which, if Valid, has new TData with data from DTO copied in</returns>
+        internal protected virtual async Task<ISuccessOrErrors<TData>> CreateDataFromDtoAsync(IGenericServicesDbContext context, TDto source)
+        {
+            var result = new TData();
+            var status = CreateUpdateDataFromDto(context, source, result);
 
+            return status.IsValid
+                ? new SuccessOrErrors<TData>(result, status.SuccessMessage)
+                : SuccessOrErrors<TData>.ConvertNonResultStatus(status);
+        }
 
         /// <summary>
-        /// This copies only the properties in TDto that have public setter into the TData
+        /// This is used in an update. It copies only the properties in TDto that have public setter into the TData.
         /// You can override this if you need a more complex copy
         /// Note: If SupportedFunctions has the flag ValidateonCopyDtoToData then it validates the data (used by Action methods)
         /// </summary>
         /// <param name="context"></param>
         /// <param name="source"></param>
         /// <param name="destination"></param>
-        internal protected virtual async Task<ISuccessOrErrors> CreateUpdateDataFromDtoAsync(IGenericServicesDbContext context, TDto source, TData destination)
+        /// <return>Task containing status. destination is only valid if status.IsValid</return>
+        internal protected virtual async Task<ISuccessOrErrors> UpdateDataFromDtoAsync(IGenericServicesDbContext context, TDto source, TData destination)
         {
             CreateDtoToDataMapping();
             Mapper.Map(source, destination);

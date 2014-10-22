@@ -66,8 +66,6 @@ namespace GenericServices.Services.Concrete
                     disposable.Dispose();
             }
         }
-
-
     }
 
     //---------------------------------------------------------------------------
@@ -91,7 +89,7 @@ namespace GenericServices.Services.Concrete
         }
 
         /// <summary>
-        /// This runs an action that does not write to the database. 
+        /// This runs an action that may write to the database. 
         /// It first converts the dto to the TActionIn format and then runs the action
         /// </summary>
         /// <param name="dto">The dto to be converted to the TActionIn class</param>
@@ -103,16 +101,15 @@ namespace GenericServices.Services.Concrete
             if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoActionWithoutValidate))
                 return status.AddSingleError("Running an action is not setup for this data.");
 
-            var actionInData = new TActionIn();
-            var nonResultStatus = dto.CreateUpdateDataFromDto(_db, dto, actionInData); //convert Tdto into TActionIn format
-            if (!nonResultStatus.IsValid)
-                return SuccessOrErrors<TActionOut>.ConvertNonResultStatus(nonResultStatus);
+            var actionInStatusWithResult = dto.CreateDataFromDto(_db, dto); //produce TActionIn from TDto
+            if (!actionInStatusWithResult.IsValid)
+                return SuccessOrErrors<TActionOut>.ConvertNonResultStatus(actionInStatusWithResult as ISuccessOrErrors);
 
             try
             {
-                status = _actionToRun.DoAction(actionInData);
+                status = _actionToRun.DoAction(actionInStatusWithResult.Result);
                 return status.AskedToSaveChanges(_actionToRun)
-                    ? status.SaveChangesAttempt(actionInData, _db)
+                    ? status.SaveChangesAttempt(actionInStatusWithResult.Result, _db)
                     : status;
             }
             finally

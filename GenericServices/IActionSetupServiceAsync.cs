@@ -30,7 +30,7 @@ using GenericServices.Core;
 namespace GenericServices
 {
     public interface IActionSetupServiceAsync<TData, TDto>
-        where TData : class
+        where TData : class, new()
         where TDto : EfGenericDtoAsync<TData, TDto>, new()
     {
         /// <summary>

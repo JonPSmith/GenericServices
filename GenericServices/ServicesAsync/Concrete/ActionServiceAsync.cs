@@ -101,15 +101,15 @@ namespace GenericServices.ServicesAsync.Concrete
                 return status.AddSingleError("Running an action is not setup for this data.");
 
             var actionInData = new TActionIn();
-            var nonResultStatus = await dto.CreateUpdateDataFromDtoAsync(_db, dto, actionInData); //convert Tdto into TActionIn format
-            if (!nonResultStatus.IsValid) 
-                return SuccessOrErrors<TActionOut>.ConvertNonResultStatus( nonResultStatus);
+            var actionInStatusWithResult = await dto.CreateDataFromDtoAsync(_db, dto); //produce TActionIn from TDto
+            if (!actionInStatusWithResult.IsValid)
+                return SuccessOrErrors<TActionOut>.ConvertNonResultStatus(actionInStatusWithResult as ISuccessOrErrors);
 
             try
             {
-                status = await _actionToRun.DoActionAsync(actionInData);
+                status = await _actionToRun.DoActionAsync(actionInStatusWithResult.Result);
                 return status.AskedToSaveChanges(_actionToRun)
-                    ? await status.SaveChangesAttemptAsync(actionInData, _db)
+                    ? await status.SaveChangesAttemptAsync(actionInStatusWithResult.Result, _db)
                     : status;
             }
             finally

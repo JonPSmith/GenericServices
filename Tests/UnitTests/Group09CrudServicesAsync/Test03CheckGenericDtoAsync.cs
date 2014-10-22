@@ -51,7 +51,34 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
         }
 
         [Test]
-        public async void Check01CopyDtoToDataOk()
+        public async void Check01CreateDataFromDtoAsyncOk()
+        {
+
+            //SETUP
+            var dto = new SimplePostDtoAsync
+            {
+                PostId = 123,
+                BloggerName = "This should not be copied",
+                Title = "Should copy this title",
+                LastUpdated = new DateTime(2000, 1, 1),
+                Tags = new Collection<Tag> { new Tag { Name = "Should not copy this", Slug = "No" } }
+            };
+
+            var status = await dto.CreateDataFromDtoAsync(null, dto);
+
+            //VERIFY
+            status.IsValid.ShouldEqual(true, status.Errors);
+            status.Result.PostId.ShouldEqual(123);
+            status.Result.Title.ShouldEqual("Should copy this title");
+
+            status.Result.Blogger.ShouldEqual(null);
+            status.Result.BlogId.ShouldEqual(0);
+            status.Result.Content.ShouldEqual(null);
+            status.Result.Tags.ShouldEqual(null);
+        }
+
+        [Test]
+        public async void Check02UpdateDataFromDtoAsyncOk()
         {
 
             //SETUP
@@ -74,7 +101,7 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 Tags = new Collection<Tag> { new Tag { Name = "Original Tag name", Slug = "Yes" } }
             };
 
-            var status = await dto.CreateUpdateDataFromDtoAsync(null, dto, newData);
+            var status = await dto.UpdateDataFromDtoAsync(null, dto, newData);
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);
@@ -98,7 +125,7 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
             //ATTEMPT
             var newData = new Tag();
 
-            var status = await dto.CreateUpdateDataFromDtoAsync(null, dto, newData);
+            var status = await dto.UpdateDataFromDtoAsync(null, dto, newData);
 
             //VERIFY
             status.IsValid.ShouldEqual(false, status.Errors);
@@ -117,7 +144,7 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
             //ATTEMPT
             var newData = new Tag();
 
-            var status = await dto.CreateUpdateDataFromDtoAsync(null, dto, newData);
+            var status = await dto.UpdateDataFromDtoAsync(null, dto, newData);
 
             //VERIFY
             status.IsValid.ShouldEqual(true, status.Errors);

@@ -41,7 +41,7 @@ namespace GenericServices.Services
     }
 
     public interface ICreateService<TData, TDto>
-        where TData : class
+        where TData : class, new()
         where TDto : EfGenericDto<TData, TDto>, new()
     {
         /// <summary>

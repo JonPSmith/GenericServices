@@ -104,7 +104,7 @@ namespace GenericServices.Services.Concrete
     //DTO version
 
     public class UpdateService<TData, TDto> : IUpdateService<TData, TDto>
-        where TData : class
+        where TData : class, new()
         where TDto : EfGenericDto<TData, TDto>, new()
     {
         private readonly IGenericServicesDbContext _db;
@@ -129,7 +129,7 @@ namespace GenericServices.Services.Concrete
             if (itemToUpdate == null)
                 return result.AddSingleError("Could not find the {0} you requested.", dto.DataItemName);
 
-            result = dto.CreateUpdateDataFromDto(_db, dto, itemToUpdate); //update those properties we want to change
+            result = dto.UpdateDataFromDto(_db, dto, itemToUpdate); //update those properties we want to change
             if (result.IsValid)
             {
                 result = _db.SaveChangesWithChecking();

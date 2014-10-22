@@ -148,7 +148,28 @@ namespace Tests.DTOs.Concrete
                 context.Set<Tag>().ToList().Select(x => new KeyValuePair<string, int>(x.Name, x.TagId)), preselectedTags);
         }
 
-        internal protected override async Task<ISuccessOrErrors> CreateUpdateDataFromDtoAsync(IGenericServicesDbContext context, DetailPostDtoAsync dto, Post post)
+
+        protected internal override async Task<ISuccessOrErrors<Post>> CreateDataFromDtoAsync(IGenericServicesDbContext context, DetailPostDtoAsync source)
+        {
+            var status = await SetupRestOfDto(context);
+
+            return status.IsValid
+                ? await base.CreateDataFromDtoAsync(context, this)
+                : SuccessOrErrors<Post>.ConvertNonResultStatus(status);
+        }
+
+        protected internal override async Task<ISuccessOrErrors> UpdateDataFromDtoAsync(IGenericServicesDbContext context, DetailPostDtoAsync source, Post destination)
+        {
+            var status = await SetupRestOfDto(context, destination);
+
+            if (status.IsValid)
+                //now we copy the items to the right place
+                status = await base.UpdateDataFromDtoAsync(context, this, destination);
+
+            return status;
+        }
+
+        private async Task<ISuccessOrErrors> SetupRestOfDto(IGenericServicesDbContext context, Post post = null)
         {
 
             var db = context as SampleWebAppDb;
@@ -167,10 +188,6 @@ namespace Tests.DTOs.Concrete
             if (errMsg != null)
                 status.AddNamedParameterError("UserChosenTags", errMsg);
 
-            if (status.IsValid)
-                //now we copy the items to the right place
-                status = await base.CreateUpdateDataFromDtoAsync(context, dto, post);
-
             return status;
         }
 
@@ -188,10 +205,6 @@ namespace Tests.DTOs.Concrete
             var blogger = await db.Blogs.FindAsync((int) blogId);
             if (blogger == null)
                 return "Could not find the blogger you selected. Did another user delete it?";
-            
-            //all ok
-            if ((int) blogId != post.BlogId)
-                post.Blogger = null;                //old info is incorrect, so remove it
 
             BlogId = (int) blogId;
             return null;
@@ -206,7 +219,7 @@ namespace Tests.DTOs.Concrete
             if (requiredTagIds.Any(x => db.Tags.Find(x) == null))
                 return "Could not find one of the tags. Did another user delete it?";
 
-            if (post.PostId != 0)
+            if (post != null)
                 //This is an update so we need to load the tags
                 db.Entry(post).Collection(p => p.Tags).Load();
 

@@ -53,7 +53,7 @@ namespace GenericServices.Services.Concrete
     }
 
     public class CreateSetupService<TData, TDto> : ICreateSetupService<TData, TDto>
-        where TData : class
+        where TData : class, new()
         where TDto : EfGenericDto<TData, TDto>, new()
     {
         private readonly IGenericServicesDbContext _db;

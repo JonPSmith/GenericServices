@@ -67,7 +67,6 @@ namespace Tests.UnitTests.Group04ServiceFlowAsync
                 status.Result.FunctionsCalledCommaDelimited.ShouldEqual("DetailDtoFromDataInAsync");
             }
         }
-
         
     }
 }

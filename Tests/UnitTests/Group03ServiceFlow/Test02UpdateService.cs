@@ -27,7 +27,6 @@
 using System;
 using System.Linq;
 using GenericServices.Core;
-using GenericServices.Services;
 using GenericServices.Services.Concrete;
 using NUnit.Framework;
 using Tests.DataClasses;
@@ -90,8 +89,8 @@ namespace Tests.UnitTests.Group03ServiceFlow
             }
         }
 
-        [TestCase(InstrumentedOpFlags.NormalOperation, true, "FindItemTracked,CreateUpdateDataFromDto")]
-        [TestCase(InstrumentedOpFlags.FailOnCopyDtoToData, false, "FindItemTracked,CreateUpdateDataFromDto,SetupSecondaryData")]
+        [TestCase(InstrumentedOpFlags.NormalOperation, true, "FindItemTracked,UpdateDataFromDto")]
+        [TestCase(InstrumentedOpFlags.FailOnUpdateDataFromDto, false, "FindItemTracked,UpdateDataFromDto,SetupSecondaryData")]
         public void Check02UpdateFlow(InstrumentedOpFlags errorFlag, bool isValid, string expectedFunctionsCalled)
         {
             using (var db = new SampleWebAppDb())

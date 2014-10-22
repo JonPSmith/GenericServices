@@ -91,8 +91,8 @@ namespace Tests.UnitTests.Group04ServiceFlowAsync
             }
         }
 
-        [TestCase(InstrumentedOpFlags.NormalOperation, true, "FindItemTrackedAsync,CreateUpdateDataFromDtoAsync")]
-        [TestCase(InstrumentedOpFlags.FailOnCopyDtoToData, false, "FindItemTrackedAsync,CreateUpdateDataFromDtoAsync,SetupSecondaryDataAsync")]
+        [TestCase(InstrumentedOpFlags.NormalOperation, true, "FindItemTrackedAsync,UpdateDataFromDtoAsync")]
+        [TestCase(InstrumentedOpFlags.FailOnUpdateDataFromDto, false, "FindItemTrackedAsync,UpdateDataFromDtoAsync,SetupSecondaryDataAsync")]
         public async void Check02UpdateFlow(InstrumentedOpFlags errorFlag, bool isValid, string expectedFunctionsCalled)
         {
             using (var db = new SampleWebAppDb())

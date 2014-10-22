@@ -123,12 +123,12 @@ namespace GenericServices.ServicesAsync.Concrete
             ISuccessOrErrors result = new SuccessOrErrors();
             if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.Create))
                 return result.AddSingleError("Create of a new {0} is not supported in this mode.", dto.DataItemName);
-            
-            var tData = new TData();
-            result = await dto.CreateUpdateDataFromDtoAsync(_db, dto, tData);    //update those properties we want to change
+
+            var statusWithData = await dto.CreateDataFromDtoAsync(_db, dto);    //creates the new data and fills in the properties
+            result = statusWithData as ISuccessOrErrors;             //convert to normal status as need errors to fall through propertly
             if (result.IsValid)
             {
-                _db.Set<TData>().Add(tData);
+                _db.Set<TData>().Add(statusWithData.Result);
                 result = await _db.SaveChangesWithCheckingAsync();
                 if (result.IsValid)
                     return result.SetSuccessMessage("Successfully created {0}.", dto.DataItemName);

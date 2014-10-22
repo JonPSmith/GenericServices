@@ -37,7 +37,7 @@ namespace GenericServices.Core
 {
 
     public abstract class InstrumentedEfGenericDtoAsync<TData, TDto> : EfGenericDtoAsync<TData, TDto>, ICheckIfWarnings
-        where TData : class
+        where TData : class, new()
         where TDto : EfGenericDtoAsync<TData, TDto>, new()
     {
         /// <summary>
@@ -160,22 +160,28 @@ namespace GenericServices.Core
                 return await context.Set<TData>().FindAsync(GetKeyValues(context));
         }
 
-        protected internal override async Task<ISuccessOrErrors> CreateUpdateDataFromDtoAsync(IGenericServicesDbContext context, TDto source, TData destination)
+        protected internal override async Task<ISuccessOrErrors<TData>> CreateDataFromDtoAsync(IGenericServicesDbContext context, TDto source)
         {
             using (new LogStartStop(this))
             {
-                if (_whereToFail.HasFlag(InstrumentedOpFlags.FailOnCopyDtoToData))
-                    return new SuccessOrErrors().AddSingleError("Flag was set to fail in CopyDtoToDataAsync.");
+                if (_whereToFail.HasFlag(InstrumentedOpFlags.FailOnCreateDataFromDto))
+                    return SuccessOrErrors<TData>.ConvertNonResultStatus(new SuccessOrErrors().AddSingleError("Flag was set to fail in CreateDataFromDto."));
 
-                //Use the below code to instrument the inner parts of the mapping 
-                //CreateDtoToDataMapping();
-                //LogSpecificName("After CreateMap");
-                //Mapper.Map(source, destination);
-                //return SuccessOrErrors.Success("Successful copy of data");
-
-                return await base.CreateUpdateDataFromDtoAsync(context, source, destination);
+                return await base.CreateDataFromDtoAsync(context, source);
             }
         }
+
+        protected internal override async Task<ISuccessOrErrors> UpdateDataFromDtoAsync(IGenericServicesDbContext context, TDto source, TData destination)
+        {
+            using (new LogStartStop(this))
+            {
+                if (_whereToFail.HasFlag(InstrumentedOpFlags.FailOnUpdateDataFromDto))
+                    return new SuccessOrErrors().AddSingleError("Flag was set to fail in UpdateDataFromDto.");
+
+                return await base.UpdateDataFromDtoAsync(context, source, destination);
+            }
+        }
+
 
         protected internal override async Task<ISuccessOrErrors<TDto>> DetailDtoFromDataInAsync(
             IGenericServicesDbContext context, Expression<Func<TData, bool>> predicate)

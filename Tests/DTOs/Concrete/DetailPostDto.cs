@@ -138,7 +138,30 @@ namespace Tests.DTOs.Concrete
                 context.Set<Tag>().ToList().Select(x => new KeyValuePair<string, int>(x.Name, x.TagId)), preselectedTags);
         }
 
-        internal protected override ISuccessOrErrors CreateUpdateDataFromDto(IGenericServicesDbContext context, DetailPostDto dto, Post post)
+        protected internal override ISuccessOrErrors<Post> CreateDataFromDto(IGenericServicesDbContext context, DetailPostDto source)
+        {
+            var status = SetupRestOfDto(context);
+
+            return status.IsValid 
+                ? base.CreateDataFromDto(context, this) 
+                : SuccessOrErrors<Post>.ConvertNonResultStatus(status);
+        }
+
+        protected internal override ISuccessOrErrors UpdateDataFromDto(IGenericServicesDbContext context, DetailPostDto source, Post destination)
+        {
+            var status = SetupRestOfDto(context, destination);
+
+            if (status.IsValid)
+                //now we copy the items to the right place
+                status = base.UpdateDataFromDto(context, this, destination);
+
+            return status;
+        }
+
+        //---------------------------------------------------
+        //private helpers
+
+        private ISuccessOrErrors SetupRestOfDto(IGenericServicesDbContext context, Post post = null)
         {
 
             var db = context as SampleWebAppDb;
@@ -148,7 +171,7 @@ namespace Tests.DTOs.Concrete
             var status = SuccessOrErrors.Success("OK if no errors set");
 
             //now we sort out the blogger
-            var errMsg = SetupBloggerIdFromDropDownList(db, post);
+            var errMsg = SetBloggerIdFromDropDownList(db);
             if (errMsg != null)
                 status.AddNamedParameterError("Bloggers", errMsg);
 
@@ -157,18 +180,10 @@ namespace Tests.DTOs.Concrete
             if (errMsg != null)
                 status.AddNamedParameterError("UserChosenTags", errMsg);
 
-            if (status.IsValid)
-                //now we copy the items to the right place
-                status = base.CreateUpdateDataFromDto(context, dto, post);
-
             return status;
         }
 
-
-        //---------------------------------------------------
-        //private helpers
-
-        private string SetupBloggerIdFromDropDownList(SampleWebAppDb db, Post post)
+        private string SetBloggerIdFromDropDownList(SampleWebAppDb db)
         {
             
             var blogId = Bloggers.SelectedValueAsInt;
@@ -178,16 +193,12 @@ namespace Tests.DTOs.Concrete
             var blogger = db.Blogs.Find((int) blogId);
             if (blogger == null)
                 return "Could not find the blogger you selected. Did another user delete it?";
-            
-            //all ok
-            if ((int) blogId != post.BlogId)
-                post.Blogger = null;                //old info is incorrect, so remove it
 
             BlogId = (int) blogId;
             return null;
         }
 
-        private string ChangeTagsBasedOnMultiSelectList(SampleWebAppDb db, Post post)
+        private string ChangeTagsBasedOnMultiSelectList(SampleWebAppDb db, Post post = null)
         {
             var requiredTagIds = UserChosenTags.GetFinalSelectionAsInts();
             if (!requiredTagIds.Any())
@@ -196,7 +207,7 @@ namespace Tests.DTOs.Concrete
             if (requiredTagIds.Any(x => db.Tags.Find(x) == null))
                 return "Could not find one of the tags. Did another user delete it?";
 
-            if (post.PostId != 0)
+            if (post != null)
                 //This is an update so we need to load the tags
                 db.Entry(post).Collection(p => p.Tags).Load();
 

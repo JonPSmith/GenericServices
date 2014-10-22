@@ -50,7 +50,7 @@ namespace GenericServices.ServicesAsync
     }
 
     public interface IUpdateSetupServiceAsync<TData, TDto>
-        where TData : class
+        where TData : class, new()
         where TDto : EfGenericDtoAsync<TData, TDto>, new()
     {
         /// <summary>
