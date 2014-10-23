@@ -57,11 +57,12 @@ namespace GenericServices.Core
         }
 
         /// <summary>
-        /// This returns the TData item that fits the key(s) in the DTO.
+        /// Used only by Update. This returns the TData item that fits the key(s) in the DTO.
+        /// Override this if you need to include any related entries when doing a complex update.
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        internal protected virtual TData FindItemTracked(IGenericServicesDbContext context)
+        internal protected virtual TData FindItemTrackedForUpdate(IGenericServicesDbContext context)
         {
             return context.Set<TData>().Find(GetKeyValues(context));
         }

@@ -125,7 +125,7 @@ namespace GenericServices.Services.Concrete
             if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.Update))
                 return result.AddSingleError("Delete of a {0} is not supported in this mode.", dto.DataItemName);
 
-            var itemToUpdate = dto.FindItemTracked(_db);
+            var itemToUpdate = dto.FindItemTrackedForUpdate(_db);
             if (itemToUpdate == null)
                 return result.AddSingleError("Could not find the {0} you requested.", dto.DataItemName);
 

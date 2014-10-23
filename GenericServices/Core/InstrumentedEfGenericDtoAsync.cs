@@ -154,7 +154,7 @@ namespace GenericServices.Core
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        internal protected override async Task<TData> FindItemTrackedAsync(IGenericServicesDbContext context)
+        internal protected override async Task<TData> FindItemTrackedForUpdateAsync(IGenericServicesDbContext context)
         {
             using (new LogStartStop(this))
                 return await context.Set<TData>().FindAsync(GetKeyValues(context));

@@ -152,10 +152,10 @@ namespace GenericServices.Core
             LogCaller();
         }
 
-        protected internal override TData FindItemTracked(IGenericServicesDbContext context)
+        protected internal override TData FindItemTrackedForUpdate(IGenericServicesDbContext context)
         {
             using (new LogStartStop(this))
-                return base.FindItemTracked(context);
+                return base.FindItemTrackedForUpdate(context);
         }
 
         protected internal override ISuccessOrErrors<TData> CreateDataFromDto(IGenericServicesDbContext context, TDto source)

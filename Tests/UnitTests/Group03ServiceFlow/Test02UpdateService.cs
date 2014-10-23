@@ -89,8 +89,8 @@ namespace Tests.UnitTests.Group03ServiceFlow
             }
         }
 
-        [TestCase(InstrumentedOpFlags.NormalOperation, true, "FindItemTracked,UpdateDataFromDto")]
-        [TestCase(InstrumentedOpFlags.FailOnUpdateDataFromDto, false, "FindItemTracked,UpdateDataFromDto,SetupSecondaryData")]
+        [TestCase(InstrumentedOpFlags.NormalOperation, true, "FindItemTrackedForUpdate,UpdateDataFromDto")]
+        [TestCase(InstrumentedOpFlags.FailOnUpdateDataFromDto, false, "FindItemTrackedForUpdate,UpdateDataFromDto,SetupSecondaryData")]
         public void Check02UpdateFlow(InstrumentedOpFlags errorFlag, bool isValid, string expectedFunctionsCalled)
         {
             using (var db = new SampleWebAppDb())
