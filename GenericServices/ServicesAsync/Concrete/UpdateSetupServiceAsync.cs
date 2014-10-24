@@ -115,8 +115,8 @@ namespace GenericServices.ServicesAsync.Concrete
         public async Task<ISuccessOrErrors<TDto>> GetOriginalUsingWhereAsync(Expression<Func<TData, bool>> whereExpression)
         {
             var dto = new TDto();
-            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.Detail))
-                throw new InvalidOperationException("This DTO does not support a detailed view.");
+            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.Update))
+                throw new InvalidOperationException("This DTO does not support update.");
 
             var status = await dto.DetailDtoFromDataInAsync(_db, whereExpression);
             if (!status.IsValid) return status;
