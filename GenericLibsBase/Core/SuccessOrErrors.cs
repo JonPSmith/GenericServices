@@ -24,6 +24,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -31,7 +32,7 @@ using System.Data.Entity.Validation;
 using System.Linq;
 using System.Text;
 
-namespace GenericServices.Core
+namespace GenericLibsBase.Core
 {
 
     public class SuccessOrErrors<T> : SuccessOrErrors, ISuccessOrErrors<T>

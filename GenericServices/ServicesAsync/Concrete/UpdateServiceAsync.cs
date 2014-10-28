@@ -27,6 +27,8 @@
 using System;
 using System.Data.Entity;
 using System.Threading.Tasks;
+using GenericLibsBase;
+using GenericLibsBase.Core;
 using GenericServices.Core;
 using GenericServices.Core.Internal;
 

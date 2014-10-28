@@ -26,6 +26,8 @@
 #endregion
 using System;
 using System.Data.Entity;
+using GenericLibsBase;
+using GenericLibsBase.Core;
 using GenericServices.Core;
 using GenericServices.Core.Internal;
 

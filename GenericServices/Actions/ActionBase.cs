@@ -25,8 +25,8 @@
 // SOFTWARE.
 #endregion
 using System;
+using GenericLibsBase;
 using GenericServices.ActionComms;
-using GenericServices.Logger;
 
 namespace GenericServices.Actions
 {
@@ -58,7 +58,7 @@ namespace GenericServices.Actions
         {
             LowerBound = 0;
             UpperBound = 100;
-            _logger = GenericServicesConfig.GetLogger(GetType().Name);       //give it the name of the inherited type
+            _logger = GenericLibsBaseConfig.GetLogger(GetType().Name);       //give it the name of the inherited type
         }
 
         

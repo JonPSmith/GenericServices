@@ -33,6 +33,8 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using GenericLibsBase;
+using GenericLibsBase.Core;
 using GenericServices.Core.Internal;
 
 [assembly: InternalsVisibleTo("Tests")]

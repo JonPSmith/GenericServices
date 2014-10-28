@@ -25,6 +25,8 @@
 // SOFTWARE.
 #endregion
 
+using GenericLibsBase;
+
 namespace GenericServices
 {
 

@@ -30,6 +30,8 @@ using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
 using System.Threading.Tasks;
+using GenericLibsBase;
+using GenericLibsBase.Core;
 using GenericServices.Core;
 
 namespace GenericServices

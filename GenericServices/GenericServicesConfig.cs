@@ -26,7 +26,6 @@
 #endregion
 using System;
 using System.Collections.Generic;
-using GenericServices.Logger;
 
 namespace GenericServices
 {
@@ -51,40 +50,15 @@ namespace GenericServices
         };
 
         /// <summary>
-        /// This is a constant noLogger. Used when no logging is needed.
-        /// </summary>
-        public static readonly IGenericLogger NoLoggerInstance = new NoLoggingGenericLogger();
-
-        /// <summary>
         /// This contains the SqlErrorNumbers that will be caught by SaveChangesWithErrorChecking (sync and Async)
         /// </summary>
         public static IReadOnlyDictionary<int, string> SqlErrorDict { get { return PrivateSqlErrorDict; } }        
-        
-        /// <summary>
-        /// This should be given a method that takes a string, to have the logger, and returns an IGenericLogger instance. 
-        /// </summary>
-        public static Func<string, IGenericLogger> SetLoggerMethod { private get; set; }
 
         /// <summary>
         /// This can be set to a method that is called in RealiseSingleWithErrorChecking when an exception occurs
         /// It should return a error string if it can decode the error for the user, otherwise should return null
         /// </summary>
         public static RealiseSingleException RealiseSingleExceptionMethod { internal get; set; }
-
-        /// <summary>
-        /// This returns the logger set in the Generic Service package
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public static IGenericLogger GetLogger( string name)
-        {
-            return SetLoggerMethod(name);
-        }
-
-        static GenericServicesConfig()
-        {
-            SetLoggerMethod = name => NoLoggerInstance;
-        }
 
         //--------------------------------------------------
         //public methods

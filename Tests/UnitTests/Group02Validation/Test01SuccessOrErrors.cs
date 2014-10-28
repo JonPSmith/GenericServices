@@ -26,6 +26,7 @@
 #endregion
 using System;
 using System.Linq;
+using GenericLibsBase.Core;
 using GenericServices.Core;
 using NUnit.Framework;
 using Tests.Helpers;

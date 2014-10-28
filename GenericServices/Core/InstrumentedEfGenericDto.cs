@@ -30,6 +30,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using GenericLibsBase;
+using GenericLibsBase.Core;
 
 namespace GenericServices.Core
 {

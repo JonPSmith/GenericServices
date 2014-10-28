@@ -24,8 +24,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #endregion
-using GenericServices;
-using GenericServices.Logger;
+
+using GenericLibsBase;
 using NUnit.Framework;
 using Tests.Helpers;
 
@@ -40,7 +40,7 @@ namespace Tests.UnitTests.Group01Configuration
 
             static FirstClass()
             {
-                Logger = GenericServicesConfig.GetLogger("hello");
+                Logger = GenericLibsBaseConfig.GetLogger("hello");
             }
         }
 
@@ -50,7 +50,7 @@ namespace Tests.UnitTests.Group01Configuration
 
             static SecondClass()
             {
-                Logger = GenericServicesConfig.GetLogger("test");
+                Logger = GenericLibsBaseConfig.GetLogger("test");
             }
         }
 
@@ -59,7 +59,7 @@ namespace Tests.UnitTests.Group01Configuration
         {
 
             //SETUP  
-            GenericServicesConfig.SetLoggerMethod = name => new NoLoggingGenericLogger();
+            GenericLibsBaseConfig.SetLoggerMethod = name => new NoLoggingGenericLogger();
 
             //ATTEMPT
             var classWithLogger = new FirstClass();
@@ -74,7 +74,7 @@ namespace Tests.UnitTests.Group01Configuration
         {
 
             //SETUP  
-            GenericServicesConfig.SetLoggerMethod = name => new Log4NetGenericLogger(name);
+            GenericLibsBaseConfig.SetLoggerMethod = name => new Log4NetGenericLogger(name);
 
             //ATTEMPT
             var classWithLogger = new SecondClass();

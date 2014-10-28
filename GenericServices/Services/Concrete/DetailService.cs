@@ -28,6 +28,7 @@ using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Linq.Expressions;
+using GenericLibsBase;
 using GenericServices.Core;
 using GenericServices.Core.Internal;
 

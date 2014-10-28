@@ -25,6 +25,8 @@
 // SOFTWARE.
 #endregion
 
+using GenericLibsBase;
+using GenericLibsBase.Core;
 using GenericServices.Core;
 using GenericServices.Core.Internal;
 

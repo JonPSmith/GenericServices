@@ -43,6 +43,9 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="GenericLibsBase">
+      <HintPath>..\packages\GenericLibsBase.1.0.0-beta5-001\lib\GenericLibsBase.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -70,8 +73,6 @@
     <Compile Include="IActionBase.cs" />
     <Compile Include="IActionSetupServiceAsync.cs" />
     <Compile Include="IGenericServiceSaveChanges.cs" />
-    <Compile Include="Logger\IGenericLogger.cs" />
-    <Compile Include="Logger\NoLoggingGenericLogger.cs" />
     <Compile Include="NuGet\AssemblyVersionPart.cs" />
     <Compile Include="SaveChangesExtensions.cs" />
     <Compile Include="ServicesAsync\Concrete\ActionSetupServiceAsync.cs" />
@@ -114,14 +115,12 @@
     <Compile Include="Core\EfGenericDto.cs" />
     <Compile Include="ICreateSetupService.cs" />
     <Compile Include="Services\Concrete\ListService.cs" />
-    <Compile Include="Core\SuccessOrErrors.cs" />
     <Compile Include="Services\Concrete\UpdateService.cs" />
     <Compile Include="ICreateService.cs" />
     <Compile Include="IGenericServicesDbContext.cs" />
     <Compile Include="IDeleteService.cs" />
     <Compile Include="IDetailService.cs" />
     <Compile Include="IListService.cs" />
-    <Compile Include="ISuccessOrErrors.cs" />
     <Compile Include="IUpdateService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ActionComms\IActionComms.cs" />

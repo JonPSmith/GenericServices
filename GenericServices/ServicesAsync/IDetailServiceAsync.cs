@@ -27,6 +27,7 @@
 using System;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using GenericLibsBase;
 using GenericServices.Core;
 
 namespace GenericServices.ServicesAsync

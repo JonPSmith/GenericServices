@@ -26,6 +26,7 @@
 #endregion
 using System;
 using System.Linq.Expressions;
+using GenericLibsBase;
 using GenericServices.Core;
 
 namespace GenericServices.Services

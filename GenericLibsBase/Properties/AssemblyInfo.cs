@@ -1,8 +1,8 @@
-#region licence
+﻿#region licence
 // The MIT License (MIT)
 // 
-// Filename: ICreateServiceAsync.cs
-// Date Created: 2014/06/17
+// Filename: AssemblyInfo.cs
+// Date Created: 2014/10/28
 // 
 // Copyright (c) 2014 Jon Smith (www.selectiveanalytics.com & www.thereformedprogrammer.net)
 // 
@@ -24,28 +24,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #endregion
-using System.Threading.Tasks;
-using GenericLibsBase;
+using System.Reflection;
+using System.Resources;
+using System.Runtime.InteropServices;
 
-namespace GenericServices
-{
-    public interface ICreateServiceAsync
-    {
-        /// <summary>
-        /// This adds a new entity class to the database with error checking
-        /// </summary>
-        /// <typeparam name="T">The type of the data to output. 
-        /// Type must be a type either an EF data class or one of the EfGenericDto's</typeparam>
-        /// <param name="newItem">either entity class or dto to create the data item with</param>
-        /// <returns>status</returns>
-        Task<ISuccessOrErrors> CreateAsync<T>(T newItem) where T : class;
+// General Information about an assembly is controlled through the following 
+// set of attributes. Change these attribute values to modify the information
+// associated with an assembly.
+[assembly: AssemblyTitle("GenericLibsBase")]
+[assembly: AssemblyDescription("Base library for GenericServices and other GenericXXX libraries")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("Selective Analytics")]
+[assembly: AssemblyProduct("GenericLibsBase")]
+[assembly: AssemblyCopyright("Copyright © Jon Smith 2014")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
 
-        /// <summary>
-        /// This is available to reset any secondary data in the dto. Call this if the ModelState was invalid and
-        /// you need to display the view again with errors
-        /// </summary>
-        /// <param name="dto">Must be a dto inherited from EfGenericDtoAsync</param>
-        /// <returns></returns>
-        Task<T> ResetDtoAsync<T>(T dto) where T : class;
-    }
-}
+// Setting ComVisible to false makes the types in this assembly not visible 
+// to COM components.  If you need to access a type in this assembly from 
+// COM, set the ComVisible attribute to true on that type.
+[assembly: ComVisible(false)]
+
+// The following GUID is for the ID of the typelib if this project is exposed to COM
+[assembly: Guid("08d7adff-4971-47c4-a403-3a79a5d0722e")]
+
+[assembly: NeutralResourcesLanguage("en")]

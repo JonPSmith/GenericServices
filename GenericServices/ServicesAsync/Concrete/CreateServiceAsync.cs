@@ -26,6 +26,8 @@
 #endregion
 
 using System.Threading.Tasks;
+using GenericLibsBase;
+using GenericLibsBase.Core;
 using GenericServices.Core;
 using GenericServices.Core.Internal;
 

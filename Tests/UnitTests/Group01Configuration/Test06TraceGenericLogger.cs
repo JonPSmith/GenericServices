@@ -29,8 +29,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using GenericLibsBase;
 using GenericServices;
-using GenericServices.Logger;
 using NUnit.Framework;
 using Tests.Helpers;
 
@@ -49,9 +49,9 @@ namespace Tests.UnitTests.Group01Configuration
             var memoryWriter = new StringWriter(_loggedData);
             Trace.Listeners.Add(new TextWriterTraceListener(memoryWriter));
 
-            GenericServicesConfig.SetLoggerMethod = name => new TraceGenericLogger(name);
-            _loggerA = GenericServicesConfig.GetLogger("A");
-            _loggerB = GenericServicesConfig.GetLogger("B");
+            GenericLibsBaseConfig.SetLoggerMethod = name => new TraceGenericLogger(name);
+            _loggerA = GenericLibsBaseConfig.GetLogger("A");
+            _loggerB = GenericLibsBaseConfig.GetLogger("B");
         }
 
         [SetUp]

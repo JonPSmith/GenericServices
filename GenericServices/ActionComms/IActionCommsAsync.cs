@@ -25,6 +25,7 @@
 // SOFTWARE.
 #endregion
 using System.Threading.Tasks;
+using GenericLibsBase;
 
 namespace GenericServices.ActionComms
 {

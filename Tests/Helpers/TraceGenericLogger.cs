@@ -26,7 +26,7 @@
 #endregion
 using System;
 using System.Diagnostics;
-using GenericServices.Logger;
+using GenericLibsBase;
 
 namespace Tests.Helpers
 {

@@ -35,7 +35,7 @@
    -->
   <metadata>
     <id>GenericServices</id>
-    <version>1.0.0-beta4-003</version>
+    <version>1.0.0-beta5-001</version>
     <title>GenericServices</title>
     <authors>Jon Smith</authors>
     <owners>Jon Smith</owners>
@@ -49,6 +49,7 @@
     <releaseNotes>First release.</releaseNotes>
     <copyright>Copyright 2014</copyright>
     <dependencies>
+      <dependency id="GenericLibsBase" version="1.0" />
       <dependency id="EntityFramework" version="6.1" />
       <dependency id="AutoMapper" version="3.0" />
     </dependencies>

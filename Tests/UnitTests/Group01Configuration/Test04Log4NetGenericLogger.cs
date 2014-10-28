@@ -25,8 +25,7 @@
 // SOFTWARE.
 #endregion
 using System;
-using GenericServices;
-using GenericServices.Logger;
+using GenericLibsBase;
 using log4net.Appender;
 using log4net.Config;
 using NUnit.Framework;
@@ -46,9 +45,9 @@ namespace Tests.UnitTests.Group01Configuration
         {
             _log4NetMemoryLog = new MemoryAppender();
             BasicConfigurator.Configure(_log4NetMemoryLog);
-            GenericServicesConfig.SetLoggerMethod = name => new Log4NetGenericLogger(name);
-            _loggerA = GenericServicesConfig.GetLogger("A");
-            _loggerB = GenericServicesConfig.GetLogger("B");
+            GenericLibsBaseConfig.SetLoggerMethod = name => new Log4NetGenericLogger(name);
+            _loggerA = GenericLibsBaseConfig.GetLogger("A");
+            _loggerB = GenericLibsBaseConfig.GetLogger("B");
         }
 
         [SetUp]
