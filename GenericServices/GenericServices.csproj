@@ -57,26 +57,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActionComms\ActionCommsBase.cs" />
-    <Compile Include="ActionComms\ActionCommsForTask.cs" />
-    <Compile Include="ActionComms\IActionCommsAsync.cs" />
-    <Compile Include="ActionComms\IActionCommsSync.cs" />
-    <Compile Include="ActionComms\ProgressWithOptionalMessage.cs" />
     <Compile Include="Core\EfGenericDtoAsync.cs" />
-    <Compile Include="Actions\Internal\ActionServiceHelper.cs" />
     <Compile Include="Core\EfGenericDtoBase.Generic.cs" />
     <Compile Include="Core\Internal\BuildFilter.cs" />
     <Compile Include="Core\Internal\DecodeToService.cs" />
     <Compile Include="Core\Internal\EfKeyFinder.cs" />
     <Compile Include="Core\SecurityHelper.cs" />
-    <Compile Include="IActionAsync.cs" />
-    <Compile Include="IActionService.cs" />
-    <Compile Include="IActionBase.cs" />
-    <Compile Include="IActionSetupServiceAsync.cs" />
     <Compile Include="IGenericServiceSaveChanges.cs" />
     <Compile Include="NuGet\AssemblyVersionPart.cs" />
     <Compile Include="SaveChangesExtensions.cs" />
-    <Compile Include="ServicesAsync\Concrete\ActionSetupServiceAsync.cs" />
     <Compile Include="ServicesAsync\Concrete\CreateSetupServiceAsync.cs" />
     <Compile Include="ServicesAsync\Concrete\DeleteServiceAsync.cs" />
     <Compile Include="ServicesAsync\Concrete\DetailServiceAsync.cs" />
@@ -87,19 +76,14 @@
     <Compile Include="Core\InstrumentedEfGenericDtoAsync.cs" />
     <Compile Include="IUpdateServiceAsync.cs" />
     <Compile Include="IUpdateSetupServiceAsync.cs" />
-    <Compile Include="IActionServiceAsync.cs" />
     <Compile Include="ServicesAsync\Concrete\UpdateServiceAsync.cs" />
     <Compile Include="ServicesAsync\Concrete\UpdateSetupServiceAsync.cs" />
-    <Compile Include="ServicesAsync\Concrete\ActionServiceAsync.cs" />
     <Compile Include="ServicesAsync\ICreateServiceAsync.cs" />
     <Compile Include="ServicesAsync\ICreateSetupServiceAsync.cs" />
     <Compile Include="ServicesAsync\IDetailServiceAsync.cs" />
     <Compile Include="ServicesAsync\IUpdateServiceAsync.cs" />
     <Compile Include="ServicesAsync\IUpdateSetupServiceAsync.cs" />
     <Compile Include="GenericServicesConfig.cs" />
-    <Compile Include="Services\Concrete\ActionService.cs" />
-    <Compile Include="Services\Concrete\ActionSetupService.cs" />
-    <Compile Include="IActionSetupService.cs" />
     <Compile Include="Services\Concrete\CreateService.cs" />
     <Compile Include="Core\EfGenericDtoBase.cs">
       <SubType>Code</SubType>
@@ -107,7 +91,6 @@
     <Compile Include="Core\InstrumentedLog.cs" />
     <Compile Include="ServicesAsync\Concrete\CreateServiceAsync.cs" />
     <Compile Include="Core\InstrumentedEfGenericDto.cs" />
-    <Compile Include="ICheckIfWarnings.cs" />
     <Compile Include="IUpdateSetupService.cs" />
     <Compile Include="Services\Concrete\UpdateSetupService.cs" />
     <Compile Include="Services\Concrete\CreateSetupService.cs" />
@@ -124,10 +107,6 @@
     <Compile Include="IListService.cs" />
     <Compile Include="IUpdateService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ActionComms\IActionComms.cs" />
-    <Compile Include="IActionSync.cs" />
-    <Compile Include="ActionComms\ProgressMessage.cs" />
-    <Compile Include="Actions\ActionBase.cs" />
     <Compile Include="Services\ICreateService.cs" />
     <Compile Include="Services\ICreateSetupService.cs" />
     <Compile Include="Services\IDetailService.cs" />

@@ -119,41 +119,6 @@ namespace Tests.UnitTests.Group08CrudServices
         }
 
         [Test]
-        public void Check03CopyDtoToDataValidationFail()
-        {
-
-            //SETUP
-            var dto = new SimpleTagDto();
-
-            //ATTEMPT
-            var newData = new Tag();
-
-            var status = dto.UpdateDataFromDto(null, dto, newData);
-
-            //VERIFY
-            status.IsValid.ShouldEqual(false, status.Errors);
-            CollectionAssert.AreEquivalent(new[] { "The Slug field is required.", "The Name field is required." },
-                status.Errors.Select(x => x.ErrorMessage));
-        }
-
-        [Test]
-        public void Check04CopyDtoToDataNoValidationOk()
-        {
-
-            //SETUP
-            var dto = new SimpleTagDto();
-            dto.SetSupportedFunctions( ServiceFunctions.DoActionWithoutValidate);
-
-            //ATTEMPT
-            var newData = new Tag();
-
-            var status = dto.UpdateDataFromDto(null, dto, newData);
-
-            //VERIFY
-            status.IsValid.ShouldEqual(true, status.Errors);
-        }
-
-        [Test]
         public void Check06CreateDtoAndCopyInDataOk()
         {
             using (var db = new SampleWebAppDb())

@@ -116,41 +116,6 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
             newData.Tags.First().Name.ShouldEqual("Original Tag name");
         }
 
-        [Test]
-        public async void Check03CopyDtoToDataValidationFail()
-        {
-
-            //SETUP
-            var dto = new SimpleTagDtoAsync();
-
-            //ATTEMPT
-            var newData = new Tag();
-
-            var status = await dto.UpdateDataFromDtoAsync(null, dto, newData);
-
-            //VERIFY
-            status.IsValid.ShouldEqual(false, status.Errors);
-            CollectionAssert.AreEquivalent(new[] { "The Slug field is required.", "The Name field is required." },
-                status.Errors.Select(x => x.ErrorMessage));
-        }
-
-        [Test]
-        public async void Check04CopyDtoToDataNoValidationOk()
-        {
-
-            //SETUP
-            var dto = new SimpleTagDtoAsync();
-            dto.SetSupportedFunctions(ServiceFunctions.DoActionWithoutValidate);
-
-            //ATTEMPT
-            var newData = new Tag();
-
-            var status = await dto.UpdateDataFromDtoAsync(null, dto, newData);
-
-            //VERIFY
-            status.IsValid.ShouldEqual(true, status.Errors);
-        }
-
         //--------------------------
 
         [Test]

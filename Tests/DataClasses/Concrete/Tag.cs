@@ -32,7 +32,7 @@ using GenericServices;
 
 namespace Tests.DataClasses.Concrete
 {
-    public class Tag : ICheckIfWarnings
+    public class Tag
     {
         public int TagId { get; set; }
 
@@ -53,16 +53,8 @@ namespace Tests.DataClasses.Concrete
             return string.Format("TagId: {0}, Name: {1}, Slug: {2}", TagId, Name, Slug);
         }
 
-        [NotMapped]
-        public bool WriteEvenIfWarning { get; private set; }
-
         public Tag()
         {
-        }
-
-        public Tag(bool writeEvenIfWarning)
-        {
-            WriteEvenIfWarning = writeEvenIfWarning;
         }
     }
 }

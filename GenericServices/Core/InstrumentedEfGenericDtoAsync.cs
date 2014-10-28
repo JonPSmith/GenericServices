@@ -38,7 +38,7 @@ using GenericLibsBase.Core;
 namespace GenericServices.Core
 {
 
-    public abstract class InstrumentedEfGenericDtoAsync<TData, TDto> : EfGenericDtoAsync<TData, TDto>, ICheckIfWarnings
+    public abstract class InstrumentedEfGenericDtoAsync<TData, TDto> : EfGenericDtoAsync<TData, TDto>
         where TData : class, new()
         where TDto : EfGenericDtoAsync<TData, TDto>, new()
     {
@@ -127,14 +127,6 @@ namespace GenericServices.Core
         {
             LogSpecificName(callerName, callType);
         }
-
-        //---------------------------------------------------------------------
-        //ICheckIfWarnings implementation
-
-        /// <summary>
-        /// This allows the user to control whether data should still be written even if warnings found
-        /// </summary>
-        public bool WriteEvenIfWarning { get { return _whereToFail == InstrumentedOpFlags.ForceActionWarnWithWrite; } }
 
         //---------------------------------------------------------------------
         //overridden methods

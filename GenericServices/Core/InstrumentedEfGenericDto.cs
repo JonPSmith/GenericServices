@@ -42,7 +42,7 @@ namespace GenericServices.Core
         //these flags are not used in InstrumentedEfGenericDto, but inside unit tests
         ForceActionFail = 16, ForceActionWarnWithWrite = 32, ForceActionkWarnNoWrite = 64 }
 
-    public abstract class InstrumentedEfGenericDto<TData, TDto> : EfGenericDto<TData, TDto>, ICheckIfWarnings
+    public abstract class InstrumentedEfGenericDto<TData, TDto> : EfGenericDto<TData, TDto>
         where TData : class, new()
         where TDto : EfGenericDto<TData, TDto>, new()
     {
@@ -131,14 +131,6 @@ namespace GenericServices.Core
         {
             LogSpecificName(callerName, callType);
         }
-
-        //---------------------------------------------------------------------
-        //ICheckIfWarnings implementation
-
-        /// <summary>
-        /// This allows the user to control whether data should still be written even if warnings found
-        /// </summary>
-        public bool WriteEvenIfWarning { get { return _whereToFail == InstrumentedOpFlags.ForceActionWarnWithWrite; } }
 
         //---------------------------------------------------------------------
         //overridden methods

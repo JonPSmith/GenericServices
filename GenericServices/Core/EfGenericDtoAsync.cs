@@ -93,7 +93,6 @@ namespace GenericServices.Core
         /// <summary>
         /// This is used in an update. It copies only the properties in TDto that have public setter into the TData.
         /// You can override this if you need a more complex copy
-        /// Note: If SupportedFunctions has the flag ValidateonCopyDtoToData then it validates the data (used by Action methods)
         /// </summary>
         /// <param name="context"></param>
         /// <param name="source"></param>
@@ -103,18 +102,7 @@ namespace GenericServices.Core
         {
             CreateDtoToDataMapping();
             Mapper.Map(source, destination);
-
-            var status = SuccessOrErrors.Success("Successful copy of data");
-            if (!SupportedFunctions.HasFlag(ServiceFunctions.ValidateonCopyDtoToData)) return status;
-
-            //we need to run a validation on the destination as it might have new or tigher validation rules
-            var errors = new List<ValidationResult>();
-            var vc = new ValidationContext(destination, null, null);
-            var valid = Validator.TryValidateObject(destination, vc, errors, true);
-            if (!valid)
-                status.SetErrors(errors);
-
-            return status;
+            return SuccessOrErrors.Success("Successful copy of data");
         }
 
         /// <summary>

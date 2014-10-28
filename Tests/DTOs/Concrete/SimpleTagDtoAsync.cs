@@ -34,8 +34,7 @@ namespace Tests.DTOs.Concrete
     class SimpleTagDtoAsync : InstrumentedEfGenericDtoAsync<Tag, SimpleTagDtoAsync>
     {
 
-        private ServiceFunctions _supportedFunctionsToUse = ServiceFunctions.AllCrud |
-                                                    ServiceFunctions.DoAction;
+        private ServiceFunctions _supportedFunctionsToUse = ServiceFunctions.AllCrud;
 
         public SimpleTagDtoAsync()
         {

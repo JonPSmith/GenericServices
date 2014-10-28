@@ -67,7 +67,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Actions\EmptyTestActionAsync.cs" />
     <Compile Include="DataClasses\Concrete\Blog.cs" />
     <Compile Include="DataClasses\Concrete\Helpers\TrackUpdate.cs" />
     <Compile Include="DataClasses\Concrete\Post.cs" />
@@ -84,7 +83,6 @@
     <Compile Include="DTOs\ISimplePostTagGradeDto.cs" />
     <Compile Include="DTOs\Concrete\SimplePostTagGradeDto.cs" />
     <Compile Include="DTOs\Concrete\SimpleTagDto.cs" />
-    <Compile Include="Actions\EmptyTestAction.cs" />
     <Compile Include="DTOs\IDetailPostDto.cs" />
     <Compile Include="DTOs\ISimpleBlogWithPostsDto.cs" />
     <Compile Include="DTOs\ISimplePostDto.cs" />
@@ -114,7 +112,6 @@
     <Compile Include="UnitTests\Group00GenericLibsBase\Test01SuccessOrErrors.cs" />
     <Compile Include="UnitTests\Group00GenericLibsBase\Test03SuccessOrErrorsT.cs" />
     <Compile Include="UnitTests\Group03ServiceFlow\Test01CreateService.cs" />
-    <Compile Include="UnitTests\Group03ServiceFlow\Test10ActionService.cs" />
     <Compile Include="UnitTests\Group03ServiceFlow\Test03DetailService.cs" />
     <Compile Include="UnitTests\Group03ServiceFlow\Test02UpdateService.cs" />
     <Compile Include="UnitTests\Group04ServiceFlowAsync\Test01CreateServiceAsync.cs" />
@@ -125,9 +122,6 @@
     <Compile Include="UnitTests\Group00GenericLibsBase\Test06Log4NetGenericLogger.cs" />
     <Compile Include="UnitTests\Group15CrudServiceFinder\Test05CreateServicesAsync.cs" />
     <Compile Include="UnitTests\Group15CrudServiceFinder\Test04CreateServices.cs" />
-    <Compile Include="UnitTests\Group20Actions\Test05ActionServiceEmptyActionAsync.cs" />
-    <Compile Include="UnitTests\Group20Actions\Test02ActionServiceEmptyAction.cs" />
-    <Compile Include="UnitTests\Group20Actions\Test01CheckTestAction.cs" />
     <Compile Include="UnitTests\Group08CrudServices\Test01AutoMapper.cs" />
     <Compile Include="UnitTests\Group08CrudServices\Test02aPostTagGradeDirect.cs" />
     <Compile Include="UnitTests\Group08CrudServices\Test02PostsDirect.cs" />

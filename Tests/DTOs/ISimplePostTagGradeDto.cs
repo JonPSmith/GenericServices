@@ -55,7 +55,6 @@ namespace Tests.DTOs
         string PostPartTitle { get; }
         string FunctionsCalledCommaDelimited { get; }
         ReadOnlyCollection<InstrumentedLog> LogOfCalls { get; }
-        bool WriteEvenIfWarning { get; }
         void LogSpecificName(string callPoint, CallTypes callType = CallTypes.Point);
         void LogCaller( CallTypes callType = CallTypes.Point, [CallerMemberName] string callerName = "");
 
