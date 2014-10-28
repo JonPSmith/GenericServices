@@ -43,8 +43,9 @@
     <Reference Include="EntityFramework.SqlServer">
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="GenericLibsBase">
-      <HintPath>..\packages\GenericLibsBase.1.0.0-beta5-001\lib\GenericLibsBase.dll</HintPath>
+    <Reference Include="GenericLibsBase, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\GenericLibsBase.1.0.0-beta5-002\lib\GenericLibsBase.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />

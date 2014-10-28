@@ -35,8 +35,8 @@
    -->
   <metadata>
     <id>GenericLibsBase</id>
-    <version>1.0.0-beta5-001</version>
-    <title>GenericServices</title>
+    <version>1.0.0-beta5-002</version>
+    <title>GenericLibsBase</title>
     <authors>Jon Smith</authors>
     <owners>Jon Smith</owners>
     <licenseUrl>https://github.com/JonPSmith/GenericServices/blob/master/licence.txt</licenseUrl>

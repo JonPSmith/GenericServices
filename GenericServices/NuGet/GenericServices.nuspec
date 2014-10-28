@@ -49,7 +49,7 @@
     <releaseNotes>First release.</releaseNotes>
     <copyright>Copyright 2014</copyright>
     <dependencies>
-      <dependency id="GenericLibsBase" version="1.0" />
+      <dependency id="GenericLibsBase" version="1.0.0-beta5" />
       <dependency id="EntityFramework" version="6.1" />
       <dependency id="AutoMapper" version="3.0" />
     </dependencies>
