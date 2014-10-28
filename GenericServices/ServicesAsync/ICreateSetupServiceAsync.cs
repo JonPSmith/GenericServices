@@ -30,9 +30,9 @@ using GenericServices.Core;
 namespace GenericServices.ServicesAsync
 {
 
-    public interface ICreateSetupServiceAsync<TData, TDto>
-        where TData : class, new()
-        where TDto : EfGenericDtoAsync<TData, TDto>, new()
+    public interface ICreateSetupServiceAsync<TEntity, TDto>
+        where TEntity : class, new()
+        where TDto : EfGenericDtoAsync<TEntity, TDto>, new()
     {
         /// <summary>
         /// This returns the dto with any data that is needs for the view setup in it

@@ -61,7 +61,7 @@ namespace GenericServices.Services.Concrete
     //--------------------------------
     //direct version
 
-    public class UpdateSetupService<TData> : IUpdateSetupService<TData> where TData : class, new()
+    public class UpdateSetupService<TEntity> : IUpdateSetupService<TEntity> where TEntity : class, new()
     {
         private readonly IGenericServicesDbContext _db;
 
@@ -75,9 +75,9 @@ namespace GenericServices.Services.Concrete
         /// </summary>
         /// <param name="whereExpression">Should be a 'where' expression that returns one item</param>
         /// <returns>Status. If valid Result holds data (not tracked), otherwise null</returns>
-        public ISuccessOrErrors<TData> GetOriginalUsingWhere(Expression<Func<TData, bool>> whereExpression)
+        public ISuccessOrErrors<TEntity> GetOriginalUsingWhere(Expression<Func<TEntity, bool>> whereExpression)
         {
-            return _db.Set<TData>().Where(whereExpression).AsNoTracking().RealiseSingleWithErrorChecking();
+            return _db.Set<TEntity>().Where(whereExpression).AsNoTracking().RealiseSingleWithErrorChecking();
         }
 
         /// <summary>
@@ -85,18 +85,18 @@ namespace GenericServices.Services.Concrete
         /// </summary>
         /// <param name="keys">The keys must be given in the same order as entity framework has them</param>
         /// <returns>Status. If valid Result holds data (not tracked), otherwise null</returns>
-        public ISuccessOrErrors<TData> GetOriginal(params object[] keys)
+        public ISuccessOrErrors<TEntity> GetOriginal(params object[] keys)
         {
-            return GetOriginalUsingWhere(BuildFilter.CreateFilter<TData>(_db.GetKeyProperties<TData>(), keys));
+            return GetOriginalUsingWhere(BuildFilter.CreateFilter<TEntity>(_db.GetKeyProperties<TEntity>(), keys));
         }
     }
 
     //--------------------------------
     //dto version
 
-    public class UpdateSetupService<TData, TDto> : IUpdateSetupService<TData, TDto>
-        where TData : class, new()
-        where TDto : EfGenericDto<TData, TDto>, new()
+    public class UpdateSetupService<TEntity, TDto> : IUpdateSetupService<TEntity, TDto>
+        where TEntity : class, new()
+        where TDto : EfGenericDto<TEntity, TDto>, new()
     {
         private readonly IGenericServicesDbContext _db;
 
@@ -114,7 +114,7 @@ namespace GenericServices.Services.Concrete
         /// to set secondary data, otherwise null</returns>
         public ISuccessOrErrors<TDto> GetOriginal(params object[] keys)
         {
-            return GetOriginalUsingWhere(BuildFilter.CreateFilter<TData>(_db.GetKeyProperties<TData>(), keys));
+            return GetOriginalUsingWhere(BuildFilter.CreateFilter<TEntity>(_db.GetKeyProperties<TEntity>(), keys));
         }
 
         /// <summary>
@@ -124,7 +124,7 @@ namespace GenericServices.Services.Concrete
         /// <param name="whereExpression">Should be a 'where' expression that returns one item</param>
         /// <returns>Status. If valid TDto type with properties copyed over and SetupSecondaryData called 
         /// to set secondary data, otherwise null</returns>
-        public ISuccessOrErrors<TDto> GetOriginalUsingWhere(Expression<Func<TData, bool>> whereExpression)
+        public ISuccessOrErrors<TDto> GetOriginalUsingWhere(Expression<Func<TEntity, bool>> whereExpression)
         {
             var dto = new TDto();
             if (!dto.SupportedFunctions.HasFlag(CrudFunctions.Update))

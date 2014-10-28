@@ -55,7 +55,7 @@ namespace GenericServices.Services.Concrete
     }
 
 
-    public class ListService<TData> : IListService<TData> where TData : class
+    public class ListService<TEntity> : IListService<TEntity> where TEntity : class
     {
         private readonly IGenericServicesDbContext _db;
 
@@ -68,9 +68,9 @@ namespace GenericServices.Services.Concrete
         /// This returns an IQueryable list of all items of the given type
         /// </summary>
         /// <returns>note: the list items are not tracked</returns>
-        public IQueryable<TData> GetAll()
+        public IQueryable<TEntity> GetAll()
         {
-            return _db.Set<TData>().AsNoTracking();
+            return _db.Set<TEntity>().AsNoTracking();
         }
 
     }
@@ -78,9 +78,9 @@ namespace GenericServices.Services.Concrete
     //---------------------------------------------------------------------------
     //DTO version
 
-    public class ListService<TData, TDto> : IListService<TData, TDto>
-        where TData : class
-        where TDto : EfGenericDtoBase<TData, TDto>, new()
+    public class ListService<TEntity, TDto> : IListService<TEntity, TDto>
+        where TEntity : class
+        where TDto : EfGenericDtoBase<TEntity, TDto>, new()
     {
         private readonly IGenericServicesDbContext _db;
 
@@ -90,7 +90,7 @@ namespace GenericServices.Services.Concrete
         }
 
         /// <summary>
-        /// This returns an IQueryable list of all items of the given TData, but transformed into TDto data type
+        /// This returns an IQueryable list of all items of the given TEntity, but transformed into TDto data type
         /// </summary>
         /// <returns>note: the list items are not tracked</returns>
         public IQueryable<TDto> GetAll()

@@ -30,18 +30,18 @@ using GenericServices.Core;
 namespace GenericServices.Services
 {
 
-    public interface IListService<out TData> where TData : class
+    public interface IListService<out TEntity> where TEntity : class
     {
         /// <summary>
         /// This returns an IQueryable list of all items of the given type
         /// </summary>
         /// <returns>note: the list items are not tracked</returns>
-        IQueryable<TData> GetAll();
+        IQueryable<TEntity> GetAll();
     }
 
-    public interface IListService<TData, out TDto>
-        where TData : class
-        where TDto : EfGenericDtoBase<TData, TDto>
+    public interface IListService<TEntity, out TDto>
+        where TEntity : class
+        where TDto : EfGenericDtoBase<TEntity, TDto>
     {
         /// <summary>
         /// This returns an IQueryable list of all items of the given type

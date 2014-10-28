@@ -38,19 +38,19 @@ using GenericLibsBase.Core;
 namespace GenericServices.Core
 {
 
-    public abstract class InstrumentedEfGenericDtoAsync<TData, TDto> : EfGenericDtoAsync<TData, TDto>
-        where TData : class, new()
-        where TDto : EfGenericDtoAsync<TData, TDto>, new()
+    public abstract class InstrumentedEfGenericDtoAsync<TEntity, TDto> : EfGenericDtoAsync<TEntity, TDto>
+        where TEntity : class, new()
+        where TDto : EfGenericDtoAsync<TEntity, TDto>, new()
     {
         /// <summary>
         /// Used to surround calls with using to catch start/end time
         /// </summary>
         private class LogStartStop : IDisposable
         {
-            private readonly InstrumentedEfGenericDtoAsync<TData, TDto> _callingClass;
+            private readonly InstrumentedEfGenericDtoAsync<TEntity, TDto> _callingClass;
             private readonly string _callingMethodName;
 
-            public LogStartStop(InstrumentedEfGenericDtoAsync<TData, TDto> callingClass, [CallerMemberName] string callerName = "")
+            public LogStartStop(InstrumentedEfGenericDtoAsync<TEntity, TDto> callingClass, [CallerMemberName] string callerName = "")
             {
                 _callingClass = callingClass;
                 _callingMethodName = callerName;
@@ -144,28 +144,28 @@ namespace GenericServices.Core
 
 
         /// <summary>
-        /// This returns the TData item that fits the key(s) in the DTO.
+        /// This returns the TEntity item that fits the key(s) in the DTO.
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        internal protected override async Task<TData> FindItemTrackedForUpdateAsync(IGenericServicesDbContext context)
+        internal protected override async Task<TEntity> FindItemTrackedForUpdateAsync(IGenericServicesDbContext context)
         {
             using (new LogStartStop(this))
-                return await context.Set<TData>().FindAsync(GetKeyValues(context));
+                return await context.Set<TEntity>().FindAsync(GetKeyValues(context));
         }
 
-        protected internal override async Task<ISuccessOrErrors<TData>> CreateDataFromDtoAsync(IGenericServicesDbContext context, TDto source)
+        protected internal override async Task<ISuccessOrErrors<TEntity>> CreateDataFromDtoAsync(IGenericServicesDbContext context, TDto source)
         {
             using (new LogStartStop(this))
             {
                 if (_whereToFail.HasFlag(InstrumentedOpFlags.FailOnCreateDataFromDto))
-                    return SuccessOrErrors<TData>.ConvertNonResultStatus(new SuccessOrErrors().AddSingleError("Flag was set to fail in CreateDataFromDto."));
+                    return SuccessOrErrors<TEntity>.ConvertNonResultStatus(new SuccessOrErrors().AddSingleError("Flag was set to fail in CreateDataFromDto."));
 
                 return await base.CreateDataFromDtoAsync(context, source);
             }
         }
 
-        protected internal override async Task<ISuccessOrErrors> UpdateDataFromDtoAsync(IGenericServicesDbContext context, TDto source, TData destination)
+        protected internal override async Task<ISuccessOrErrors> UpdateDataFromDtoAsync(IGenericServicesDbContext context, TDto source, TEntity destination)
         {
             using (new LogStartStop(this))
             {
@@ -178,13 +178,13 @@ namespace GenericServices.Core
 
 
         protected internal override async Task<ISuccessOrErrors<TDto>> DetailDtoFromDataInAsync(
-            IGenericServicesDbContext context, Expression<Func<TData, bool>> predicate)
+            IGenericServicesDbContext context, Expression<Func<TEntity, bool>> predicate)
         {
             LogCaller(CallTypes.Start);
             var status = await base.DetailDtoFromDataInAsync(context, predicate);
             if (status.IsValid)
             {
-                var instDto = status.Result as InstrumentedEfGenericDtoAsync<TData, TDto>;
+                var instDto = status.Result as InstrumentedEfGenericDtoAsync<TEntity, TDto>;
                 instDto._timer = _timer;
                 instDto._logOfCalls = _logOfCalls;
                 instDto._whereToFail = _whereToFail;

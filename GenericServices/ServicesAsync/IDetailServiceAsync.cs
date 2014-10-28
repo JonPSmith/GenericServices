@@ -33,34 +33,34 @@ using GenericServices.Core;
 namespace GenericServices.ServicesAsync
 {
 
-    public interface IDetailServiceAsync<TData>
-        where TData : class, new()
+    public interface IDetailServiceAsync<TEntity>
+        where TEntity : class, new()
     {
         /// <summary>
         /// This gets a single entry using the lambda expression as a where part
         /// </summary>
         /// <param name="whereExpression">Should be a 'where' expression that returns one item</param>
         /// <returns>Task with Status. If valid Result is data as read from database (not tracked), otherwise null</returns>
-        Task<ISuccessOrErrors<TData>> GetDetailUsingWhereAsync(Expression<Func<TData, bool>> whereExpression);
+        Task<ISuccessOrErrors<TEntity>> GetDetailUsingWhereAsync(Expression<Func<TEntity, bool>> whereExpression);
 
         /// <summary>
         /// This finds an entry using the primary key(s) in the data
         /// </summary>
         /// <param name="keys">The keys must be given in the same order as entity framework has them</param>
         /// <returns>Task with Status. If valid Result is data as read from database (not tracked), otherwise null</returns>
-        Task<ISuccessOrErrors<TData>> GetDetailAsync(params object[] keys);
+        Task<ISuccessOrErrors<TEntity>> GetDetailAsync(params object[] keys);
     }
 
-    public interface IDetailServiceAsync<TData, TDto>
-        where TData : class, new()
-        where TDto : EfGenericDtoAsync<TData, TDto>, new()
+    public interface IDetailServiceAsync<TEntity, TDto>
+        where TEntity : class, new()
+        where TDto : EfGenericDtoAsync<TEntity, TDto>, new()
     {
         /// <summary>
         /// This gets a single entry using the lambda expression as a where part
         /// </summary>
         /// <param name="whereExpression">Should be a 'where' expression that returns one item</param>
         /// <returns>Task with Status. If valid Result is data as read from database (not tracked), otherwise null</returns>
-        Task<ISuccessOrErrors<TDto>> GetDetailUsingWhereAsync(Expression<Func<TData, bool>> whereExpression);
+        Task<ISuccessOrErrors<TDto>> GetDetailUsingWhereAsync(Expression<Func<TEntity, bool>> whereExpression);
 
 
         /// <summary>

@@ -73,8 +73,8 @@ namespace GenericServices.ServicesAsync.Concrete
     //--------------------------------
     //direct
 
-    public class UpdateServiceAsync<TData> : IUpdateServiceAsync<TData>
-        where TData : class
+    public class UpdateServiceAsync<TEntity> : IUpdateServiceAsync<TEntity>
+        where TEntity : class
     {
         private readonly IGenericServicesDbContext _db;
 
@@ -89,7 +89,7 @@ namespace GenericServices.ServicesAsync.Concrete
         /// </summary>
         /// <param name="itemToUpdate"></param>
         /// <returns>status</returns>
-        public async Task<ISuccessOrErrors> UpdateAsync(TData itemToUpdate)
+        public async Task<ISuccessOrErrors> UpdateAsync(TEntity itemToUpdate)
         {
             if (itemToUpdate == null)
                 throw new ArgumentNullException("itemToUpdate", "The item provided was null.");
@@ -99,7 +99,7 @@ namespace GenericServices.ServicesAsync.Concrete
 
             var result = await _db.SaveChangesWithCheckingAsync();
             if (result.IsValid)
-                result.SetSuccessMessage("Successfully updated {0}.", typeof(TData).Name);
+                result.SetSuccessMessage("Successfully updated {0}.", typeof(TEntity).Name);
 
             return result;
         }
@@ -108,9 +108,9 @@ namespace GenericServices.ServicesAsync.Concrete
     //------------------------------------------------------------------------
     //DTO version
 
-    public class UpdateServiceAsync<TData, TDto> : IUpdateServiceAsync<TData,TDto>
-        where TData : class, new()
-        where TDto : EfGenericDtoAsync<TData, TDto>, new()
+    public class UpdateServiceAsync<TEntity, TDto> : IUpdateServiceAsync<TEntity,TDto>
+        where TEntity : class, new()
+        where TDto : EfGenericDtoAsync<TEntity, TDto>, new()
     {
         private readonly IGenericServicesDbContext _db;
 

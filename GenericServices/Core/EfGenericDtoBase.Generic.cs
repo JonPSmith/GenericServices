@@ -25,8 +25,6 @@
 // SOFTWARE.
 #endregion
 
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
 using System.Reflection;
@@ -42,9 +40,9 @@ using GenericServices.Core.Internal;
 namespace GenericServices.Core
 {
     
-    public abstract class EfGenericDtoBase<TData, TDto> :EfGenericDtoBase
-        where TData : class
-        where TDto : EfGenericDtoBase<TData, TDto>
+    public abstract class EfGenericDtoBase<TEntity, TDto> : EfGenericDtoBase
+        where TEntity : class
+        where TDto : EfGenericDtoBase<TEntity, TDto>
     {
         /// <summary>
         /// Optional method that will setup any mapping etc. that are cached. This will will improve speed later.
@@ -60,20 +58,20 @@ namespace GenericServices.Core
         /// This provides the name of the name of the data item to display in success or error messages.
         /// Override if you want a more user friendly name
         /// </summary>
-        internal protected virtual string DataItemName { get { return typeof (TData).Name; }}
+        internal protected virtual string DataItemName { get { return typeof (TEntity).Name; }}
         
         /// <summary>
         /// This method is called to get the data table. Can be overridden if include statements are needed.
         /// </summary>
         /// <param name="context"></param>
-        /// <returns>returns an IQueryable of the table TData as Untracked</returns>
-        protected virtual IQueryable<TData> GetDataUntracked(IGenericServicesDbContext context)
+        /// <returns>returns an IQueryable of the table TEntity as Untracked</returns>
+        protected virtual IQueryable<TEntity> GetDataUntracked(IGenericServicesDbContext context)
         {
-            return context.Set<TData>().AsNoTracking();
+            return context.Set<TEntity>().AsNoTracking();
         }
 
         /// <summary>
-        /// This provides the IQueryable command to get a list of TData, but projected to TDto.
+        /// This provides the IQueryable command to get a list of TEntity, but projected to TDto.
         /// Can be overridden if standard AutoMapping isn't good enough, or return null if not supported
         /// </summary>
         /// <returns></returns>
@@ -88,7 +86,7 @@ namespace GenericServices.Core
 
         protected object[] GetKeyValues(IGenericServicesDbContext context)
         {
-            var efkeyPropertyNames = context.GetKeyProperties<TData>().Select(x => x.Name).ToArray();
+            var efkeyPropertyNames = context.GetKeyProperties<TEntity>().Select(x => x.Name).ToArray();
 
             var dtoKeyProperies = typeof(TDto).GetProperties(BindingFlags.Public | BindingFlags.Instance)
                     .Where(x => efkeyPropertyNames.Any( y => y == x.Name)).ToArray();
@@ -101,12 +99,12 @@ namespace GenericServices.Core
 
         protected static void CreateDatatoDtoMapping()
         {
-            Mapper.CreateMap<TData, TDto>();
+            Mapper.CreateMap<TEntity, TDto>();
         }
 
         protected static void CreateDtoToDataMapping()
         {
-            Mapper.CreateMap<TDto, TData>()
+            Mapper.CreateMap<TDto, TEntity>()
                 .ForAllMembers(opt => opt.Condition(CheckIfSourceSetterIsPublic));
         }
 
@@ -114,13 +112,13 @@ namespace GenericServices.Core
         //protected/private methods
 
         /// <summary>
-        /// This copies only the properties in TDto that have public setter into the TData.
+        /// This copies only the properties in TDto that have public setter into the TEntity.
         /// You can override this if you need a more complex copy
         /// </summary>
         /// <param name="context"></param>
         /// <param name="source"></param>
         /// <param name="destination"></param>
-        protected ISuccessOrErrors CreateUpdateDataFromDto(IGenericServicesDbContext context, TDto source, TData destination)
+        protected ISuccessOrErrors CreateUpdateDataFromDto(IGenericServicesDbContext context, TDto source, TEntity destination)
         {
             CreateDtoToDataMapping();
             Mapper.Map(source, destination);

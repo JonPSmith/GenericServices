@@ -32,27 +32,27 @@ using GenericServices.Core;
 namespace GenericServices.Services
 {
     
-    public interface IUpdateSetupService<TData> where TData : class
+    public interface IUpdateSetupService<TEntity> where TEntity : class
     {
         /// <summary>
         /// This gets a single entry using the lambda expression as a where part
         /// </summary>
         /// <param name="whereExpression">Should be a 'where' expression that returns one item</param>
         /// <returns>Status. If valid Result holds data (not tracked), otherwise null</returns>
-        ISuccessOrErrors<TData> GetOriginalUsingWhere(Expression<Func<TData, bool>> whereExpression);
+        ISuccessOrErrors<TEntity> GetOriginalUsingWhere(Expression<Func<TEntity, bool>> whereExpression);
 
         /// <summary>
         /// This finds an entry using the primary key(s) in the data
         /// </summary>
         /// <param name="keys">The keys must be given in the same order as entity framework has them</param>
         /// <returns>Status. If valid Result holds data (not tracked), otherwise null</returns>
-        ISuccessOrErrors<TData> GetOriginal(params object[] keys);
+        ISuccessOrErrors<TEntity> GetOriginal(params object[] keys);
     }
 
 
-    public interface IUpdateSetupService<TData, TDto>
-        where TData : class, new()
-        where TDto : EfGenericDto<TData, TDto>, new()
+    public interface IUpdateSetupService<TEntity, TDto>
+        where TEntity : class, new()
+        where TDto : EfGenericDto<TEntity, TDto>, new()
     {
         /// <summary>
         /// This returns a single entry using the primary keys to find it. It also calls
@@ -69,6 +69,6 @@ namespace GenericServices.Services
         /// </summary>
         /// <param name="whereExpression">Should be a 'where' expression that returns one item</param>
         /// <returns>TDto type with properties copyed over and SetupSecondaryData called to set secondary data</returns>
-        ISuccessOrErrors<TDto> GetOriginalUsingWhere(Expression<Func<TData, bool>> whereExpression);
+        ISuccessOrErrors<TDto> GetOriginalUsingWhere(Expression<Func<TEntity, bool>> whereExpression);
     }
 }

@@ -72,7 +72,7 @@ namespace GenericServices.Services.Concrete
     //--------------------------------
     //direct
 
-    public class UpdateService<TData> : IUpdateService<TData> where TData : class
+    public class UpdateService<TEntity> : IUpdateService<TEntity> where TEntity : class
     {
         private readonly IGenericServicesDbContext _db;
 
@@ -86,7 +86,7 @@ namespace GenericServices.Services.Concrete
         /// </summary>
         /// <param name="itemToUpdate"></param>
         /// <returns>status</returns>
-        public ISuccessOrErrors Update(TData itemToUpdate)
+        public ISuccessOrErrors Update(TEntity itemToUpdate)
         {
             if (itemToUpdate == null)
                 throw new ArgumentNullException("itemToUpdate", "The item provided was null.");
@@ -96,7 +96,7 @@ namespace GenericServices.Services.Concrete
 
             var result = _db.SaveChangesWithChecking();
             if (result.IsValid)
-                result.SetSuccessMessage("Successfully updated {0}.", typeof(TData).Name);
+                result.SetSuccessMessage("Successfully updated {0}.", typeof(TEntity).Name);
 
             return result;
         }
@@ -105,9 +105,9 @@ namespace GenericServices.Services.Concrete
     //------------------------------------------------------------------------
     //DTO version
 
-    public class UpdateService<TData, TDto> : IUpdateService<TData, TDto>
-        where TData : class, new()
-        where TDto : EfGenericDto<TData, TDto>, new()
+    public class UpdateService<TEntity, TDto> : IUpdateService<TEntity, TDto>
+        where TEntity : class, new()
+        where TDto : EfGenericDto<TEntity, TDto>, new()
     {
         private readonly IGenericServicesDbContext _db;
 

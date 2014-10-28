@@ -27,11 +27,11 @@
 using GenericServices.Core;
 
 namespace GenericServices.Services
-{   
+{
 
-    public interface ICreateSetupService<TData, out TDto>
-        where TData : class, new()
-        where TDto : EfGenericDto<TData, TDto>, new()
+    public interface ICreateSetupService<TEntity, out TDto>
+        where TEntity : class, new()
+        where TDto : EfGenericDto<TEntity, TDto>, new()
     {
         /// <summary>
         /// This returns the dto with any data that is needs for the view setup in it

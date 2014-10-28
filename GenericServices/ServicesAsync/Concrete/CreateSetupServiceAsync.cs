@@ -53,9 +53,9 @@ namespace GenericServices.ServicesAsync.Concrete
     }
 
 
-    public class CreateSetupServiceAsync<TData, TDto> : ICreateSetupServiceAsync<TData, TDto>
-        where TData : class, new()
-        where TDto : EfGenericDtoAsync<TData, TDto>, new()
+    public class CreateSetupServiceAsync<TEntity, TDto> : ICreateSetupServiceAsync<TEntity, TDto>
+        where TEntity : class, new()
+        where TDto : EfGenericDtoAsync<TEntity, TDto>, new()
     {
                 private readonly IGenericServicesDbContext _db;
 

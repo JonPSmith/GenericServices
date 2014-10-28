@@ -62,8 +62,8 @@ namespace GenericServices.ServicesAsync.Concrete
     //--------------------------------
     //direct
 
-    public class DetailServiceAsync<TData> : IDetailServiceAsync<TData>
-        where TData : class, new()
+    public class DetailServiceAsync<TEntity> : IDetailServiceAsync<TEntity>
+        where TEntity : class, new()
     {
         private readonly IGenericServicesDbContext _db;
 
@@ -77,9 +77,9 @@ namespace GenericServices.ServicesAsync.Concrete
         /// </summary>
         /// <param name="whereExpression">Should be a 'where' expression that returns one item</param>
         /// <returns>Task with Status. If valid Result is data as read from database (not tracked), otherwise null</returns>
-        public async Task<ISuccessOrErrors<TData>> GetDetailUsingWhereAsync(Expression<Func<TData, bool>> whereExpression)
+        public async Task<ISuccessOrErrors<TEntity>> GetDetailUsingWhereAsync(Expression<Func<TEntity, bool>> whereExpression)
         {
-            return await _db.Set<TData>().Where(whereExpression).AsNoTracking().RealiseSingleWithErrorCheckingAsync();
+            return await _db.Set<TEntity>().Where(whereExpression).AsNoTracking().RealiseSingleWithErrorCheckingAsync();
         }
 
         /// <summary>
@@ -87,9 +87,9 @@ namespace GenericServices.ServicesAsync.Concrete
         /// </summary>
         /// <param name="keys">The keys must be given in the same order as entity framework has them</param>
         /// <returns>Task with Status. If valid Result is data as read from database (not tracked), otherwise null</returns>
-        public async Task<ISuccessOrErrors<TData>> GetDetailAsync(params object[] keys)
+        public async Task<ISuccessOrErrors<TEntity>> GetDetailAsync(params object[] keys)
         {
-            return await GetDetailUsingWhereAsync(BuildFilter.CreateFilter<TData>(_db.GetKeyProperties<TData>(), keys));
+            return await GetDetailUsingWhereAsync(BuildFilter.CreateFilter<TEntity>(_db.GetKeyProperties<TEntity>(), keys));
         }
 
 
@@ -98,9 +98,9 @@ namespace GenericServices.ServicesAsync.Concrete
     //---------------------------------------------------------------------
     //DTO version
 
-    public class DetailServiceAsync<TData, TDto> : IDetailServiceAsync<TData, TDto>
-        where TData : class, new()
-        where TDto : EfGenericDtoAsync<TData, TDto>, new()
+    public class DetailServiceAsync<TEntity, TDto> : IDetailServiceAsync<TEntity, TDto>
+        where TEntity : class, new()
+        where TDto : EfGenericDtoAsync<TEntity, TDto>, new()
     {
         private readonly IGenericServicesDbContext _db;
 
@@ -114,7 +114,7 @@ namespace GenericServices.ServicesAsync.Concrete
         /// </summary>
         /// <param name="whereExpression">Should be a 'where' expression that returns one item</param>
         /// <returns>Task with Status. If valid Result is data as read from database (not tracked), otherwise null</returns>
-        public async Task<ISuccessOrErrors<TDto>> GetDetailUsingWhereAsync(Expression<Func<TData, bool>> whereExpression)
+        public async Task<ISuccessOrErrors<TDto>> GetDetailUsingWhereAsync(Expression<Func<TEntity, bool>> whereExpression)
         {
             var dto = new TDto();
             if (!dto.SupportedFunctions.HasFlag(CrudFunctions.Detail))
@@ -130,7 +130,7 @@ namespace GenericServices.ServicesAsync.Concrete
         /// <returns>Task with Status. If valid Result is data as read from database (not tracked), otherwise null</returns>
         public async Task<ISuccessOrErrors<TDto>> GetDetailAsync(params object[] keys)
         {
-            return await GetDetailUsingWhereAsync(BuildFilter.CreateFilter<TData>(_db.GetKeyProperties<TData>(), keys));
+            return await GetDetailUsingWhereAsync(BuildFilter.CreateFilter<TEntity>(_db.GetKeyProperties<TEntity>(), keys));
         }
     }
 }

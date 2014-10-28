@@ -24,6 +24,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #endregion
+
+using System;
 using System.Threading.Tasks;
 using GenericLibsBase;
 
@@ -36,6 +38,22 @@ namespace GenericServices
         /// </summary>
         /// <param name="keys">The keys must be given in the same order as entity framework has them</param>
         /// <returns></returns>
-        Task<ISuccessOrErrors> DeleteAsync<TData>(params object[] keys) where TData : class;
+        Task<ISuccessOrErrors> DeleteAsync<TEntity>(params object[] keys) where TEntity : class;
+
+        /// <summary>
+        /// This allows a developer to delete an entity plus any of its relationships.
+        /// The first part of the method finds the given entity using the provided keys.
+        /// It then calls the deleteRelationships method which should remove the extra relationships
+        /// </summary>
+        /// <param name="removeRelationships">method which is handed the DbContext and the found entity.
+        /// It should then remove any relationships on this entity that it wants to.
+        /// It returns a status, if IsValid then calls SaveChangesWithChecking</param>
+        /// <param name="keys">The keys must be given in the same order as entity framework has them</param>
+        /// <returns></returns>
+        Task<ISuccessOrErrors> DeleteWithRelationshipsAsync<TEntity>(
+            Func<IGenericServicesDbContext, TEntity, Task<ISuccessOrErrors>> removeRelationships,
+            params object[] keys) where TEntity : class;
+
+
     }
 }

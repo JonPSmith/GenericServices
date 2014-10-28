@@ -30,8 +30,8 @@ using GenericServices.Core;
 
 namespace GenericServices.Services
 {
-    
-    public interface ICreateService<in TData> where TData : class
+
+    public interface ICreateService<in TEntity> where TEntity : class
     {
 
         /// <summary>
@@ -39,12 +39,12 @@ namespace GenericServices.Services
         /// </summary>
         /// <param name="newItem"></param>
         /// <returns>status</returns>
-        ISuccessOrErrors Create(TData newItem);
+        ISuccessOrErrors Create(TEntity newItem);
     }
 
-    public interface ICreateService<TData, TDto>
-        where TData : class, new()
-        where TDto : EfGenericDto<TData, TDto>, new()
+    public interface ICreateService<TEntity, TDto>
+        where TEntity : class, new()
+        where TDto : EfGenericDto<TEntity, TDto>, new()
     {
         /// <summary>
         /// This uses a dto to create a data class which it writes to the database with error checking

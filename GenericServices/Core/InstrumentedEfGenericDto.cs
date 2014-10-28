@@ -42,19 +42,19 @@ namespace GenericServices.Core
         //these flags are not used in InstrumentedEfGenericDto, but inside unit tests
         ForceActionFail = 16, ForceActionWarnWithWrite = 32, ForceActionkWarnNoWrite = 64 }
 
-    public abstract class InstrumentedEfGenericDto<TData, TDto> : EfGenericDto<TData, TDto>
-        where TData : class, new()
-        where TDto : EfGenericDto<TData, TDto>, new()
+    public abstract class InstrumentedEfGenericDto<TEntity, TDto> : EfGenericDto<TEntity, TDto>
+        where TEntity : class, new()
+        where TDto : EfGenericDto<TEntity, TDto>, new()
     {
         /// <summary>
         /// Used to surround calls with using to catch start/end time
         /// </summary>
         private class LogStartStop : IDisposable
         {
-            private readonly InstrumentedEfGenericDto<TData, TDto> _callingClass;
+            private readonly InstrumentedEfGenericDto<TEntity, TDto> _callingClass;
             private readonly string _callingMethodName;
 
-            public LogStartStop(InstrumentedEfGenericDto<TData, TDto> callingClass, [CallerMemberName] string callerName = "")
+            public LogStartStop(InstrumentedEfGenericDto<TEntity, TDto> callingClass, [CallerMemberName] string callerName = "")
             {
                 _callingClass = callingClass;
                 _callingMethodName = callerName;
@@ -146,24 +146,24 @@ namespace GenericServices.Core
             LogCaller();
         }
 
-        protected internal override TData FindItemTrackedForUpdate(IGenericServicesDbContext context)
+        protected internal override TEntity FindItemTrackedForUpdate(IGenericServicesDbContext context)
         {
             using (new LogStartStop(this))
                 return base.FindItemTrackedForUpdate(context);
         }
 
-        protected internal override ISuccessOrErrors<TData> CreateDataFromDto(IGenericServicesDbContext context, TDto source)
+        protected internal override ISuccessOrErrors<TEntity> CreateDataFromDto(IGenericServicesDbContext context, TDto source)
         {
             using (new LogStartStop(this))
             {
                 if (_whereToFail.HasFlag(InstrumentedOpFlags.FailOnCreateDataFromDto))
-                    return SuccessOrErrors<TData>.ConvertNonResultStatus(new SuccessOrErrors().AddSingleError("Flag was set to fail in CreateDataFromDto."));
+                    return SuccessOrErrors<TEntity>.ConvertNonResultStatus(new SuccessOrErrors().AddSingleError("Flag was set to fail in CreateDataFromDto."));
 
                 return base.CreateDataFromDto(context, source);
             }
         }
 
-        protected internal override ISuccessOrErrors UpdateDataFromDto(IGenericServicesDbContext context, TDto source, TData destination)
+        protected internal override ISuccessOrErrors UpdateDataFromDto(IGenericServicesDbContext context, TDto source, TEntity destination)
         {
             using (new LogStartStop(this))
             {
@@ -175,18 +175,18 @@ namespace GenericServices.Core
         }
 
         /// <summary>
-        /// This copies an existing TData into a new the dto using a Lambda expression to define the where clause
-        /// It copies TData properties into all TDto properties that have accessable setters, i.e. not private
+        /// This copies an existing TEntity into a new the dto using a Lambda expression to define the where clause
+        /// It copies TEntity properties into all TDto properties that have accessable setters, i.e. not private
         /// </summary>
         /// <returns>status. If valid result is dto. Otherwise null if not found</returns>
         internal protected override ISuccessOrErrors<TDto> DetailDtoFromDataIn(IGenericServicesDbContext context,
-            Expression<Func<TData, bool>> predicate)
+            Expression<Func<TEntity, bool>> predicate)
         {
             LogCaller(CallTypes.Start);
             var status = base.DetailDtoFromDataIn(context, predicate);
             if (status.IsValid)
             {
-                var instDto = status.Result as InstrumentedEfGenericDto<TData, TDto>;
+                var instDto = status.Result as InstrumentedEfGenericDto<TEntity, TDto>;
                 instDto._timer = _timer;
                 instDto._logOfCalls = _logOfCalls;
                 instDto._whereToFail = _whereToFail;

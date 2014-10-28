@@ -41,9 +41,9 @@ using GenericLibsBase.Core;
 namespace GenericServices.Core
 {
 
-    public abstract class EfGenericDtoAsync<TData, TDto> : EfGenericDtoBase<TData, TDto>
-        where TData : class, new()
-        where TDto : EfGenericDtoAsync<TData, TDto>, new()
+    public abstract class EfGenericDtoAsync<TEntity, TDto> : EfGenericDtoBase<TEntity, TDto>
+        where TEntity : class, new()
+        where TDto : EfGenericDtoAsync<TEntity, TDto>, new()
     {
 
         
@@ -62,43 +62,43 @@ namespace GenericServices.Core
         }
 
         /// <summary>
-        /// This is used for update. This returns the TData item that fits the key(s) in the DTO.
+        /// This is used for update. This returns the TEntity item that fits the key(s) in the DTO.
         /// Override this if you need to include any related entries when doing a complex update.
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        internal protected virtual async Task<TData> FindItemTrackedForUpdateAsync(IGenericServicesDbContext context)
+        internal protected virtual async Task<TEntity> FindItemTrackedForUpdateAsync(IGenericServicesDbContext context)
         {
-            return await context.Set<TData>().FindAsync(GetKeyValues(context));
+            return await context.Set<TEntity>().FindAsync(GetKeyValues(context));
         }
 
         /// <summary>
-        /// This is used in a create. It copies only the properties in TDto that have public setter into the TData.
+        /// This is used in a create. It copies only the properties in TDto that have public setter into the TEntity.
         /// You can override this if you need a more complex copy
         /// Note: If SupportedFunctions has the flag ValidateonCopyDtoToData then it validates the data (used by Action methods)
         /// </summary>
         /// <param name="context"></param>
         /// <param name="source"></param>
-        /// <returns>Task containing status which, if Valid, has new TData with data from DTO copied in</returns>
-        internal protected virtual async Task<ISuccessOrErrors<TData>> CreateDataFromDtoAsync(IGenericServicesDbContext context, TDto source)
+        /// <returns>Task containing status which, if Valid, has new TEntity with data from DTO copied in</returns>
+        internal protected virtual async Task<ISuccessOrErrors<TEntity>> CreateDataFromDtoAsync(IGenericServicesDbContext context, TDto source)
         {
-            var result = new TData();
+            var result = new TEntity();
             var status = CreateUpdateDataFromDto(context, source, result);
 
             return status.IsValid
-                ? new SuccessOrErrors<TData>(result, status.SuccessMessage)
-                : SuccessOrErrors<TData>.ConvertNonResultStatus(status);
+                ? new SuccessOrErrors<TEntity>(result, status.SuccessMessage)
+                : SuccessOrErrors<TEntity>.ConvertNonResultStatus(status);
         }
 
         /// <summary>
-        /// This is used in an update. It copies only the properties in TDto that have public setter into the TData.
+        /// This is used in an update. It copies only the properties in TDto that have public setter into the TEntity.
         /// You can override this if you need a more complex copy
         /// </summary>
         /// <param name="context"></param>
         /// <param name="source"></param>
         /// <param name="destination"></param>
         /// <return>Task containing status. destination is only valid if status.IsValid</return>
-        internal protected virtual async Task<ISuccessOrErrors> UpdateDataFromDtoAsync(IGenericServicesDbContext context, TDto source, TData destination)
+        internal protected virtual async Task<ISuccessOrErrors> UpdateDataFromDtoAsync(IGenericServicesDbContext context, TDto source, TEntity destination)
         {
             CreateDtoToDataMapping();
             Mapper.Map(source, destination);
@@ -106,14 +106,14 @@ namespace GenericServices.Core
         }
 
         /// <summary>
-        /// This copies an existing TData into a new the dto using a Lambda expression to define the where clause
-        /// It copies TData properties into all TDto properties that have accessable setters, i.e. not private
+        /// This copies an existing TEntity into a new the dto using a Lambda expression to define the where clause
+        /// It copies TEntity properties into all TDto properties that have accessable setters, i.e. not private
         /// </summary>
         /// <returns>status. If Valid then dto, otherwise null</returns>
         internal protected virtual async Task<ISuccessOrErrors<TDto>> DetailDtoFromDataInAsync(
-            IGenericServicesDbContext context, Expression<Func<TData, bool>> predicate)
+            IGenericServicesDbContext context, Expression<Func<TEntity, bool>> predicate)
         {
-            Mapper.CreateMap<TData, TDto>();
+            Mapper.CreateMap<TEntity, TDto>();
             return
                 await
                     GetDataUntracked(context)

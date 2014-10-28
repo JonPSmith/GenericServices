@@ -70,7 +70,7 @@ namespace GenericServices.Services.Concrete
     //-----------------------------------------------
     //direct service
 
-    public class CreateService<TData> : ICreateService<TData> where TData : class
+    public class CreateService<TEntity> : ICreateService<TEntity> where TEntity : class
     {
         private readonly IGenericServicesDbContext _db;
 
@@ -84,12 +84,12 @@ namespace GenericServices.Services.Concrete
         /// </summary>
         /// <param name="newItem"></param>
         /// <returns>status</returns>
-        public ISuccessOrErrors Create(TData newItem)
+        public ISuccessOrErrors Create(TEntity newItem)
         {
-            _db.Set<TData>().Add(newItem);
+            _db.Set<TEntity>().Add(newItem);
             var result = _db.SaveChangesWithChecking();
             if (result.IsValid)
-                result.SetSuccessMessage("Successfully created {0}.", typeof(TData).Name);
+                result.SetSuccessMessage("Successfully created {0}.", typeof(TEntity).Name);
 
             return result;
         }
@@ -98,9 +98,9 @@ namespace GenericServices.Services.Concrete
     //---------------------------------------------------------------------------
     //DTO version
 
-    public class CreateService<TData, TDto> : ICreateService<TData, TDto>
-        where TData : class, new()
-        where TDto : EfGenericDto<TData, TDto>, new()
+    public class CreateService<TEntity, TDto> : ICreateService<TEntity, TDto>
+        where TEntity : class, new()
+        where TDto : EfGenericDto<TEntity, TDto>, new()
     {
         private readonly IGenericServicesDbContext _db;
 
@@ -125,7 +125,7 @@ namespace GenericServices.Services.Concrete
             result = statusWithData as ISuccessOrErrors;             //convert to normal status as need errors to fall through propertly
             if (result.IsValid)
             {
-                _db.Set<TData>().Add(statusWithData.Result);
+                _db.Set<TEntity>().Add(statusWithData.Result);
                 result = _db.SaveChangesWithChecking();
                 if (result.IsValid)
                     return result.SetSuccessMessage("Successfully created {0}.", dto.DataItemName);

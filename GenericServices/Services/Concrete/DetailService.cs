@@ -61,7 +61,7 @@ namespace GenericServices.Services.Concrete
     //--------------------------------
     //direct version
 
-    public class DetailService<TData> : IDetailService<TData> where TData : class, new()
+    public class DetailService<TEntity> : IDetailService<TEntity> where TEntity : class, new()
     {
         private readonly IGenericServicesDbContext _db;
 
@@ -75,9 +75,9 @@ namespace GenericServices.Services.Concrete
         /// </summary>
         /// <param name="whereExpression">Should be a 'where' expression that returns one item</param>
         /// <returns>Status. If valid Result is data as read from database (not tracked), otherwise null</returns>
-        public ISuccessOrErrors<TData> GetDetailUsingWhere(Expression<Func<TData, bool>> whereExpression)
+        public ISuccessOrErrors<TEntity> GetDetailUsingWhere(Expression<Func<TEntity, bool>> whereExpression)
         {
-            return _db.Set<TData>().Where(whereExpression).AsNoTracking().RealiseSingleWithErrorChecking();
+            return _db.Set<TEntity>().Where(whereExpression).AsNoTracking().RealiseSingleWithErrorChecking();
         }
 
         /// <summary>
@@ -85,18 +85,18 @@ namespace GenericServices.Services.Concrete
         /// </summary>
         /// <param name="keys">The keys must be given in the same order as entity framework has them</param>
         /// <returns>Status. If valid Result is data as read from database (not tracked), otherwise null</returns>
-        public ISuccessOrErrors<TData> GetDetail(params object[] keys)
+        public ISuccessOrErrors<TEntity> GetDetail(params object[] keys)
         {
-            return GetDetailUsingWhere(BuildFilter.CreateFilter<TData>(_db.GetKeyProperties<TData>(), keys));
+            return GetDetailUsingWhere(BuildFilter.CreateFilter<TEntity>(_db.GetKeyProperties<TEntity>(), keys));
         }
     }
 
     //---------------------------------------------------------------------
     //DTO version
 
-    public class DetailService<TData, TDto> : IDetailService<TData, TDto>
-        where TData : class, new()
-        where TDto : EfGenericDto<TData, TDto>, new()
+    public class DetailService<TEntity, TDto> : IDetailService<TEntity, TDto>
+        where TEntity : class, new()
+        where TDto : EfGenericDto<TEntity, TDto>, new()
     {
         private readonly IGenericServicesDbContext _db;
 
@@ -110,7 +110,7 @@ namespace GenericServices.Services.Concrete
         /// </summary>
         /// <param name="whereExpression">Should be a 'where' expression that returns one item</param>
         /// <returns>Status. If Valid then TDto type with properties copyed over, else null</returns>
-        public ISuccessOrErrors<TDto> GetDetailUsingWhere(Expression<Func<TData, bool>> whereExpression)
+        public ISuccessOrErrors<TDto> GetDetailUsingWhere(Expression<Func<TEntity, bool>> whereExpression)
         {
             var dto = new TDto();
             if (!dto.SupportedFunctions.HasFlag(CrudFunctions.Detail))
@@ -126,7 +126,7 @@ namespace GenericServices.Services.Concrete
         /// <returns>Status. If Valid then TDto type with properties copyed over, else null</returns>
         public ISuccessOrErrors<TDto> GetDetail(params object[] keys)
         {
-            return GetDetailUsingWhere(BuildFilter.CreateFilter<TData>(_db.GetKeyProperties<TData>(), keys));
+            return GetDetailUsingWhere(BuildFilter.CreateFilter<TEntity>(_db.GetKeyProperties<TEntity>(), keys));
         }
     }
 }

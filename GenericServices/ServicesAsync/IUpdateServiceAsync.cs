@@ -31,19 +31,19 @@ using GenericServices.Core;
 namespace GenericServices.ServicesAsync
 {
 
-    public interface IUpdateServiceAsync<in TData> where TData : class
+    public interface IUpdateServiceAsync<in TEntity> where TEntity : class
     {
         /// <summary>
         /// This updates the entity data class directly
         /// </summary>
         /// <param name="itemToUpdate"></param>
         /// <returns>status</returns>
-        Task<ISuccessOrErrors> UpdateAsync(TData itemToUpdate);
+        Task<ISuccessOrErrors> UpdateAsync(TEntity itemToUpdate);
     }
 
-    public interface IUpdateServiceAsync<TData,TDto>
-        where TData : class, new()
-        where TDto : EfGenericDtoAsync<TData, TDto>, new()
+    public interface IUpdateServiceAsync<TEntity,TDto>
+        where TEntity : class, new()
+        where TDto : EfGenericDtoAsync<TEntity, TDto>, new()
     {
         /// <summary>
         /// This updates the entity data by copying over the relevant dto data.

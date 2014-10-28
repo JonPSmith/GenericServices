@@ -48,19 +48,19 @@ namespace GenericServices.Services.Concrete
         /// </summary>
         /// <param name="keys">The keys must be given in the same order as entity framework has them</param>
         /// <returns></returns>
-        public ISuccessOrErrors Delete<TData>(params object[] keys) where TData : class 
+        public ISuccessOrErrors Delete<TEntity>(params object[] keys) where TEntity : class 
         {
 
-            var entityToDelete = _db.Set<TData>().Find(keys);
+            var entityToDelete = _db.Set<TEntity>().Find(keys);
             if (entityToDelete == null)
                 return
                     new SuccessOrErrors().AddSingleError(
                         "Could not delete entry as it was not in the database. Could it have been deleted by someone else?");
 
-            _db.Set<TData>().Remove(entityToDelete);
+            _db.Set<TEntity>().Remove(entityToDelete);
             var result = _db.SaveChangesWithChecking();
             if (result.IsValid)
-                result.SetSuccessMessage("Successfully deleted {0}.", typeof(TData).Name);
+                result.SetSuccessMessage("Successfully deleted {0}.", typeof(TEntity).Name);
 
             return result;
 
@@ -76,11 +76,11 @@ namespace GenericServices.Services.Concrete
         /// It returns a status, if IsValid then calls SaveChangesWithChecking</param>
         /// <param name="keys">The keys must be given in the same order as entity framework has them</param>
         /// <returns></returns>
-        public ISuccessOrErrors DeleteWithRelationships<TData>(Func<IGenericServicesDbContext, TData, ISuccessOrErrors> removeRelationships,
-            params object[] keys) where TData : class
+        public ISuccessOrErrors DeleteWithRelationships<TEntity>(Func<IGenericServicesDbContext, TEntity, ISuccessOrErrors> removeRelationships,
+            params object[] keys) where TEntity : class
         {
 
-            var entityToDelete = _db.Set<TData>().Find(keys);
+            var entityToDelete = _db.Set<TEntity>().Find(keys);
             if (entityToDelete == null)
                 return
                     new SuccessOrErrors().AddSingleError(
@@ -89,10 +89,10 @@ namespace GenericServices.Services.Concrete
             var result = removeRelationships(_db, entityToDelete);
             if (!result.IsValid) return result;
 
-            _db.Set<TData>().Remove(entityToDelete);
+            _db.Set<TEntity>().Remove(entityToDelete);
             result = _db.SaveChangesWithChecking();
             if (result.IsValid)
-                result.SetSuccessMessage("Successfully deleted {0} and given relationships.", typeof(TData).Name);
+                result.SetSuccessMessage("Successfully deleted {0} and given relationships.", typeof(TEntity).Name);
 
             return result;
 

@@ -73,7 +73,7 @@ namespace GenericServices.ServicesAsync.Concrete
     //-----------------------------
     //direct
 
-    public class CreateServiceAsync<TData> : ICreateServiceAsync<TData> where TData : class
+    public class CreateServiceAsync<TEntity> : ICreateServiceAsync<TEntity> where TEntity : class
     {
         private readonly IGenericServicesDbContext _db;
 
@@ -87,12 +87,12 @@ namespace GenericServices.ServicesAsync.Concrete
         /// </summary>
         /// <param name="newItem"></param>
         /// <returns>status</returns>
-        public async Task<ISuccessOrErrors> CreateAsync(TData newItem)
+        public async Task<ISuccessOrErrors> CreateAsync(TEntity newItem)
         {
-            _db.Set<TData>().Add(newItem);
+            _db.Set<TEntity>().Add(newItem);
             var result = await _db.SaveChangesWithCheckingAsync();
             if (result.IsValid)
-                result.SetSuccessMessage("Successfully created {0}.", typeof(TData).Name);
+                result.SetSuccessMessage("Successfully created {0}.", typeof(TEntity).Name);
 
             return result;
         }
@@ -102,9 +102,9 @@ namespace GenericServices.ServicesAsync.Concrete
     //---------------------------------------------------------------------------
     //DTO version
 
-    public class CreateServiceAsync<TData, TDto> : ICreateServiceAsync<TData, TDto> 
-        where TData : class, new()
-        where TDto : EfGenericDtoAsync<TData, TDto>, new()
+    public class CreateServiceAsync<TEntity, TDto> : ICreateServiceAsync<TEntity, TDto>
+        where TEntity : class, new()
+        where TDto : EfGenericDtoAsync<TEntity, TDto>, new()
     {
         private readonly IGenericServicesDbContext _db;
 
@@ -130,7 +130,7 @@ namespace GenericServices.ServicesAsync.Concrete
             result = statusWithData as ISuccessOrErrors;             //convert to normal status as need errors to fall through propertly
             if (result.IsValid)
             {
-                _db.Set<TData>().Add(statusWithData.Result);
+                _db.Set<TEntity>().Add(statusWithData.Result);
                 result = await _db.SaveChangesWithCheckingAsync();
                 if (result.IsValid)
                     return result.SetSuccessMessage("Successfully created {0}.", dto.DataItemName);

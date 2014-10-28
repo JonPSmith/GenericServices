@@ -29,6 +29,8 @@ using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
+using GenericLibsBase;
+using GenericLibsBase.Core;
 using GenericServices;
 using GenericServices.Services.Concrete;
 using GenericServices.ServicesAsync;
@@ -43,8 +45,8 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
     class Test02PostsDirectAsync
     {
 
-        [TestFixtureSetUp]
-        public void SetUpFixture()
+        [SetUp]
+        public void SetUp()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -241,6 +243,61 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 status.IsValid.ShouldEqual(true, status.Errors);
                 status.SuccessMessage.ShouldEqual("Successfully deleted Post.");
                 snap.CheckSnapShot(db, -1,-2, 0, 0, -2);
+            }
+        }
+
+
+
+        private async Task<ISuccessOrErrors> DeleteBloggerWithPost(IGenericServicesDbContext db, Post post)
+        {
+            var blogger = await db.Set<Blog>().FindAsync(post.BlogId);
+            db.Set<Blog>().Remove(blogger);
+            return SuccessOrErrors.Success("It was fine.");
+        }
+
+        [Test]
+        public async void Check11DeleteWithRelationshipsDirectOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var snap = new DbSnapShot(db);
+                var firstPostUntracked = db.Posts.AsNoTracking().First();
+                var service = new DeleteServiceAsync(db);
+
+                //ATTEMPT
+                var status = await service.DeleteWithRelationshipsAsync<Post>(DeleteBloggerWithPost, firstPostUntracked.PostId);
+
+                //VERIFY
+                status.IsValid.ShouldEqual(true, status.Errors);
+                status.SuccessMessage.ShouldEqual("Successfully deleted Post and given relationships.");
+                snap.CheckSnapShot(db, -1, -2, -1, 0, -2);
+            }
+        }
+
+        private async Task<ISuccessOrErrors> FailDeleteRelationships(IGenericServicesDbContext db, Post post)
+        {
+            return new SuccessOrErrors().AddSingleError("I failed.");
+        }
+
+        [Test]
+        public async void Check12DeleteWithRelationshipsDirectFailOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var snap = new DbSnapShot(db);
+                var firstPostUntracked = db.Posts.AsNoTracking().First();
+                var service = new DeleteServiceAsync(db);
+
+                //ATTEMPT
+                var status = await service.DeleteWithRelationshipsAsync<Post>(FailDeleteRelationships, firstPostUntracked.PostId);
+
+                //VERIFY
+                status.IsValid.ShouldEqual(false);
+                status.Errors.Count.ShouldEqual(1);
+                status.Errors[0].ErrorMessage.ShouldEqual("I failed.");
+                snap.CheckSnapShot(db);
             }
         }
 

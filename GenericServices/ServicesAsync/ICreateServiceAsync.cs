@@ -31,19 +31,19 @@ using GenericServices.Core;
 namespace GenericServices.ServicesAsync
 {
 
-    public interface ICreateServiceAsync<in TData> where TData : class
+    public interface ICreateServiceAsync<in TEntity> where TEntity : class
     {
         /// <summary>
         /// This adds a new entity class to the database with error checking
         /// </summary>
         /// <param name="newItem"></param>
         /// <returns>status</returns>
-        Task<ISuccessOrErrors> CreateAsync(TData newItem);
+        Task<ISuccessOrErrors> CreateAsync(TEntity newItem);
     }
 
-    public interface ICreateServiceAsync<TData, TDto>
-        where TData : class, new()
-        where TDto : EfGenericDtoAsync<TData, TDto>, new()
+    public interface ICreateServiceAsync<TEntity, TDto>
+        where TEntity : class, new()
+        where TDto : EfGenericDtoAsync<TEntity, TDto>, new()
     {
 
         /// <summary>
