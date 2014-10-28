@@ -53,7 +53,5 @@ namespace GenericServices
         Task<ISuccessOrErrors> DeleteWithRelationshipsAsync<TEntity>(
             Func<IGenericServicesDbContext, TEntity, Task<ISuccessOrErrors>> removeRelationshipsAsync,
             params object[] keys) where TEntity : class;
-
-
     }
 }

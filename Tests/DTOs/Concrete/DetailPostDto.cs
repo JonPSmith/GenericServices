@@ -58,7 +58,8 @@ namespace Tests.DTOs.Concrete
         //-------------------------------------------
         //properties that cannot be set directly (The data layer looks after them)
 
-        public DateTime LastUpdated { get; internal set; }
+        [DoNotCopyBackToDatabase]
+        public DateTime LastUpdated { get; set; }
 
         //------------------------------------------
         //these two items are altered by the  
@@ -71,7 +72,7 @@ namespace Tests.DTOs.Concrete
         //------------------------------------------
         //Item set up if update
 
-        public string BloggerName { get; internal set; }
+        public string BloggerName { get; set; }
 
         //-------------------------------------------
         //now the various lists for user interaction

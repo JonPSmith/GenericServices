@@ -27,6 +27,7 @@
 
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using GenericServices;
 using GenericServices.Core;
 using Tests.DataClasses.Concrete;
 
@@ -37,24 +38,28 @@ namespace Tests.DTOs.Concrete
 
         [Key]
         [Column(Order = 1)]
-        public int PostId { get; internal set; }
+        [DoNotCopyBackToDatabase]
+        public int PostId { get; set; }
+        [DoNotCopyBackToDatabase]
         [ForeignKey("PostId")]
-        public Post PostPart { get; internal set; }
+        public Post PostPart { get; set; }
 
         [Key]
         [Column(Order = 2)]
-        public int TagId { get; internal set; }
+        [DoNotCopyBackToDatabase]
+        public int TagId { get; set; }
         [ForeignKey("TagId")]
-        public Tag TagPart { get; internal set; }
+        [DoNotCopyBackToDatabase]
+        public Tag TagPart { get; set; }
 
         public int Grade { get; set; }
 
         //--------------------------------
         //now the extra bits
 
-        public string TagPartName { get; internal set; }
+        public string TagPartName { get; set; }
 
-        public string PostPartTitle { get; internal set; }
+        public string PostPartTitle { get; set; }
 
         protected internal override CrudFunctions SupportedFunctions
         {

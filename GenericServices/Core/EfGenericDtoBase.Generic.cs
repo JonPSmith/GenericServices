@@ -97,15 +97,22 @@ namespace GenericServices.Core
             return dtoKeyProperies.Select(x => x.GetValue(this)).ToArray();
         }
 
+        /// <summary>
+        /// This sets up the AutoMapper mapping for a copy from the TEntity to the TDto.
+        /// </summary>
         protected static void CreateDatatoDtoMapping()
         {
             Mapper.CreateMap<TEntity, TDto>();
         }
 
+        /// <summary>
+        /// This sets up the AutoMapper mapping for a copy from the TDto to the TEntity.
+        /// Note that properties which have the [DoNotCopyBackToDatabase] attribute will not be copied
+        /// </summary>
         protected static void CreateDtoToDataMapping()
         {
             Mapper.CreateMap<TDto, TEntity>()
-                .ForAllMembers(opt => opt.Condition(CheckIfSourceSetterIsPublic));
+                .ForAllMembers(opt => opt.Condition(IncludeIfSourceDoesNotHaveDoNotCopyBackToDatabaseAttribute));
         }
 
         //----------------------------------------------------------------
@@ -122,14 +129,13 @@ namespace GenericServices.Core
         {
             CreateDtoToDataMapping();
             Mapper.Map(source, destination);
-            return SuccessOrErrors.Success("Successful copy of data"); ;
+            return SuccessOrErrors.Success("Successful copy of data");
         }
 
-        private static bool CheckIfSourceSetterIsPublic(ResolutionContext mapContext)
+        private static bool IncludeIfSourceDoesNotHaveDoNotCopyBackToDatabaseAttribute(ResolutionContext mapContext)
         {
-            return mapContext.PropertyMap.SourceMember != null 
-                   && ((PropertyInfo)mapContext.PropertyMap.SourceMember).SetMethod != null
-                   && ((PropertyInfo)mapContext.PropertyMap.SourceMember).SetMethod.IsPublic;
+            return mapContext.PropertyMap.SourceMember != null &&
+                   mapContext.PropertyMap.SourceMember.GetCustomAttribute<DoNotCopyBackToDatabaseAttribute>() == null;
         }
 
     }

@@ -30,6 +30,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using GenericServices;
 using GenericServices.Core;
 using Tests.DataClasses.Concrete;
 
@@ -44,14 +45,16 @@ namespace Tests.DTOs.Concrete
         [Key]
         public int PostId { get; set; }
 
-        public string BloggerName { get; internal set; }
+        public string BloggerName { get; set; }
 
         [MinLength(2), MaxLength(128)]
         public string Title { get; set; }                   //only the Title can be updated
 
-        public ICollection<Tag> Tags { get; internal set; }
+        [DoNotCopyBackToDatabase]
+        public ICollection<Tag> Tags { get; set; }
 
-        public DateTime LastUpdated { get; internal set; }
+        [DoNotCopyBackToDatabase]
+        public DateTime LastUpdated { get; set; }
 
         /// <summary>
         /// When it was last updated in DateTime format

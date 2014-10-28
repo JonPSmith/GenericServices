@@ -57,7 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CopyToDtoOnlyAttribute.cs" />
+    <Compile Include="DoNotCopyBackToDatabaseAttribute.cs" />
     <Compile Include="Core\EfGenericDtoAsync.cs" />
     <Compile Include="Core\EfGenericDtoBase.Generic.cs" />
     <Compile Include="Core\Internal\BuildFilter.cs" />
