@@ -24,6 +24,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #endregion
+
 using System;
 using System.Data.Entity;
 using System.Linq;
@@ -34,7 +35,6 @@ using Tests.DataClasses;
 using Tests.DataClasses.Concrete;
 using Tests.DTOs.Concrete;
 using Tests.Helpers;
-using Tests.UiHelpers;
 
 namespace Tests.UnitTests.Group15CrudServiceFinder
 {

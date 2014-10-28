@@ -1,8 +1,8 @@
 ﻿#region licence
 // The MIT License (MIT)
 // 
-// Filename: Test03SetupLogger.cs
-// Date Created: 2014/06/03
+// Filename: Test04SplitCamel.cs
+// Date Created: 2014/10/28
 // 
 // Copyright (c) 2014 Jon Smith (www.selectiveanalytics.com & www.thereformedprogrammer.net)
 // 
@@ -29,60 +29,45 @@ using GenericLibsBase;
 using NUnit.Framework;
 using Tests.Helpers;
 
-namespace Tests.UnitTests.Group01Configuration
+namespace Tests.UnitTests.Group00GenericLibsBase
 {
-
-    class Test03SetupLogger
+    class Test04SplitCamel
     {
-        class FirstClass
+
+        [Test]
+        public void Test01SplitNoNumberOk()
         {
-            public static readonly IGenericLogger Logger;
+            //SETUP
 
-            static FirstClass()
-            {
-                Logger = GenericLibsBaseConfig.GetLogger("hello");
-            }
-        }
+            //ATTEMPT
+            var result = "UnitTest".SplitCamelCase();
 
-        class SecondClass
-        {
-            public static readonly IGenericLogger Logger;
-
-            static SecondClass()
-            {
-                Logger = GenericLibsBaseConfig.GetLogger("test");
-            }
+            //VERIFY
+            result.ShouldEqual("Unit Test");
         }
 
         [Test]
-        public void Check01DefaultLoggerSetupOk()
+        public void Test02SplitNumberOk()
         {
-
-            //SETUP  
-            GenericLibsBaseConfig.SetLoggerMethod = name => new NoLoggingGenericLogger();
+            //SETUP
 
             //ATTEMPT
-            var classWithLogger = new FirstClass();
+            var result = "Unit4Test".SplitCamelCase();
 
             //VERIFY
-            FirstClass.Logger.IsA<NoLoggingGenericLogger>();
-
+            result.ShouldEqual("Unit4 Test");
         }
 
         [Test]
-        public void Check02ChangedLoggerSetupOk()
+        public void Test05NoSplitOk()
         {
-
-            //SETUP  
-            GenericLibsBaseConfig.SetLoggerMethod = name => new Log4NetGenericLogger(name);
+            //SETUP
 
             //ATTEMPT
-            var classWithLogger = new SecondClass();
+            var result = "Unittest".SplitCamelCase();
 
             //VERIFY
-            SecondClass.Logger.IsA<Log4NetGenericLogger>();
-
+            result.ShouldEqual("Unittest");
         }
-
     }
 }

@@ -24,9 +24,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #endregion
+
 using System;
 using GenericServices.Core;
-using GenericServices.Services;
 using GenericServices.Services.Concrete;
 using NUnit.Framework;
 using Tests.DataClasses;

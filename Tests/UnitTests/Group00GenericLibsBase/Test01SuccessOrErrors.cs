@@ -2,7 +2,7 @@
 // The MIT License (MIT)
 // 
 // Filename: Test01SuccessOrErrors.cs
-// Date Created: 2014/05/21
+// Date Created: 2014/10/28
 // 
 // Copyright (c) 2014 Jon Smith (www.selectiveanalytics.com & www.thereformedprogrammer.net)
 // 
@@ -24,14 +24,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #endregion
+
 using System;
 using System.Linq;
 using GenericLibsBase.Core;
-using GenericServices.Core;
 using NUnit.Framework;
 using Tests.Helpers;
 
-namespace Tests.UnitTests.Group02Validation
+namespace Tests.UnitTests.Group00GenericLibsBase
 {
     class Test01SuccessOrErrors
     {

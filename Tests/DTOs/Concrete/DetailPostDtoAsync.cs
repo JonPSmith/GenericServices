@@ -24,6 +24,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #endregion
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -35,8 +36,6 @@ using GenericLibsBase;
 using GenericLibsBase.Core;
 using GenericServices;
 using GenericServices.Core;
-using GenericServices.Services;
-using GenericServices.ServicesAsync;
 using Tests.DataClasses;
 using Tests.DataClasses.Concrete;
 using Tests.UiHelpers;

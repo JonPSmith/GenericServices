@@ -2,7 +2,7 @@
 // The MIT License (MIT)
 // 
 // Filename: AssemblyVersionPart.cs
-// Date Created: 2014/07/22
+// Date Created: 2014/10/28
 // 
 // Copyright (c) 2014 Jon Smith (www.selectiveanalytics.com & www.thereformedprogrammer.net)
 // 
@@ -24,6 +24,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #endregion
+
 using System.Reflection;
 
 // THIS HOLDS THE VERSION PART OF THE ASSEMBLY

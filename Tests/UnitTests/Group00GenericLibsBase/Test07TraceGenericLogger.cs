@@ -1,8 +1,8 @@
 ﻿#region licence
 // The MIT License (MIT)
 // 
-// Filename: Test06TraceGenericLogger.cs
-// Date Created: 2014/07/07
+// Filename: Test07TraceGenericLogger.cs
+// Date Created: 2014/10/28
 // 
 // Copyright (c) 2014 Jon Smith (www.selectiveanalytics.com & www.thereformedprogrammer.net)
 // 
@@ -24,19 +24,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #endregion
+
 using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using GenericLibsBase;
-using GenericServices;
 using NUnit.Framework;
 using Tests.Helpers;
 
-namespace Tests.UnitTests.Group01Configuration
+namespace Tests.UnitTests.Group00GenericLibsBase
 {
-    class Test06TraceGenericLogger
+    class Test07TraceGenericLogger
     {
         private readonly StringBuilder _loggedData = new StringBuilder();
 

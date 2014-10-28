@@ -1,9 +1,8 @@
 ﻿#region licence
-// =====================================================
 // The MIT License (MIT)
 // 
 // Filename: SplitterExtension.cs
-// Date Created: 2014/10/14
+// Date Created: 2014/10/28
 // 
 // Copyright (c) 2014 Jon Smith (www.selectiveanalytics.com & www.thereformedprogrammer.net)
 // 

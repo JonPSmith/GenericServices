@@ -1,8 +1,8 @@
 ﻿#region licence
 // The MIT License (MIT)
 // 
-// Filename: Test04Log4NetGenericLogger.cs
-// Date Created: 2014/06/03
+// Filename: Test06Log4NetGenericLogger.cs
+// Date Created: 2014/10/28
 // 
 // Copyright (c) 2014 Jon Smith (www.selectiveanalytics.com & www.thereformedprogrammer.net)
 // 
@@ -24,6 +24,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #endregion
+
 using System;
 using GenericLibsBase;
 using log4net.Appender;
@@ -31,9 +32,9 @@ using log4net.Config;
 using NUnit.Framework;
 using Tests.Helpers;
 
-namespace Tests.UnitTests.Group01Configuration
+namespace Tests.UnitTests.Group00GenericLibsBase
 {
-    class Test04Log4NetGenericLogger
+    class Test06Log4NetGenericLogger
     {
         private MemoryAppender _log4NetMemoryLog;
 

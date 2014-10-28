@@ -24,13 +24,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #endregion
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+
 using System.Linq;
 using AutoMapper;
 using NUnit.Framework;
-using Tests.DataClasses.Concrete;
 using Tests.Helpers;
 
 namespace Tests.UnitTests.Group08CrudServices

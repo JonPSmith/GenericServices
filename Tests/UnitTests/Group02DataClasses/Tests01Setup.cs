@@ -24,13 +24,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #endregion
+
+using System.Data.Entity;
 using System.Linq;
 using NUnit.Framework;
 using Tests.DataClasses;
 using Tests.Helpers;
-using System.Data.Entity;
 
-namespace Tests.UnitTests.Group01DataClasses
+namespace Tests.UnitTests.Group02DataClasses
 {
     class Tests01Setup
     {

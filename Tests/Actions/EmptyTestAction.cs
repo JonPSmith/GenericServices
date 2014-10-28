@@ -24,12 +24,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #endregion
+
 using System;
 using GenericLibsBase;
 using GenericLibsBase.Core;
 using GenericServices;
 using GenericServices.Actions;
-using GenericServices.Core;
 using Tests.DataClasses.Concrete;
 
 namespace Tests.Actions

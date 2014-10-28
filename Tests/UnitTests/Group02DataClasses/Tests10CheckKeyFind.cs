@@ -24,6 +24,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #endregion
+
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -33,7 +34,7 @@ using Tests.DataClasses;
 using Tests.DataClasses.Concrete;
 using Tests.Helpers;
 
-namespace Tests.UnitTests.Group01DataClasses
+namespace Tests.UnitTests.Group02DataClasses
 {
     class Tests10CheckKeyFind
     {

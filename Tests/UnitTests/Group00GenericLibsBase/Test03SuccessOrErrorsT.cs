@@ -2,7 +2,7 @@
 // The MIT License (MIT)
 // 
 // Filename: Test03SuccessOrErrorsT.cs
-// Date Created: 2014/06/23
+// Date Created: 2014/10/28
 // 
 // Copyright (c) 2014 Jon Smith (www.selectiveanalytics.com & www.thereformedprogrammer.net)
 // 
@@ -27,12 +27,10 @@
 
 using GenericLibsBase;
 using GenericLibsBase.Core;
-using GenericServices;
-using GenericServices.Core;
 using NUnit.Framework;
 using Tests.Helpers;
 
-namespace Tests.UnitTests.Group02Validation
+namespace Tests.UnitTests.Group00GenericLibsBase
 {
     class Test03SuccessOrErrorsT
     {

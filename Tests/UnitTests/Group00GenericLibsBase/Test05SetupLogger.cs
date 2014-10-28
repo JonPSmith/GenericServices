@@ -1,8 +1,8 @@
 ﻿#region licence
 // The MIT License (MIT)
 // 
-// Filename: Test01CheckTestAction.cs
-// Date Created: 2014/06/23
+// Filename: Test05SetupLogger.cs
+// Date Created: 2014/10/28
 // 
 // Copyright (c) 2014 Jon Smith (www.selectiveanalytics.com & www.thereformedprogrammer.net)
 // 
@@ -25,44 +25,64 @@
 // SOFTWARE.
 #endregion
 
+using GenericLibsBase;
 using NUnit.Framework;
-using Tests.Actions;
-using Tests.DataClasses.Concrete;
 using Tests.Helpers;
 
-namespace Tests.UnitTests.Group20Actions
+namespace Tests.UnitTests.Group00GenericLibsBase
 {
-    class Test01CheckTestAction
+
+    class Test05SetupLogger
     {
-
-        [Test]
-        public void Check01RunActionSuccessOk()
+        class FirstClass
         {
-            //SETUP  
-            var testAction = new EmptyTestAction(false);
+            public static readonly IGenericLogger Logger;
 
-            //ATTEMPT
-            var data = new Tag {TagId = -123};
-            var status = testAction.DoAction(data);
+            static FirstClass()
+            {
+                Logger = GenericLibsBaseConfig.GetLogger("hello");
+            }
+        }
 
-            //VERIFY
-            status.IsValid.ShouldEqual(true, status.Errors);
-            status.Result.ShouldEqual(data.TagId);
-            testAction.DisposeWasCalled.ShouldEqual(false);
+        class SecondClass
+        {
+            public static readonly IGenericLogger Logger;
+
+            static SecondClass()
+            {
+                Logger = GenericLibsBaseConfig.GetLogger("test");
+            }
         }
 
         [Test]
-        public void Check05CheckDisposeCalledOk()
+        public void Check01DefaultLoggerSetupOk()
         {
+
             //SETUP  
-            var testAction = new EmptyTestAction(false);
+            GenericLibsBaseConfig.SetLoggerMethod = name => new NoLoggingGenericLogger();
 
             //ATTEMPT
-            testAction.Dispose();
+            var classWithLogger = new FirstClass();
 
             //VERIFY
-            testAction.DisposeWasCalled.ShouldEqual(true);
+            FirstClass.Logger.IsA<NoLoggingGenericLogger>();
+
         }
-        
+
+        [Test]
+        public void Check02ChangedLoggerSetupOk()
+        {
+
+            //SETUP  
+            GenericLibsBaseConfig.SetLoggerMethod = name => new Log4NetGenericLogger(name);
+
+            //ATTEMPT
+            var classWithLogger = new SecondClass();
+
+            //VERIFY
+            SecondClass.Logger.IsA<Log4NetGenericLogger>();
+
+        }
+
     }
 }

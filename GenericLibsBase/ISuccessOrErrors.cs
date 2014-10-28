@@ -2,7 +2,7 @@
 // The MIT License (MIT)
 // 
 // Filename: ISuccessOrErrors.cs
-// Date Created: 2014/05/19
+// Date Created: 2014/10/28
 // 
 // Copyright (c) 2014 Jon Smith (www.selectiveanalytics.com & www.thereformedprogrammer.net)
 // 
