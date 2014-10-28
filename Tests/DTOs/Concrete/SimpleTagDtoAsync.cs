@@ -34,7 +34,7 @@ namespace Tests.DTOs.Concrete
     class SimpleTagDtoAsync : InstrumentedEfGenericDtoAsync<Tag, SimpleTagDtoAsync>
     {
 
-        private ServiceFunctions _supportedFunctionsToUse = ServiceFunctions.AllCrud;
+        private CrudFunctions _supportedFunctionsToUse = CrudFunctions.AllCrud;
 
         public SimpleTagDtoAsync()
         {
@@ -62,12 +62,12 @@ namespace Tests.DTOs.Concrete
         //--------------------------------------
 
 
-        protected internal override ServiceFunctions SupportedFunctions
+        protected internal override CrudFunctions SupportedFunctions
         {
             get { return _supportedFunctionsToUse; }
         }
 
-        public void SetSupportedFunctions(ServiceFunctions allowedFunctions)
+        public void SetSupportedFunctions(CrudFunctions allowedFunctions)
         {
             _supportedFunctionsToUse = allowedFunctions;
         }

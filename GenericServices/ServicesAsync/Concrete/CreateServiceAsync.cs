@@ -123,7 +123,7 @@ namespace GenericServices.ServicesAsync.Concrete
         public async Task<ISuccessOrErrors> CreateAsync(TDto dto)
         {
             ISuccessOrErrors result = new SuccessOrErrors();
-            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.Create))
+            if (!dto.SupportedFunctions.HasFlag(CrudFunctions.Create))
                 return result.AddSingleError("Create of a new {0} is not supported in this mode.", dto.DataItemName);
 
             var statusWithData = await dto.CreateDataFromDtoAsync(_db, dto);    //creates the new data and fills in the properties
@@ -137,7 +137,7 @@ namespace GenericServices.ServicesAsync.Concrete
             }
 
             //otherwise there are errors
-            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
+            if (!dto.SupportedFunctions.HasFlag(CrudFunctions.DoesNotNeedSetup))
                 //we reset any secondary data as we expect the view to be reshown with the errors
                 await dto.SetupSecondaryDataAsync(_db, dto);
             return result;
@@ -152,7 +152,7 @@ namespace GenericServices.ServicesAsync.Concrete
         /// <returns></returns>
         public async Task<TDto> ResetDtoAsync(TDto dto)
         {
-            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
+            if (!dto.SupportedFunctions.HasFlag(CrudFunctions.DoesNotNeedSetup))
                 //we reset any secondary data as we expect the view to be reshown with the errors
                 await dto.SetupSecondaryDataAsync(_db, dto);
 

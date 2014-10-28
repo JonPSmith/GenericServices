@@ -127,13 +127,13 @@ namespace GenericServices.Services.Concrete
         public ISuccessOrErrors<TDto> GetOriginalUsingWhere(Expression<Func<TData, bool>> whereExpression)
         {
             var dto = new TDto();
-            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.Update))
+            if (!dto.SupportedFunctions.HasFlag(CrudFunctions.Update))
                 throw new InvalidOperationException("This DTO does not support update.");
 
             var status = dto.DetailDtoFromDataIn(_db, whereExpression);
             if (!status.IsValid) return status;
 
-            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
+            if (!dto.SupportedFunctions.HasFlag(CrudFunctions.DoesNotNeedSetup))
                 status.Result.SetupSecondaryData(_db, status.Result);
             return status;
         }

@@ -32,7 +32,7 @@ using System.Runtime.CompilerServices;
 namespace GenericServices.Core
 {
     [Flags]
-    public enum ServiceFunctions
+    public enum CrudFunctions
     {
         None = 0,
         List = 1,
@@ -53,7 +53,7 @@ namespace GenericServices.Core
         /// <summary>
         /// This must be overridden to say that the dto supports the create function
         /// </summary>
-        internal protected abstract ServiceFunctions SupportedFunctions { get; }     
+        internal protected abstract CrudFunctions SupportedFunctions { get; }     
 
     }
 }

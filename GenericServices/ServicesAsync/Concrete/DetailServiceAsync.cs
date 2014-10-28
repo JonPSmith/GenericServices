@@ -117,7 +117,7 @@ namespace GenericServices.ServicesAsync.Concrete
         public async Task<ISuccessOrErrors<TDto>> GetDetailUsingWhereAsync(Expression<Func<TData, bool>> whereExpression)
         {
             var dto = new TDto();
-            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.Detail))
+            if (!dto.SupportedFunctions.HasFlag(CrudFunctions.Detail))
                 throw new InvalidOperationException("This DTO does not support a detailed view.");
 
             return await dto.DetailDtoFromDataInAsync(_db, whereExpression);

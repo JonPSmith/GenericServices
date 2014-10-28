@@ -70,7 +70,7 @@ namespace GenericServices.Services.Concrete
         public TDto GetDto()
         {
             var dto = new TDto();
-            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
+            if (!dto.SupportedFunctions.HasFlag(CrudFunctions.DoesNotNeedSetup))
                 dto.SetupSecondaryData(_db, dto);
 
             return dto;

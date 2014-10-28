@@ -56,9 +56,9 @@ namespace Tests.DTOs.Concrete
 
         public string PostPartTitle { get; internal set; }
 
-        protected internal override ServiceFunctions SupportedFunctions
+        protected internal override CrudFunctions SupportedFunctions
         {
-            get { return ServiceFunctions.AllCrudButCreate | ServiceFunctions.DoesNotNeedSetup; }
+            get { return CrudFunctions.AllCrudButCreate | CrudFunctions.DoesNotNeedSetup; }
         }
     }
 }

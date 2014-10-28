@@ -74,7 +74,7 @@ namespace Tests.UnitTests.Group03ServiceFlow
                 //SETUP
                 var service = new CreateService<Tag, SimpleTagDto>(db);
                 var dto = new SimpleTagDto();
-                dto.SetSupportedFunctions( ServiceFunctions.None);
+                dto.SetSupportedFunctions( CrudFunctions.None);
 
                 //ATTEMPT
                 var status = service.Create(dto);

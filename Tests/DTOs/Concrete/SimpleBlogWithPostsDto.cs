@@ -51,9 +51,9 @@ namespace Tests.DTOs.Concrete
 
         public ICollection<Post> Posts { get; protected set; }
 
-        protected internal override ServiceFunctions SupportedFunctions
+        protected internal override CrudFunctions SupportedFunctions
         {
-            get { return ServiceFunctions.List | ServiceFunctions.DoesNotNeedSetup; }
+            get { return CrudFunctions.List | CrudFunctions.DoesNotNeedSetup; }
         }
 
         protected override IQueryable<Blog> GetDataUntracked(IGenericServicesDbContext context)

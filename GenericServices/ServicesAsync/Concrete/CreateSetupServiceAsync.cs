@@ -71,7 +71,7 @@ namespace GenericServices.ServicesAsync.Concrete
         public async Task<TDto> GetDtoAsync()
         {
             var dto = new TDto();
-            if (!dto.SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
+            if (!dto.SupportedFunctions.HasFlag(CrudFunctions.DoesNotNeedSetup))
                 await dto.SetupSecondaryDataAsync(_db, dto);
 
             return dto;

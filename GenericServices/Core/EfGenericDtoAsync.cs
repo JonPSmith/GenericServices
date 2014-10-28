@@ -57,7 +57,7 @@ namespace GenericServices.Core
         /// <returns></returns>
         internal protected virtual async Task SetupSecondaryDataAsync(IGenericServicesDbContext db, TDto dto)
         {
-            if (!SupportedFunctions.HasFlag(ServiceFunctions.DoesNotNeedSetup))
+            if (!SupportedFunctions.HasFlag(CrudFunctions.DoesNotNeedSetup))
                 throw new InvalidOperationException("SupportedFunctions flags say that setup of secondary data is needed, but did not override the SetupSecondaryData method.");
         }
 

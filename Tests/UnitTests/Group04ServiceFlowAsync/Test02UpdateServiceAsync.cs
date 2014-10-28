@@ -77,7 +77,7 @@ namespace Tests.UnitTests.Group04ServiceFlowAsync
                 //SETUP
                 var service = new UpdateServiceAsync<Tag, SimpleTagDtoAsync>(db);
                 var dto = new SimpleTagDtoAsync();
-                dto.SetSupportedFunctions(ServiceFunctions.None);
+                dto.SetSupportedFunctions(CrudFunctions.None);
 
                 //ATTEMPT
                 var status = await service.UpdateAsync(dto);
