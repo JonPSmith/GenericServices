@@ -35,7 +35,7 @@
    -->
   <metadata>
     <id>GenericServices</id>
-    <version>1.0.0-beta5-002</version>
+    <version>1.0.0-beta5-003</version>
     <title>GenericServices</title>
     <authors>Jon Smith</authors>
     <owners>Jon Smith</owners>
@@ -52,6 +52,7 @@
       <dependency id="GenericLibsBase" version="1.0.0-beta5" />
       <dependency id="EntityFramework" version="6.1" />
       <dependency id="AutoMapper" version="3.0" />
+      <dependency id="DelegateDecompiler" version="0.10" />
     </dependencies>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.Core" targetFramework="net451" />

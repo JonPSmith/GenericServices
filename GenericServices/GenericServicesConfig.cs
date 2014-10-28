@@ -60,6 +60,11 @@ namespace GenericServices
         /// </summary>
         public static RealiseSingleException RealiseSingleExceptionMethod { internal get; set; }
 
+        /// <summary>
+        /// Set this if you want Generic Services to use the DelegateDecompiler. See documentation for more information
+        /// </summary>
+        public static bool UseDelegateDecompilerWhereNeeded { get; set; }
+
         //--------------------------------------------------
         //public methods
 

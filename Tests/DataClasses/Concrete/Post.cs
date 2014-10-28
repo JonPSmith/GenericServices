@@ -28,6 +28,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using DelegateDecompiler;
 using Tests.DataClasses.Concrete.Helpers;
 
 namespace Tests.DataClasses.Concrete
@@ -48,6 +49,19 @@ namespace Tests.DataClasses.Concrete
         public virtual Blog Blogger { get; set; }
 
         public ICollection<Tag> Tags { get; set; }
+
+        /// <summary>
+        /// This is a property to be filled in by the DelegateDecompilier
+        /// </summary>
+        [Computed]
+        public string BloggerNameAndEmail { get { return Blogger.Name + " (" + Blogger.EmailAddress + ")"; } }
+
+        /// <summary>
+        /// This is a property to be filled in by the DelegateDecompilier
+        /// </summary>
+        [Computed]
+        public IEnumerable<string> TagNames { get { return Tags.Select(x => x.Name); } }
+        //public IEnumerable<string> TagNames { get { return Tags == null ? new string[]{} : Tags.Select(x => x.Name); } }
 
         public override string ToString()
         {

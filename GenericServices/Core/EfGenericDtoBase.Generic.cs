@@ -31,6 +31,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using DelegateDecompiler;
 using GenericLibsBase;
 using GenericLibsBase.Core;
 using GenericServices.Core.Internal;
@@ -78,8 +79,12 @@ namespace GenericServices.Core
         internal protected virtual IQueryable<TDto> ListQueryUntracked(IGenericServicesDbContext context)
         {
             CreateDatatoDtoMapping();
-            return GetDataUntracked(context).Project().To<TDto>();
+            var query = GetDataUntracked(context).Project().To<TDto>();
+
+            //We check if we need to decompile the LINQ expression so that any computed properties in the class are filled in properly
+            return ShouldDecompileEntity() ? query.Decompile() : query;
         }
+
 
         //---------------------------------------------------------------
         //protected methods
@@ -120,7 +125,6 @@ namespace GenericServices.Core
 
         /// <summary>
         /// This copies only the properties in TDto that have public setter into the TEntity.
-        /// You can override this if you need a more complex copy
         /// </summary>
         /// <param name="context"></param>
         /// <param name="source"></param>
@@ -130,6 +134,18 @@ namespace GenericServices.Core
             CreateDtoToDataMapping();
             Mapper.Map(source, destination);
             return SuccessOrErrors.Success("Successful copy of data");
+        }
+
+        /// <summary>
+        /// This returns true if DelegateDecompiler is switched on and one of the TEntity's properties has a [Computed] attribute
+        /// </summary>
+        /// <returns></returns>
+        protected static bool ShouldDecompileEntity()
+        {
+            var shouldDecompile = GenericServicesConfig.UseDelegateDecompilerWhereNeeded &&
+                                  typeof(TEntity).GetProperties()
+                                      .Any(x => x.GetCustomAttribute<ComputedAttribute>() != null);
+            return shouldDecompile;
         }
 
         private static bool IncludeIfSourceDoesNotHaveDoNotCopyBackToDatabaseAttribute(ResolutionContext mapContext)

@@ -28,12 +28,23 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using GenericLibsBase;
 using NUnit.Framework;
 
 namespace Tests.Helpers
 {
     internal static class ExtendAsserts
     {
+        internal static void ShouldBeValid(this ISuccessOrErrors status, bool isValid = true)
+        {
+            Assert.AreEqual(isValid, status.IsValid, string.Join("\n", status.Errors));
+        }
+
+        internal static void ShouldBeValid<T>(this ISuccessOrErrors<T> status, bool isValid = true)
+        {
+            Assert.AreEqual(isValid, status.IsValid, string.Join("\n", status.Errors));
+        }
+
         internal static void ShouldEqual(this string actualValue, string expectedValue, string errorMessage = null)
         {
             Assert.AreEqual(expectedValue, actualValue, errorMessage);
@@ -102,6 +113,11 @@ namespace Tests.Helpers
         internal static void ShouldNotEqualNull<T>(this T actualValue, string errorMessage = null) where T : class
         {
             Assert.NotNull( actualValue);
+        }
+
+        internal static void ShouldBeGreaterThan(this int actualValue, int greaterThanThis, string errorMessage = null)
+        {
+            Assert.Greater(actualValue, greaterThanThis);
         }
 
         internal static void IsA<T>(this object actualValue, string errorMessage = null) where T : class

@@ -37,6 +37,9 @@
     <Reference Include="AutoMapper.Net4">
       <HintPath>..\packages\AutoMapper.3.2.1\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
+    <Reference Include="DelegateDecompiler">
+      <HintPath>..\packages\DelegateDecompiler.0.10.1.0\lib\net40-Client\DelegateDecompiler.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -46,6 +49,9 @@
     <Reference Include="GenericLibsBase, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\GenericLibsBase.1.0.0-beta5-002\lib\GenericLibsBase.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Reflection">
+      <HintPath>..\packages\Mono.Reflection.1.0.0.0\lib\Mono.Reflection.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />

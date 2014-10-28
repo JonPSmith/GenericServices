@@ -33,6 +33,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using DelegateDecompiler;
 using GenericLibsBase;
 using GenericLibsBase.Core;
 
@@ -113,14 +114,14 @@ namespace GenericServices.Core
         internal protected virtual async Task<ISuccessOrErrors<TDto>> DetailDtoFromDataInAsync(
             IGenericServicesDbContext context, Expression<Func<TEntity, bool>> predicate)
         {
-            Mapper.CreateMap<TEntity, TDto>();
-            return
-                await
-                    GetDataUntracked(context)
-                        .Where(predicate)
-                        .Project()
-                        .To<TDto>()
-                        .RealiseSingleWithErrorCheckingAsync();
+            CreateDatatoDtoMapping();
+            var query = GetDataUntracked(context).Where(predicate).Project().To<TDto>();
+
+            //We check if we need to decompile the LINQ expression so that any computed properties in the class are filled in properly
+            return await (ShouldDecompileEntity()
+                            ? query.Decompile().RealiseSingleWithErrorCheckingAsync()
+                            : query.RealiseSingleWithErrorCheckingAsync());
+
         }
     }
 }

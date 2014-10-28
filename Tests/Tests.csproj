@@ -37,6 +37,9 @@
     <Reference Include="AutoMapper.Net4">
       <HintPath>..\packages\AutoMapper.3.2.1\lib\net40\AutoMapper.Net4.dll</HintPath>
     </Reference>
+    <Reference Include="DelegateDecompiler">
+      <HintPath>..\packages\DelegateDecompiler.0.10.1.0\lib\net40-Client\DelegateDecompiler.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework">
       <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -50,6 +53,9 @@
     <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Reflection">
+      <HintPath>..\packages\Mono.Reflection.1.0.0.0\lib\Mono.Reflection.dll</HintPath>
     </Reference>
     <Reference Include="Moq">
       <HintPath>..\packages\Moq.4.2.1402.2112\lib\net40\Moq.dll</HintPath>
@@ -76,6 +82,8 @@
     <Compile Include="DataClasses\Internal\LoadDbDataFromXml.cs" />
     <Compile Include="DataClasses\Concrete\PostLink.cs" />
     <Compile Include="DataClasses\SampleWebAppDb.cs" />
+    <Compile Include="DTOs\Concrete\DelegateDecompilePostDtoAsync.cs" />
+    <Compile Include="DTOs\Concrete\DelegateDecompilePostDto.cs" />
     <Compile Include="DTOs\Concrete\DetailPostDtoAsync.cs" />
     <Compile Include="DTOs\Concrete\DetailPostDto.cs" />
     <Compile Include="DTOs\Concrete\SimplePostDtoAsync.cs" />
@@ -102,12 +110,14 @@
     <Compile Include="UnitTests\Group00GenericLibsBase\Test04SplitCamel.cs" />
     <Compile Include="UnitTests\Group01Configuration\Test02SqlDict.cs" />
     <Compile Include="UnitTests\Group01Configuration\Test10RealiseSingleException.cs" />
+    <Compile Include="UnitTests\Group02DataClasses\Tests06DelegateDecompiler.cs" />
     <Compile Include="UnitTests\Group02DataClasses\Tests12BuildFilter.cs" />
     <Compile Include="UnitTests\Group02DataClasses\Tests10CheckKeyFind.cs" />
     <Compile Include="UnitTests\Group02DataClasses\Tests01Setup.cs" />
     <Compile Include="UnitTests\Group02DataClasses\Tests02Validation.cs" />
     <Compile Include="UnitTests\Group02DataClasses\Tests04ReadWrite.cs" />
     <Compile Include="UnitTests\Group02DataClasses\Tests90CheckDbUpdateException.cs" />
+    <Compile Include="UnitTests\Group08CrudServices\Test01DelegateDecompiler.cs" />
     <Compile Include="UnitTests\Group15CrudServiceFinder\Test02DecodeToService.cs" />
     <Compile Include="UnitTests\Group00GenericLibsBase\Test01SuccessOrErrors.cs" />
     <Compile Include="UnitTests\Group00GenericLibsBase\Test03SuccessOrErrorsT.cs" />

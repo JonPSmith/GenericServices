@@ -1,8 +1,8 @@
 ﻿#region licence
 // The MIT License (MIT)
 // 
-// Filename: Test01AutoMapper.cs
-// Date Created: 2014/05/20
+// Filename: DetailPostDto.cs
+// Date Created: 2014/05/19
 // 
 // Copyright (c) 2014 Jon Smith (www.selectiveanalytics.com & www.thereformedprogrammer.net)
 // 
@@ -25,42 +25,39 @@
 // SOFTWARE.
 #endregion
 
-using System.Linq;
-using AutoMapper;
-using NUnit.Framework;
-using Tests.Helpers;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
+using GenericServices.Core;
+using Tests.DataClasses.Concrete;
 
-namespace Tests.UnitTests.Group08CrudServices
+[assembly: InternalsVisibleTo("Tests")]
+
+namespace Tests.DTOs.Concrete
 {
-    class Test01AutoMapper
+    public class DelegateDecompilePostDtoAsync : InstrumentedEfGenericDtoAsync<Post, DelegateDecompilePostDtoAsync>
     {
-        private class Data
+
+        [UIHint("HiddenInput")]
+        [Key]
+        public int PostId { get; set; }
+
+        public string Title { get; set; }
+
+        public string Content { get; set; }
+
+        //public ICollection<Tag> Tags { get; set; }
+
+        //------------------------------------------------------
+        //now the computed properties to read
+
+        public string BloggerNameAndEmail { get; set; }
+
+        public IEnumerable<string> TagNames { get; set; }
+
+        protected internal override CrudFunctions SupportedFunctions
         {
-            public int [] Ints { get; set; }
-
-            public int GetSum { get { return Ints.Sum(); } }
-        }
-
-        private class DtoAggregate
-        {
-            public int IntsCount { get; set; }
-            public int Sum { get; set; }
-        }
-
-        [Test]
-        public void Check01MappingAggregatesOk()
-        {
-
-            //SETUP  
-            var data = new Data {Ints = new[] {1, 2, 3}};
-
-            //ATTEMPT
-            Mapper.CreateMap<Data, DtoAggregate>();
-            var dto = Mapper.Map<Data, DtoAggregate>(data);
-
-            //VERIFY
-            dto.IntsCount.ShouldEqual(3);
-            dto.Sum.ShouldEqual(6);
+            get { return CrudFunctions.AllCrud | CrudFunctions.DoesNotNeedSetup ; }
         }
 
     }

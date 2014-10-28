@@ -32,6 +32,7 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using DelegateDecompiler;
 using GenericLibsBase;
 using GenericLibsBase.Core;
 
@@ -111,7 +112,10 @@ namespace GenericServices.Core
             Expression<Func<TEntity, bool>> predicate)
         {
             CreateDatatoDtoMapping();
-            return GetDataUntracked(context).Where(predicate).Project().To<TDto>().RealiseSingleWithErrorChecking();
+            var query = GetDataUntracked(context).Where(predicate).Project().To<TDto>();
+
+            //We check if we need to decompile the LINQ expression so that any computed properties in the class are filled in properly
+            return ShouldDecompileEntity() ? query.Decompile().RealiseSingleWithErrorChecking() : query.RealiseSingleWithErrorChecking();
         }
 
     }
