@@ -73,12 +73,12 @@ namespace GenericServices.ServicesAsync.Concrete
         /// The first part of the method finds the given entity using the provided keys.
         /// It then calls the deleteRelationships method which should remove the extra relationships
         /// </summary>
-        /// <param name="removeRelationships">method which is handed the DbContext and the found entity.
+        /// <param name="removeRelationshipsAsync">method which is handed the DbContext and the found entity.
         /// It should then remove any relationships on this entity that it wants to.
         /// It returns a status, if IsValid then calls SaveChangesWithChecking</param>
         /// <param name="keys">The keys must be given in the same order as entity framework has them</param>
         /// <returns></returns>
-        public async Task<ISuccessOrErrors> DeleteWithRelationshipsAsync<TEntity>(Func<IGenericServicesDbContext, TEntity, Task<ISuccessOrErrors>> removeRelationships,
+        public async Task<ISuccessOrErrors> DeleteWithRelationshipsAsync<TEntity>(Func<IGenericServicesDbContext, TEntity, Task<ISuccessOrErrors>> removeRelationshipsAsync,
             params object[] keys) where TEntity : class
         {
 
@@ -88,7 +88,7 @@ namespace GenericServices.ServicesAsync.Concrete
                     new SuccessOrErrors().AddSingleError(
                         "Could not delete entry as it was not in the database. Could it have been deleted by someone else?");
 
-            var result = await removeRelationships(_db, entityToDelete);
+            var result = await removeRelationshipsAsync(_db, entityToDelete);
             if (!result.IsValid) return result;
 
             _db.Set<TEntity>().Remove(entityToDelete);
