@@ -14,8 +14,8 @@ namespace Tests.UnitTests.Group08CrudServices
     class Test01DelegateDecompiler
     {
 
-        [SetUp]
-        public void SetUp()
+        [TestFixtureSetUp]
+        public void FixtureSetUp()
         {
             using (var db = new SampleWebAppDb())
             {
