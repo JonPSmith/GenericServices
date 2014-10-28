@@ -28,6 +28,9 @@
 using System;
 using System.Data.Entity;
 using System.Linq;
+using GenericLibsBase;
+using GenericLibsBase.Core;
+using GenericServices;
 using GenericServices.Services;
 using GenericServices.Services.Concrete;
 using NUnit.Framework;
@@ -40,8 +43,8 @@ namespace Tests.UnitTests.Group08CrudServices
     class Test02PostsDirect
     {
 
-        [TestFixtureSetUp]
-        public void SetUpFixture()
+        [SetUp]
+        public void SetUp()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -261,6 +264,61 @@ namespace Tests.UnitTests.Group08CrudServices
                 snap.CheckSnapShot(db, -1,-2, 0, 0, -2);
             }
         }
+
+        private ISuccessOrErrors DeleteBloggerWithPost(IGenericServicesDbContext db, Post post)
+        {
+            var blogger = db.Set<Blog>().Find(post.BlogId);
+            db.Set<Blog>().Remove(blogger);
+            return SuccessOrErrors.Success("It was fine.");
+        }
+
+        [Test]
+        public void Check11DeleteWithRelationshipsDirectOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var snap = new DbSnapShot(db);
+                var firstPostUntracked = db.Posts.AsNoTracking().First();
+                var service = new DeleteService(db);
+
+                //ATTEMPT
+                var status = service.DeleteWithRelationships<Post>(DeleteBloggerWithPost, firstPostUntracked.PostId);
+
+                //VERIFY
+                status.IsValid.ShouldEqual(true, status.Errors);
+                status.SuccessMessage.ShouldEqual("Successfully deleted Post and given relationships.");
+                snap.CheckSnapShot(db, -1, -2, -1, 0, -2);
+            }
+        }
+
+        private ISuccessOrErrors FailDeleteRelationships(IGenericServicesDbContext db, Post post)
+        {
+            return new SuccessOrErrors().AddSingleError("I failed.");
+        }
+
+        [Test]
+        public void Check12DeleteWithRelationshipsDirectFailOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var snap = new DbSnapShot(db);
+                var firstPostUntracked = db.Posts.AsNoTracking().First();
+                var service = new DeleteService(db);
+
+                //ATTEMPT
+                var status = service.DeleteWithRelationships<Post>(FailDeleteRelationships, firstPostUntracked.PostId);
+
+                //VERIFY
+                status.IsValid.ShouldEqual(false);
+                status.Errors.Count.ShouldEqual(1);
+                status.Errors[0].ErrorMessage.ShouldEqual("I failed.");
+                snap.CheckSnapShot(db);
+            }
+        }
+
+
 
     }
 }

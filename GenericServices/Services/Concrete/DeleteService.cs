@@ -25,13 +25,15 @@
 // SOFTWARE.
 #endregion
 
+using System;
 using GenericLibsBase;
 using GenericLibsBase.Core;
-using GenericServices.Core;
 
 namespace GenericServices.Services.Concrete
 {
-
+    /// <summary>
+    /// This holds the methods to delete an entry from the database
+    /// </summary>
     public class DeleteService : IDeleteService
     {
         private readonly IGenericServicesDbContext _db;
@@ -59,6 +61,38 @@ namespace GenericServices.Services.Concrete
             var result = _db.SaveChangesWithChecking();
             if (result.IsValid)
                 result.SetSuccessMessage("Successfully deleted {0}.", typeof(TData).Name);
+
+            return result;
+
+        }
+
+        /// <summary>
+        /// This allows a developer to delete an entity plus any of its relationships.
+        /// The first part of the method finds the given entity using the provided keys.
+        /// It then calls the deleteRelationships method which should remove the extra relationships
+        /// </summary>
+        /// <param name="removeRelationships">method which is handed the DbContext and the found entity.
+        /// It should then remove any relationships on this entity that it wants to.
+        /// It returns a status, if IsValid then calls SaveChangesWithChecking</param>
+        /// <param name="keys">The keys must be given in the same order as entity framework has them</param>
+        /// <returns></returns>
+        public ISuccessOrErrors DeleteWithRelationships<TData>(Func<IGenericServicesDbContext, TData, ISuccessOrErrors> removeRelationships,
+            params object[] keys) where TData : class
+        {
+
+            var entityToDelete = _db.Set<TData>().Find(keys);
+            if (entityToDelete == null)
+                return
+                    new SuccessOrErrors().AddSingleError(
+                        "Could not delete entry as it was not in the database. Could it have been deleted by someone else?");
+
+            var result = removeRelationships(_db, entityToDelete);
+            if (!result.IsValid) return result;
+
+            _db.Set<TData>().Remove(entityToDelete);
+            result = _db.SaveChangesWithChecking();
+            if (result.IsValid)
+                result.SetSuccessMessage("Successfully deleted {0} and given relationships.", typeof(TData).Name);
 
             return result;
 
