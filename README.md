@@ -12,9 +12,9 @@ I develop fairly complex analysing, modelling and data visualisation web applica
 
 My experience is that the Service Layer, plus [Data Transfer Objects - DTOs](http://msdn.microsoft.com/en-us/magazine/ee236638.aspx) is the best way to solve this mismatch. However I have found that the service layer is often filled with lots of code that is very similar, with just different data classes. I therefore researched a number of approaches to solve this and finally came up with a solution using C#'s Generic classes. I have therefore called it GenericServices.
 
-### What does the GenericServices framework provide?
+### Details on GenericServices
 
-#### 1. Generic Database access commands
+#### Generic Database access commands
 
 GenericServices provides the standard CRUD (Create, Read, Update and Delete) commands using EF 6. These commands have the following features:
 
@@ -24,20 +24,10 @@ GenericServices provides the standard CRUD (Create, Read, Update and Delete) com
 - Good extension points to handle specific issues like loading a dropdownlist for the UI.
 - There are normal and async versions of all CRUD commands.
 
-#### 2. Generic calling of business logic
-
-GenericServices has standard patterns for running business methods. The features are:
-
-- Ability to call a business method normally or as async task.
-- Ability to copy DTO to business data class (same methods as for database commands).
-- External code available for handling long-running methods with progress and cancel.
-
-#### 3. What frameworks are GenericServices is designed to work with?
+#### What frameworks are GenericServices is designed to work with?
 
 - GenericServices is designed work as a service layer framework in any .NET application, such as:
   - [ASP.NET MVC](http://www.asp.net/mvc/tutorials/mvc-5/introduction/getting-started)
-  - [Widows Azure Web apps](https://azure.microsoft.com/en-us/services/web-sites/)
-  - etc.
 - GenericServices assumed a disconnected state model, e.g. a web site or a Http RESTful service .
 - GenericServices assumes a horizontal scaling model, e.g. scale by having multiple web instances.
 - GenericServices uses the following .NET frameworks/systems.
@@ -46,7 +36,7 @@ GenericServices has standard patterns for running business methods. The features
   - It uses [Entity Framework 6](http://msdn.microsoft.com/en-us/data/ee712907) for database access, again because it supports async commands.
   - It also makes use of the open source [AutoMapper](http://automapper.org/) library for transforming data to/from DTOs.
 
-#### 4. General items
+#### General items
 
 - GenericService is designed to handle validation and error checking at multiple levels in the system.
 - Good examples of usage via an online [example web site](http://samplemvcwebapp.net/) which includes some documentation.
@@ -55,4 +45,4 @@ GenericServices has standard patterns for running business methods. The features
 - The project is Open Source.
 
 For documentation on the commands and configuration please look at the [wiki](https://github.com/JonPSmith/GenericServices/wiki)
-
+plus the example web site listed above.
