@@ -53,7 +53,13 @@ namespace GenericServices.Core
         /// <summary>
         /// This must be overridden to say that the dto supports the create function
         /// </summary>
-        internal protected abstract CrudFunctions SupportedFunctions { get; }     
+        internal protected abstract CrudFunctions SupportedFunctions { get; }
+
+        /// <summary>
+        /// If you override this to return true then it will always apply .Decompile() to any TEntity->TDto access
+        /// This is useful were the top TEntity does not contain a [Computed] attribute, but lower classes do
+        /// </summary>
+        protected virtual bool RequiresDelegateDecompiler { get { return false; } }
 
     }
 }

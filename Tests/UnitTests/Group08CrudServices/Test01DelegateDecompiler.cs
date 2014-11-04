@@ -136,5 +136,28 @@ namespace Tests.UnitTests.Group08CrudServices
             }
         }
 
+        //-----------------------------------------------------------------
+        //check case where we must force the decompile
+
+        [Test]
+        public void Check10ListNestedComputedOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                GenericServicesConfig.UseDelegateDecompilerWhereNeeded = true;
+                var service = new ListService<Tag, DelegateDecompileNeededTagDto>(db);
+                var firstTag = db.Tags.Include(x => x.Posts).First();
+
+                //ATTEMPT
+                var list = service.GetAll().OrderBy(x => x.TagId).ToList();
+
+                //VERIFY
+                list.Count().ShouldEqual(3);
+                list.First().Name.ShouldEqual(firstTag.Name);
+                list.First().Posts.First().BloggerNameAndEmail.ShouldNotEqualNull();
+            }
+        }
+
     }
 }

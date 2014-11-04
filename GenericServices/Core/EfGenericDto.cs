@@ -115,7 +115,7 @@ namespace GenericServices.Core
             var query = GetDataUntracked(context).Where(predicate).Project().To<TDto>();
 
             //We check if we need to decompile the LINQ expression so that any computed properties in the class are filled in properly
-            return ShouldDecompileEntity() ? query.Decompile().RealiseSingleWithErrorChecking() : query.RealiseSingleWithErrorChecking();
+            return ApplyDecompileIfNeeded(query).RealiseSingleWithErrorChecking();
         }
 
     }

@@ -292,13 +292,44 @@ namespace Tests.UnitTests.Group08CrudServices
             }
         }
 
+        //There are no items in the database that can't be deleted because they are used by other entries
+        //Therefore this needs to be checked elsewhere. I have checked it in TryAdventAndKendo
+
+        //private ISuccessOrErrors DeleteAnotherPost(IGenericServicesDbContext db, Post post)
+        //{
+        //    var anotherPost = db.Set<Post>().FirstOrDefault(x => x.PostId != post.PostId);
+        //    db.Set<Post>().Remove(anotherPost);
+        //    return SuccessOrErrors.Success("It was fine.");
+        //}
+
+        //[Test]
+        //public void Check12DeleteWithRelationshipsShouldFailOk()
+        //{
+        //    using (var db = new SampleWebAppDb())
+        //    {
+        //        //SETUP
+        //        var snap = new DbSnapShot(db);
+        //        var firstPostUntracked = db.Posts.AsNoTracking().First();
+        //        var service = new DeleteService(db);
+
+        //        //ATTEMPT
+        //        var status = service.DeleteWithRelationships<Post>(DeleteAnotherPost, firstPostUntracked.PostId);
+
+        //        //VERIFY
+        //        status.IsValid.ShouldEqual(false, status.Errors);
+        //        status.Errors.Count.ShouldEqual(1);
+        //        status.Errors.First().ErrorMessage.ShouldEqual("This operation failed because another data entry uses this entry.");
+        //        snap.CheckSnapShot(db);
+        //    }
+        //}
+
         private ISuccessOrErrors FailDeleteRelationships(IGenericServicesDbContext db, Post post)
         {
             return new SuccessOrErrors().AddSingleError("I failed.");
         }
 
         [Test]
-        public void Check12DeleteWithRelationshipsDirectFailOk()
+        public void Check15DeleteWithRelationshipsDirectFailOk()
         {
             using (var db = new SampleWebAppDb())
             {

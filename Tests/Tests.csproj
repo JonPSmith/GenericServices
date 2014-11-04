@@ -82,6 +82,7 @@
     <Compile Include="DataClasses\Internal\LoadDbDataFromXml.cs" />
     <Compile Include="DataClasses\Concrete\PostLink.cs" />
     <Compile Include="DataClasses\SampleWebAppDb.cs" />
+    <Compile Include="DTOs\Concrete\DelegateDecompileNeededTagDto.cs" />
     <Compile Include="DTOs\Concrete\DelegateDecompilePostDtoAsync.cs" />
     <Compile Include="DTOs\Concrete\DelegateDecompilePostDto.cs" />
     <Compile Include="DTOs\Concrete\DetailPostDtoAsync.cs" />

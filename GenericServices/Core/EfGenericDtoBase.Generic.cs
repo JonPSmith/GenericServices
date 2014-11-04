@@ -82,7 +82,7 @@ namespace GenericServices.Core
             var query = GetDataUntracked(context).Project().To<TDto>();
 
             //We check if we need to decompile the LINQ expression so that any computed properties in the class are filled in properly
-            return ShouldDecompileEntity() ? query.Decompile() : query;
+            return ApplyDecompileIfNeeded(query);
         }
 
 
@@ -137,15 +137,15 @@ namespace GenericServices.Core
         }
 
         /// <summary>
-        /// This returns true if DelegateDecompiler is switched on and one of the TEntity's properties has a [Computed] attribute
+        /// This checks if the DelegateDecompiler is needed. If so it applies it to the query
         /// </summary>
-        /// <returns></returns>
-        protected static bool ShouldDecompileEntity()
+        /// <returns>original query, but with Decompile applied if needed</returns>
+        protected IQueryable<TDto> ApplyDecompileIfNeeded(IQueryable<TDto> query)
         {
-            var shouldDecompile = GenericServicesConfig.UseDelegateDecompilerWhereNeeded &&
+            var shouldDecompile = RequiresDelegateDecompiler || (GenericServicesConfig.UseDelegateDecompilerWhereNeeded &&
                                   typeof(TEntity).GetProperties()
-                                      .Any(x => x.GetCustomAttribute<ComputedAttribute>() != null);
-            return shouldDecompile;
+                                      .Any(x => x.GetCustomAttribute<ComputedAttribute>() != null));
+            return shouldDecompile ? query.Decompile() : query;
         }
 
         private static bool IncludeIfSourceDoesNotHaveDoNotCopyBackToDatabaseAttribute(ResolutionContext mapContext)

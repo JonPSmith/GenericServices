@@ -54,7 +54,23 @@ namespace Tests.UnitTests.Group02DataClasses
         }
 
         [Test]
-        public void Test03ComputedOnPostSingleOk()
+        public void Test03ComputedOnPostSingleNoSelectOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var firstPost = db.Posts.First();
+
+                //ATTEMPT
+                var single = db.Posts.Where(x => x.PostId == firstPost.PostId).Decompile().Single();
+
+                //VERIFY
+                single.BloggerNameAndEmail.ShouldEndWith("nospam.com)");
+            }
+        }
+
+        [Test]
+        public void Test04ComputedOnPostSingleOk()
         {
             using (var db = new SampleWebAppDb())
             {
