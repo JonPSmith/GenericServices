@@ -169,7 +169,33 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
         }
 
         [Test]
-        public async void Check12CreateFailRunsSetupSecondaryDataAgainOk()
+        public async void Check12CreatePostCopyBackKeyOk()
+        {
+
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var service = new CreateServiceAsync<Post, DetailPostDtoAsync>(db);
+                var setupService = new CreateSetupServiceAsync<Post, DetailPostDtoAsync>(db);
+
+                //ATTEMPT
+                var dto = await setupService.GetDtoAsync();
+                dto.Title = Guid.NewGuid().ToString();
+                dto.Content = "something to fill it as can't be empty";
+                dto.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
+                dto.UserChosenTags.FinalSelection = db.Tags.OrderBy(x => x.TagId).Take(2).ToList().Select(x => x.TagId.ToString("D")).ToArray();
+                var status = await service.CreateAsync(dto);
+
+                //VERIFY
+                status.IsValid.ShouldEqual(true, status.Errors);
+                var post = db.Posts.Include(x => x.Tags).OrderByDescending(x => x.PostId).First();
+                dto.PostId.ShouldEqual(post.PostId);
+            }
+        }
+
+
+        [Test]
+        public async void Check13CreateFailRunsSetupSecondaryDataAgainOk()
         {
 
             using (var db = new SampleWebAppDb())

@@ -169,7 +169,32 @@ namespace Tests.UnitTests.Group08CrudServices
         }
 
         [Test]
-        public void Check12CreateFailRunsSetupSecondaryDataAgainOk()
+        public void Check12CreatePostCopyBackKeyOk()
+        {
+
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var service = new CreateService<Post, DetailPostDto>(db);
+                var setupService = new CreateSetupService<Post, DetailPostDto>(db);
+
+                //ATTEMPT
+                var dto = setupService.GetDto();
+                dto.Title = Guid.NewGuid().ToString();
+                dto.Content = "something to fill it as can't be empty";
+                dto.Bloggers.SelectedValue = db.Blogs.First().BlogId.ToString("D");
+                dto.UserChosenTags.FinalSelection = db.Tags.OrderBy(x => x.TagId).Take(2).ToList().Select(x => x.TagId.ToString("D")).ToArray();
+                var status = service.Create(dto);
+
+                //VERIFY
+                status.IsValid.ShouldEqual(true, status.Errors);
+                var post = db.Posts.OrderByDescending(x => x.PostId).First();
+                dto.PostId.ShouldEqual(post.PostId);
+            }
+        }
+
+        [Test]
+        public void Check13CreateFailRunsSetupSecondaryDataAgainOk()
         {
 
             using (var db = new SampleWebAppDb())

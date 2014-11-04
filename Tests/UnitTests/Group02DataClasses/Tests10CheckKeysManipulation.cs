@@ -32,11 +32,12 @@ using GenericServices.Core.Internal;
 using NUnit.Framework;
 using Tests.DataClasses;
 using Tests.DataClasses.Concrete;
+using Tests.DTOs.Concrete;
 using Tests.Helpers;
 
 namespace Tests.UnitTests.Group02DataClasses
 {
-    class Tests10CheckKeyFind
+    class Tests10CheckKeysManipulation
     {
 
         [Test]
@@ -101,6 +102,49 @@ namespace Tests.UnitTests.Group02DataClasses
             }
         }
 
+        //--------------------------------------------------------------------------
 
+        [Test]
+        public void Check10PostCopyKeysBackToDtoOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var timer = new Stopwatch();
+                var post = new Post{PostId = 123};
+                var dto = new DetailPostDto();
+
+                //ATTEMPT
+                timer.Start();
+                dto.AfterCreateCopyBackKeysToDtoIfPresent(db, post);
+                timer.Stop();
+
+                Console.WriteLine("took {0:f3} ms", 1000.0 * timer.ElapsedTicks / Stopwatch.Frequency);
+                //VERIFY
+                dto.PostId.ShouldEqual(post.PostId);
+            }
+        }
+
+        [Test]
+        public void Check11PostTagGradesCopyKeysBackToDtoOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var timer = new Stopwatch();
+                var postTag = new PostTagGrade { PostId = 123, TagId = 456};
+                var dto = new SimplePostTagGradeDto();
+
+                //ATTEMPT
+                timer.Start();
+                dto.AfterCreateCopyBackKeysToDtoIfPresent(db, postTag);
+                timer.Stop();
+
+                Console.WriteLine("took {0:f3} ms", 1000.0 * timer.ElapsedTicks / Stopwatch.Frequency);
+                //VERIFY
+                dto.PostId.ShouldEqual(postTag.PostId);
+                dto.TagId.ShouldEqual(postTag.TagId);
+            }
+        }
     }
 }

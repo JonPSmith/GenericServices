@@ -113,7 +113,7 @@
     <Compile Include="UnitTests\Group01Configuration\Test10RealiseSingleException.cs" />
     <Compile Include="UnitTests\Group02DataClasses\Tests06DelegateDecompiler.cs" />
     <Compile Include="UnitTests\Group02DataClasses\Tests12BuildFilter.cs" />
-    <Compile Include="UnitTests\Group02DataClasses\Tests10CheckKeyFind.cs" />
+    <Compile Include="UnitTests\Group02DataClasses\Tests10CheckKeysManipulation.cs" />
     <Compile Include="UnitTests\Group02DataClasses\Tests01Setup.cs" />
     <Compile Include="UnitTests\Group02DataClasses\Tests02Validation.cs" />
     <Compile Include="UnitTests\Group02DataClasses\Tests04ReadWrite.cs" />

@@ -85,16 +85,35 @@ namespace GenericServices.Core
             return ApplyDecompileIfNeeded(query);
         }
 
+        /// <summary>
+        /// This copies back the keys from a newly created entity into the dto as long as there are matching properties in the Dto
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="newEntity"></param>
+        internal protected void AfterCreateCopyBackKeysToDtoIfPresent(IGenericServicesDbContext context, TEntity newEntity)
+        {
+            var dtoKeyProperies = typeof (TDto).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach (var entityKeys in context.GetKeyProperties<TEntity>())
+            {
+                var dtoMatchingProperty =
+                    dtoKeyProperies.SingleOrDefault(
+                        x => x.Name == entityKeys.Name && x.PropertyType == entityKeys.PropertyType);
+                if (dtoMatchingProperty == null) continue;
+
+                dtoMatchingProperty.SetValue(this, entityKeys.GetValue(newEntity));
+            }
+        }
+
 
         //---------------------------------------------------------------
         //protected methods
 
         protected object[] GetKeyValues(IGenericServicesDbContext context)
         {
-            var efkeyPropertyNames = context.GetKeyProperties<TEntity>().Select(x => x.Name).ToArray();
+            var efkeyPropertyNames = context.GetKeyProperties<TEntity>().ToArray();
 
             var dtoKeyProperies = typeof(TDto).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                    .Where(x => efkeyPropertyNames.Any( y => y == x.Name)).ToArray();
+                    .Where(x => efkeyPropertyNames.Any(y => y.Name == x.Name && y.PropertyType == x.PropertyType)).ToArray();
 
             if (efkeyPropertyNames.Length != dtoKeyProperies.Length)
                 throw new MissingPrimaryKeyException("The dto must contain the key(s) properties from the data class.");
@@ -120,11 +139,8 @@ namespace GenericServices.Core
                 .ForAllMembers(opt => opt.Condition(IncludeIfSourceDoesNotHaveDoNotCopyBackToDatabaseAttribute));
         }
 
-        //----------------------------------------------------------------
-        //protected/private methods
-
         /// <summary>
-        /// This copies only the properties in TDto that have public setter into the TEntity.
+        /// This copies only the properties in that do not have the [DoNotCopyBackToDatabase] attribute
         /// </summary>
         /// <param name="context"></param>
         /// <param name="source"></param>
@@ -147,6 +163,9 @@ namespace GenericServices.Core
                                       .Any(x => x.GetCustomAttribute<ComputedAttribute>() != null));
             return shouldDecompile ? query.Decompile() : query;
         }
+
+        //----------------------------------------------------------------
+        //private methods
 
         private static bool IncludeIfSourceDoesNotHaveDoNotCopyBackToDatabaseAttribute(ResolutionContext mapContext)
         {

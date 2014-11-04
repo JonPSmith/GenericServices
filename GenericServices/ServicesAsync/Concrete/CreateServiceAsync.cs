@@ -132,6 +132,7 @@ namespace GenericServices.ServicesAsync.Concrete
             {
                 _db.Set<TEntity>().Add(statusWithData.Result);
                 result = await _db.SaveChangesWithCheckingAsync();
+                dto.AfterCreateCopyBackKeysToDtoIfPresent(_db, statusWithData.Result);
                 if (result.IsValid)
                     return result.SetSuccessMessage("Successfully created {0}.", dto.DataItemName);
             }
