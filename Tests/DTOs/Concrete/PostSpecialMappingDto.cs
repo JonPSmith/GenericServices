@@ -28,8 +28,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
 using System.Runtime.CompilerServices;
+using AutoMapper;
 using GenericServices;
 using GenericServices.Core;
 using Tests.DataClasses.Concrete;
@@ -38,30 +38,33 @@ using Tests.DataClasses.Concrete;
 
 namespace Tests.DTOs.Concrete
 {
-    public class SimplePostDto : InstrumentedEfGenericDto<Post, SimplePostDto>
+    internal class PostSpecialMappingDto : InstrumentedEfGenericDto<Post, PostSpecialMappingDto>
     {
 
         [UIHint("HiddenInput")]
-        [Key]
+        [DoNotCopyBackToDatabase]
         public int PostId { get; set; }
 
-        public string BloggerName { get; set; }
-
         [MinLength(2), MaxLength(128)]
-        public string Title { get; set; }                   //only the Title can be updated
+        public string Title { get; set; }                   //Title can be updated
+
+        [DataType(DataType.MultilineText)]
+        public string Content { get; set; }                 //Content can be updated
+
+        //------------------------------------------
+        //properties that are going to be specifically mapped
 
         [DoNotCopyBackToDatabase]
-        public ICollection<Tag> Tags { get; set; }
+        public string BloggerInfo { get; set; }
 
         [DoNotCopyBackToDatabase]
-        public DateTime LastUpdated { get; set; }
+        public int CountOfTags { get; set; }
 
-        /// <summary>
-        /// When it was last updated in DateTime format
-        /// </summary>
-        public DateTime LastUpdatedUtc { get { return DateTime.SpecifyKind(LastUpdated, DateTimeKind.Utc); } }
+        //-------------------------------------------
+        //dtos for mapping relationships
 
-        public string TagNames { get { return string.Join(", ", Tags.Select(x => x.Name)); } }
+        [DoNotCopyBackToDatabase]
+        public ICollection<SimpleTagDto> Tags { get; set; }
 
         //----------------------------------------------
         //overridden properties or methods
@@ -69,6 +72,17 @@ namespace Tests.DTOs.Concrete
         internal protected override CrudFunctions SupportedFunctions
         {
             get { return CrudFunctions.AllCrudButCreate | CrudFunctions.DoesNotNeedSetup; }
+        }
+
+        protected override Action<IMappingExpression<Post, PostSpecialMappingDto>> AddedDatabaseToDtoMapping
+        {
+            get { return m => m.ForMember(p => p.BloggerInfo, opt => opt.MapFrom(x => x.Blogger.Name + " " + x.Blogger.EmailAddress))
+                               .ForMember(p => p.CountOfTags, opt => opt.MapFrom(x => x.Tags.Count)); }
+        }
+
+        protected override Type AssociatedDtoMapping
+        {
+            get { return typeof (SimpleTagDto); }
         }
     }
 }

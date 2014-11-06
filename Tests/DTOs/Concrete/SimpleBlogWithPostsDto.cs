@@ -35,7 +35,7 @@ using Tests.DataClasses.Concrete;
 
 namespace Tests.DTOs.Concrete
 {
-    public class SimpleBlogWithPostsDto : InstrumentedEfGenericDto<Blog, SimpleBlogWithPostsDto>, ISimpleBlogWithPostsDto
+    public class SimpleBlogWithPostsDto : InstrumentedEfGenericDto<Blog, SimpleBlogWithPostsDto>
     {
         [Key]
         public int BlogId { get; set; }

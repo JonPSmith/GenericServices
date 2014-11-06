@@ -45,7 +45,7 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
         [TestFixtureSetUp]
         public void SetUpFixture()
         {
-            new DetailPostDtoAsync().CacheSetup();
+            new DetailPostDtoAsync();        //sets up the mapping
         }
 
         [SetUp]

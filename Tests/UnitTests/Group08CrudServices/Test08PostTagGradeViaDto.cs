@@ -42,7 +42,7 @@ namespace Tests.UnitTests.Group08CrudServices
         [TestFixtureSetUp]
         public void SetUpFixture()
         {
-            new SimplePostTagGradeDto().CacheSetup();
+            new SimplePostTagGradeDto();        //sets up the mapping
         }
 
         [SetUp]

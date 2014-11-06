@@ -47,14 +47,13 @@ namespace Tests.UnitTests.Group80Performance
         public void SetUpFixture()
         {
             DataLayerInitialise.InitialiseThis();
+            new SimplePostDto();        //sets up the mapping
+            new DetailPostDto();        //sets up the mapping
         }
 
         [Test]
         public void Perf01NPostDatabaseOk()
         {
-            new SimplePostDto().CacheSetup();
-            new DetailPostDto().CacheSetup();
-
             Console.WriteLine("Testing with N of post, and two tag, two bloggers in database");
             RunEfPerformanceTests(10, ResetDatabaseNPost);
             RunGenericPerformanceTests(10, ResetDatabaseNPost);
@@ -66,9 +65,6 @@ namespace Tests.UnitTests.Group80Performance
         [Test]
         public void Perf02NAllGenericAgainstEfOk()
         {
-            new SimplePostDto().CacheSetup();
-            new DetailPostDto().CacheSetup();
-
             Console.WriteLine("Testing with N of each class in database");
             RunEfPerformanceTests(10, ResetDatabaseNAll);
             RunGenericPerformanceTests(10, ResetDatabaseNAll);
@@ -80,9 +76,6 @@ namespace Tests.UnitTests.Group80Performance
         [Test]
         public void Perf02NAllSelfSelectAgainstEfOk()
         {
-            new SimplePostDto().CacheSetup();
-            new DetailPostDto().CacheSetup();
-
             Console.WriteLine("Testing with N of each class in database");
             RunEfPerformanceTests(10, ResetDatabaseNAll);
             RunGSelectPerformanceTests(10, ResetDatabaseNAll);
@@ -94,9 +87,6 @@ namespace Tests.UnitTests.Group80Performance
         [Test]
         public async void Perf10NAllDatabaseAsyncOk()
         {
-            new SimplePostDto().CacheSetup();
-            new DetailPostDto().CacheSetup();
-
             Console.WriteLine("Testing async with N of each class in database");
             await Task.WhenAll(RunEfPerformanceTestsAsync(10, ResetDatabaseNAll));
             await Task.WhenAll(RunGenericPerformanceTestsAsync(10, ResetDatabaseNAll));
@@ -108,9 +98,6 @@ namespace Tests.UnitTests.Group80Performance
         [Test]
         public async void Perf20NCompareEfSyncAndAsyncOk()
         {
-            new SimplePostDto().CacheSetup();
-            new DetailPostDto().CacheSetup();
-
             Console.WriteLine("Compare Ef access, sync and Async");
             RunEfPerformanceTests(10, ResetDatabaseNAll);
             await Task.WhenAll(RunEfPerformanceTestsAsync(10, ResetDatabaseNAll));
@@ -122,9 +109,6 @@ namespace Tests.UnitTests.Group80Performance
         [Test]
         public async void Perf21NCompareEfSyncAndAsync1000Ok()
         {
-            new SimplePostDto().CacheSetup();
-            new DetailPostDto().CacheSetup();
-
             Console.WriteLine("Compare Ef access, sync and Async");
             RunEfPerformanceTests(10, ResetDatabaseNAll);
             await Task.WhenAll(RunEfPerformanceTestsAsync(10, ResetDatabaseNAll));
@@ -136,9 +120,6 @@ namespace Tests.UnitTests.Group80Performance
         [Test]
         public async void Perf25NCompareGenericSyncAndAsyncOk()
         {
-            new SimplePostDto().CacheSetup();
-            new DetailPostDto().CacheSetup();
-
             Console.WriteLine("Compare Generic access, sync and Async");
             RunGenericPerformanceTests(10, ResetDatabaseNAll);
             await Task.WhenAll(RunGenericPerformanceTestsAsync(10, ResetDatabaseNAll));

@@ -33,7 +33,7 @@ using Tests.DataClasses.Concrete;
 
 namespace Tests.DTOs.Concrete
 {
-    class SimplePostTagGradeDto : InstrumentedEfGenericDto<PostTagGrade, SimplePostTagGradeDto>, ISimplePostTagGradeDto
+    class SimplePostTagGradeDto : InstrumentedEfGenericDto<PostTagGrade, SimplePostTagGradeDto>
     {
 
         [Key]

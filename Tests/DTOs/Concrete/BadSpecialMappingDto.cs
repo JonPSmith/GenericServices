@@ -1,8 +1,8 @@
 ﻿#region licence
 // The MIT License (MIT)
 // 
-// Filename: ISimplePostDto.cs
-// Date Created: 2014/05/20
+// Filename: SimplePostDto.cs
+// Date Created: 2014/05/19
 // 
 // Copyright (c) 2014 Jon Smith (www.selectiveanalytics.com & www.thereformedprogrammer.net)
 // 
@@ -26,31 +26,28 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+using System.Runtime.CompilerServices;
+using GenericServices.Core;
 using Tests.DataClasses.Concrete;
 
-namespace Tests.DTOs
+[assembly: InternalsVisibleTo("Tests")]
+
+namespace Tests.DTOs.Concrete
 {
-    public interface ISimplePostDto
+    internal class BadSpecialMappingDto : InstrumentedEfGenericDto<Post, BadSpecialMappingDto>
     {
-        [UIHint("HiddenInput")]
-        [Key]
-        int PostId { get; set; }
 
-        string BloggerName { get; }
+        //----------------------------------------------
+        //overridden properties or methods
 
-        [MinLength(2), MaxLength(128)]
-        string Title { get; set; }
+        internal protected override CrudFunctions SupportedFunctions
+        {
+            get { return CrudFunctions.AllCrudButCreate | CrudFunctions.DoesNotNeedSetup; }
+        }
 
-        ICollection<Tag> Tags { get; }
-        DateTime LastUpdated { get; }
-
-        /// <summary>
-        /// When it was last updated in DateTime format
-        /// </summary>
-        DateTime LastUpdatedUtc { get; }
-
-        string TagNames { get; }
+        protected override Type AssociatedDtoMapping
+        {
+            get { return typeof (DateTime); }               //bad type, not a EfGenericDto
+        }
     }
 }

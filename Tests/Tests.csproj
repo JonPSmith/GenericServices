@@ -87,14 +87,12 @@
     <Compile Include="DTOs\Concrete\DelegateDecompilePostDto.cs" />
     <Compile Include="DTOs\Concrete\DetailPostDtoAsync.cs" />
     <Compile Include="DTOs\Concrete\DetailPostDto.cs" />
+    <Compile Include="DTOs\Concrete\BadSpecialMappingDto.cs" />
+    <Compile Include="DTOs\Concrete\PostSpecialMappingDto.cs" />
     <Compile Include="DTOs\Concrete\SimplePostDtoAsync.cs" />
     <Compile Include="DTOs\Concrete\SimpleTagDtoAsync.cs" />
-    <Compile Include="DTOs\ISimplePostTagGradeDto.cs" />
     <Compile Include="DTOs\Concrete\SimplePostTagGradeDto.cs" />
     <Compile Include="DTOs\Concrete\SimpleTagDto.cs" />
-    <Compile Include="DTOs\IDetailPostDto.cs" />
-    <Compile Include="DTOs\ISimpleBlogWithPostsDto.cs" />
-    <Compile Include="DTOs\ISimplePostDto.cs" />
     <Compile Include="DTOs\Concrete\SimpleBlogWithPostsDto.cs" />
     <Compile Include="DTOs\Concrete\SimplePostDto.cs" />
     <Compile Include="Helpers\TimerToConsole.cs" />

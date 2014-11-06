@@ -44,7 +44,7 @@ namespace Tests.UnitTests.Group08CrudServices
         [TestFixtureSetUp]
         public void SetUpFixture()
         {
-            new DetailPostDto().CacheSetup();
+            new DetailPostDto();        //sets up the mapping
         }
 
         [SetUp]

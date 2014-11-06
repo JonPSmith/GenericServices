@@ -38,7 +38,7 @@ using Tests.DataClasses.Concrete;
 
 namespace Tests.DTOs.Concrete
 {
-    public class SimplePostDtoAsync : InstrumentedEfGenericDtoAsync<Post, SimplePostDtoAsync>, ISimplePostDto
+    public class SimplePostDtoAsync : InstrumentedEfGenericDtoAsync<Post, SimplePostDtoAsync>
     {
 
         [UIHint("HiddenInput")]

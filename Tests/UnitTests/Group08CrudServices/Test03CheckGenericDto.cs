@@ -29,7 +29,6 @@ using System;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
-using GenericServices.Core;
 using NUnit.Framework;
 using Tests.DataClasses;
 using Tests.DataClasses.Concrete;
@@ -52,7 +51,7 @@ namespace Tests.UnitTests.Group08CrudServices
         }
 
         [Test]
-        public void Check01CreateDataFromDtoOk()
+        public void Test01CreateDataFromDtoOk()
         {
 
             //SETUP
@@ -81,7 +80,7 @@ namespace Tests.UnitTests.Group08CrudServices
         }
 
         [Test]
-        public void Check02UpdateDataFromDtoOk()
+        public void Test02UpdateDataFromDtoOk()
         {
 
             //SETUP
@@ -118,8 +117,9 @@ namespace Tests.UnitTests.Group08CrudServices
             newData.Tags.First().Name.ShouldEqual("Original Tag name");
         }
 
+
         [Test]
-        public void Check06CreateDtoAndCopyInDataOk()
+        public void Test06CreateDtoAndCopyInDataOk()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -138,6 +138,77 @@ namespace Tests.UnitTests.Group08CrudServices
                 status.Result.BloggerName.ShouldEqual(firstPost.Blogger.Name);
                 CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.TagId), status.Result.Tags.Select(x => x.TagId));
             }
+        }
+
+        //-----------------------------------------------------------------------------
+        //check override mappings
+
+        [Test]
+        public void Test10CreateDtoAndCopyInDataMappingOverriddenOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP;
+                var firstPost = db.Posts.Include(x => x.Blogger).Include(x => x.Tags).AsNoTracking().First();
+
+                //ATTEMPT
+                var status = new PostSpecialMappingDto().DetailDtoFromDataIn(db, x => x.PostId == firstPost.PostId);
+
+                //VERIFY
+                status.Result.PostId.ShouldEqual(firstPost.PostId);
+                status.Result.Title.ShouldEqual(firstPost.Title);
+                status.Result.Content.ShouldEqual(firstPost.Content);
+
+                status.Result.BloggerInfo.ShouldEqual(firstPost.Blogger.Name + " " + firstPost.Blogger.EmailAddress);
+                status.Result.CountOfTags.ShouldEqual(firstPost.Tags.Count);
+
+                CollectionAssert.AreEqual( firstPost.Tags.Select( x => x.Name), status.Result.Tags.Select( x => x.Name));
+            }
+        }
+
+
+        [Test]
+        public void Test11CreateDataFromDtoMappingOverriddenOk()
+        {
+
+            //SETUP
+            var dto = new PostSpecialMappingDto
+            {
+                PostId = 123,
+                BloggerInfo = "This should not be copied",
+                Title = "Should copy this title",
+                Content = "Should copy content",
+            };
+
+
+            //ATTEMPT
+            var status = dto.CreateDataFromDto(null, dto);
+
+            //VERIFY
+            status.ShouldBeValid();
+            //should be copied or altered
+            status.Result.Title.ShouldEqual("Should copy this title prefix to title");
+            status.Result.Content.ShouldEqual("Should copy content");
+            
+            //should not be copied
+            status.Result.PostId.ShouldEqual(0);
+            status.Result.LastUpdated.Ticks.ShouldEqualWithTolerance(DateTime.UtcNow.Ticks, 100000000);
+            status.Result.Blogger.ShouldEqual(null);
+            status.Result.BlogId.ShouldEqual(0);
+            status.Result.Tags.ShouldEqual(null);
+        }
+
+        [Test]
+        public void Test20CheckAssociatedMappingsBad()
+        {
+
+            //SETUP
+
+            //ATTEMPT
+            var ex = Assert.Throws<InvalidOperationException>(() => new BadSpecialMappingDto());
+
+            //VERIFY
+            ex.Message.ShouldEqual("You have not supplied a class based on EfGenericDto to set up the mapping.");
         }
     }
 }

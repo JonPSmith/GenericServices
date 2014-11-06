@@ -43,7 +43,7 @@ namespace Tests.UnitTests.Group80Performance
         [TestFixtureSetUp]
         public void SetUpFixture()
         {
-            new DetailPostDto().CacheSetup();
+            new DetailPostDto();        //sets up the mapping
         }
 
         [SetUp]

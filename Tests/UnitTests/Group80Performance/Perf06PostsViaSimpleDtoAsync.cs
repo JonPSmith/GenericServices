@@ -49,7 +49,7 @@ namespace Tests.UnitTests.Group80Performance
                 var filepath = TestFileHelpers.GetTestFileFilePath("DbContentSimple.xml");
                 DataLayerInitialise.ResetDatabaseToTestData(db, filepath);
             }
-            new SimplePostDto().CacheSetup();
+            new SimplePostDto();        //sets up the mapping
         }
         
         //--------------------------------------------------------

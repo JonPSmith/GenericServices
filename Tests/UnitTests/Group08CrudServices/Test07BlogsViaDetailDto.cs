@@ -43,7 +43,7 @@ namespace Tests.UnitTests.Group08CrudServices
         [TestFixtureSetUp]
         public void SetUpFixture()
         {
-            new SimpleBlogWithPostsDto().CacheSetup();
+            new SimpleBlogWithPostsDto();        //sets up the mapping
         }
 
         [SetUp]

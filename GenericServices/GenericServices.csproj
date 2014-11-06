@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Internal\MappingHelper.cs" />
     <Compile Include="DoNotCopyBackToDatabaseAttribute.cs" />
     <Compile Include="Core\EfGenericDtoAsync.cs" />
     <Compile Include="Core\EfGenericDtoBase.Generic.cs" />

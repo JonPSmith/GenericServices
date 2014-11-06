@@ -42,7 +42,7 @@ using Tests.UiHelpers;
 
 namespace Tests.DTOs.Concrete
 {
-    public class DetailPostDto : InstrumentedEfGenericDto<Post, DetailPostDto>, IDetailPostDto
+    public class DetailPostDto : InstrumentedEfGenericDto<Post, DetailPostDto>
     {
 
         [UIHint("HiddenInput")]

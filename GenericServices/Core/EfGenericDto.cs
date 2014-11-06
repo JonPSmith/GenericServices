@@ -25,14 +25,11 @@
 // SOFTWARE.
 #endregion
 using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using DelegateDecompiler;
 using GenericLibsBase;
 using GenericLibsBase.Core;
 
@@ -81,11 +78,8 @@ namespace GenericServices.Core
         internal protected virtual ISuccessOrErrors<TEntity> CreateDataFromDto(IGenericServicesDbContext context, TDto source)
         {
             var result = new TEntity();
-            var status = CreateUpdateDataFromDto(context, source, result);
-
-            return status.IsValid
-                ? new SuccessOrErrors<TEntity>(result, status.SuccessMessage)
-                : SuccessOrErrors<TEntity>.ConvertNonResultStatus(status);
+            Mapper.Map(source, result);
+            return new SuccessOrErrors<TEntity>(result, "Successful copy of data");
         }
 
         /// <summary>
@@ -98,7 +92,6 @@ namespace GenericServices.Core
         /// <return>status. destination is only valid if status.IsValid</return>
         internal protected virtual ISuccessOrErrors UpdateDataFromDto(IGenericServicesDbContext context, TDto source, TEntity destination)
         {
-            CreateDtoToDataMapping();
             Mapper.Map(source, destination);
             return SuccessOrErrors.Success("Successful copy of data");
         }
@@ -111,7 +104,6 @@ namespace GenericServices.Core
         internal protected virtual ISuccessOrErrors<TDto> DetailDtoFromDataIn(IGenericServicesDbContext context, 
             Expression<Func<TEntity, bool>> predicate)
         {
-            CreateDatatoDtoMapping();
             var query = GetDataUntracked(context).Where(predicate).Project().To<TDto>();
 
             //We check if we need to decompile the LINQ expression so that any computed properties in the class are filled in properly

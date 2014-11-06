@@ -50,7 +50,7 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 var filepath = TestFileHelpers.GetTestFileFilePath("DbContentSimple.xml");
                 DataLayerInitialise.ResetDatabaseToTestData(db, filepath);
             }
-            new SimplePostDtoAsync().CacheSetup();
+            new SimplePostDtoAsync();        //sets up the mapping
         }
 
         [Test]
