@@ -146,7 +146,7 @@ namespace Tests.UnitTests.Group08CrudServices
             {
                 //SETUP
                 GenericServicesConfig.UseDelegateDecompilerWhereNeeded = true;
-                var service = new ListService<Tag, DelegateDecompileNeededTagDto>(db);
+                var service = new ListService<Tag, DelegateDecompileNeededPostDto>(db);
                 var firstTag = db.Tags.Include(x => x.Posts).First();
 
                 //ATTEMPT

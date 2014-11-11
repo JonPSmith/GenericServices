@@ -1,17 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
-using GenericServices;
 using GenericServices.Core;
 using Tests.DataClasses.Concrete;
 
 namespace Tests.DTOs.Concrete
 {
-    class DelegateDecompileNeededTagDto : EfGenericDto<Tag, DelegateDecompileNeededTagDto>
+    class DelegateDecompileNeededPostDto : EfGenericDto<Tag, DelegateDecompileNeededPostDto>
     {
 
         [Key]
@@ -36,15 +31,10 @@ namespace Tests.DTOs.Concrete
             get { return CrudFunctions.List ; }
         }
 
-        protected override bool RequiresDelegateDecompiler
+        protected override Type AssociatedDtoMapping
         {
-            get { return true; }
+            get { return typeof(DelegateDecompilePostDto); }
         }
 
-        protected internal override IQueryable<DelegateDecompileNeededTagDto> ListQueryUntracked(IGenericServicesDbContext context)
-        {
-            Mapper.CreateMap<Post, DelegateDecompilePostDto>();
-            return base.ListQueryUntracked(context);
-        }
     }
 }

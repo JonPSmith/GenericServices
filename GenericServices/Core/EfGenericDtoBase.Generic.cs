@@ -45,10 +45,17 @@ namespace GenericServices.Core
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     /// <typeparam name="TDto"></typeparam>
-    public abstract class EfGenericDtoBase<TEntity, TDto> : EfGenericDtoBase
+    public abstract partial class EfGenericDtoBase<TEntity, TDto> : EfGenericDtoBase
         where TEntity : class
         where TDto : EfGenericDtoBase<TEntity, TDto>
     {
+        
+        /// <summary>
+        /// This provides the name of the name of the data item to display in success or error messages.
+        /// Override if you want a more user friendly name
+        /// </summary>
+        internal protected virtual string DataItemName { get { return typeof (TEntity).Name; }}
+
         /// <summary>
         /// Override this to add .ForEach mappings that will be applied to the TEntity to TDto conversion
         /// </summary>
@@ -65,36 +72,6 @@ namespace GenericServices.Core
         /// For instance if you are mapping a property that is a type and you want that to map to a dto then call this
         /// </summary>
         protected virtual Type[] AssociatedDtoMappings { get { return null; } }
-
-        /// <summary>
-        /// Constructor. This ensures that the mappings are set up on creation of the class
-        /// If the inheriting class overrides CreateReadFromDatabaseMapping() or CreateWriteToDatabaseMapping()
-        /// </summary>
-        protected EfGenericDtoBase()
-        {
-            MapperSetup();
-        }
-
-        /// <summary>
-        /// This sets all the AutoMapper mapping that this dto needs. It is called from the base constructor
-        /// It also makes sure that any associated dto mappings are set up as the order of creation is not fixed
-        /// </summary>
-        private void MapperSetup()
-        {
-            if (Mapper.FindTypeMapFor<TEntity, TDto>() == null)
-                CreateReadFromDatabaseMapping();
-            if (Mapper.FindTypeMapFor<TDto, TEntity>() == null)
-                CreatWriteToDatabaseMapping();
-
-            //now set up any associated mappings. See comments on AssociatedDtoMapping for why these are needed
-            SetupAllAssociatedMappings();
-        }
-
-        /// <summary>
-        /// This provides the name of the name of the data item to display in success or error messages.
-        /// Override if you want a more user friendly name
-        /// </summary>
-        internal protected virtual string DataItemName { get { return typeof (TEntity).Name; }}
         
         /// <summary>
         /// This method is called to get the data table. Can be overridden if include statements are needed.
@@ -168,55 +145,7 @@ namespace GenericServices.Core
         /// <returns>original query, but with Decompile applied if needed</returns>
         protected IQueryable<TDto> ApplyDecompileIfNeeded(IQueryable<TDto> query)
         {
-            var shouldDecompile = RequiresDelegateDecompiler || (GenericServicesConfig.UseDelegateDecompilerWhereNeeded &&
-                                  typeof(TEntity).GetProperties()
-                                      .Any(x => x.GetCustomAttribute<ComputedAttribute>() != null));
-            return shouldDecompile ? query.Decompile() : query;
-        }
-
-        //---------------------------------------------------------------------
-        //private methods
-
-        /// <summary>
-        /// This sets up the AutoMapper mapping for a copy from the TEntity to the TDto.
-        /// It applies any extra mapping provided by AddedDatabaseToDtoMapping if not null
-        /// </summary>
-        private void CreateReadFromDatabaseMapping()
-        {
-            var map = Mapper.CreateMap<TEntity, TDto>();
-            if (AddedDatabaseToDtoMapping != null)
-                AddedDatabaseToDtoMapping(map);
-        }
-
-        /// <summary>
-        /// This sets up the AutoMapper mapping for a copy from the TDto to the TEntity.
-        /// Note that properties which have the [DoNotCopyBackToDatabase] attribute will not be copied
-        /// </summary>
-        private void CreatWriteToDatabaseMapping()
-        {
-            Mapper.CreateMap<TDto, TEntity>()
-                .IgnoreMarkedProperties();
-        }
-
-        /// <summary>
-        /// Set up any requested assocaiated mappings
-        /// </summary>
-        private void SetupAllAssociatedMappings()
-        {
-            if (AssociatedDtoMapping != null)
-                CheckAndSetupAssociatedMapping(AssociatedDtoMapping);
-
-            if (AssociatedDtoMappings == null) return;
-
-            foreach (var associatedDtoMapping in AssociatedDtoMappings)
-                CheckAndSetupAssociatedMapping(associatedDtoMapping);
-        }
-
-        private static void CheckAndSetupAssociatedMapping(Type associatedDtoMapping)
-        {
-            if (!associatedDtoMapping.IsSubclassOf(typeof(EfGenericDtoBase)))
-                throw new InvalidOperationException("You have not supplied a class based on EfGenericDto to set up the mapping.");
-            Activator.CreateInstance(associatedDtoMapping, new object[] { });
+            return NeedsDecompile ? query.Decompile() : query;
         }
 
     }

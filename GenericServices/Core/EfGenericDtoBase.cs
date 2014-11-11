@@ -25,6 +25,7 @@
 // SOFTWARE.
 #endregion
 using System;
+using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Tests")]
@@ -49,17 +50,47 @@ namespace GenericServices.Core
 
     public abstract class EfGenericDtoBase 
     {
+        /// <summary>
+        /// This class hold any information that can be found at setup
+        /// </summary>
+        protected class GenericDtoSetupInfo
+        {
+
+            /// <summary>
+            /// Set to true if UseDelegateDecompilerWhereNeeded is valid and TEntity class contains a [Computed] attribute
+            /// </summary>
+            public bool NeedsDecompile { get; private set; }
+
+            public GenericDtoSetupInfo(bool needsDecompile)
+            {
+                NeedsDecompile = needsDecompile;
+            }
+        }
+
+        /// <summary>
+        /// This is the cache used to hold info on setup. If an entry is in the directory then the class has been setup
+        /// </summary>
+        protected static readonly ConcurrentDictionary<Type, GenericDtoSetupInfo> SetupCache = new ConcurrentDictionary<Type, GenericDtoSetupInfo>();
+
+        /// <summary>
+        /// If this flag is set then .Decompile needs to be added to any query
+        /// The flag is set on creation based on whether config UseDelegateDecompilerWhereNeeded flas is true
+        /// and class's TEntity class, or  any of the associatedDTO TEntity classes ,
+        /// has properties with the [Computed] attribute on them.
+        /// Can be overriden by the developer.
+        /// </summary>
+        public bool NeedsDecompile { get; set; }
+
+        /// <summary>
+        /// Override and set to true if you wish to force NeedDecompile as always on in this DTO.
+        /// Needed if accessing a calculated field in a related class
+        /// </summary>
+        public virtual bool ForceNeedDecompile { get {  return false;} }
 
         /// <summary>
         /// This must be overridden to say that the dto supports the create function
         /// </summary>
         internal protected abstract CrudFunctions SupportedFunctions { get; }
-
-        /// <summary>
-        /// If you override this to return true then it will always apply .Decompile() to any TEntity->TDto access
-        /// This is useful were the top TEntity does not contain a [Computed] attribute, but lower classes do
-        /// </summary>
-        protected virtual bool RequiresDelegateDecompiler { get { return false; } }
 
     }
 }

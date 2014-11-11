@@ -1,8 +1,8 @@
 ﻿#region licence
 // The MIT License (MIT)
 // 
-// Filename: AssemblyVersionPart.cs
-// Date Created: 2014/07/22
+// Filename: SimpleTagDto.cs
+// Date Created: 2014/05/26
 // 
 // Copyright (c) 2014 Jon Smith (www.selectiveanalytics.com & www.thereformedprogrammer.net)
 // 
@@ -24,22 +24,42 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #endregion
-using System.Reflection;
 
-// THIS HOLDS THE VERSION PART OF THE ASSEMBLY
-// Alter this before building for Nuget pack
+using System;
+using System.ComponentModel.DataAnnotations;
+using GenericServices.Core;
+using Tests.DataClasses.Concrete;
 
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Build and Revision Numbers 
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
+namespace Tests.DTOs.Concrete
+{
+    public class SimpleTagDtoAssociatedToDecompileClass : InstrumentedEfGenericDto<Tag, SimpleTagDtoAssociatedToDecompileClass>
+    {
 
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
-[assembly: AssemblyInformationalVersion("1.0.0-beta5-009")]
+        [Key]
+        public int TagId { get; set; }
+
+        [MaxLength(64)]
+        [Required]
+        [RegularExpression(@"\w*", ErrorMessage = "The slug must not contain spaces or non-alphanumeric characters.")]
+        public string Slug { get; set; }
+
+        [MaxLength(128)]
+        [Required]
+        public string Name { get; set; }
+
+
+        //--------------------------------------
+
+        protected override Type AssociatedDtoMapping
+        {
+            get { return typeof (DelegateDecompilePostDto); }
+        }
+
+        protected internal override CrudFunctions SupportedFunctions
+        {
+            get { return CrudFunctions.List; }
+        }
+
+
+    }
+}

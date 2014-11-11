@@ -82,7 +82,9 @@
     <Compile Include="DataClasses\Internal\LoadDbDataFromXml.cs" />
     <Compile Include="DataClasses\Concrete\PostLink.cs" />
     <Compile Include="DataClasses\SampleWebAppDb.cs" />
-    <Compile Include="DTOs\Concrete\DelegateDecompileNeededTagDto.cs" />
+    <Compile Include="DTOs\Concrete\DelegateDecompileForced.cs" />
+    <Compile Include="DTOs\Concrete\TabNeededTagAndDelegatePostDto.cs" />
+    <Compile Include="DTOs\Concrete\DelegateDecompileNeededPostDto.cs" />
     <Compile Include="DTOs\Concrete\DelegateDecompilePostDtoAsync.cs" />
     <Compile Include="DTOs\Concrete\DelegateDecompilePostDto.cs" />
     <Compile Include="DTOs\Concrete\DetailPostDtoAsync.cs" />
@@ -90,6 +92,7 @@
     <Compile Include="DTOs\Concrete\BadSpecialMappingDto.cs" />
     <Compile Include="DTOs\Concrete\PostSpecialMappingDto.cs" />
     <Compile Include="DTOs\Concrete\SimplePostDtoAsync.cs" />
+    <Compile Include="DTOs\Concrete\SimpleTagDtoAssociatedToDecompileClass.cs" />
     <Compile Include="DTOs\Concrete\SimpleTagDtoAsync.cs" />
     <Compile Include="DTOs\Concrete\SimplePostTagGradeDto.cs" />
     <Compile Include="DTOs\Concrete\SimpleTagDto.cs" />
@@ -116,6 +119,7 @@
     <Compile Include="UnitTests\Group02DataClasses\Tests02Validation.cs" />
     <Compile Include="UnitTests\Group02DataClasses\Tests04ReadWrite.cs" />
     <Compile Include="UnitTests\Group02DataClasses\Tests90CheckDbUpdateException.cs" />
+    <Compile Include="UnitTests\Group08CrudServices\Test03AGenericDtoSetup.cs" />
     <Compile Include="UnitTests\Group08CrudServices\Test01DelegateDecompiler.cs" />
     <Compile Include="UnitTests\Group15CrudServiceFinder\Test02DecodeToService.cs" />
     <Compile Include="UnitTests\Group00GenericLibsBase\Test01SuccessOrErrors.cs" />
@@ -135,7 +139,7 @@
     <Compile Include="UnitTests\Group08CrudServices\Test02aPostTagGradeDirect.cs" />
     <Compile Include="UnitTests\Group08CrudServices\Test02PostsDirect.cs" />
     <Compile Include="UnitTests\Group09CrudServicesAsync\Test02PostsDirectAsync.cs" />
-    <Compile Include="UnitTests\Group08CrudServices\Test03CheckGenericDto.cs" />
+    <Compile Include="UnitTests\Group08CrudServices\Test03BCheckGenericDto.cs" />
     <Compile Include="UnitTests\Group08CrudServices\Test04PostsViaSimpleDto.cs" />
     <Compile Include="UnitTests\Group08CrudServices\Test05PostsViaDetailDto.cs" />
     <Compile Include="UnitTests\Group08CrudServices\Test08PostTagGradeViaDto.cs" />
