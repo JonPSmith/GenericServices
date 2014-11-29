@@ -51,7 +51,7 @@
     </Reference>
     <Reference Include="GenericLibsBase, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\GenericLibsBase.1.0.0-beta5-002\lib\GenericLibsBase.dll</HintPath>
+      <HintPath>..\packages\GenericLibsBase.1.0.0-beta6-002\lib\GenericLibsBase.dll</HintPath>
     </Reference>
     <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

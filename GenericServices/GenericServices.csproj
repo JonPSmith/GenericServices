@@ -51,7 +51,7 @@
     </Reference>
     <Reference Include="GenericLibsBase, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\GenericLibsBase.1.0.0-beta5-002\lib\GenericLibsBase.dll</HintPath>
+      <HintPath>..\packages\GenericLibsBase.1.0.0-beta6-002\lib\GenericLibsBase.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Reflection">
       <HintPath>..\packages\Mono.Reflection.1.0.0.0\lib\Mono.Reflection.dll</HintPath>

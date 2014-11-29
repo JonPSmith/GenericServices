@@ -35,7 +35,7 @@
    -->
   <metadata>
     <id>GenericLibsBase</id>
-    <version>1.0.0-beta5-002</version>
+    <version>1.0.0-beta6-002</version>
     <title>GenericLibsBase</title>
     <authors>Jon Smith</authors>
     <owners>Jon Smith</owners>
@@ -48,9 +48,6 @@
     </description>
     <releaseNotes>First release.</releaseNotes>
     <copyright>Copyright 2014</copyright>
-    <dependencies>
-      <dependency id="EntityFramework" version="6.1" />
-    </dependencies>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.Core" targetFramework="net451" />
     </frameworkAssemblies>

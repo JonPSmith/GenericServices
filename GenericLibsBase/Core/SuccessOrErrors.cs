@@ -28,7 +28,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Data.Entity.Validation;
 using System.Linq;
 using System.Text;
 
@@ -66,12 +65,6 @@ namespace GenericLibsBase.Core
         {
             Result = result;
             base.SetSuccessMessage(successformat, args);
-            return this;
-        }
-
-        public new ISuccessOrErrors<T> SetErrors(IEnumerable<DbEntityValidationResult> errors)
-        {
-            base.SetErrors(errors);
             return this;
         }
 
@@ -194,19 +187,6 @@ namespace GenericLibsBase.Core
         public void AddWarning(string warningformat, params object[] args)
         {
             _localWarnings.Add("Warning: " + string.Format(warningformat, args));
-        }
-
-        /// <summary>
-        /// This converts the Entity framework errors into Validation errors
-        /// </summary>
-        public ISuccessOrErrors SetErrors(IEnumerable<DbEntityValidationResult> errors)
-        {
-            _localErrors = errors.SelectMany(
-                    x => x.ValidationErrors.Select(y => new ValidationResult(y.ErrorMessage, new[] { y.PropertyName })))
-                    .ToList();
-
-            _localSuccessMessage = string.Empty;
-            return this;
         }
 
         /// <summary>

@@ -59,7 +59,8 @@ namespace GenericServices
             }
             catch (DbEntityValidationException ex)
             {
-                return result.SetErrors(ex.EntityValidationErrors);
+                return result.SetErrors(ex.EntityValidationErrors.SelectMany(
+                    x => x.ValidationErrors.Select(y => new ValidationResult(y.ErrorMessage, new[] { y.PropertyName }))));
             }
             catch (DbUpdateException ex)
             {
@@ -90,7 +91,8 @@ namespace GenericServices
             }
             catch (DbEntityValidationException ex)
             {
-                return result.SetErrors(ex.EntityValidationErrors);
+                return result.SetErrors(ex.EntityValidationErrors.SelectMany(
+                    x => x.ValidationErrors.Select(y => new ValidationResult(y.ErrorMessage, new[] { y.PropertyName }))));
             }
             catch (DbUpdateException ex)
             {
