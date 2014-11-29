@@ -33,7 +33,7 @@ namespace Tests.UnitTests.Group08CrudServices
                 //SETUP
                 GenericServicesConfig.UseDelegateDecompilerWhereNeeded = false;
                 var service = new ListService<Post,SimplePostDto>(db);
-                var firstPost = db.Posts.Include(x => x.Blogger).First();
+                var firstPost = db.Posts.Include(x => x.Blogger).OrderBy( x => x.PostId).First();
 
                 //ATTEMPT
                 var list = service.GetAll().OrderBy( x => x.PostId).ToList();
@@ -54,7 +54,7 @@ namespace Tests.UnitTests.Group08CrudServices
                 //SETUP
                 GenericServicesConfig.UseDelegateDecompilerWhereNeeded = true;
                 var service = new ListService<Post, SimplePostDto>(db);
-                var firstPost = db.Posts.Include(x => x.Blogger).First();
+                var firstPost = db.Posts.Include(x => x.Blogger).OrderBy(x => x.PostId).First();
 
                 //ATTEMPT
                 var list = service.GetAll().OrderBy(x => x.PostId).ToList();

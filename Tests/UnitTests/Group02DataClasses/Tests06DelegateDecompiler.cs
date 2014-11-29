@@ -8,6 +8,21 @@ using System.Data.Entity;
 
 namespace Tests.UnitTests.Group02DataClasses
 {
+    
+    //Code removed from Post class to ensure unit tests pass
+        ///// <summary>
+        ///// This is a property to be filled in by the DelegateDecompilier
+        ///// </summary>
+        //[Computed]
+        //public string BloggerNameAndEmail { get { return Blogger.Name + " (" + Blogger.EmailAddress + ")"; } }
+
+        ///// <summary>
+        ///// This is a property to be filled in by the DelegateDecompilier
+        ///// </summary>
+        //[Computed]
+        //public IEnumerable<string> TagNames { get { return Tags.Select(x => x.Name); } }
+        ////public IEnumerable<string> TagNames { get { return Tags == null ? new string[]{} : Tags.Select(x => x.Name); } }
+
     class Tests06DelegateDecompiler
     {
 

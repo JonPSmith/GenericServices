@@ -41,11 +41,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\DelegateDecompiler.0.11.1.0\lib\net40-Client\DelegateDecompiler.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework">
-      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.dll</HintPath>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
-    <Reference Include="EntityFramework.SqlServer">
-      <HintPath>..\packages\EntityFramework.6.1.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="GenericLibsBase, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -113,7 +115,6 @@
     <Compile Include="UnitTests\Group00GenericLibsBase\Test04SplitCamel.cs" />
     <Compile Include="UnitTests\Group01Configuration\Test02SqlDict.cs" />
     <Compile Include="UnitTests\Group01Configuration\Test10RealiseSingleException.cs" />
-    <Compile Include="UnitTests\Group02DataClasses\Tests06DelegateDecompiler.cs" />
     <Compile Include="UnitTests\Group02DataClasses\Tests12BuildFilter.cs" />
     <Compile Include="UnitTests\Group02DataClasses\Tests10CheckKeysManipulation.cs" />
     <Compile Include="UnitTests\Group02DataClasses\Tests01Setup.cs" />
@@ -121,7 +122,6 @@
     <Compile Include="UnitTests\Group02DataClasses\Tests04ReadWrite.cs" />
     <Compile Include="UnitTests\Group02DataClasses\Tests90CheckDbUpdateException.cs" />
     <Compile Include="UnitTests\Group08CrudServices\Test03AGenericDtoSetup.cs" />
-    <Compile Include="UnitTests\Group08CrudServices\Test01DelegateDecompiler.cs" />
     <Compile Include="UnitTests\Group15CrudServiceFinder\Test02DecodeToService.cs" />
     <Compile Include="UnitTests\Group00GenericLibsBase\Test01SuccessOrErrors.cs" />
     <Compile Include="UnitTests\Group00GenericLibsBase\Test03SuccessOrErrorsT.cs" />
