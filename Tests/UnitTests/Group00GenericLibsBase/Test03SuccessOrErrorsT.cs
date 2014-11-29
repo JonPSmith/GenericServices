@@ -25,9 +25,11 @@
 // SOFTWARE.
 #endregion
 
+using System;
 using GenericLibsBase;
 using GenericLibsBase.Core;
 using NUnit.Framework;
+using Tests.DataClasses.Concrete;
 using Tests.Helpers;
 
 namespace Tests.UnitTests.Group00GenericLibsBase
@@ -165,6 +167,33 @@ namespace Tests.UnitTests.Group00GenericLibsBase
 
             //VERIFY
             status.IsValid.ShouldEqual(false);
+        }
+
+        [Test]
+        public void Check16CheckConvertResultStatusToAnotherResultStatusValidOk()
+        {
+            //SETUP  
+            var statusWithResult = new SuccessOrErrors<int>();
+            statusWithResult.SetSuccessWithResult(1,"This is a message");
+
+            //ATTEMPT
+            var status = SuccessOrErrors<string>.ConvertNonResultStatus(statusWithResult);
+
+            //VERIFY
+            status.IsValid.ShouldEqual(true);
+            status.Result.ShouldEqual(null);
+        }
+
+        [Test]
+        public void Check17CheckConvertIntToAnotherResultStatusFail()
+        {
+            //SETUP  
+
+            //ATTEMPT
+            var ex = Assert.Throws<ArgumentNullException>(() => SuccessOrErrors<string>.ConvertNonResultStatus("string"));
+
+            //VERIFY
+            ex.Message.ShouldStartWith("The status parameter was not derived from a type thta supported ISuccessOrErrors.");
         }
     }
 }

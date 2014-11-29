@@ -101,11 +101,15 @@ namespace GenericLibsBase.Core
         /// <summary>
         /// Turns the non result status into a result status by copying any errors or warnings
         /// </summary>
-        /// <param name="nonResultStatus"></param>
+        /// <param name="status">Can be a non-result status, or a result status of a different type</param>
         /// <returns></returns>
-        public static ISuccessOrErrors<T> ConvertNonResultStatus(ISuccessOrErrors nonResultStatus)
+        public static ISuccessOrErrors<T> ConvertNonResultStatus(object status)
         {
-            return new SuccessOrErrors<T>(nonResultStatus);
+            var castISuccessOrErrors = status as ISuccessOrErrors;
+            if (castISuccessOrErrors == null)
+                throw new ArgumentNullException("status", "The status parameter was not derived from a type thta supported ISuccessOrErrors.");
+
+            return new SuccessOrErrors<T>(castISuccessOrErrors);
         }
 
         /// <summary>
