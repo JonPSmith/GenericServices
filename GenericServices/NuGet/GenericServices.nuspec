@@ -19,9 +19,9 @@
    2. Go to SampleMvcWebApp
    3. Set Package manager->Package Source to All, or <your local source>
    4. Use the following package manager command in target 
-      Install-Package GenericServices -Pre -Project <projectname>
+      Install-Package GenericServices (-Pre) -Project <projectname>
       or
-      Update-Package GenericServices -Pre
+      Update-Package GenericServices (-Pre)
    
    To test via staging
    ===================
@@ -35,7 +35,7 @@
    -->
   <metadata>
     <id>GenericServices</id>
-    <version>1.0.0-beta6-004</version>
+    <version>1.0.0</version>
     <title>GenericServices</title>
     <authors>Jon Smith</authors>
     <owners>Jon Smith</owners>
@@ -49,10 +49,11 @@
     <releaseNotes>First release.</releaseNotes>
     <copyright>Copyright 2014</copyright>
     <dependencies>
-      <dependency id="GenericLibsBase" version="1.0.0-beta6" />
+      <dependency id="GenericLibsBase" version="1.0.0" />
       <dependency id="EntityFramework" version="6.1" />
-      <dependency id="AutoMapper" version="3.0" />
-      <dependency id="DelegateDecompiler" version="0.10" />
+      <dependency id="AutoMapper" version="3.3" />
+      <dependency id="DelegateDecompiler" version="0.13" />
+      <dependency id="DelegateDecompiler.EntityFramework" version="0.13" />
     </dependencies>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.Core" targetFramework="net451" />

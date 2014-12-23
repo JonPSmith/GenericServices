@@ -19,9 +19,9 @@
    2. Go to Application
    3. Set Package manager->Package Source to All, or <your local source>
    4. Use the following package manager command in target 
-      Install-Package GenericLibsBase -Pre -Project <projectname>
+      Install-Package GenericLibsBase (-Pre) -Project <projectname>
       or
-      Update-Package GenericLibsBase -Pre
+      Update-Package GenericLibsBase (-Pre)
    
    To test via staging
    ===================
@@ -35,7 +35,7 @@
    -->
   <metadata>
     <id>GenericLibsBase</id>
-    <version>1.0.0-beta6-004</version>
+    <version>1.0.0</version>
     <title>GenericLibsBase</title>
     <authors>Jon Smith</authors>
     <owners>Jon Smith</owners>

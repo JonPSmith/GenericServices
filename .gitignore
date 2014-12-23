@@ -157,3 +157,4 @@ $RECYCLE.BIN/
 /Tests/DataClasses/CutDownValidation.cs
 /GenericServices/NuGet/GenericServices.1.0.0-beta4.nupkg
 /GenericServices/NuGet/GenericServices.1.0.0-beta5.nupkg
+*.nupkg

@@ -32,7 +32,7 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using DelegateDecompiler;
+using DelegateDecompiler.EntityFramework;
 using GenericServices.Core.Internal;
 
 [assembly: InternalsVisibleTo("Tests")]
@@ -45,7 +45,7 @@ namespace GenericServices.Core
     /// </summary>
     /// <typeparam name="TEntity"></typeparam>
     /// <typeparam name="TDto"></typeparam>
-    public abstract partial class EfGenericDtoBase<TEntity, TDto> : EfGenericDtoBase
+    public abstract partial class EfGenericDtoBase<TEntity, TDto>
         where TEntity : class
         where TDto : EfGenericDtoBase<TEntity, TDto>
     {
@@ -145,7 +145,7 @@ namespace GenericServices.Core
         /// <returns>original query, but with Decompile applied if needed</returns>
         protected IQueryable<TDto> ApplyDecompileIfNeeded(IQueryable<TDto> query)
         {
-            return NeedsDecompile ? query.Decompile() : query;
+            return NeedsDecompile ? query.DecompileAsync() : query;
         }
 
     }
