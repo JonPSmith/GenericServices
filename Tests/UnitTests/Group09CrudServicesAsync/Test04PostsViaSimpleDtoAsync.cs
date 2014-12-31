@@ -28,6 +28,7 @@
 using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using GenericServices.ServicesAsync;
 using GenericServices.ServicesAsync.Concrete;
 using NUnit.Framework;
@@ -162,7 +163,37 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
         }
 
         [Test]
-        public async void Check07UpdateWithListDtoCorrectOk()
+        public async void Check07UpdateWithListDtoCheckDateOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var snap = new DbSnapShot(db);
+                var firstPost = db.Posts.Include(x => x.Tags).AsNoTracking().First();
+                var originalDateTime = firstPost.LastUpdated;
+                Thread.Sleep(400);
+
+                var service = new UpdateServiceAsync<Post, SimplePostDtoAsync>(db);
+                var setupService = new UpdateSetupServiceAsync<Post, SimplePostDtoAsync>(db);
+
+                //ATTEMPT
+                var setupStatus = await setupService.GetOriginalAsync(firstPost.PostId);
+                setupStatus.IsValid.ShouldEqual(true, setupStatus.Errors);
+                setupStatus.Result.Title = Guid.NewGuid().ToString();
+                setupStatus.Result.LastUpdated = new DateTime();
+                var status = await service.UpdateAsync(setupStatus.Result);
+                setupStatus.Result.LogSpecificName("End");
+
+                //VERIFY
+                status.IsValid.ShouldEqual(true, status.Errors);
+                status.SuccessMessage.ShouldEqual("Successfully updated Post.");
+                snap.CheckSnapShot(db);
+                Assert.GreaterOrEqual(db.Posts.First().LastUpdated.Subtract(originalDateTime).Milliseconds, 400);
+            }
+        }
+
+        [Test]
+        public async void Check08UpdateWithListDtoCorrectOk()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -189,7 +220,7 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
         }
 
         [Test]
-        public async void Check08UpdateWithListDtoBad()
+        public async void Check09UpdateWithListDtoBad()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -214,7 +245,7 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
         }
 
         [Test]
-        public async void Check08CreateWithListDtoBad()
+        public async void Check10CreateWithListDtoBad()
         {
             using (var db = new SampleWebAppDb())
             {

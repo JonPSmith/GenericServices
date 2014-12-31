@@ -30,6 +30,7 @@ using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Threading.Tasks;
 using GenericServices;
 using Tests.DataClasses.Concrete;
 using Tests.DataClasses.Concrete.Helpers;
@@ -56,6 +57,16 @@ namespace Tests.DataClasses
         {
             HandleChangeTracking();
             return base.SaveChanges();
+        }
+
+        /// <summary>
+        /// Same for async
+        /// </summary>
+        /// <returns></returns>
+        public override Task<int> SaveChangesAsync()
+        {
+            HandleChangeTracking();
+            return base.SaveChangesAsync();
         }
 
         /// <summary>

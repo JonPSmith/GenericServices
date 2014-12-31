@@ -28,6 +28,7 @@
 using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading;
 using GenericServices.Services;
 using GenericServices.Services.Concrete;
 using NUnit.Framework;
@@ -220,7 +221,35 @@ namespace Tests.UnitTests.Group08CrudServices
         }
 
         [Test]
-        public void Check07UpdateWithListDtoCorrectOk()
+        public void Check07UpdateWithListDtoCheckDateOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var snap = new DbSnapShot(db);
+                var firstPost = db.Posts.Include(x => x.Tags).AsNoTracking().First(); 
+                var originalDateTime = firstPost.LastUpdated;
+                Thread.Sleep(400);
+
+                var service = new UpdateService<Post, SimplePostDto>(db);
+                var setupService = new UpdateSetupService<Post, SimplePostDto>(db);
+
+                //ATTEMPT
+                var setupStatus = setupService.GetOriginal(firstPost.PostId);
+                setupStatus.Result.Title = Guid.NewGuid().ToString();
+                var status = service.Update(setupStatus.Result);
+                setupStatus.Result.LogSpecificName("End");
+
+                //VERIFY
+                status.IsValid.ShouldEqual(true, status.Errors);
+                status.SuccessMessage.ShouldEqual("Successfully updated Post.");
+                snap.CheckSnapShot(db);
+                Assert.GreaterOrEqual(db.Posts.First().LastUpdated.Subtract(originalDateTime).Milliseconds, 400);
+            }
+        }
+
+        [Test]
+        public void Check08UpdateWithListDtoCorrectOk()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -246,7 +275,7 @@ namespace Tests.UnitTests.Group08CrudServices
         }
 
         [Test]
-        public void Check08UpdateWithListDtoBad()
+        public void Check09UpdateWithListDtoBad()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -269,7 +298,7 @@ namespace Tests.UnitTests.Group08CrudServices
         }
 
         [Test]
-        public void Check08CreateWithListDtoBad()
+        public void Check10CreateWithListDtoBad()
         {
             using (var db = new SampleWebAppDb())
             {
