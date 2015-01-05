@@ -35,14 +35,20 @@ GenericServices provides the standard CRUD (Create, Read, Update and Delete) com
   - It needs .NET 4.5 for the new [async/await](http://msdn.microsoft.com/en-gb/library/hh191443.aspx) tasking format introduced in .NET 4.5
   - It uses [Entity Framework 6](http://msdn.microsoft.com/en-us/data/ee712907) for database access, again because it supports async commands.
   - It also makes use of the open source [AutoMapper](http://automapper.org/) library for transforming data to/from DTOs.
+  - It includes [DelegateDecompiler](https://github.com/hazzik/DelegateDecompiler) to help with computed parameters. 
+See this [article](https://www.simple-talk.com/dotnet/asp.net/using-entity-framework-with-an-existing-database--user-interface/) for more information on that.
 
-#### General items
+#### Supporing information
 
-- GenericService is designed to handle validation and error checking at multiple levels in the system.
-- Good examples of usage via an online [example web site](http://samplemvcwebapp.net/) which includes some documentation.
+- This [article](https://www.simple-talk.com/dotnet/asp.net/using-entity-framework-with-an-existing-database--user-interface/) 
+for more information on the architecture of a system using GenericServices.
+- Some examples of usage are available via the [example web site](http://samplemvcwebapp.net/) which includes some documentation.
 - The source code of the [example web site](https://github.com/JonPSmith/SampleMvcWebApp) is also available as a Open Source project.
-- The commands have been extensively Unit Tested.
-- The project is Open Source.
+- GenericService is designed to handle validation and error checking at multiple levels in the system.
+See this [article](https://www.simple-talk.com/dotnet/.net-framework/catching-bad-data-in-entity-framework/)
+for the general approach I use.
+- This [article](https://www.simple-talk.com/dotnet/.net-framework/the-.net-4.5-asyncawait-feature-in-promise-and-practice/)
+compares sync and async usage of Entity Framework using the [SampleMvcWebApp](http://samplemvcwebapp.net/).
 
 For documentation on the commands and configuration please look at the [wiki](https://github.com/JonPSmith/GenericServices/wiki)
 plus the example web site listed above.
