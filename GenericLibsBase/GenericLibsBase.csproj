@@ -45,6 +45,7 @@
     <Compile Include="GenericLibsBaseConfig.cs" />
     <Compile Include="ISuccessOrErrors.cs" />
     <Compile Include="IGenericLogger.cs" />
+    <Compile Include="ISuccessOrErrors.Generic.cs" />
     <Compile Include="NoLoggingGenericLogger.cs" />
     <Compile Include="NuGet\AssemblyVersionPart.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -52,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <Compile Include="Core\SuccessOrErrors.Generic.cs" />
     <None Include="NuGet\GenericLibsBase.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
