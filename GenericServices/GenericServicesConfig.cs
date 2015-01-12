@@ -49,6 +49,8 @@ namespace GenericServices
             {2601, "One of the properties is marked as Unique index and there is already an entry with that value."} //cannot insert dup key in index
         };
 
+        private static bool _useDelegateDecompilerWhereNeeded = true;
+
         /// <summary>
         /// This contains the SqlErrorNumbers that will be caught by SaveChangesWithErrorChecking (sync and Async)
         /// </summary>
@@ -63,7 +65,11 @@ namespace GenericServices
         /// <summary>
         /// Set this if you want Generic Services to use the DelegateDecompiler. See documentation for more information
         /// </summary>
-        public static bool UseDelegateDecompilerWhereNeeded { get; set; }
+        public static bool UseDelegateDecompilerWhereNeeded
+        {
+            get { return _useDelegateDecompilerWhereNeeded; }
+            set { _useDelegateDecompilerWhereNeeded = value; }
+        }
 
         //--------------------------------------------------
         //public methods

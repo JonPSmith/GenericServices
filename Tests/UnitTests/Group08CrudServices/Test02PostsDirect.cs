@@ -55,7 +55,7 @@ namespace Tests.UnitTests.Group08CrudServices
         }
 
         [Test]
-        public void Check01DirectReferenceOk()
+        public void Test01DirectReferenceOk()
         {
 
             //SETUP    
@@ -71,7 +71,7 @@ namespace Tests.UnitTests.Group08CrudServices
         }
 
         [Test]
-        public void Check02ListDirectPostOk()
+        public void Test02ListDirectPostOk()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -87,12 +87,11 @@ namespace Tests.UnitTests.Group08CrudServices
                 list.First().Title.ShouldEqual(firstPost.Title);
                 list.First().Blogger.Name.ShouldEqual(firstPost.Blogger.Name);
                 list.First().Tags.ShouldEqual(null);
-
             }
         }
 
         [Test]
-        public void Check03DetailDirectPostOk()
+        public void Test10DetailDirectPostOk()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -111,7 +110,7 @@ namespace Tests.UnitTests.Group08CrudServices
         }
 
         [Test]
-        public void Check03DetailDirectPostWhereOk()
+        public void Test11DetailDirectPostWhereOk()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -130,7 +129,7 @@ namespace Tests.UnitTests.Group08CrudServices
         }
 
         [Test]
-        public void Check05DetailDirectPostNotFoundBad()
+        public void Test12DetailDirectPostNotFoundBad()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -149,7 +148,7 @@ namespace Tests.UnitTests.Group08CrudServices
         }
 
         [Test]
-        public void Check06UpdateDirectOk()
+        public void Test20UpdateDirectOk()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -171,7 +170,7 @@ namespace Tests.UnitTests.Group08CrudServices
         }
 
         [Test]
-        public void Check07UpdateDirectPostCorrectOk()
+        public void Test21UpdateDirectPostCorrectOk()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -199,7 +198,7 @@ namespace Tests.UnitTests.Group08CrudServices
         }
 
         [Test]
-        public void Check08UpdateWithListDtoBad()
+        public void Test22UpdateWithListDtoBad()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -220,7 +219,7 @@ namespace Tests.UnitTests.Group08CrudServices
         }
 
         [Test]
-        public void Check08CreateDirectOk()
+        public void Test30CreateDirectOk()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -246,7 +245,7 @@ namespace Tests.UnitTests.Group08CrudServices
         }
 
         [Test]
-        public void Check10DeleteDirectOk()
+        public void Test40DeleteDirectOk()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -273,7 +272,7 @@ namespace Tests.UnitTests.Group08CrudServices
         }
 
         [Test]
-        public void Check11DeleteWithRelationshipsDirectOk()
+        public void Test41DeleteWithRelationshipsDirectOk()
         {
             using (var db = new SampleWebAppDb())
             {
@@ -303,7 +302,7 @@ namespace Tests.UnitTests.Group08CrudServices
         //}
 
         //[Test]
-        //public void Check12DeleteWithRelationshipsShouldFailOk()
+        //public void Test42DeleteWithRelationshipsShouldFailOk()
         //{
         //    using (var db = new SampleWebAppDb())
         //    {
@@ -329,7 +328,7 @@ namespace Tests.UnitTests.Group08CrudServices
         }
 
         [Test]
-        public void Check15DeleteWithRelationshipsDirectFailOk()
+        public void Test43DeleteWithRelationshipsDirectFailOk()
         {
             using (var db = new SampleWebAppDb())
             {
