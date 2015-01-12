@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\EfGenericDtoBase.Generic.Setup.cs" />
+    <Compile Include="Core\Internal\CheckComputed.cs" />
     <Compile Include="Core\Internal\MappingHelper.cs" />
     <Compile Include="DoNotCopyBackToDatabaseAttribute.cs" />
     <Compile Include="Core\EfGenericDtoAsync.cs" />

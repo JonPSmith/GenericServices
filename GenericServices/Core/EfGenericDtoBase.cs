@@ -50,36 +50,19 @@ namespace GenericServices.Core
 
     public abstract class EfGenericDtoBase 
     {
-        /// <summary>
-        /// This class hold any information that can be found at setup
-        /// </summary>
-        protected class GenericDtoSetupInfo
-        {
-
-            /// <summary>
-            /// Set to true if UseDelegateDecompilerWhereNeeded is valid and TEntity class contains a [Computed] attribute
-            /// </summary>
-            public bool NeedsDecompile { get; private set; }
-
-            public GenericDtoSetupInfo(bool needsDecompile)
-            {
-                NeedsDecompile = needsDecompile;
-            }
-        }
+        private bool _needsDecompile;
 
         /// <summary>
-        /// This is the cache used to hold info on setup. If an entry is in the directory then the class has been setup
-        /// </summary>
-        protected static readonly ConcurrentDictionary<Type, GenericDtoSetupInfo> SetupCache = new ConcurrentDictionary<Type, GenericDtoSetupInfo>();
-
-        /// <summary>
-        /// If this flag is set then .Decompile needs to be added to any query
+        /// If this flag is set then .Decompile is added to any query
         /// The flag is set on creation based on whether config UseDelegateDecompilerWhereNeeded flas is true
         /// and class's TEntity class, or  any of the associatedDTO TEntity classes ,
         /// has properties with the [Computed] attribute on them.
-        /// Can be overriden by the developer.
         /// </summary>
-        public bool NeedsDecompile { get; set; }
+        public bool NeedsDecompile
+        {
+            get { return _needsDecompile || ForceNeedDecompile; }
+            set { _needsDecompile = value; }
+        }
 
         /// <summary>
         /// Override and set to true if you wish to force NeedDecompile as always on in this DTO.

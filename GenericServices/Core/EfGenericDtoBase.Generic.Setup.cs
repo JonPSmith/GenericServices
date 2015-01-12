@@ -54,35 +54,25 @@ namespace GenericServices.Core
         /// </summary>
         protected EfGenericDtoBase()
         {
-            var setupInfo = SetupCache.GetOrAdd(GetType(), setup => MapperSetup());
-            NeedsDecompile = setupInfo.NeedsDecompile;
+            MapperSetup();
         }
 
         /// <summary>
         /// This sets all the AutoMapper mapping that this dto needs. It is called from the base constructor
         /// It also makes sure that any associated dto mappings are set up as the order of creation is not fixed
         /// </summary>
-        private GenericDtoSetupInfo MapperSetup()
+        private void MapperSetup()
         {
             CreateReadFromDatabaseMapping();
             CreatWriteToDatabaseMapping();
 
-            //now set up any associated mappings. See comments on AssociatedDtoMapping for why these are needed
-            var shouldDecompile = ForceNeedDecompile;
-            shouldDecompile |= CheckIfClassNeedsDecompile(typeof(TEntity));
-            shouldDecompile |= SetupAllAssociatedMappings();
-
-            return new GenericDtoSetupInfo(shouldDecompile);
+            //now set up NeedsDecompile any associated mappings. See comments on AssociatedDtoMapping for why these are needed
+            NeedsDecompile = ForceNeedDecompile || CheckComputed.ClassNeedsDecompile(typeof(TEntity));
+            NeedsDecompile |= SetupAllAssociatedMappings();
         }
 
         //---------------------------------------------------------------------
         //private methods
-
-        private static bool CheckIfClassNeedsDecompile(Type type)
-        {
-            return (GenericServicesConfig.UseDelegateDecompilerWhereNeeded &&
-                    type.GetProperties().Any(x => x.GetCustomAttribute<ComputedAttribute>() != null));
-        }
 
         /// <summary>
         /// This sets up the AutoMapper mapping for a copy from the TEntity to the TDto.
@@ -90,6 +80,8 @@ namespace GenericServices.Core
         /// </summary>
         private void CreateReadFromDatabaseMapping()
         {
+            if (DoesAutoMapperMapAlreadyExist<TEntity, TDto>()) return;
+
             var map = Mapper.CreateMap<TEntity, TDto>();
             if (AddedDatabaseToDtoMapping != null)
                 AddedDatabaseToDtoMapping(map);
@@ -101,8 +93,21 @@ namespace GenericServices.Core
         /// </summary>
         private static void CreatWriteToDatabaseMapping()
         {
+            if (DoesAutoMapperMapAlreadyExist<TDto, TEntity>()) return;
+
             Mapper.CreateMap<TDto, TEntity>()
                 .IgnoreMarkedProperties();
+        }
+
+        /// <summary>
+        /// This stops us setting up the mapping multiple times. Don't think it is problem, but mainly a performance issue.
+        /// </summary>
+        /// <typeparam name="TSource"></typeparam>
+        /// <typeparam name="TDestination"></typeparam>
+        /// <returns></returns>
+        private static bool DoesAutoMapperMapAlreadyExist<TSource, TDestination>()
+        {
+            return (Mapper.FindTypeMapFor<TSource, TDestination>() != null);
         }
 
         /// <summary>
@@ -128,13 +133,11 @@ namespace GenericServices.Core
             if (!associatedDtoMapping.IsSubclassOf(typeof(EfGenericDtoBase)))
                 throw new InvalidOperationException("You have not supplied a class based on EfGenericDto to set up the mapping.");
 
-            if (SetupCache.ContainsKey(associatedDtoMapping))
-                return SetupCache[associatedDtoMapping].NeedsDecompile;
-
-            //Otherwise it has not been set up so create it and then get flag
-            var associatedDto = Activator.CreateInstance(associatedDtoMapping, new object[] { });       //this sets up the mapping
+            //create the acssociated dto to get the NeedsDecompile flag. Also makes sure the mapping is set
+            var associatedDto = Activator.CreateInstance(associatedDtoMapping, new object[] { });       
             return ((EfGenericDtoBase)associatedDto).NeedsDecompile;
         }
+
 
     }
 }
