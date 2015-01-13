@@ -46,6 +46,7 @@ namespace Tests.UnitTests.Group08CrudServices
             public int IntsCount { get; set; }
             public bool IntsAny { get; set; }
             public int IntsSum { get; set; }            //This does not work!
+            public int IntsMax { get; set; }
             public int Sum { get; set; }
         }
 
@@ -63,11 +64,26 @@ namespace Tests.UnitTests.Group08CrudServices
             //VERIFY
             dto.IntsCount.ShouldEqual(3);
             dto.IntsAny.ShouldEqual(true);
+            dto.IntsMax.ShouldEqual(3);
+        }
+
+        [Test]
+        public void Check02MappingGetSumOk()
+        {
+
+            //SETUP  
+            var data = new Data { Ints = new[] { 1, 2, 3 } };
+
+            //ATTEMPT
+            Mapper.CreateMap<Data, DtoAggregate>();
+            var dto = Mapper.Map<Data, DtoAggregate>(data);
+
+            //VERIFY
             dto.Sum.ShouldEqual(6);
         }
 
         [Test]
-        public void Check02AggregatesSumBad()
+        public void Check05AggregatesSumBad()
         {
 
             //SETUP  
