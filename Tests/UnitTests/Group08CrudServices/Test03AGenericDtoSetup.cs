@@ -36,15 +36,9 @@ namespace Tests.UnitTests.Group08CrudServices
     class Test03AGenericDtoSetup
     {
 
-        [TestFixtureSetUp]
-        public void FixtureSetUp()
+        [SetUp]
+        public void SetUp()
         {
-            //using (var db = new SampleWebAppDb())
-            //{
-            //    DataLayerInitialise.InitialiseThis();
-            //    var filepath = TestFileHelpers.GetTestFileFilePath("DbContentSimple.xml");
-            //    DataLayerInitialise.ResetDatabaseToTestData(db, filepath);
-            //}
             GenericServicesConfig.UseDelegateDecompilerWhereNeeded = true;
         }
 
@@ -82,6 +76,19 @@ namespace Tests.UnitTests.Group08CrudServices
 
             //VERIFY
             dto.NeedsDecompile.ShouldEqual(true);
+        }
+
+        [Test]
+        public void Test11SetupDelegateDecompilerPostDto()
+        {
+            //SETUP
+            GenericServicesConfig.UseDelegateDecompilerWhereNeeded = false;
+
+            //ATTEMPT
+            var dto = new DelegateDecompilePostDto();
+
+            //VERIFY
+            dto.NeedsDecompile.ShouldEqual(false);
         }
 
         [Test]

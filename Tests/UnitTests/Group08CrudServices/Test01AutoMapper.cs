@@ -44,6 +44,8 @@ namespace Tests.UnitTests.Group08CrudServices
         private class DtoAggregate
         {
             public int IntsCount { get; set; }
+            public bool IntsAny { get; set; }
+            public int IntsSum { get; set; }            //This does not work!
             public int Sum { get; set; }
         }
 
@@ -60,6 +62,23 @@ namespace Tests.UnitTests.Group08CrudServices
 
             //VERIFY
             dto.IntsCount.ShouldEqual(3);
+            dto.IntsAny.ShouldEqual(true);
+            dto.Sum.ShouldEqual(6);
+        }
+
+        [Test]
+        public void Check02AggregatesSumBad()
+        {
+
+            //SETUP  
+            var data = new Data { Ints = new[] { 1, 2, 3 } };
+
+            //ATTEMPT
+            Mapper.CreateMap<Data, DtoAggregate>();
+            var dto = Mapper.Map<Data, DtoAggregate>(data);
+
+            //VERIFY
+            dto.IntsSum.ShouldEqual(0);
             dto.Sum.ShouldEqual(6);
         }
 

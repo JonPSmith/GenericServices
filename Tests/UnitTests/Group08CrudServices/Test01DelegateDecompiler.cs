@@ -1,4 +1,5 @@
-﻿using System.Data.Entity;
+﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using GenericServices;
 using GenericServices.Services.Concrete;
@@ -133,6 +134,24 @@ namespace Tests.UnitTests.Group08CrudServices
                 status.Result.BloggerNameAndEmail.ShouldEndWith("nospam.com)");
                 status.Result.TagNames.ShouldNotEqualNull();
                 CollectionAssert.AreEqual(firstPost.Tags.Select(x => x.Name), status.Result.TagNames);
+            }
+        }
+
+        [Test]
+        public void Check06DetailComputedFailDelegateDecompilerTurnedOff()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                GenericServicesConfig.UseDelegateDecompilerWhereNeeded = false;
+                var service = new DetailService<Post, DelegateDecompilePostDto>(db);
+                var firstPost = db.Posts.Include(x => x.Tags).First();
+
+                //ATTEMPT
+                var ex = Assert.Throws<NotSupportedException>( () => service.GetDetail(firstPost.PostId));
+
+                //VERIFY
+                ex.Message.ShouldEqual("The specified type member 'BloggerNameAndEmail' is not supported in LINQ to Entities. Only initializers, entity members, and entity navigation properties are supported.");
             }
         }
 
