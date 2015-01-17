@@ -58,6 +58,7 @@ namespace GenericServices.Core
 
         /// <summary>
         /// Override this to add .ForEach mappings that will be applied to the TEntity to TDto conversion
+        /// See 'DTO data copying, Using AutoMapper for calculated properties' in the documentation 
         /// </summary>
         protected virtual Action<IMappingExpression<TEntity, TDto>> AddedDatabaseToDtoMapping { get { return null; } }
 

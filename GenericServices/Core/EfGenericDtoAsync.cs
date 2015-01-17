@@ -73,7 +73,6 @@ namespace GenericServices.Core
         /// <summary>
         /// This is used in a create. It copies only the properties in TDto that have public setter into the TEntity.
         /// You can override this if you need a more complex copy
-        /// Note: If SupportedFunctions has the flag ValidateonCopyDtoToData then it validates the data (used by Action methods)
         /// </summary>
         /// <param name="context"></param>
         /// <param name="source"></param>
@@ -86,7 +85,7 @@ namespace GenericServices.Core
         }
 
         /// <summary>
-        /// This is used in an update. It copies only the properties in TDto that have public setter into the TEntity.
+        /// This is used in an update. It copies only the properties in TDto that do not have the [DoNotCopyBackToDatabase] on them.
         /// You can override this if you need a more complex copy
         /// </summary>
         /// <param name="context"></param>

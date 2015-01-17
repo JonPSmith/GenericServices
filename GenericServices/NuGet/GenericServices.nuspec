@@ -19,9 +19,9 @@
    2. Go to SampleMvcWebApp
    3. Set Package manager->Package Source to All, or <your local source>
    4. Use the following package manager command in target 
-      Install-Package GenericServices (-Pre) -Project <projectname>
+      Install-Package GenericServices -Project <projectname>
       or
-      Update-Package GenericServices (-Pre)
+      Update-Package GenericServices
    
    To test via staging
    ===================
@@ -35,13 +35,13 @@
    -->
   <metadata>
     <id>GenericServices</id>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <title>GenericServices</title>
     <authors>Jon Smith</authors>
     <owners>Jon Smith</owners>
     <licenseUrl>https://github.com/JonPSmith/GenericServices/blob/master/licence.txt</licenseUrl>
     <projectUrl>https://github.com/JonPSmith/GenericServices</projectUrl>
-    <!--<iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>-->
+    <iconUrl>https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/NuGet/GenericServicesNuGetIcon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
       Generic Services is a .NET class library to help build a service layer, i.e. a layer that acts as a facard/adapter between your business/data service layers and your User Interface or HTTP service.
@@ -52,7 +52,6 @@
       <dependency id="GenericLibsBase" version="1.0.0" />
       <dependency id="EntityFramework" version="6.1" />
       <dependency id="AutoMapper" version="3.3" />
-      <dependency id="DelegateDecompiler" version="0.13" />
       <dependency id="DelegateDecompiler.EntityFramework" version="0.13" />
     </dependencies>
     <frameworkAssemblies>

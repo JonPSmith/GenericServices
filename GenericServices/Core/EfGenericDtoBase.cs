@@ -42,6 +42,12 @@ namespace GenericServices.Core
         Update = 8,
         //note: no delete as delete does not need a dto
         
+        /// <summary>
+        /// By default the Create and Update services will call the method 'SetupSecondaryData' (sync and Async)
+        /// which you are supposed to override. As a safety precaution the default SetupSecondaryData method
+        /// will throw an exception if not overridden. 
+        /// If you don't need SetupSecondaryData then set the flag 'DoesNotNeedSetup' below to stop the call.
+        /// </summary>
         DoesNotNeedSetup = 256,
         AllCrudButCreate = List | Detail | Update,
         AllCrudButList = Detail | Create | Update,
@@ -71,7 +77,8 @@ namespace GenericServices.Core
         public virtual bool ForceNeedDecompile { get {  return false;} }
 
         /// <summary>
-        /// This must be overridden to say that the dto supports the create function
+        /// This must be overridden to say what functions the DTO supports.
+        /// Each method checks this and will throw an error if the service is not supported
         /// </summary>
         internal protected abstract CrudFunctions SupportedFunctions { get; }
 
