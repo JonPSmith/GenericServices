@@ -12,6 +12,8 @@ providing robust implementations of standard database access commands.
 GenericServices is an Open Source project under the 
 [MIT licence](https://github.com/JonPSmith/GenericServices/blob/master/licence.txt)
 
+It is not currently available on NuGet, but it will be up there soon.
+
 ## The best documentation is a demo
 I have created two demo sites that show how GenericServices can be used to produce a
 ASP.NET MVC web application with a html/razor front end. 
@@ -25,7 +27,7 @@ It is an open-source project with
 Read the [site's introduction](http://samplemvcwebapp.net/) and the 
 [source code README page](https://github.com/JonPSmith/SampleMvcWebApp) for more information.
 
-#### 2. [SampleMvcWebAppComplex](https://github.com/JonPSmith/SampleMvcWebAppComplex) web site
+#### 2. [SampleMvcWebAppComplex](http://complex.samplemvcwebapp.net/) web site
 This is an Advanced/Complex web site using GenericServices to provide a user interface
 to the AdventureWorks Lite 2012 database. This is NOT an open-source project,
 mainly because it uses the proprietary, paid-for library 
@@ -38,7 +40,7 @@ for more information.
 
 ## Second best documentation is the Wiki
 The [GenericServices Wiki](https://github.com/JonPSmith/GenericServices/wiki)
-has extensive information - see the sidebar for an index to the various parts.
+has extensive information - see the Wiki sidebar for an index to the various parts.
 
 The wiki documentation covers things the software doesn't explain, like
 [Why GenericServices?](https://github.com/JonPSmith/GenericServices/wiki/Why-GenericServices%3F) 
