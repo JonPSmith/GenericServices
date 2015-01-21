@@ -12,7 +12,8 @@ providing robust implementations of standard database access commands.
 GenericServices is an Open Source project under the 
 [MIT licence](https://github.com/JonPSmith/GenericServices/blob/master/licence.txt)
 
-It is not currently available on NuGet, but it will be up there soon.
+**GenericServices is now available on NuGet.**
+See [NuGet Package Page](https://www.nuget.org/packages/GenericServices/) for more details.
 
 ## The best documentation is a demo
 I have created two demo sites that show how GenericServices can be used to produce a
