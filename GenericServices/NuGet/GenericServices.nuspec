@@ -11,7 +11,7 @@
    3. Update release notes
    4. Run the following two command lines
       cd C:\Users\Jon\Documents\Visual Studio 2013\Projects\GenericServices\GenericServices\NuGet
-      C:\Users\Jon\Nuget pack GenericServices.nuspec
+      C:\Users\Jon\Nuget pack GenericServices.nuspec -Symbols
    
    To Test locally
    ===============
@@ -26,16 +26,19 @@
    To test via staging
    ===================
    1. Go to http://staging.nuget.org/ and log on normally
-   2. Upload the package
+   2. Upload the package to check
    
    To upload to NuGet
    ==================
-   ???
+   Quickest way is via command line as it pushes both the package and the symboles
+   NuGet SetApiKey <key>
+   NuGet Push GenericServices.<ver>.nupkg
+   
    
    -->
   <metadata>
     <id>GenericServices</id>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
     <title>GenericServices</title>
     <authors>Jon Smith</authors>
     <owners>Jon Smith</owners>
@@ -44,15 +47,15 @@
     <iconUrl>https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/NuGet/GenericServicesNuGetIcon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
-      Generic Services is a .NET class library to help build a service layer, i.e. a layer that acts as a facard/adapter between your business/data service layers and your User Interface or HTTP service.
+      Generic Services is a .NET class library to help build a service layer, i.e. a layer that acts as a facard/adapter between your data layers containing an Entity Framework database and your User Interface or HTTP service.
     </description>
-    <releaseNotes>First release.</releaseNotes>
-    <copyright>Copyright 2014</copyright>
+    <releaseNotes>First NuGet release now that documentation is ready.</releaseNotes>
+    <copyright>Copyright 2015</copyright>
     <dependencies>
       <dependency id="GenericLibsBase" version="1.0.0" />
       <dependency id="EntityFramework" version="6.1" />
       <dependency id="AutoMapper" version="3.3" />
-      <dependency id="DelegateDecompiler.EntityFramework" version="0.13" />
+      <dependency id="DelegateDecompiler.EntityFramework" version="0.15" />
     </dependencies>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.Core" targetFramework="net451" />
@@ -61,6 +64,5 @@
   <files>
     <file src="..\bin\Release\GenericServices.dll" target="lib" />
     <file src="..\bin\Release\GenericServices.xml" target="lib" />
-    <file src="..\bin\Release\GenericServices.pdb" target="lib" />
   </files>
 </package>

@@ -11,7 +11,7 @@
    3. Update release notes
    4. Run the following two command lines
       cd C:\Users\Jon\Documents\Visual Studio 2013\Projects\GenericServices\GenericLibsBase\NuGet
-      C:\Users\Jon\Nuget pack GenericLibsBase.nuspec
+      C:\Users\Jon\Nuget pack GenericLibsBase.nuspec -Symbols
    
    To Test locally
    ===============
@@ -26,11 +26,13 @@
    To test via staging
    ===================
    1. Go to http://staging.nuget.org/ and log on normally
-   2. Upload the package
+   2. Upload the package to check
    
    To upload to NuGet
    ==================
-   ???
+   Quickest way is via command line as it pushes both the package and the symboles
+   NuGet SetApiKey <key>
+   NuGet Push GenericLibsBase.<ver>.nupkg
    
    -->
   <metadata>
@@ -41,13 +43,13 @@
     <owners>Jon Smith</owners>
     <licenseUrl>https://github.com/JonPSmith/GenericServices/blob/master/licence.txt</licenseUrl>
     <projectUrl>https://github.com/JonPSmith/GenericServices</projectUrl>
-    <!--<iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>-->
+    <iconUrl>https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/NuGet/GenericServicesNuGetIcon.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
       GenericLibsBase is a very small .NET class library holds common items used by GenericServices and other GenericXXX libraries.
     </description>
     <releaseNotes>First release.</releaseNotes>
-    <copyright>Copyright 2014</copyright>
+    <copyright>Copyright 2015</copyright>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.Core" targetFramework="net451" />
     </frameworkAssemblies>
@@ -55,6 +57,5 @@
   <files>
     <file src="..\bin\Release\GenericLibsBase.dll" target="lib" />
     <file src="..\bin\Release\GenericLibsBase.xml" target="lib" />
-    <file src="..\bin\Release\GenericLibsBase.pdb" target="lib" />
   </files>
 </package>
