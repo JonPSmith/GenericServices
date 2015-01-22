@@ -3,8 +3,9 @@ GenericServices
 
 GenericServices is a .NET class library to help build a 
 [service layer](http://martinfowler.com/eaaCatalog/serviceLayer.html), 
-i.e. a layer that acts as a facard/adapter between your business/data service layers 
-and your User Interface or HTTP service. It makes heavy use of 
+i.e. a layer that acts as a facard/adapter between your database in the Data Layer 
+and your User Interface or HTTP service in your Presentation Layer. 
+It makes heavy use of 
 [Entity Framework 6 - EF6](http://msdn.microsoft.com/en-us/data/ee712907) 
 and .NET 4.5's [async/await](http://msdn.microsoft.com/en-gb/library/hh191443.aspx) 
 commands. Its aim is to make the creation of the service layer simple while 
