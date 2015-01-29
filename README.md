@@ -16,8 +16,8 @@ GenericServices is an Open Source project under the
 **GenericServices is now available on NuGet.**
 See [NuGet Package Page](https://www.nuget.org/packages/GenericServices/) for more details.
 
-## The best documentation is a demo
-I have created two demo sites that show how GenericServices can be used to produce a
+## The best documentation is a worked example
+I have created two worked exmaples that show how GenericServices can be used to produce a
 ASP.NET MVC web application with a html/razor front end. 
 
 #### 1. [SampleMvcWebApp](http://samplemvcwebapp.net/) web site

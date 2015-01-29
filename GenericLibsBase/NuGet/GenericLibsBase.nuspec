@@ -43,7 +43,7 @@
     <owners>Jon Smith</owners>
     <licenseUrl>https://github.com/JonPSmith/GenericServices/blob/master/licence.txt</licenseUrl>
     <projectUrl>https://github.com/JonPSmith/GenericServices</projectUrl>
-    <iconUrl>https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/NuGet/GenericServicesNuGetIcon.png</iconUrl>
+    <iconUrl>https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/NuGet/GenericServicesNuGetIcon128.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
       GenericLibsBase is a very small .NET class library holds common items used by GenericServices and other GenericXXX libraries.
