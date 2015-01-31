@@ -51,6 +51,7 @@
     </description>
     <releaseNotes>First NuGet release now that documentation is ready.</releaseNotes>
     <copyright>Copyright 2015</copyright>
+    <tags>EntityFramework EF ASP.NET MVC DTO Validation Library</tags>
     <dependencies>
       <dependency id="GenericLibsBase" version="1.0.0" />
       <dependency id="EntityFramework" version="6.1" />

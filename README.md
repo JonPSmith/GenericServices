@@ -40,7 +40,7 @@ Read the [site's introduction](http://complex.samplemvcwebapp.net/) and the
 [source code README page](https://github.com/JonPSmith/SampleMvcWebAppComplex) 
 for more information.
 
-## Second best documentation is the Wiki
+## Full documentation exists in the Wiki
 The [GenericServices Wiki](https://github.com/JonPSmith/GenericServices/wiki)
 has extensive information - see the Wiki sidebar for an index to the various parts.
 
