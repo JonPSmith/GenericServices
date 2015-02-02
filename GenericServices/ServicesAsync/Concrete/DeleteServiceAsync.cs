@@ -54,14 +54,14 @@ namespace GenericServices.ServicesAsync.Concrete
             if (keyProperties.Count != keys.Length)
                 throw new ArgumentException("The number of keys in the data entry did not match the number of keys provided");
 
-            var entityToDelete = await _db.Set<TEntity>().FindAsync(keys);
+            var entityToDelete = await _db.Set<TEntity>().FindAsync(keys).ConfigureAwait(false);
             if (entityToDelete == null)
                 return
                     new SuccessOrErrors().AddSingleError(
                         "Could not delete entry as it was not in the database. Could it have been deleted by someone else?");
 
             _db.Set<TEntity>().Remove(entityToDelete);
-            var result = await _db.SaveChangesWithCheckingAsync();
+            var result = await _db.SaveChangesWithCheckingAsync().ConfigureAwait(false);
             if (result.IsValid)
                 result.SetSuccessMessage("Successfully deleted {0}.", typeof(TEntity).Name);
 
@@ -82,17 +82,17 @@ namespace GenericServices.ServicesAsync.Concrete
             params object[] keys) where TEntity : class
         {
 
-            var entityToDelete = await _db.Set<TEntity>().FindAsync(keys);
+            var entityToDelete = await _db.Set<TEntity>().FindAsync(keys).ConfigureAwait(false);
             if (entityToDelete == null)
                 return
                     new SuccessOrErrors().AddSingleError(
                         "Could not delete entry as it was not in the database. Could it have been deleted by someone else?");
 
-            var result = await removeRelationshipsAsync(_db, entityToDelete);
+            var result = await removeRelationshipsAsync(_db, entityToDelete).ConfigureAwait(false);
             if (!result.IsValid) return result;
 
             _db.Set<TEntity>().Remove(entityToDelete);
-            result = await _db.SaveChangesWithCheckingAsync();
+            result = await _db.SaveChangesWithCheckingAsync().ConfigureAwait(false);
             if (result.IsValid)
                 result.SetSuccessMessage("Successfully deleted {0} and given relationships.", typeof(TEntity).Name);
 

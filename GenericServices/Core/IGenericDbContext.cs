@@ -1,8 +1,8 @@
 ﻿#region licence
 // The MIT License (MIT)
 // 
-// Filename: IGenericServicesDbContext.cs
-// Date Created: 2014/05/19
+// Filename: IGenericDbContext.cs
+// Date Created: 2015/02/02
 // 
 // Copyright (c) 2014 Jon Smith (www.selectiveanalytics.com & www.thereformedprogrammer.net)
 // 
@@ -25,17 +25,28 @@
 // SOFTWARE.
 #endregion
 
-using GenericServices.Core;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.Validation;
 
-namespace GenericServices
+namespace GenericServices.Core
 {
     /// <summary>
-    /// This is the interface that developers should placed on the DbContext in there project
-    /// It will allow the GenericServices commands to woek with your context
-    /// Also useful for dependency injection.
+    /// This is the core Generic DbContext that all GenericXXXDbContexts reference, but should not be used by a user of this library
+    /// Anyone using GenericServices should use GenericServicesDbContexts
+    /// This interface is used in all the commands so that they can be used by other GenericXXX libraries 
     /// </summary>
-    public interface IGenericServicesDbContext : IGenericDbContext, IGenericSaveChanges
+    public interface IGenericDbContext
     {
 
+        IEnumerable<DbEntityValidationResult> GetValidationErrors();
+
+        DbSet<TEntity> Set<TEntity>() where TEntity : class;
+        DbSet Set(Type entityType);
+
+        DbEntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;
+        DbEntityEntry Entry(object entity); 
     }
 }

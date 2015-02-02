@@ -31,14 +31,14 @@
    To upload to NuGet
    ==================
    Quickest way is via command line as it pushes both the package and the symboles
-   NuGet SetApiKey <key>
-   NuGet Push GenericServices.<ver>.nupkg
+   C:\Users\Jon\Nuget SetApiKey <key>
+   C:\Users\Jon\Nuget Push GenericServices.<ver>.nupkg
    
    
    -->
   <metadata>
     <id>GenericServices</id>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <title>GenericServices</title>
     <authors>Jon Smith</authors>
     <owners>Jon Smith</owners>
@@ -49,7 +49,7 @@
     <description>
       Generic Services is a .NET class library to help build a service layer, i.e. a layer that acts as a facard/adapter between your data layers containing an Entity Framework database and your User Interface or HTTP service.
     </description>
-    <releaseNotes>First NuGet release now that documentation is ready.</releaseNotes>
+    <releaseNotes>Added .ConfigureAwait(false) to all library async calls. Minor changes to internal interfaces.</releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>EntityFramework EF ASP.NET MVC DTO Validation Library</tags>
     <dependencies>

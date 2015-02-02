@@ -67,7 +67,7 @@ namespace GenericServices.Core
         /// <returns></returns>
         internal protected virtual async Task<TEntity> FindItemTrackedForUpdateAsync(IGenericServicesDbContext context)
         {
-            return await context.Set<TEntity>().FindAsync(GetKeyValues(context));
+            return await context.Set<TEntity>().FindAsync(GetKeyValues(context)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace GenericServices.Core
             var query = GetDataUntracked(context).Where(predicate).Project().To<TDto>();
 
             //We check if we need to decompile the LINQ expression so that any computed properties in the class are filled in properly
-            return await ApplyDecompileIfNeeded(query).RealiseSingleWithErrorCheckingAsync();
+            return await ApplyDecompileIfNeeded(query).RealiseSingleWithErrorCheckingAsync().ConfigureAwait(false);
         }
     }
 }

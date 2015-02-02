@@ -24,16 +24,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #endregion
+
 using System.Threading.Tasks;
 
-namespace GenericServices
+namespace GenericServices.Core
 {
     /// <summary>
     /// This interface is used by the SaveChangesWithChecking extensions.
-    /// Please add this interface to any DbContext that you want to use SaveChangesWithChecking extentions on
-    /// Note that IGenericServiceSaveChanges is included in the IGenericSericesDbContext already
+    /// Uses of the GenericServices library should not need to use this as IGenericSaveChanges is included in the IGenericSericesDbContext already 
     /// </summary>
-    public interface IGenericServiceSaveChanges
+    public interface IGenericSaveChanges
     {
         int SaveChanges();
         Task<int> SaveChangesAsync();

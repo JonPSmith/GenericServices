@@ -55,7 +55,7 @@ namespace GenericServices.ServicesAsync.Concrete
         public async Task<ISuccessOrErrors<T>> GetOriginalAsync<T>(params object[] keys) where T : class
         {
             var service = DecodeToService<UpdateSetupServiceAsync>.CreateCorrectService<T>(WhatItShouldBe.AsyncClassOrSpecificDto, _db);
-            return await service.GetOriginalAsync(keys);
+            return await service.GetOriginalAsync(keys).ConfigureAwait(false);
         }
     }
 
@@ -78,7 +78,7 @@ namespace GenericServices.ServicesAsync.Concrete
         /// <returns>Task with Status. If valid Result holds data (not tracked), otherwise null</returns>
         public async Task<ISuccessOrErrors<TEntity>> GetOriginalUsingWhereAsync(Expression<Func<TEntity, bool>> whereExpression)
         {
-            return await _db.Set<TEntity>().Where(whereExpression).AsNoTracking().RealiseSingleWithErrorCheckingAsync();
+            return await _db.Set<TEntity>().Where(whereExpression).AsNoTracking().RealiseSingleWithErrorCheckingAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace GenericServices.ServicesAsync.Concrete
         /// <returns>Task with Status. If valid Result holds data (not tracked), otherwise null</returns>
         public async Task<ISuccessOrErrors<TEntity>> GetOriginalAsync(params object[] keys)
         {
-            return await GetOriginalUsingWhereAsync(BuildFilter.CreateFilter<TEntity>(_db.GetKeyProperties<TEntity>(), keys));
+            return await GetOriginalUsingWhereAsync(BuildFilter.CreateFilter<TEntity>(_db.GetKeyProperties<TEntity>(), keys)).ConfigureAwait(false);
         }
     }
 
@@ -119,11 +119,11 @@ namespace GenericServices.ServicesAsync.Concrete
             if (!dto.SupportedFunctions.HasFlag(CrudFunctions.Update))
                 throw new InvalidOperationException("This DTO does not support update.");
 
-            var status = await dto.DetailDtoFromDataInAsync(_db, whereExpression);
+            var status = await dto.DetailDtoFromDataInAsync(_db, whereExpression).ConfigureAwait(false);
             if (!status.IsValid) return status;
 
             if (!dto.SupportedFunctions.HasFlag(CrudFunctions.DoesNotNeedSetup))
-                await status.Result.SetupSecondaryDataAsync(_db, status.Result);
+                await status.Result.SetupSecondaryDataAsync(_db, status.Result).ConfigureAwait(false);
             return status;
         }
 
@@ -136,7 +136,7 @@ namespace GenericServices.ServicesAsync.Concrete
         /// to set secondary data, otherwise null</returns>
         public async Task<ISuccessOrErrors<TDto>> GetOriginalAsync(params object[] keys)
         {
-            return await GetOriginalUsingWhereAsync(BuildFilter.CreateFilter<TEntity>(_db.GetKeyProperties<TEntity>(), keys));
+            return await GetOriginalUsingWhereAsync(BuildFilter.CreateFilter<TEntity>(_db.GetKeyProperties<TEntity>(), keys)).ConfigureAwait(false);
         }
     }
 }

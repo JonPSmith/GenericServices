@@ -83,7 +83,7 @@ namespace GenericServices.Core
             var status = new SuccessOrErrors<T>(new T(), "we return empty class if it fails");
             try
             {
-                var result = await request.SingleOrDefaultAsync();
+                var result = await request.SingleOrDefaultAsync().ConfigureAwait(false);
                 if (result == null)
                     status.AddSingleError(
                         "We could not find an entry using that filter. Has it been deleted by someone else?");

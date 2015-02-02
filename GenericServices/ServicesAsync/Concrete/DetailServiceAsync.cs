@@ -55,7 +55,7 @@ namespace GenericServices.ServicesAsync.Concrete
         public async Task<ISuccessOrErrors<T>> GetDetailAsync<T>(params object[] keys) where T : class, new()
         {
             var service = DecodeToService<DetailServiceAsync>.CreateCorrectService<T>(WhatItShouldBe.AsyncAnything, _db);
-            return await service.GetDetailAsync(keys);
+            return await service.GetDetailAsync(keys).ConfigureAwait(false);
         }
     }
 
@@ -79,7 +79,7 @@ namespace GenericServices.ServicesAsync.Concrete
         /// <returns>Task with Status. If valid Result is data as read from database (not tracked), otherwise null</returns>
         public async Task<ISuccessOrErrors<TEntity>> GetDetailUsingWhereAsync(Expression<Func<TEntity, bool>> whereExpression)
         {
-            return await _db.Set<TEntity>().Where(whereExpression).AsNoTracking().RealiseSingleWithErrorCheckingAsync();
+            return await _db.Set<TEntity>().Where(whereExpression).AsNoTracking().RealiseSingleWithErrorCheckingAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace GenericServices.ServicesAsync.Concrete
         /// <returns>Task with Status. If valid Result is data as read from database (not tracked), otherwise null</returns>
         public async Task<ISuccessOrErrors<TEntity>> GetDetailAsync(params object[] keys)
         {
-            return await GetDetailUsingWhereAsync(BuildFilter.CreateFilter<TEntity>(_db.GetKeyProperties<TEntity>(), keys));
+            return await GetDetailUsingWhereAsync(BuildFilter.CreateFilter<TEntity>(_db.GetKeyProperties<TEntity>(), keys)).ConfigureAwait(false);
         }
 
 
@@ -120,7 +120,7 @@ namespace GenericServices.ServicesAsync.Concrete
             if (!dto.SupportedFunctions.HasFlag(CrudFunctions.Detail))
                 throw new InvalidOperationException("This DTO does not support a detailed view.");
 
-            return await dto.DetailDtoFromDataInAsync(_db, whereExpression);
+            return await dto.DetailDtoFromDataInAsync(_db, whereExpression).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace GenericServices.ServicesAsync.Concrete
         /// <returns>Task with Status. If valid Result is data as read from database (not tracked), otherwise null</returns>
         public async Task<ISuccessOrErrors<TDto>> GetDetailAsync(params object[] keys)
         {
-            return await GetDetailUsingWhereAsync(BuildFilter.CreateFilter<TEntity>(_db.GetKeyProperties<TEntity>(), keys));
+            return await GetDetailUsingWhereAsync(BuildFilter.CreateFilter<TEntity>(_db.GetKeyProperties<TEntity>(), keys)).ConfigureAwait(false);
         }
     }
 }

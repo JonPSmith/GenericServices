@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\EfGenericDtoBase.Generic.Setup.cs" />
+    <Compile Include="Core\IGenericDbContext.cs" />
     <Compile Include="Core\Internal\CheckComputed.cs" />
     <Compile Include="Core\Internal\MappingHelper.cs" />
     <Compile Include="DoNotCopyBackToDatabaseAttribute.cs" />
@@ -82,7 +83,7 @@
     <Compile Include="Core\Internal\DecodeToService.cs" />
     <Compile Include="Core\Internal\EfKeyFinder.cs" />
     <Compile Include="Core\SecurityHelper.cs" />
-    <Compile Include="IGenericServiceSaveChanges.cs" />
+    <Compile Include="Core\IGenericSaveChanges.cs" />
     <Compile Include="NuGet\AssemblyVersionPart.cs" />
     <Compile Include="SaveChangesExtensions.cs" />
     <Compile Include="ServicesAsync\Concrete\CreateSetupServiceAsync.cs" />

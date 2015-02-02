@@ -151,7 +151,7 @@ namespace GenericServices.Core
         internal protected override async Task<TEntity> FindItemTrackedForUpdateAsync(IGenericServicesDbContext context)
         {
             using (new LogStartStop(this))
-                return await context.Set<TEntity>().FindAsync(GetKeyValues(context));
+                return await context.Set<TEntity>().FindAsync(GetKeyValues(context)).ConfigureAwait(false);
         }
 
         protected internal override async Task<ISuccessOrErrors<TEntity>> CreateDataFromDtoAsync(IGenericServicesDbContext context, TDto source)
@@ -161,7 +161,7 @@ namespace GenericServices.Core
                 if (_whereToFail.HasFlag(InstrumentedOpFlags.FailOnCreateDataFromDto))
                     return SuccessOrErrors<TEntity>.ConvertNonResultStatus(new SuccessOrErrors().AddSingleError("Flag was set to fail in CreateDataFromDto."));
 
-                return await base.CreateDataFromDtoAsync(context, source);
+                return await base.CreateDataFromDtoAsync(context, source).ConfigureAwait(false);
             }
         }
 
@@ -172,7 +172,7 @@ namespace GenericServices.Core
                 if (_whereToFail.HasFlag(InstrumentedOpFlags.FailOnUpdateDataFromDto))
                     return new SuccessOrErrors().AddSingleError("Flag was set to fail in UpdateDataFromDto.");
 
-                return await base.UpdateDataFromDtoAsync(context, source, destination);
+                return await base.UpdateDataFromDtoAsync(context, source, destination).ConfigureAwait(false);
             }
         }
 
@@ -181,7 +181,7 @@ namespace GenericServices.Core
             IGenericServicesDbContext context, Expression<Func<TEntity, bool>> predicate)
         {
             LogCaller(CallTypes.Start);
-            var status = await base.DetailDtoFromDataInAsync(context, predicate);
+            var status = await base.DetailDtoFromDataInAsync(context, predicate).ConfigureAwait(false);
             if (status.IsValid)
             {
                 var instDto = status.Result as InstrumentedEfGenericDtoAsync<TEntity, TDto>;

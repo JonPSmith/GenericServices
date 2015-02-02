@@ -54,7 +54,7 @@ namespace GenericServices.ServicesAsync.Concrete
         public async Task<ISuccessOrErrors> UpdateAsync<T>(T data) where T : class
         {
             var service = DecodeToService<UpdateServiceAsync>.CreateCorrectService<T>(WhatItShouldBe.AsyncClassOrSpecificDto, _db);
-            return await service.UpdateAsync(data);
+            return await service.UpdateAsync(data).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace GenericServices.ServicesAsync.Concrete
         public async Task<T> ResetDtoAsync<T>(T dto) where T : class
         {
             var service = DecodeToService<UpdateServiceAsync>.CreateCorrectService<T>(WhatItShouldBe.AsyncSpecificDto, _db);
-            return await service.ResetDtoAsync(dto);
+            return await service.ResetDtoAsync(dto).ConfigureAwait(false);
         }
     }
 
@@ -97,7 +97,7 @@ namespace GenericServices.ServicesAsync.Concrete
             //Set the entry as modified
             _db.Entry(itemToUpdate).State = EntityState.Modified;
 
-            var result = await _db.SaveChangesWithCheckingAsync();
+            var result = await _db.SaveChangesWithCheckingAsync().ConfigureAwait(false);
             if (result.IsValid)
                 result.SetSuccessMessage("Successfully updated {0}.", typeof(TEntity).Name);
 
@@ -131,14 +131,14 @@ namespace GenericServices.ServicesAsync.Concrete
             if (!dto.SupportedFunctions.HasFlag(CrudFunctions.Update))
                 return result.AddSingleError("Delete of a {0} is not supported in this mode.", dto.DataItemName);
 
-            var itemToUpdate = await dto.FindItemTrackedForUpdateAsync(_db);
+            var itemToUpdate = await dto.FindItemTrackedForUpdateAsync(_db).ConfigureAwait(false);
             if (itemToUpdate == null)
                 return result.AddSingleError("Could not find the {0} you requested.", dto.DataItemName);
 
-            result = await dto.UpdateDataFromDtoAsync(_db, dto, itemToUpdate); //update those properties we want to change
+            result = await dto.UpdateDataFromDtoAsync(_db, dto, itemToUpdate).ConfigureAwait(false); //update those properties we want to change
             if (result.IsValid)
             {
-                result = await _db.SaveChangesWithCheckingAsync();
+                result = await _db.SaveChangesWithCheckingAsync().ConfigureAwait(false);
                 if (result.IsValid)
                     return result.SetSuccessMessage("Successfully updated {0}.", dto.DataItemName);
             }
@@ -146,7 +146,7 @@ namespace GenericServices.ServicesAsync.Concrete
             //otherwise there are errors
             if (!dto.SupportedFunctions.HasFlag(CrudFunctions.DoesNotNeedSetup))
                 //we reset any secondary data as we expect the view to be reshown with the errors
-                await dto.SetupSecondaryDataAsync(_db, dto);
+                await dto.SetupSecondaryDataAsync(_db, dto).ConfigureAwait(false);
             return result;
         }
 
@@ -160,7 +160,7 @@ namespace GenericServices.ServicesAsync.Concrete
         {
             if (!dto.SupportedFunctions.HasFlag(CrudFunctions.DoesNotNeedSetup))
                 //we reset any secondary data as we expect the view to be reshown with the errors
-                await dto.SetupSecondaryDataAsync(_db, dto);
+                await dto.SetupSecondaryDataAsync(_db, dto).ConfigureAwait(false);
 
             return dto;
         }

@@ -54,7 +54,7 @@ namespace GenericServices.ServicesAsync.Concrete
         public async Task<ISuccessOrErrors> CreateAsync<T>(T newItem) where T : class
         {
             var service = DecodeToService<CreateServiceAsync>.CreateCorrectService<T>(WhatItShouldBe.AsyncAnything, _db);
-            return await service.CreateAsync(newItem);
+            return await service.CreateAsync(newItem).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace GenericServices.ServicesAsync.Concrete
         public async Task<T> ResetDtoAsync<T>(T dto) where T : class
         {
             var service = DecodeToService<UpdateServiceAsync>.CreateCorrectService<T>(WhatItShouldBe.AsyncSpecificDto, _db);
-            return await service.ResetDtoAsync(dto);
+            return await service.ResetDtoAsync(dto).ConfigureAwait(false);
         }
     }
 
@@ -90,7 +90,7 @@ namespace GenericServices.ServicesAsync.Concrete
         public async Task<ISuccessOrErrors> CreateAsync(TEntity newItem)
         {
             _db.Set<TEntity>().Add(newItem);
-            var result = await _db.SaveChangesWithCheckingAsync();
+            var result = await _db.SaveChangesWithCheckingAsync().ConfigureAwait(false);
             if (result.IsValid)
                 result.SetSuccessMessage("Successfully created {0}.", typeof(TEntity).Name);
 
@@ -126,12 +126,12 @@ namespace GenericServices.ServicesAsync.Concrete
             if (!dto.SupportedFunctions.HasFlag(CrudFunctions.Create))
                 return result.AddSingleError("Create of a new {0} is not supported in this mode.", dto.DataItemName);
 
-            var statusWithData = await dto.CreateDataFromDtoAsync(_db, dto);    //creates the new data and fills in the properties
+            var statusWithData = await dto.CreateDataFromDtoAsync(_db, dto).ConfigureAwait(false);    //creates the new data and fills in the properties
             result = statusWithData as ISuccessOrErrors;             //convert to normal status as need errors to fall through propertly
             if (result.IsValid)
             {
                 _db.Set<TEntity>().Add(statusWithData.Result);
-                result = await _db.SaveChangesWithCheckingAsync();
+                result = await _db.SaveChangesWithCheckingAsync().ConfigureAwait(false);
                 dto.AfterCreateCopyBackKeysToDtoIfPresent(_db, statusWithData.Result);
                 if (result.IsValid)
                     return result.SetSuccessMessage("Successfully created {0}.", dto.DataItemName);
@@ -140,7 +140,7 @@ namespace GenericServices.ServicesAsync.Concrete
             //otherwise there are errors
             if (!dto.SupportedFunctions.HasFlag(CrudFunctions.DoesNotNeedSetup))
                 //we reset any secondary data as we expect the view to be reshown with the errors
-                await dto.SetupSecondaryDataAsync(_db, dto);
+                await dto.SetupSecondaryDataAsync(_db, dto).ConfigureAwait(false);
             return result;
 
         }
@@ -155,7 +155,7 @@ namespace GenericServices.ServicesAsync.Concrete
         {
             if (!dto.SupportedFunctions.HasFlag(CrudFunctions.DoesNotNeedSetup))
                 //we reset any secondary data as we expect the view to be reshown with the errors
-                await dto.SetupSecondaryDataAsync(_db, dto);
+                await dto.SetupSecondaryDataAsync(_db, dto).ConfigureAwait(false);
 
             return dto;
         }

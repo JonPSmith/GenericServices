@@ -49,7 +49,7 @@ namespace GenericServices
         /// </summary>
         /// <param name="db"></param>
         /// <returns>a status saying whether SaveChanges was successful or not. If not then holds errors</returns>
-        public static ISuccessOrErrors SaveChangesWithChecking(this IGenericServiceSaveChanges db)
+        public static ISuccessOrErrors SaveChangesWithChecking(this IGenericSaveChanges db)
         {
             var result = new SuccessOrErrors();
             var numChanges = 0;
@@ -81,13 +81,13 @@ namespace GenericServices
         /// </summary>
         /// <param name="db"></param>
         /// <returns>Task containing status saying whether SaveChanges was successful or not. If not then holds errors</returns>
-        public static async Task<ISuccessOrErrors> SaveChangesWithCheckingAsync(this IGenericServiceSaveChanges db)
+        public static async Task<ISuccessOrErrors> SaveChangesWithCheckingAsync(this IGenericSaveChanges db)
         {
             var result = new SuccessOrErrors();
             var numChanges = 0;
             try
             {
-                numChanges = await db.SaveChangesAsync(); //then update it
+                numChanges = await db.SaveChangesAsync().ConfigureAwait(false); //then update it
             }
             catch (DbEntityValidationException ex)
             {

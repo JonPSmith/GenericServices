@@ -48,7 +48,7 @@ namespace GenericServices.ServicesAsync.Concrete
         public async Task<TDto> GetDtoAsync<TDto>() where TDto : class
         {
             var service = DecodeToService<CreateSetupServiceAsync>.CreateCorrectService<TDto>(WhatItShouldBe.AsyncSpecificDto, _db);
-            return await service.GetDtoAsync();
+            return await service.GetDtoAsync().ConfigureAwait(false);
         }
     }
 
@@ -72,7 +72,7 @@ namespace GenericServices.ServicesAsync.Concrete
         {
             var dto = new TDto();
             if (!dto.SupportedFunctions.HasFlag(CrudFunctions.DoesNotNeedSetup))
-                await dto.SetupSecondaryDataAsync(_db, dto);
+                await dto.SetupSecondaryDataAsync(_db, dto).ConfigureAwait(false);
 
             return dto;
         }
