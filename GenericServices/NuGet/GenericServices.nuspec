@@ -2,16 +2,22 @@
 <package >
   <!-- Steps to making a Nuget package.
    
+   Setup
+   =====
+   1. Download NuGet.exe from and place it in the directory C:\User\Jon\
+   2. Make sure path points to it by running the line below
+   set PATH=%PATH%;C:\Users\Jon\
+   
    To create nuget package
    =======================
    1. Update version numbers
       a. In the AssemblyVersionPart in NuGet folder 
       b. Update the version field below 
    2. RECOMPILE GenericServices in RELEASE MODE
-   3. Update release notes
+   3. Update release notes in the nuget package
    4. Run the following two command lines
       cd C:\Users\Jon\Documents\Visual Studio 2013\Projects\GenericServices\GenericServices\NuGet
-      C:\Users\Jon\Nuget pack GenericServices.nuspec -Symbols
+      Nuget pack GenericServices.nuspec -Symbols
    
    To Test locally
    ===============
@@ -31,9 +37,8 @@
    To upload to NuGet
    ==================
    Quickest way is via command line as it pushes both the package and the symboles
-   C:\Users\Jon\Nuget SetApiKey <key>
-   C:\Users\Jon\Nuget Push GenericServices.<ver>.nupkg
-   
+   Nuget SetApiKey <key>
+   Nuget Push GenericServices.1.0.<ver>.nupkg
    
    -->
   <metadata>
@@ -44,7 +49,7 @@
     <owners>Jon Smith</owners>
     <licenseUrl>https://github.com/JonPSmith/GenericServices/blob/master/licence.txt</licenseUrl>
     <projectUrl>https://github.com/JonPSmith/GenericServices</projectUrl>
-    <iconUrl>https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/NuGet/GenericServicesNuGetIcon128.png</iconUrl>
+    <iconUrl>https://github.com/JonPSmith/GenericServices/blob/master/GenericServices/NuGet/GenericServicesNuGetIcon128-png8.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
       Generic Services is a .NET class library to help build a service layer, i.e. a layer that acts as a facard/adapter between your data layers containing an Entity Framework database and your User Interface or HTTP service.
