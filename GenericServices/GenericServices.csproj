@@ -141,6 +141,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="NuGet\GenericServicesNuGetIcon128-png8.png" />
+    <Content Include="NuGet\GenericServicesNuGetIcon128.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
