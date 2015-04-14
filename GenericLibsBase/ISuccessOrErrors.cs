@@ -51,6 +51,13 @@ namespace GenericLibsBase
         bool IsValid { get; }
 
         /// <summary>
+        /// Returns true if any errors. Note: different to IsValid in that it just checks for errors,
+        /// i.e. different to IsValid in that no errors but unset Validity will return false.
+        /// Useful for checking inside a method where the status is being manipulated.
+        /// </summary>
+        bool HasErrors { get; }
+
+        /// <summary>
         /// Returns true if not errors or not validated yet, else false. 
         /// </summary>
         bool HasWarnings { get; }
@@ -59,7 +66,6 @@ namespace GenericLibsBase
         /// This returns the success message with suffix is nay warning messages
         /// </summary>
         string SuccessMessage { get; }
-
 
         /// <summary>
         /// Adds a warning message. It places the test 'Warning: ' before the message
@@ -98,11 +104,27 @@ namespace GenericLibsBase
         ISuccessOrErrors AddNamedParameterError(string parameterName, string errorformat, params object[] args);
 
         /// <summary>
+        /// This combines any errors or warnings into the current status.
+        /// Note: it does NOT copy any success message into the current status
+        /// as it is the job of the outer status to set its own success message
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        ISuccessOrErrors Combine(object status);
+
+        /// <summary>
         /// This sets a success message and sets the IsValid flag to true
         /// </summary>
         /// <param name="successformat"></param>
         /// <param name="args"></param>
         ISuccessOrErrors SetSuccessMessage(string successformat, params object[] args);
+
+        /// <summary>
+        /// This returns all the error messages, with parameter name prefix if appropriate, joined together into one long string
+        /// </summary>
+        /// <param name="joinWith">By default joined using \n, i.e. newline. Can provide different join string </param>
+        /// <returns></returns>
+        string GetAllErrors(string joinWith = "\n");
 
         /// <summary>
         /// This returns the errors as:

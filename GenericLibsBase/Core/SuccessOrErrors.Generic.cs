@@ -87,7 +87,13 @@ namespace GenericLibsBase.Core
             return this;
         }
 
-        /// <summary>
+	    public new ISuccessOrErrors<T> Combine(object status)
+	    {
+	        base.Combine(status);
+	        return this;
+	    }
+
+	    /// <summary>
         /// This allows the current success message to be updated
         /// </summary>
         /// <param name="successformat"></param>

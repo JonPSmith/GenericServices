@@ -37,7 +37,7 @@ namespace Tests.UnitTests.Group00GenericLibsBase
     {
 
         [Test]
-        public void Check01DefaultsToNotValidOk()
+        public void Test01DefaultsToNotValidOk()
         {
             //SETUP  
             var status = new SuccessOrErrors();
@@ -50,7 +50,19 @@ namespace Tests.UnitTests.Group00GenericLibsBase
         }
 
         [Test]
-        public void Check02DefaultsAccessErrorsFailsOk()
+        public void Test02UnsetStatusHasNoErrorsOk()
+        {
+            //SETUP  
+            var status = new SuccessOrErrors();
+
+            //ATTEMPT
+
+            //VERIFY
+            status.HasErrors.ShouldEqual(false);
+        }
+
+        [Test]
+        public void Test03DefaultsAccessErrorsFailsOk()
         {
             //SETUP  
             var status = new SuccessOrErrors();
@@ -63,7 +75,7 @@ namespace Tests.UnitTests.Group00GenericLibsBase
         }
 
         [Test]
-        public void Check05SetSuccessOk()
+        public void Test05SetSuccessOk()
         {
             //SETUP  
             var status = new SuccessOrErrors();
@@ -73,13 +85,14 @@ namespace Tests.UnitTests.Group00GenericLibsBase
 
             //VERIFY
             status.IsValid.ShouldEqual(true);
+            status.HasErrors.ShouldEqual(false);
             status.HasWarnings.ShouldEqual(false);
             status.SuccessMessage.ShouldEqual("This was successful.");
             status.Errors.Count.ShouldEqual(0);
         }
 
         [Test]
-        public void Check06SuccessWithWarningsOk()
+        public void Test06SuccessWithWarningsOk()
         {
             //SETUP  
             var status = new SuccessOrErrors();
@@ -90,6 +103,7 @@ namespace Tests.UnitTests.Group00GenericLibsBase
 
             //VERIFY
             status.IsValid.ShouldEqual(true);
+            status.HasErrors.ShouldEqual(false);
             status.HasWarnings.ShouldEqual(true);
             status.SuccessMessage.ShouldEqual("This was successful. (has 1 warnings)");
             status.Warnings.Count.ShouldEqual(1);
@@ -97,7 +111,7 @@ namespace Tests.UnitTests.Group00GenericLibsBase
         }
 
         [Test]
-        public void Check10AddSingleErrorOk()
+        public void Test10AddSingleErrorOk()
         {
             //SETUP  
             var status = new SuccessOrErrors();
@@ -107,6 +121,7 @@ namespace Tests.UnitTests.Group00GenericLibsBase
 
             //VERIFY
             status.IsValid.ShouldEqual(false);
+            status.HasErrors.ShouldEqual(true);
             status.SuccessMessage.ShouldEqual("");
             status.Errors.Count.ShouldEqual(1);
             status.Errors[0].ErrorMessage.ShouldEqual("This was bad.");
@@ -114,7 +129,7 @@ namespace Tests.UnitTests.Group00GenericLibsBase
         }
 
         [Test]
-        public void Check11AddNamedParameterErrorOk()
+        public void Test11AddNamedParameterErrorOk()
         {
             //SETUP  
             var status = new SuccessOrErrors();
@@ -124,6 +139,7 @@ namespace Tests.UnitTests.Group00GenericLibsBase
 
             //VERIFY
             status.IsValid.ShouldEqual(false);
+            status.HasErrors.ShouldEqual(true);
             status.SuccessMessage.ShouldEqual("");
             status.Errors.Count.ShouldEqual(1);
             status.Errors[0].ErrorMessage.ShouldEqual("This was bad.");
@@ -131,8 +147,167 @@ namespace Tests.UnitTests.Group00GenericLibsBase
             status.Errors[0].MemberNames.First().ShouldEqual("MyParameterName");
         }
 
+        //-----------------------------------------------------
+        //Check combine
+
         [Test]
-        public void Check20SingleErrorAsHtmlOk()
+        public void Test20CombineDefaultsToNotValidOk()
+        {
+            //SETUP  
+            var status1 = new SuccessOrErrors();
+            var status2 = new SuccessOrErrors();
+
+            //ATTEMPT
+            status1.Combine(status2);
+
+            //VERIFY
+            status1.IsValid.ShouldEqual(false);
+            status1.ToString().ShouldEqual("Not currently setup");
+        }
+
+        [Test]
+        public void Test21CombineUnsetStatusHasNoErrorsOk()
+        {
+            //SETUP  
+            var status1 = new SuccessOrErrors();
+            var status2 = new SuccessOrErrors();
+
+            //ATTEMPT
+            status1.Combine(status2);
+
+            //VERIFY
+            status1.HasErrors.ShouldEqual(false);
+        }
+
+        [Test]
+        public void Test25CombineSetSuccessOk()
+        {
+            //SETUP 
+            var status1 = new SuccessOrErrors();
+            var status2 = new SuccessOrErrors();
+            status1.SetSuccessMessage("This was {0}.", "successful");
+
+            //ATTEMPT
+            status1.Combine(status2);
+
+            //VERIFY
+            status1.IsValid.ShouldEqual(true);
+            status1.HasErrors.ShouldEqual(false);
+            status1.HasWarnings.ShouldEqual(false);
+            status1.SuccessMessage.ShouldEqual("This was successful.");
+            status1.Errors.Count.ShouldEqual(0);
+        }
+
+        [Test]
+        public void Test26CombineOtherSetSuccessOk()
+        {
+            //SETUP 
+            var status1 = new SuccessOrErrors();
+            var status2 = new SuccessOrErrors();
+            status2.SetSuccessMessage("This was {0}.", "successful");
+
+            //ATTEMPT
+            status1.Combine(status2);
+
+            //VERIFY
+            status1.IsValid.ShouldEqual(false);
+            status1.ToString().ShouldEqual("Not currently setup");
+        }
+
+        [Test]
+        public void Test27SuccessWithOtherWarningsOk()
+        {
+            //SETUP  
+            var status1 = new SuccessOrErrors();
+            var status2 = new SuccessOrErrors();
+            status2.AddWarning("This is a warning");
+            status1.SetSuccessMessage("This was {0}.", "successful");
+
+            //ATTEMPT
+            status1.Combine(status2);
+
+            //VERIFY
+            status1.IsValid.ShouldEqual(true);
+            status1.HasErrors.ShouldEqual(false);
+            status1.HasWarnings.ShouldEqual(true);
+            status1.SuccessMessage.ShouldEqual("This was successful. (has 1 warnings)");
+            status1.Warnings.Count.ShouldEqual(1);
+            status1.Warnings[0].ShouldEqual("Warning: This is a warning");
+        }
+
+        [Test]
+        public void Test30CombineAddSingleErrorOk()
+        {
+            //SETUP  
+            var status1 = new SuccessOrErrors();
+            var status2 = new SuccessOrErrors();
+            status1.AddSingleError("This was {0}.", "bad");
+
+            //ATTEMPT
+            status1.Combine(status2);
+
+            //VERIFY
+            status1.IsValid.ShouldEqual(false);
+            status1.HasErrors.ShouldEqual(true);
+            status1.SuccessMessage.ShouldEqual("");
+            status1.Errors.Count.ShouldEqual(1);
+            status1.Errors[0].ErrorMessage.ShouldEqual("This was bad.");
+            status1.Errors[0].MemberNames.Count().ShouldEqual(0);
+        }
+
+        [Test]
+        public void Test31CombineAddOtherSingleErrorOk()
+        {
+            //SETUP  
+            var status1 = new SuccessOrErrors();
+            var status2 = new SuccessOrErrors();
+            status2.AddSingleError("This was {0}.", "bad");
+
+            //ATTEMPT
+            status1.Combine(status2);
+
+            //VERIFY
+            status1.IsValid.ShouldEqual(false);
+            status1.HasErrors.ShouldEqual(true);
+            status1.SuccessMessage.ShouldEqual("");
+            status1.Errors.Count.ShouldEqual(1);
+            status1.Errors[0].ErrorMessage.ShouldEqual("This was bad.");
+            status1.Errors[0].MemberNames.Count().ShouldEqual(0);
+        }
+
+        [Test]
+        public void Test35CombineBadStatusFail()
+        {
+            //SETUP  
+            var status1 = new SuccessOrErrors();
+            var status2 = "hello";
+
+            //ATTEMPT
+            var ex = Assert.Throws<ArgumentNullException>(() => status1.Combine(status2));
+
+            //VERIFY
+            ex.Message.ShouldStartWith("The status parameter was not derived from a type that supported ISuccessOrErrors.");
+        }
+
+        //-----------------------------------------------------
+        //get combined errors
+
+        [Test]
+        public void Test50SingleErrorGetAllErrorsOk()
+        {
+            //SETUP  
+            var status = new SuccessOrErrors();
+
+            //ATTEMPT
+            status.AddSingleError("This was {0}.", "bad");
+            var str = status.GetAllErrors();
+
+            //VERIFY
+            str.ShouldEqual("This was bad.");
+        }
+
+        [Test]
+        public void Test51SingleErrorAsHtmlOk()
         {
             //SETUP  
             var status = new SuccessOrErrors();
@@ -146,7 +321,21 @@ namespace Tests.UnitTests.Group00GenericLibsBase
         }
 
         [Test]
-        public void Check21SingleParamErrorAsHtmlOk()
+        public void Test52SingleParamErrorGetAllErrorsOk()
+        {
+            //SETUP  
+            var status = new SuccessOrErrors();
+
+            //ATTEMPT
+            status.AddNamedParameterError("MyParameterName", "This was {0}.", "bad");
+            var str = status.GetAllErrors();
+
+            //VERIFY
+            str.ShouldEqual("MyParameterName: This was bad.");
+        }
+
+        [Test]
+        public void Test53SingleParamErrorAsHtmlOk()
         {
             //SETUP  
             var status = new SuccessOrErrors();
@@ -160,7 +349,22 @@ namespace Tests.UnitTests.Group00GenericLibsBase
         }
 
         [Test]
-        public void Check23MultipleErrorsAsHtmlOk()
+        public void Test54MultipleErrorsGetAllErrorsOk()
+        {
+            //SETUP  
+            var status = new SuccessOrErrors();
+
+            //ATTEMPT
+            status.AddSingleError("This was {0}.", "bad");
+            status.AddNamedParameterError("MyParameterName", "This was {0}.", "bad");
+            var str = status.GetAllErrors();
+
+            //VERIFY
+            str.ShouldEqual("This was bad.\nMyParameterName: This was bad.");
+        }
+
+        [Test]
+        public void Test55MultipleErrorsAsHtmlOk()
         {
             //SETUP  
             var status = new SuccessOrErrors();
@@ -178,7 +382,7 @@ namespace Tests.UnitTests.Group00GenericLibsBase
 
         //Cannot test this as cannot new DbEntityEntry and won't accept null 
         //[Test]
-        //public void Check20AddNamedParameterErrorOk()
+        //public void Test50AddNamedParameterErrorOk()
         //{
         //    //SETUP  
         //    var status = new SuccessOrErrors();

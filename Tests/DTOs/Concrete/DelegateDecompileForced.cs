@@ -24,7 +24,7 @@ namespace Tests.DTOs.Concrete
             get { return CrudFunctions.List ; }
         }
 
-        public override bool ForceNeedDecompile
+        protected override bool ForceNeedDecompile
         {
             get { return true; }
         }

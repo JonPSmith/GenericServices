@@ -73,6 +73,13 @@ namespace GenericLibsBase
         bool IsValid { get; }
 
         /// <summary>
+        /// Returns true if any errors. Note: different to IsValid in that it just checks for errors,
+        /// i.e. different to IsValid in that no errors but unset Validity will return false.
+        /// Useful for checking inside a method where the status is being manipulated.
+        /// </summary>
+        bool HasErrors { get; }
+
+        /// <summary>
         /// Returns true if not errors or not validated yet, else false. 
         /// </summary>
         bool HasWarnings { get; }
@@ -112,6 +119,22 @@ namespace GenericLibsBase
         /// <param name="args"></param>
         /// <returns></returns>
         ISuccessOrErrors<T> AddNamedParameterError(string parameterName, string errorformat, params object[] args);
+
+        /// <summary>
+        /// This combines any errors or warnings into the current status.
+        /// Note: it does NOT copy any success message into the current status
+        /// as it is the job of the outer status to set its own success message
+        /// </summary>
+        /// <param name="status"></param>
+        /// <returns></returns>
+        ISuccessOrErrors<T> Combine(object status);
+
+        /// <summary>
+        /// This returns all the error messages, with parameter name prefix if appropriate, joined together into one long string
+        /// </summary>
+        /// <param name="joinWith">By default joined using \n, i.e. newline. Can provide different join string </param>
+        /// <returns></returns>
+        string GetAllErrors(string joinWith = "\n");
 
         /// <summary>
         /// This returns the errors as:

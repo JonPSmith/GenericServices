@@ -64,7 +64,7 @@ namespace GenericServices.Core
         /// and class's TEntity class, or  any of the associatedDTO TEntity classes ,
         /// has properties with the [Computed] attribute on them.
         /// </summary>
-        public bool NeedsDecompile
+        internal bool NeedsDecompile
         {
             get { return _needsDecompile || ForceNeedDecompile; }
             set { _needsDecompile = value; }
@@ -74,7 +74,7 @@ namespace GenericServices.Core
         /// Override and set to true if you wish to force NeedDecompile as always on in this DTO.
         /// Needed if accessing a calculated field in a related class
         /// </summary>
-        public virtual bool ForceNeedDecompile { get {  return false;} }
+        protected virtual bool ForceNeedDecompile { get {  return false;} }
 
         /// <summary>
         /// This must be overridden to say what functions the DTO supports.

@@ -2,6 +2,12 @@
 <package >
   <!-- Steps to making a Nuget package.
    
+   Setup
+   =====
+   1. Download NuGet.exe from and place it in the directory C:\User\Jon\
+   2. Make sure path points to it by running the line below
+   set PATH=%PATH%;C:\Users\Jon\
+   
    To create nuget package
    =======================
    1. Update version numbers
@@ -37,18 +43,18 @@
    -->
   <metadata>
     <id>GenericLibsBase</id>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <title>GenericLibsBase</title>
     <authors>Jon Smith</authors>
     <owners>Jon Smith</owners>
     <licenseUrl>https://github.com/JonPSmith/GenericServices/blob/master/licence.txt</licenseUrl>
     <projectUrl>https://github.com/JonPSmith/GenericServices</projectUrl>
-    <iconUrl>https://raw.githubusercontent.com/JonPSmith/GenericServices/master/GenericServices/NuGet/GenericServicesNuGetIcon128.png</iconUrl>
+    <iconUrl>https://raw.githubusercontent.com/JonPSmith/GenericServices/master/GenericLibsBase/NuGet/GenericLibsBaseNuGetIcon128-png8.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>
       GenericLibsBase is a very small .NET class library holds common items used by GenericServices and other GenericXXX libraries.
     </description>
-    <releaseNotes>First release.</releaseNotes>
+    <releaseNotes>Added HasErrors, Combine() and GetAllErrors() to SuccessOrErrors/SuccessOrErrors.Generic to make working with nested methods returning a status easier to work with.</releaseNotes>
     <copyright>Copyright 2015</copyright>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.Core" targetFramework="net451" />
