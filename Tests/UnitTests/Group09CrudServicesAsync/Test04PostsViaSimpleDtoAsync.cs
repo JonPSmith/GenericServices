@@ -29,6 +29,10 @@ using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
+using GenericLibsBase;
+using GenericLibsBase.Core;
+using GenericServices;
 using GenericServices.ServicesAsync;
 using GenericServices.ServicesAsync.Concrete;
 using NUnit.Framework;
@@ -219,6 +223,9 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
             }
         }
 
+        //-------------------------------------------------------------
+        //error checking
+
         [Test]
         public async void Check09UpdateWithListDtoBad()
         {
@@ -240,7 +247,6 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 status.IsValid.ShouldEqual(false);
                 status.Errors.Count.ShouldEqual(1);
                 status.Errors[0].ErrorMessage.ShouldEqual("Sorry, but you can't ask a question, i.e. the title can't end with '?'.");
-
             }
         }
 
@@ -262,6 +268,48 @@ namespace Tests.UnitTests.Group09CrudServicesAsync
                 status.Errors.Count.ShouldEqual(1);
                 status.Errors[0].ErrorMessage.ShouldEqual("Create of a new Post is not supported in this mode.");
 
+            }
+        }
+
+        //---------------------------------------------
+        // Cannot use Delete with DTO
+
+        [Test]
+        public async void Test40DeleteViaDtoBad()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var service = new DeleteServiceAsync(db);
+
+                //ATTEMPT
+                var ex = Assert.Throws<InvalidOperationException>(async () => await service.DeleteAsync<SimplePostDto>(0));
+
+                //VERIFY
+                ex.Message.ShouldEqual("The entity type SimplePostDto is not part of the model for the current context.");
+            }
+        }
+
+        private async Task<ISuccessOrErrors> DeleteBloggerWithPostAsync(IGenericServicesDbContext db, SimplePostDto post)
+        {
+            var blogger = db.Set<Blog>().SingleOrDefault(x => x.Name == post.BloggerName);
+            db.Set<Blog>().Remove(blogger);
+            return SuccessOrErrors.Success("It was fine.");
+        }
+
+        [Test]
+        public void Test41DeleteWithRelationshipsViaDtoBad()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var service = new DeleteServiceAsync(db);
+
+                //ATTEMPT
+                var ex = Assert.Throws<InvalidOperationException>(async () => await service.DeleteWithRelationshipsAsync<SimplePostDto>(DeleteBloggerWithPostAsync, 0));
+
+                //VERIFY
+                ex.Message.ShouldEqual("The entity type SimplePostDto is not part of the model for the current context.");
             }
         }
 

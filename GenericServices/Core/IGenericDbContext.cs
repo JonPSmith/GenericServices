@@ -38,7 +38,7 @@ namespace GenericServices.Core
     /// Anyone using GenericServices should use GenericServicesDbContexts
     /// This interface is used in all the commands so that they can be used by other GenericXXX libraries 
     /// </summary>
-    public interface IGenericDbContext
+    public interface IGenericDbContext : IDisposable
     {
 
         IEnumerable<DbEntityValidationResult> GetValidationErrors();

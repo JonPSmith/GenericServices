@@ -102,6 +102,23 @@ namespace Tests.UnitTests.Group02DataClasses
             }
         }
 
+
+        [Test]
+        public void Check10FindDtoKeyBad()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                DataLayerInitialise.InitialiseThis();
+
+                //ATTEMPT
+                var ex = Assert.Throws<InvalidOperationException>( () => db.GetKeyProperties<SimplePostDto>());
+
+                //VERIFY
+                ex.Message.ShouldEqual("This method expects a entity class. Did you provide a DTO by mistake?");
+            }
+        }
+
         //--------------------------------------------------------------------------
 
         [Test]

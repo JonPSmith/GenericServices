@@ -43,7 +43,7 @@
    -->
   <metadata>
     <id>GenericServices</id>
-    <version>1.0.6</version>
+    <version>1.0.7</version>
     <title>GenericServices</title>
     <authors>Jon Smith</authors>
     <owners>Jon Smith</owners>
@@ -55,11 +55,9 @@
       Generic Services is a .NET class library to help build a service layer, i.e. a layer that acts as a facard/adapter between your data layers containing an Entity Framework database and your User Interface or HTTP service.
     </description>
     <releaseNotes>
-      Correction: 
-      1. Breaking change in making ForceNeedDecompile protected. This stops the property appearing in json output when used in WebApi etc.
-      2. Also changed NeedsDecompile to internal for same reason as 1.
-      3. Uses newer GenericLibsBase with improved status methods.
-      4. Also updated to latest Entity Framework and AutoMapper
+      1. Made IGenericDbContext and therefore IGenericServicesDbContext support the IDisposable interface.
+         This is useful when working on Unit Tests that provide 
+      2. Fixed bug in DeleteAsync when called with DTO. Now returns suitable error message.
     </releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>EntityFramework EF ASP.NET MVC DTO Validation Library</tags>
@@ -67,7 +65,7 @@
       <dependency id="GenericLibsBase" version="1.0.1" />
       <dependency id="EntityFramework" version="6.1.3" />
       <dependency id="AutoMapper" version="3.3.1" />
-      <dependency id="DelegateDecompiler.EntityFramework" version="0.15" />
+      <dependency id="DelegateDecompiler.EntityFramework" version="0.16" />
     </dependencies>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.Core" targetFramework="net451" />

@@ -65,7 +65,10 @@ namespace GenericServices.Core.Internal
             // Get the entity type from the model that maps to the CLR type
             var entityType = metadata
                     .GetItems<EntityType>(DataSpace.OSpace)
-                    .Single(e => objectItemCollection.GetClrType(e) == type);
+                    .SingleOrDefault(e => objectItemCollection.GetClrType(e) == type);
+
+            if (entityType == null)
+                throw new InvalidOperationException("This method expects a entity class. Did you provide a DTO by mistake?");
 
             var keyProperties = entityType.KeyProperties.Select(x => type.GetProperty(x.Name)).ToList();
             if (!keyProperties.Any())

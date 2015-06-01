@@ -27,8 +27,10 @@
 
 using System.Data.Entity;
 using System.Linq;
+using GenericServices;
 using NUnit.Framework;
 using Tests.DataClasses;
+using Tests.DataClasses.Concrete;
 using Tests.Helpers;
 
 namespace Tests.UnitTests.Group02DataClasses
@@ -83,5 +85,24 @@ namespace Tests.UnitTests.Group02DataClasses
             }
         }
 
+        [Test]
+        public void Check10DatabaseResetWithIGenericServicesDbContextOk()
+        {
+            using (var db = new SampleWebAppDb() as IGenericServicesDbContext)
+            {
+                //SETUP
+                DataLayerInitialise.InitialiseThis();
+                var filepath = TestFileHelpers.GetTestFileFilePath("DbContentSimple.xml");
+
+                //ATTEMPT
+                DataLayerInitialise.ResetDatabaseToTestData(db as SampleWebAppDb, filepath);
+
+                //VERIFY
+                db.Set<Blog>().Count().ShouldEqual(2);
+                db.Set<Post>().Count().ShouldEqual(3);
+                db.Set<Tag>().Count().ShouldEqual(3);
+                db.Set<PostTagGrade>().Count().ShouldEqual(2);
+            }
+        }
     }
 }

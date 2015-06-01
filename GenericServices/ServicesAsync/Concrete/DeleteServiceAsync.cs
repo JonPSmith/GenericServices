@@ -50,10 +50,6 @@ namespace GenericServices.ServicesAsync.Concrete
         /// <returns></returns>
         public async Task<ISuccessOrErrors> DeleteAsync<TEntity>(params object[] keys) where TEntity : class
         {
-            var keyProperties = _db.GetKeyProperties<TEntity>();
-            if (keyProperties.Count != keys.Length)
-                throw new ArgumentException("The number of keys in the data entry did not match the number of keys provided");
-
             var entityToDelete = await _db.Set<TEntity>().FindAsync(keys).ConfigureAwait(false);
             if (entityToDelete == null)
                 return

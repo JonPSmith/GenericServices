@@ -29,6 +29,9 @@ using System;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading;
+using GenericLibsBase;
+using GenericLibsBase.Core;
+using GenericServices;
 using GenericServices.Services;
 using GenericServices.Services.Concrete;
 using NUnit.Framework;
@@ -315,6 +318,49 @@ namespace Tests.UnitTests.Group08CrudServices
                 status.Errors.Count.ShouldEqual(1);
                 status.Errors[0].ErrorMessage.ShouldEqual("Create of a new Post is not supported in this mode.");
 
+            }
+        }
+
+
+        //--------------------------------------------------------------------
+        // Cannot use Delete with DTO
+
+        [Test]
+        public void Test40DeleteViaDtoBad()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var service = new DeleteService(db);
+
+                //ATTEMPT
+                var ex = Assert.Throws<InvalidOperationException>(() => service.Delete<SimplePostDto>(0));
+
+                //VERIFY
+                ex.Message.ShouldEqual("The entity type SimplePostDto is not part of the model for the current context.");
+            }
+        }
+
+        private ISuccessOrErrors DeleteBloggerWithPost(IGenericServicesDbContext db, SimplePostDto post)
+        {
+            var blogger = db.Set<Blog>().SingleOrDefault(x => x.Name == post.BloggerName);
+            db.Set<Blog>().Remove(blogger);
+            return SuccessOrErrors.Success("It was fine.");
+        }
+
+        [Test]
+        public void Test41DeleteWithRelationshipsViaDtoBad()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var service = new DeleteService(db);
+
+                //ATTEMPT
+                var ex = Assert.Throws<InvalidOperationException>(() => service.DeleteWithRelationships<SimplePostDto>(DeleteBloggerWithPost, 0));
+
+                //VERIFY
+                ex.Message.ShouldEqual("The entity type SimplePostDto is not part of the model for the current context.");
             }
         }
 
