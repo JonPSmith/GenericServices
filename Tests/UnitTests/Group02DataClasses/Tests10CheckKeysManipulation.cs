@@ -26,6 +26,7 @@
 #endregion
 
 using System;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
 using GenericServices.Core.Internal;
@@ -101,7 +102,6 @@ namespace Tests.UnitTests.Group02DataClasses
                 keys.Last().Name.ShouldEqual("TagId");
             }
         }
-
 
         [Test]
         public void Check10FindDtoKeyBad()

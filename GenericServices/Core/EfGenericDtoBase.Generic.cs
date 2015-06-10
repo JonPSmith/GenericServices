@@ -123,21 +123,20 @@ namespace GenericServices.Core
         //protected methods
 
         /// <summary>
-        /// This gets the key values from this DTO. Used in FindItemTrackedForUpdate sync/async
+        /// This gets the key values from this DTO in the correct order. Used in FindItemTrackedForUpdate sync/async
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
         protected object[] GetKeyValues(IGenericServicesDbContext context)
         {
-            var efkeyPropertyNames = context.GetKeyProperties<TEntity>().ToArray();
+            var efkeyProperties = context.GetKeyProperties<TEntity>().ToArray();
+            var dtoProperties = typeof(TDto).GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            var keysInOrder = efkeyProperties.Select(x => dtoProperties.SingleOrDefault(y => y.Name == x.Name && y.PropertyType == x.PropertyType)).ToArray();
 
-            var dtoKeyProperies = typeof(TDto).GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                    .Where(x => efkeyPropertyNames.Any(y => y.Name == x.Name && y.PropertyType == x.PropertyType)).ToArray();
+            if (keysInOrder.Any(x => x == null))
+                throw new MissingPrimaryKeyException("The dto must contain all the key(s) properties from the data class.");
 
-            if (efkeyPropertyNames.Length != dtoKeyProperies.Length)
-                throw new MissingPrimaryKeyException("The dto must contain the key(s) properties from the data class.");
-
-            return dtoKeyProperies.Select(x => x.GetValue(this)).ToArray();
+            return keysInOrder.Select(x => x.GetValue(this)).ToArray();
         }
 
         /// <summary>

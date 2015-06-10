@@ -43,7 +43,7 @@
    -->
   <metadata>
     <id>GenericServices</id>
-    <version>1.0.7</version>
+    <version>1.0.8</version>
     <title>GenericServices</title>
     <authors>Jon Smith</authors>
     <owners>Jon Smith</owners>
@@ -54,11 +54,7 @@
     <description>
       Generic Services is a .NET class library to help build a service layer, i.e. a layer that acts as a facard/adapter between your data layers containing an Entity Framework database and your User Interface or HTTP service.
     </description>
-    <releaseNotes>
-      1. Made IGenericDbContext and therefore IGenericServicesDbContext support the IDisposable interface.
-         This is useful when working on Unit Tests that provide 
-      2. Fixed bug in DeleteAsync when called with DTO. Now returns suitable error message.
-    </releaseNotes>
+    <releaseNotes>Fixed bug where the order of composite keys was based on order  the EF order</releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>EntityFramework EF ASP.NET MVC DTO Validation Library</tags>
     <dependencies>

@@ -88,7 +88,9 @@
     <Compile Include="DataClasses\Internal\LoadDbDataFromXml.cs" />
     <Compile Include="DataClasses\Concrete\PostLink.cs" />
     <Compile Include="DataClasses\SampleWebAppDb.cs" />
+    <Compile Include="DTOs\Concrete\BadPostTagGradeMissingKeyDto.cs" />
     <Compile Include="DTOs\Concrete\DelegateDecompileForced.cs" />
+    <Compile Include="DTOs\Concrete\SimpleTagPostGradeDto.cs" />
     <Compile Include="DTOs\Concrete\TabNeededTagAndDelegatePostDto.cs" />
     <Compile Include="DTOs\Concrete\DelegateDecompileNeededPostDto.cs" />
     <Compile Include="DTOs\Concrete\DelegateDecompilePostDtoAsync.cs" />

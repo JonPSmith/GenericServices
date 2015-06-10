@@ -25,6 +25,7 @@
 // SOFTWARE.
 #endregion
 
+using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using GenericServices.Services.Concrete;
@@ -144,6 +145,58 @@ namespace Tests.UnitTests.Group08CrudServices
                 snap.CheckSnapShot(db);
                 var updatedfirstGrade = db.PostTagGrades.First();
                 updatedfirstGrade.Grade.ShouldEqual(999);
+            }
+        }
+
+        [Test]
+        public void Check06UpdateWithKeyPropertiesInWrongOrderOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var snap = new DbSnapShot(db);
+                var firstGrade = db.PostTagGrades.Include(x => x.TagPart).Include(x => x.PostPart).First();
+                var service = new UpdateService<PostTagGrade, SimpleTagPostGradeDto>(db);
+                var setupService = new UpdateSetupService<PostTagGrade, SimpleTagPostGradeDto>(db);
+
+                //ATTEMPT
+                var setupStatus = setupService.GetOriginal(firstGrade.PostId, firstGrade.TagId);
+                setupStatus.IsValid.ShouldEqual(true, setupStatus.Errors);
+                setupStatus.Result.Grade = 999;
+                var status = service.Update(setupStatus.Result);
+                setupStatus.Result.LogSpecificName("End");
+
+                //VERIFY
+                status.IsValid.ShouldEqual(true, status.Errors);
+                status.SuccessMessage.ShouldEqual("Successfully updated PostTagGrade.");
+                snap.CheckSnapShot(db);
+                var updatedfirstGrade = db.PostTagGrades.First();
+                updatedfirstGrade.Grade.ShouldEqual(999);
+            }
+        }
+
+        //-----------------------------------------------------------------
+        // Errors
+
+        [Test]
+        public void Check10UpdateBadMisingKeyOk()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                //SETUP
+                var snap = new DbSnapShot(db);
+                var firstGrade = db.PostTagGrades.Include(x => x.TagPart).Include(x => x.PostPart).First();
+                var service = new UpdateService<PostTagGrade, BadPostTagGradeMissingKeyDto>(db);
+                var setupService = new UpdateSetupService<PostTagGrade, BadPostTagGradeMissingKeyDto>(db);
+
+                //ATTEMPT
+                var setupStatus = setupService.GetOriginal(firstGrade.PostId, firstGrade.TagId);
+                setupStatus.IsValid.ShouldEqual(true, setupStatus.Errors);
+                setupStatus.Result.Grade = 999;
+                var ex = Assert.Throws<MissingPrimaryKeyException>( () => service.Update(setupStatus.Result));
+
+                //VERIFY
+                ex.Message.ShouldEqual("The dto must contain all the key(s) properties from the data class.");
             }
         }
 

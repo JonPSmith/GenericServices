@@ -1,8 +1,8 @@
 ﻿#region licence
 // The MIT License (MIT)
 // 
-// Filename: AssemblyVersionPart.cs
-// Date Created: 2014/07/22
+// Filename: SimplePostTagGradeDto.cs
+// Date Created: 2014/05/27
 // 
 // Copyright (c) 2014 Jon Smith (www.selectiveanalytics.com & www.thereformedprogrammer.net)
 // 
@@ -24,22 +24,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 #endregion
-using System.Reflection;
 
-// THIS HOLDS THE VERSION PART OF THE ASSEMBLY
-// Alter this before building for Nuget pack
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using GenericServices;
+using GenericServices.Core;
+using Tests.DataClasses.Concrete;
 
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Build and Revision Numbers 
-// by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
+namespace Tests.DTOs.Concrete
+{
+    class SimpleTagPostGradeDto : InstrumentedEfGenericDto<PostTagGrade, SimpleTagPostGradeDto>
+    {
+        [DoNotCopyBackToDatabase]
+        public int TagId { get; set; }
+        [ForeignKey("TagId")]
+        [DoNotCopyBackToDatabase]
+        public Tag TagPart { get; set; }
 
-[assembly: AssemblyVersion("1.0.8.0")]
-[assembly: AssemblyFileVersion("1.0.8.0")]
-[assembly: AssemblyInformationalVersion("1.0.8")]
+        [DoNotCopyBackToDatabase]
+        public int PostId { get; set; }
+        [DoNotCopyBackToDatabase]
+        [ForeignKey("PostId")]
+        public Post PostPart { get; set; }
+
+        public int Grade { get; set; }
+
+        //--------------------------------
+        //now the extra bits
+
+        public string TagPartName { get; set; }
+
+        public string PostPartTitle { get; set; }
+
+        protected internal override CrudFunctions SupportedFunctions
+        {
+            get { return CrudFunctions.AllCrudButCreate | CrudFunctions.DoesNotNeedSetup; }
+        }
+    }
+}
