@@ -26,6 +26,7 @@
 #endregion
 
 using System;
+using System.Collections.Concurrent;
 using System.Runtime.CompilerServices;
 using AutoMapper;
 using GenericServices.Core.Internal;
@@ -44,6 +45,10 @@ namespace GenericServices.Core
         where TEntity : class
         where TDto : EfGenericDtoBase<TEntity, TDto>
     {
+        //This holds all the AutoMapper configs
+        // ReSharper disable once StaticMemberInGenericType
+        protected static readonly ConcurrentDictionary<string, MapperConfiguration> AutoMapperConfigs = 
+            new ConcurrentDictionary<string, MapperConfiguration>();
 
         /// <summary>
         /// Constructor. This ensures that the mappings are set up on creation of the class
@@ -60,8 +65,8 @@ namespace GenericServices.Core
         /// </summary>
         private void MapperSetup()
         {
-            CreateReadFromDatabaseMapping();
-            CreatWriteToDatabaseMapping();
+            AutoMapperConfigs.GetOrAdd(CreateDictionaryKey<TEntity, TDto>(), config => CreateReadFromDatabaseMapping());
+            AutoMapperConfigs.GetOrAdd(CreateDictionaryKey<TDto, TEntity>(), config => CreatWriteToDatabaseMapping());
 
             //now set up NeedsDecompile any associated mappings. See comments on AssociatedDtoMapping for why these are needed
             NeedsDecompile = ForceNeedDecompile || CheckComputed.ClassNeedsDecompile(typeof(TEntity));
@@ -75,36 +80,25 @@ namespace GenericServices.Core
         /// This sets up the AutoMapper mapping for a copy from the TEntity to the TDto.
         /// It applies any extra mapping provided by AddedDatabaseToDtoMapping if not null
         /// </summary>
-        private void CreateReadFromDatabaseMapping()
+        private MapperConfiguration CreateReadFromDatabaseMapping()
         {
-            if (DoesAutoMapperMapAlreadyExist<TEntity, TDto>()) return;
-
-            var map = Mapper.CreateMap<TEntity, TDto>();
-            if (AddedDatabaseToDtoMapping != null)
-                AddedDatabaseToDtoMapping(map);
+            return AddedDatabaseToDtoMapping == null
+                ? new MapperConfiguration(cfg => cfg.CreateMap<TEntity, TDto>())
+                : new MapperConfiguration(cfg => AddedDatabaseToDtoMapping(cfg.CreateMap<TEntity, TDto>()));
         }
 
         /// <summary>
         /// This sets up the AutoMapper mapping for a copy from the TDto to the TEntity.
         /// Note that properties which have the [DoNotCopyBackToDatabase] attribute will not be copied
         /// </summary>
-        private static void CreatWriteToDatabaseMapping()
+        private static MapperConfiguration CreatWriteToDatabaseMapping()
         {
-            if (DoesAutoMapperMapAlreadyExist<TDto, TEntity>()) return;
-
-            Mapper.CreateMap<TDto, TEntity>()
-                .IgnoreMarkedProperties();
+            return new MapperConfiguration(cfg => cfg.CreateMap<TDto, TEntity>().IgnoreMarkedProperties());
         }
 
-        /// <summary>
-        /// This stops us setting up the mapping multiple times. Don't think it is problem, but mainly a performance issue.
-        /// </summary>
-        /// <typeparam name="TSource"></typeparam>
-        /// <typeparam name="TDestination"></typeparam>
-        /// <returns></returns>
-        private static bool DoesAutoMapperMapAlreadyExist<TSource, TDestination>()
+        protected static string CreateDictionaryKey<TFrom, TTo>()
         {
-            return (Mapper.FindTypeMapFor<TSource, TDestination>() != null);
+            return typeof (TFrom).FullName + "=" + typeof (TTo).FullName;
         }
 
         /// <summary>

@@ -43,8 +43,7 @@ namespace GenericServices.Core
         where TEntity : class, new()
         where TDto : EfGenericDtoAsync<TEntity, TDto>, new()
     {
-
-        
+      
         /// <summary>
         /// This function will be called at the end of CreateSetupService and UpdateSetupService to setup any
         /// additional data in the dto used to display dropdownlists etc. 
@@ -53,7 +52,7 @@ namespace GenericServices.Core
         /// This function should be overridden if the dto needs additional data setup 
         /// </summary>
         /// <returns></returns>
-        internal protected virtual async Task SetupSecondaryDataAsync(IGenericServicesDbContext db, TDto dto)
+        protected internal virtual async Task SetupSecondaryDataAsync(IGenericServicesDbContext db, TDto dto)
         {
             if (!SupportedFunctions.HasFlag(CrudFunctions.DoesNotNeedSetup))
                 throw new InvalidOperationException("SupportedFunctions flags say that setup of secondary data is needed, but did not override the SetupSecondaryData method.");
@@ -65,7 +64,7 @@ namespace GenericServices.Core
         /// </summary>
         /// <param name="context"></param>
         /// <returns></returns>
-        internal protected virtual async Task<TEntity> FindItemTrackedForUpdateAsync(IGenericServicesDbContext context)
+        protected internal virtual async Task<TEntity> FindItemTrackedForUpdateAsync(IGenericServicesDbContext context)
         {
             return await context.Set<TEntity>().FindAsync(GetKeyValues(context)).ConfigureAwait(false);
         }
@@ -77,7 +76,7 @@ namespace GenericServices.Core
         /// <param name="context"></param>
         /// <param name="source"></param>
         /// <returns>Task containing status which, if Valid, has new TEntity with data from DTO copied in</returns>
-        internal protected virtual async Task<ISuccessOrErrors<TEntity>> CreateDataFromDtoAsync(IGenericServicesDbContext context, TDto source)
+        protected internal virtual async Task<ISuccessOrErrors<TEntity>> CreateDataFromDtoAsync(IGenericServicesDbContext context, TDto source)
         {
             var result = new TEntity();
             Mapper.Map(source, result);
@@ -92,7 +91,7 @@ namespace GenericServices.Core
         /// <param name="source"></param>
         /// <param name="destination"></param>
         /// <return>Task containing status. destination is only valid if status.IsValid</return>
-        internal protected virtual async Task<ISuccessOrErrors> UpdateDataFromDtoAsync(IGenericServicesDbContext context, TDto source, TEntity destination)
+        protected internal virtual async Task<ISuccessOrErrors> UpdateDataFromDtoAsync(IGenericServicesDbContext context, TDto source, TEntity destination)
         {
             Mapper.Map(source, destination);
             return SuccessOrErrors.Success("Successful copy of data");
@@ -103,10 +102,10 @@ namespace GenericServices.Core
         /// It copies TEntity properties into all TDto properties that have accessable setters, i.e. not private
         /// </summary>
         /// <returns>status. If Valid then dto, otherwise null</returns>
-        internal protected virtual async Task<ISuccessOrErrors<TDto>> DetailDtoFromDataInAsync(
+        protected internal virtual async Task<ISuccessOrErrors<TDto>> DetailDtoFromDataInAsync(
             IGenericServicesDbContext context, Expression<Func<TEntity, bool>> predicate)
         {
-            var query = GetDataUntracked(context).Where(predicate).Project().To<TDto>();
+            var query = GetDataUntracked(context).Where(predicate).ProjectTo<TDto>(AutoMapperConfigs[CreateDictionaryKey<TEntity, TDto>()]);
 
             //We check if we need to decompile the LINQ expression so that any computed properties in the class are filled in properly
             return await ApplyDecompileIfNeeded(query).RealiseSingleWithErrorCheckingAsync().ConfigureAwait(false);

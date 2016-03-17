@@ -91,7 +91,7 @@ namespace GenericServices.Core
         /// <returns></returns>
         internal protected virtual IQueryable<TDto> ListQueryUntracked(IGenericServicesDbContext context)
         {
-            var query = GetDataUntracked(context).Project().To<TDto>();
+            var query = GetDataUntracked(context).ProjectTo<TDto>(AutoMapperConfigs[CreateDictionaryKey<TEntity, TDto>()]);
 
             //We check if we need to decompile the LINQ expression so that any computed properties in the class are filled in properly
             return ApplyDecompileIfNeeded(query);
