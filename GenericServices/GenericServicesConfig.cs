@@ -88,6 +88,9 @@ namespace GenericServices
             PrivateSqlErrorDict.Clear();
         }
 
+        /// <summary>
+        /// This clears any AutoMapper mappings. Used when Unit Testing to ensure the mappings are newly set up.
+        /// </summary>
         public static void ClearAutoMapperCache()
         {
            AutoMapperConfigs.Clear();
