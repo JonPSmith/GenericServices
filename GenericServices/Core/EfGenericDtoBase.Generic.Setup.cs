@@ -26,7 +26,6 @@
 #endregion
 
 using System;
-using System.Collections.Concurrent;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using AutoMapper;
@@ -57,12 +56,9 @@ namespace GenericServices.Core
             MapperSetup();
         }
 
-
-        //---------------------------------------------------------------------
-        //private methods
-
         /// <summary>
         /// This is used to set up the mapping of any associated EfGenericDto 
+        /// NOTE: It needs to be protected as the reflection .GetMethod doens't find a private method
         /// </summary>
         /// <param name="cfg"></param>
         /// <param name="readFromDatabase"></param>
@@ -75,6 +71,9 @@ namespace GenericServices.Core
             else
                 CreateWriteToDatabaseMapping(cfg);
         }
+
+        //---------------------------------------------------------------------
+        //private methods
 
         /// <summary>
         /// This sets all the AutoMapper mapping that this dto needs. It is called from the base constructor
