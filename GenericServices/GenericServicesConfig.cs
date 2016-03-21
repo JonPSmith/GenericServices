@@ -25,7 +25,9 @@
 // SOFTWARE.
 #endregion
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using AutoMapper;
 
 namespace GenericServices
 {
@@ -50,6 +52,10 @@ namespace GenericServices
         };
 
         private static bool _useDelegateDecompilerWhereNeeded = true;
+
+        //This holds all the AutoMapper configs
+        internal static readonly ConcurrentDictionary<string, MapperConfiguration> AutoMapperConfigs =
+            new ConcurrentDictionary<string, MapperConfiguration>();
 
         /// <summary>
         /// This contains the SqlErrorNumbers that will be caught by SaveChangesWithErrorChecking (sync and Async)
@@ -80,6 +86,11 @@ namespace GenericServices
         public static void ClearSqlErrorDict()
         {
             PrivateSqlErrorDict.Clear();
+        }
+
+        public static void ClearAutoMapperCache()
+        {
+           AutoMapperConfigs.Clear();
         }
 
         /// <summary>

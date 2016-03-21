@@ -42,6 +42,10 @@ namespace GenericServices.Core
         where TDto : EfGenericDto<TEntity, TDto>, new()
     {
 
+        protected EfGenericDto()
+        {
+        }
+
         /// <summary>
         /// This function will be called at the end of CreateSetupService and UpdateSetupService to setup any
         /// additional data in the dto used to display dropdownlists etc. 
@@ -77,7 +81,8 @@ namespace GenericServices.Core
         protected internal virtual ISuccessOrErrors<TEntity> CreateDataFromDto(IGenericServicesDbContext context, TDto source)
         {
             var result = new TEntity();
-            Mapper.Map(source, result);
+            var mapper = GenericServicesConfig.AutoMapperConfigs[CreateDictionaryKey<TDto, TEntity>()].CreateMapper();
+            mapper.Map(source, result);
             return new SuccessOrErrors<TEntity>(result, "Successful copy of data");
         }
 
@@ -91,7 +96,8 @@ namespace GenericServices.Core
         /// <return>status. destination is only valid if status.IsValid</return>
         protected internal virtual ISuccessOrErrors UpdateDataFromDto(IGenericServicesDbContext context, TDto source, TEntity destination)
         {
-            Mapper.Map(source, destination);
+            var mapper = GenericServicesConfig.AutoMapperConfigs[CreateDictionaryKey<TDto, TEntity>()].CreateMapper();
+            mapper.Map(source, destination);
             return SuccessOrErrors.Success("Successful copy of data");
         }
 
@@ -103,7 +109,8 @@ namespace GenericServices.Core
         protected internal virtual ISuccessOrErrors<TDto> DetailDtoFromDataIn(IGenericServicesDbContext context, 
             Expression<Func<TEntity, bool>> predicate)
         {
-            var query = GetDataUntracked(context).Where(predicate).ProjectTo<TDto>(AutoMapperConfigs[CreateDictionaryKey<TEntity,TDto>()]);
+            var query = GetDataUntracked(context).Where(predicate).ProjectTo<TDto>(
+                GenericServicesConfig.AutoMapperConfigs[CreateDictionaryKey<TEntity,TDto>()]);
 
             //We check if we need to decompile the LINQ expression so that any computed properties in the class are filled in properly
             return ApplyDecompileIfNeeded(query).RealiseSingleWithErrorChecking();

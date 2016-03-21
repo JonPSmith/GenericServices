@@ -35,6 +35,11 @@ namespace Tests.UnitTests.Group08CrudServices
 {
     class Test03AGenericDtoSetup
     {
+        [TestFixtureSetUp]
+        public void FixtureSetUp()
+        {
+            GenericServicesConfig.ClearAutoMapperCache();
+        }
 
         [SetUp]
         public void SetUp()

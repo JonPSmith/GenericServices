@@ -27,6 +27,7 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using AutoMapper;
 using GenericServices.Core.Internal;
@@ -45,10 +46,7 @@ namespace GenericServices.Core
         where TEntity : class
         where TDto : EfGenericDtoBase<TEntity, TDto>
     {
-        //This holds all the AutoMapper configs
-        // ReSharper disable once StaticMemberInGenericType
-        protected static readonly ConcurrentDictionary<string, MapperConfiguration> AutoMapperConfigs = 
-            new ConcurrentDictionary<string, MapperConfiguration>();
+
 
         /// <summary>
         /// Constructor. This ensures that the mappings are set up on creation of the class
@@ -59,41 +57,67 @@ namespace GenericServices.Core
             MapperSetup();
         }
 
+
+        //---------------------------------------------------------------------
+        //private methods
+
+        /// <summary>
+        /// This is used to set up the mapping of any associated EfGenericDto 
+        /// </summary>
+        /// <param name="cfg"></param>
+        /// <param name="readFromDatabase"></param>
+        /// <returns></returns>
+        protected void AssociatedMapperSetup(IMapperConfiguration cfg, bool readFromDatabase)
+        {
+            var needsDecompile = false;
+            if (readFromDatabase)
+                CreateReadFromDatabaseMapping(cfg, ref needsDecompile);
+            else
+                CreateWriteToDatabaseMapping(cfg);
+        }
+
         /// <summary>
         /// This sets all the AutoMapper mapping that this dto needs. It is called from the base constructor
         /// It also makes sure that any associated dto mappings are set up as the order of creation is not fixed
         /// </summary>
         private void MapperSetup()
         {
-            AutoMapperConfigs.GetOrAdd(CreateDictionaryKey<TEntity, TDto>(), config => CreateReadFromDatabaseMapping());
-            AutoMapperConfigs.GetOrAdd(CreateDictionaryKey<TDto, TEntity>(), config => CreatWriteToDatabaseMapping());
+            var needsDecompile = false;
+            GenericServicesConfig.AutoMapperConfigs.GetOrAdd(CreateDictionaryKey<TEntity, TDto>(),
+                config => new MapperConfiguration(cfg => CreateReadFromDatabaseMapping(cfg, ref needsDecompile)));
 
             //now set up NeedsDecompile any associated mappings. See comments on AssociatedDtoMapping for why these are needed
             NeedsDecompile = ForceNeedDecompile || CheckComputed.ClassNeedsDecompile(typeof(TEntity));
-            NeedsDecompile |= SetupAllAssociatedMappings();
-        }
+            NeedsDecompile |= needsDecompile;
 
-        //---------------------------------------------------------------------
-        //private methods
+            if (SupportedFunctions.HasFlag(CrudFunctions.Update) | SupportedFunctions.HasFlag(CrudFunctions.Create))
+                //Only setup TDto->TEntity mapping if needed
+                GenericServicesConfig.AutoMapperConfigs.GetOrAdd(CreateDictionaryKey<TDto, TEntity>(), 
+                    config => new MapperConfiguration(CreateWriteToDatabaseMapping));
+        }
 
         /// <summary>
         /// This sets up the AutoMapper mapping for a copy from the TEntity to the TDto.
         /// It applies any extra mapping provided by AddedDatabaseToDtoMapping if not null
         /// </summary>
-        private MapperConfiguration CreateReadFromDatabaseMapping()
+        private void CreateReadFromDatabaseMapping(IMapperConfiguration cfg, ref bool needsDecompile)
         {
-            return AddedDatabaseToDtoMapping == null
-                ? new MapperConfiguration(cfg => cfg.CreateMap<TEntity, TDto>())
-                : new MapperConfiguration(cfg => AddedDatabaseToDtoMapping(cfg.CreateMap<TEntity, TDto>()));
+            if (AddedDatabaseToDtoMapping == null)
+                cfg.CreateMap<TEntity, TDto>();
+            else
+                AddedDatabaseToDtoMapping(cfg.CreateMap<TEntity, TDto>());
+
+            needsDecompile = needsDecompile | SetupAllAssociatedMappings(cfg, true);
         }
 
         /// <summary>
         /// This sets up the AutoMapper mapping for a copy from the TDto to the TEntity.
         /// Note that properties which have the [DoNotCopyBackToDatabase] attribute will not be copied
         /// </summary>
-        private static MapperConfiguration CreatWriteToDatabaseMapping()
+        private void CreateWriteToDatabaseMapping(IMapperConfiguration cfg)
         {
-            return new MapperConfiguration(cfg => cfg.CreateMap<TDto, TEntity>().IgnoreMarkedProperties());
+            cfg.CreateMap<TDto, TEntity>().IgnoreMarkedProperties();
+            SetupAllAssociatedMappings(cfg, false);
         }
 
         protected static string CreateDictionaryKey<TFrom, TTo>()
@@ -104,28 +128,31 @@ namespace GenericServices.Core
         /// <summary>
         /// Set up any requested assocaiated mappings
         /// </summary>
-        private bool SetupAllAssociatedMappings()
+        private bool SetupAllAssociatedMappings(IMapperConfiguration cfg, bool readFromDatabase)
         {
-
             var shouldDecompile = false;
             if (AssociatedDtoMapping != null)
-                shouldDecompile |= CheckAndSetupAssociatedMapping(AssociatedDtoMapping);
+                shouldDecompile |= CheckAndSetupAssociatedMapping(AssociatedDtoMapping, cfg, readFromDatabase);
 
             if (AssociatedDtoMappings == null) return shouldDecompile;
 
             foreach (var associatedDtoMapping in AssociatedDtoMappings)
-                shouldDecompile |= CheckAndSetupAssociatedMapping(associatedDtoMapping);
+                shouldDecompile |= CheckAndSetupAssociatedMapping(associatedDtoMapping, cfg, readFromDatabase);
 
             return shouldDecompile;
         }
 
-        private static bool CheckAndSetupAssociatedMapping(Type associatedDtoMapping)
+        private static bool CheckAndSetupAssociatedMapping(Type associatedDtoMapping, IMapperConfiguration cfg, bool readFromDatabase)
         {
             if (!associatedDtoMapping.IsSubclassOf(typeof(EfGenericDtoBase)))
                 throw new InvalidOperationException("You have not supplied a class based on EfGenericDto to set up the mapping.");
 
-            //create the acssociated dto to get the NeedsDecompile flag. Also makes sure the mapping is set
-            var associatedDto = Activator.CreateInstance(associatedDtoMapping, new object[] { });       
+            //create the acssociated dto to get the AssociatedMapperSetup method
+            var associatedDto = Activator.CreateInstance(associatedDtoMapping, new object[] { });
+            var method = associatedDtoMapping.GetMethod(nameof(AssociatedMapperSetup),
+                BindingFlags.NonPublic | BindingFlags.Instance);
+
+            method.Invoke(associatedDto, new object[] { cfg, readFromDatabase});
             return ((EfGenericDtoBase)associatedDto).NeedsDecompile;
         }
 

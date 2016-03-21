@@ -89,9 +89,9 @@ namespace GenericServices.Core
         /// Can be overridden if standard AutoMapping isn't good enough, or return null if not supported
         /// </summary>
         /// <returns></returns>
-        internal protected virtual IQueryable<TDto> ListQueryUntracked(IGenericServicesDbContext context)
+        protected internal virtual IQueryable<TDto> ListQueryUntracked(IGenericServicesDbContext context)
         {
-            var query = GetDataUntracked(context).ProjectTo<TDto>(AutoMapperConfigs[CreateDictionaryKey<TEntity, TDto>()]);
+            var query = GetDataUntracked(context).ProjectTo<TDto>(GenericServicesConfig.AutoMapperConfigs[CreateDictionaryKey<TEntity, TDto>()]);
 
             //We check if we need to decompile the LINQ expression so that any computed properties in the class are filled in properly
             return ApplyDecompileIfNeeded(query);

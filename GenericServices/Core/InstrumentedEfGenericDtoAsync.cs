@@ -32,6 +32,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using AutoMapper;
 using GenericLibsBase;
 using GenericLibsBase.Core;
 
@@ -42,6 +43,7 @@ namespace GenericServices.Core
         where TEntity : class, new()
         where TDto : EfGenericDtoAsync<TEntity, TDto>, new()
     {
+
         /// <summary>
         /// Used to surround calls with using to catch start/end time
         /// </summary>

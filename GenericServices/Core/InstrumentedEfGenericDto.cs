@@ -30,6 +30,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
+using AutoMapper;
 using GenericLibsBase;
 using GenericLibsBase.Core;
 
@@ -46,6 +47,7 @@ namespace GenericServices.Core
         where TEntity : class, new()
         where TDto : EfGenericDto<TEntity, TDto>, new()
     {
+
         /// <summary>
         /// Used to surround calls with using to catch start/end time
         /// </summary>
@@ -79,7 +81,7 @@ namespace GenericServices.Core
         //--------------------------------------------------
         //ctors
 
-        protected InstrumentedEfGenericDto()
+        protected InstrumentedEfGenericDto() : base()
         {
             _timer.Start();
         }
