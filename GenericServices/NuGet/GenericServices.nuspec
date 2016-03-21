@@ -16,7 +16,7 @@
    2. RECOMPILE GenericServices in RELEASE MODE
    3. Update release notes in the nuget package
    4. Run the following two command lines
-      cd C:\Users\Jon\Documents\Visual Studio 2013\Projects\GenericServices\GenericServices\NuGet
+      cd C:\Users\Jon\Documents\Visual Studio 2015\Projects\GenericServices\GenericServices\NuGet
       Nuget pack GenericServices.nuspec -Symbols
    
    To Test locally
@@ -54,7 +54,7 @@
     <description>
       Generic Services is a .NET class library to help build a service layer, i.e. a layer that acts as a facard/adapter between your data layers containing an Entity Framework database and your User Interface or HTTP service.
     </description>
-    <releaseNotes>Changed config of AutoMapper mapping to use non-static approach</releaseNotes>
+    <releaseNotes>Changed over to AutoMapper 4.2.x non-static mapping approach</releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>EntityFramework EF ASP.NET MVC DTO Validation Library</tags>
     <dependencies>
