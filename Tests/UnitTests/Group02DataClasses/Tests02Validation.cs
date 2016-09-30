@@ -69,26 +69,6 @@ namespace Tests.UnitTests.Group02DataClasses
         }
 
         [Test]
-        public void Check02ValidateTagError()
-        {
-            using (var db = new SampleWebAppDb())
-            {
-                //SETUP
-                var existingTag = db.Tags.First();
-
-                //ATTEMPT
-                var dupTag = new Tag {Name = "duplicate slug", Slug = existingTag.Slug};
-                db.Tags.Add(dupTag);
-                var status = db.SaveChangesWithChecking();
-
-                //VERIFY
-                status.IsValid.ShouldEqual(false);
-                status.Errors.Count.ShouldEqual(1);
-                status.Errors[0].ErrorMessage.ShouldEqual("The Slug on tag 'duplicate slug' must be unique.");
-            }
-        }
-
-        [Test]
         public void Check10ValidatePostOk()
         {
             using (var db = new SampleWebAppDb())

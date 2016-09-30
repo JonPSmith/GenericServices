@@ -27,10 +27,21 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Data.Entity.Infrastructure;
 using AutoMapper;
 
 namespace GenericServices
 {
+    /// <summary>
+    /// This is the signiture of the method called on a SqlException happening in SaveChangesWithChecking (sync and Async)
+    /// </summary>
+    /// <param name="exception">This is the Sql Exception that occured</param>
+    /// <param name="entitiesThatErrored">DbEntityEntry objects that represents the entities that could not be saved to the database</param>
+    /// <returns>return ValidationResult with error, or null if cannot handle this error</returns>
+    public delegate ValidationResult HandleSqlException(
+        System.Data.SqlClient.SqlException exception, IEnumerable<DbEntityEntry> entitiesThatErrored);
+
     /// <summary>
     /// This is the signiture of the method called if an exception is found in the RealiseSingleWithErrorChecking
     /// </summary>
@@ -58,13 +69,23 @@ namespace GenericServices
             new ConcurrentDictionary<string, MapperConfiguration>();
 
         /// <summary>
-        /// This contains the SqlErrorNumbers that will be caught by SaveChangesWithErrorChecking (sync and Async)
+        /// This can be set to a method that is called if a SqlException happens when SaveChangesWithChecking
+        /// (sync and Async) is called. The method is handed the SqlException and a list of the DbEntities that
+        /// EF was trying to save. It should return either a ValidationError if it can handle it, or null if it
+        /// cannot handle it. 
         /// </summary>
-        public static IReadOnlyDictionary<int, string> SqlErrorDict { get { return PrivateSqlErrorDict; } }        
+        public static HandleSqlException HandleSqlExceptionOnSave { internal get; set; }
 
         /// <summary>
-        /// This can be set to a method that is called in RealiseSingleWithErrorChecking when an exception occurs
-        /// It should return a error string if it can decode the error for the user, otherwise should return null
+        /// This contains the SqlErrorNumbers that will be caught by SaveChangesWithChecking (sync and Async)
+        /// </summary>
+        public static IReadOnlyDictionary<int, string> SqlErrorDict { get { return PrivateSqlErrorDict; } }
+
+        /// <summary>
+        /// This can be set to a method that is called in RealiseSingleWithErrorChecking when an exception occurs.
+        /// RealiseSingleWithErrorChecking is used when a single DTO/Enity is asked for inside DetailService and
+        /// UpdateSetupService, plus RealiseSingleWithErrorChecking can be used as an extension. 
+        /// The method you provide should return a error string if it can decode the error for the user, otherwise should return null
         /// </summary>
         public static RealiseSingleException RealiseSingleExceptionMethod { internal get; set; }
 

@@ -25,7 +25,11 @@
 // SOFTWARE.
 #endregion
 
+using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Data.Entity.Infrastructure;
+using System.Data.SqlClient;
 using System.Linq;
 using GenericServices;
 using NUnit.Framework;
@@ -35,103 +39,86 @@ using Tests.Helpers;
 
 namespace Tests.UnitTests.Group01Configuration
 {
-    class Test02SqlDict
+    class Test05HandleSqlException
     {
-
-        private List<KeyValuePair<int, string>> _rememberDefaultSqlErrorTextDict ;
-            
             
         [TestFixtureSetUp]
         public void FixtureSetup()
         {
-            //This remembers the SqlErrorTextDict
-            _rememberDefaultSqlErrorTextDict =
-                GenericServicesConfig.SqlErrorDict.Select(x => new KeyValuePair<int, string>(x.Key, x.Value))
-                    .ToList();
             GenericServicesConfig.HandleSqlExceptionOnSave = null;
         }
 
         [TestFixtureTearDown]
         public void FixtureTearDown()
         {
-            //This resets the SqlErrorTextDict
-            RestoreSqlErrorTextDict();
+            GenericServicesConfig.HandleSqlExceptionOnSave = null;
         }
 
-        private void RestoreSqlErrorTextDict()
-        {
-            _rememberDefaultSqlErrorTextDict.ForEach(x => GenericServicesConfig.AddToSqlErrorDict(x.Key, x.Value));
+        private ValidationResult TestExceptionCatch(SqlException ex, IEnumerable<DbEntityEntry> entitiesNotSaved)
+        {         
+            var message = string.Format("SQL error {0}. Following class types had errors: {1}.", ex.Number, 
+                string.Join(",", entitiesNotSaved.Select(x => x.Entity.GetType().Name)));
+            return new ValidationResult(message);
         }
 
-        //---------------------
-
-        [Test]
-        public void Test01ClearSqlErrorDictOk()
+        private ValidationResult TestExceptionNoCatch(SqlException ex, IEnumerable<DbEntityEntry> entitiesNotSaved)
         {
-
-            //SETUP  
-
-            //ATTEMPT
-            GenericServicesConfig.ClearSqlErrorDict();
-
-            //VERIFY
-            GenericServicesConfig.SqlErrorDict.Count.ShouldEqual(0);
-        }
-
-        [Test]
-        public void Test02DefaultSqlErrorDictOk()
-        {
-
-            //SETUP  
-
-            //ATTEMPT
-            GenericServicesConfig.ClearSqlErrorDict();
-            RestoreSqlErrorTextDict();
-
-            //VERIFY
-            CollectionAssert.AreEquivalent(new[] {547, 2601}, GenericServicesConfig.SqlErrorDict.Keys);
-        }
-
-        [Test]
-        public void Test05AddNewSqlErrorDictItemOk()
-        {
-
-            //SETUP  
-
-            //ATTEMPT
-            GenericServicesConfig.ClearSqlErrorDict();
-            GenericServicesConfig.AddToSqlErrorDict(-1, "A test");
-
-            //VERIFY
-            GenericServicesConfig.SqlErrorDict.Count.ShouldEqual(1);
-            GenericServicesConfig.SqlErrorDict[-1].ShouldEqual("A test");
-        }
-
-        [Test]
-        public void Test05UpdateSqlErrorDictItemOk()
-        {
-
-            //SETUP  
-
-            //ATTEMPT
-            GenericServicesConfig.ClearSqlErrorDict();
-            GenericServicesConfig.AddToSqlErrorDict(-1, "A test");
-            GenericServicesConfig.AddToSqlErrorDict(-1, "Another test");
-
-            //VERIFY
-            GenericServicesConfig.SqlErrorDict.Count.ShouldEqual(1);
-            GenericServicesConfig.SqlErrorDict[-1].ShouldEqual("Another test");
+            return null;
         }
 
         //-------------------------------
-        //Test it catches an error
+        //Tests
 
         [Test]
-        public void Check02ValidateTagError()
+        public void Test01ValidateTagError()
         {
+            //SETUP
+            GenericServicesConfig.HandleSqlExceptionOnSave = TestExceptionCatch;
             using (var db = new SampleWebAppDb())
             {
-                //SETUP
+                var existingTag = db.Tags.First();
+
+                //ATTEMPT
+                var dupTag = new Tag { Name = "duplicate slug", Slug = existingTag.Slug };
+                db.Tags.Add(dupTag);
+                var status = db.SaveChangesWithChecking();
+
+                //VERIFY
+                status.IsValid.ShouldEqual(false);
+                status.Errors.Count.ShouldEqual(1);
+                status.Errors[0].ErrorMessage.ShouldEqual("SQL error 2601. Following class types had errors: Tag.");
+            }
+        }
+
+        [Test]
+        public void Test02ValidateTagErrorWithOtherData()
+        {
+            //SETUP
+            GenericServicesConfig.HandleSqlExceptionOnSave = TestExceptionCatch;
+            using (var db = new SampleWebAppDb())
+            {
+                var existingTag = db.Tags.First();
+
+                //ATTEMPT
+                var dupTag = new Tag { Name = "duplicate slug", Slug = existingTag.Slug };
+                db.Tags.Add(dupTag);
+                db.Blogs.Add(new Blog {Name = Guid.NewGuid().ToString(), EmailAddress = "nospam@nospam.com"});
+                var status = db.SaveChangesWithChecking();
+
+                //VERIFY
+                status.IsValid.ShouldEqual(false);
+                status.Errors.Count.ShouldEqual(1);
+                status.Errors[0].ErrorMessage.ShouldEqual("SQL error 2601. Following class types had errors: Tag.");
+            }
+        }
+
+        [Test]
+        public void Test10ValidateTagCaughtBySqlDict()
+        {
+            //SETUP
+            GenericServicesConfig.HandleSqlExceptionOnSave = TestExceptionNoCatch;
+            using (var db = new SampleWebAppDb())
+            {
                 var existingTag = db.Tags.First();
 
                 //ATTEMPT
@@ -145,7 +132,5 @@ namespace Tests.UnitTests.Group01Configuration
                 status.Errors[0].ErrorMessage.ShouldEqual("One of the properties is marked as Unique index and there is already an entry with that value.");
             }
         }
-
-
     }
 }

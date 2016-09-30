@@ -43,7 +43,7 @@
    -->
   <metadata>
     <id>GenericServices</id>
-    <version>1.0.9</version>
+    <version>1.0.10</version>
     <title>GenericServices</title>
     <authors>Jon Smith</authors>
     <owners>Jon Smith</owners>
@@ -54,7 +54,7 @@
     <description>
       Generic Services is a .NET class library to help build a service layer, i.e. a layer that acts as a facard/adapter between your data layers containing an Entity Framework database and your User Interface or HTTP service.
     </description>
-    <releaseNotes>Changed over to AutoMapper 4.2.x non-static mapping approach</releaseNotes>
+    <releaseNotes>Added GenericServicesConfig.HandleSqlExceptionOnSave to allow developer to handle SqlExection in SaveChangesWithChecking (sync and async)</releaseNotes>
     <copyright>Copyright 2015</copyright>
     <tags>EntityFramework EF ASP.NET MVC DTO Validation Library</tags>
     <dependencies>

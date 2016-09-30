@@ -69,32 +69,32 @@ namespace Tests.DataClasses
             return base.SaveChangesAsync();
         }
 
-        /// <summary>
-        /// This does validations that can only be done at the database level
-        /// </summary>
-        /// <param name="entityEntry"></param>
-        /// <param name="items"></param>
-        /// <returns></returns>
-        protected override DbEntityValidationResult ValidateEntity(DbEntityEntry entityEntry,
-            IDictionary<object, object> items)
-        {
+        ///// <summary>
+        ///// This does validations that can only be done at the database level
+        ///// </summary>
+        ///// <param name="entityEntry"></param>
+        ///// <param name="items"></param>
+        ///// <returns></returns>
+        //protected override DbEntityValidationResult ValidateEntity(DbEntityEntry entityEntry,
+        //    IDictionary<object, object> items)
+        //{
 
-            if (entityEntry.Entity is Tag && (entityEntry.State == EntityState.Added || entityEntry.State == EntityState.Modified))
-            {
-                var tagToCheck = ((Tag)entityEntry.Entity);
+        //    if (entityEntry.Entity is Tag && (entityEntry.State == EntityState.Added || entityEntry.State == EntityState.Modified))
+        //    {
+        //        var tagToCheck = ((Tag)entityEntry.Entity);
 
-                //check for uniqueness of Service shortName (note: because we may alter a service we need to exclude check against itself)
-                if (Tags.Any(x => x.TagId != tagToCheck.TagId && x.Slug == tagToCheck.Slug))
-                    return new DbEntityValidationResult(entityEntry,
-                                                        new List<DbValidationError>
-                                                            {
-                                                                new DbValidationError( "Slug",
-                                                                    string.Format( "The Slug on tag '{0}' must be unique.", tagToCheck.Name))
-                                                            });
-            }
+        //        //check for uniqueness of Service shortName (note: because we may alter a service we need to exclude check against itself)
+        //        if (Tags.Any(x => x.TagId != tagToCheck.TagId && x.Slug == tagToCheck.Slug))
+        //            return new DbEntityValidationResult(entityEntry,
+        //                                                new List<DbValidationError>
+        //                                                    {
+        //                                                        new DbValidationError( "Slug",
+        //                                                            string.Format( "The Slug on tag '{0}' must be unique.", tagToCheck.Name))
+        //                                                    });
+        //    }
 
-            return base.ValidateEntity(entityEntry, items);
-        }
+        //    return base.ValidateEntity(entityEntry, items);
+        //}
 
         
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

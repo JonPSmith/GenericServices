@@ -114,6 +114,7 @@
     <Compile Include="UiHelpers\DropDownListType.cs" />
     <Compile Include="UiHelpers\MultiSelectListType.cs" />
     <Compile Include="UnitTests\Group00GenericLibsBase\Test04SplitCamel.cs" />
+    <Compile Include="UnitTests\Group01Configuration\Test05HandleSqlException.cs" />
     <Compile Include="UnitTests\Group01Configuration\Test02SqlDict.cs" />
     <Compile Include="UnitTests\Group01Configuration\Test10RealiseSingleException.cs" />
     <Compile Include="UnitTests\Group02DataClasses\Tests12BuildFilter.cs" />
