@@ -121,20 +121,22 @@ namespace GenericServices
 
             var sqlException = (System.Data.SqlClient.SqlException)ex.InnerException.InnerException;
 
-            //See if user has set the HandleSqlExceptionOnSave config method
-            if (GenericServicesConfig.HandleSqlExceptionOnSave != null)
-            {
-                var error = GenericServicesConfig.HandleSqlExceptionOnSave(sqlException, ex.Entries);
-                if (error != null)
-                    return new List<ValidationResult> {error};
-            }
-
             //Otherwise see if the GenericServicesConfig.SqlErrorDict has a entry for this error
             var result = new List<ValidationResult>();
             for (int i = 0; i < sqlException.Errors.Count; i++)
             {
                 var errorNum = sqlException.Errors[i].Number;
+                HandleSqlException errorHandler;
                 string errorText;
+                if (GenericServicesConfig.SqlHandlerDict.TryGetValue(errorNum, out errorHandler))
+                {
+                    var error = errorHandler(sqlException, ex.Entries);
+                    if (error != null)
+                    {
+                        result.Add(error);
+                        continue;
+                    }
+                }
                 if (GenericServicesConfig.SqlErrorDict.TryGetValue(errorNum, out errorText))
                     result.Add(new ValidationResult(errorText));
             }

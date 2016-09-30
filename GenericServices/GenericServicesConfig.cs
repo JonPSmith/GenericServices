@@ -34,7 +34,7 @@ using AutoMapper;
 namespace GenericServices
 {
     /// <summary>
-    /// This is the signiture of the method called on a SqlException happening in SaveChangesWithChecking (sync and Async)
+    /// This is the signiture of the method called on a SqlException happening in SaveChangesWithChecking (sync and async)
     /// </summary>
     /// <param name="exception">This is the Sql Exception that occured</param>
     /// <param name="entitiesThatErrored">DbEntityEntry objects that represents the entities that could not be saved to the database</param>
@@ -56,6 +56,8 @@ namespace GenericServices
     public static class GenericServicesConfig
     {
 
+        private static readonly Dictionary<int, HandleSqlException> PrivateSqlHandlerDict = new Dictionary<int, HandleSqlException>();
+
         private static readonly Dictionary<int, string> PrivateSqlErrorDict = new Dictionary<int, string>
         {
             {547, "This operation failed because another data entry uses this entry."},         //constraint
@@ -69,17 +71,14 @@ namespace GenericServices
             new ConcurrentDictionary<string, MapperConfiguration>();
 
         /// <summary>
-        /// This can be set to a method that is called if a SqlException happens when SaveChangesWithChecking
-        /// (sync and Async) is called. The method is handed the SqlException and a list of the DbEntities that
-        /// EF was trying to save. It should return either a ValidationError if it can handle it, or null if it
-        /// cannot handle it. 
-        /// </summary>
-        public static HandleSqlException HandleSqlExceptionOnSave { internal get; set; }
-
-        /// <summary>
         /// This contains the SqlErrorNumbers that will be caught by SaveChangesWithChecking (sync and Async)
         /// </summary>
         public static IReadOnlyDictionary<int, string> SqlErrorDict { get { return PrivateSqlErrorDict; } }
+
+        /// <summary>
+        /// This contains the HandleSqlException methods by Sql Error number that will be caught by SaveChangesWithChecking (sync and Async)
+        /// </summary>
+        public static IReadOnlyDictionary<int, HandleSqlException> SqlHandlerDict { get { return PrivateSqlHandlerDict; } }
 
         /// <summary>
         /// This can be set to a method that is called in RealiseSingleWithErrorChecking when an exception occurs.
@@ -102,6 +101,14 @@ namespace GenericServices
         //public methods
 
         /// <summary>
+        /// This clears any AutoMapper mappings. Used when Unit Testing to ensure the mappings are newly set up.
+        /// </summary>
+        public static void ClearAutoMapperCache()
+        {
+           AutoMapperConfigs.Clear();
+        }
+
+        /// <summary>
         /// This clears the SqlErrorDict of all entries
         /// </summary>
         public static void ClearSqlErrorDict()
@@ -110,11 +117,11 @@ namespace GenericServices
         }
 
         /// <summary>
-        /// This clears any AutoMapper mappings. Used when Unit Testing to ensure the mappings are newly set up.
+        /// This clears the SqlHandlerDict of all entries
         /// </summary>
-        public static void ClearAutoMapperCache()
+        public static void ClearSqlHandlerDict()
         {
-           AutoMapperConfigs.Clear();
+            PrivateSqlHandlerDict.Clear();
         }
 
         /// <summary>
@@ -128,6 +135,30 @@ namespace GenericServices
                 PrivateSqlErrorDict[sqlErrorNumber] = errorText;
             else
                 PrivateSqlErrorDict.Add(sqlErrorNumber, errorText);
+        }
+
+        /// <summary>
+        /// This adds an ErrorHandler to the SqlHandlerDict
+        /// The ErrorHandler will be called if the specified sql error happens.
+        /// Note: will throw an exception if an error handler already exists for that sql error number unless 
+        /// the checkNotAlreadySet is set to false
+        /// </summary>
+        /// <param name="sqlErrorNumber"></param>
+        /// <param name="errorHandler">Called when given sql error number happens with sql error and entities. 
+        /// Should return ValidationError or null if cannot handle the error</param>
+        /// <param name="checkNotAlreadySet"></param>
+        public static void AddToSqlHandlerDict(int sqlErrorNumber, HandleSqlException errorHandler, bool checkNotAlreadySet = true)
+        {
+            if (PrivateSqlHandlerDict.ContainsKey(sqlErrorNumber))
+            {
+                if (checkNotAlreadySet)
+                    throw new InvalidOperationException(
+                        string.Format("You tried to add an exception handler for sql error {0} but a handler called {1} was already there.",
+                        sqlErrorNumber, PrivateSqlHandlerDict[sqlErrorNumber].Method.Name));
+                PrivateSqlHandlerDict[sqlErrorNumber] = errorHandler;
+            }
+            else
+                PrivateSqlHandlerDict.Add(sqlErrorNumber, errorHandler);
         }
 
     }

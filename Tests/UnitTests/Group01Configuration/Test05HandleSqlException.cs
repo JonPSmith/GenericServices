@@ -41,18 +41,18 @@ namespace Tests.UnitTests.Group01Configuration
 {
     class Test05HandleSqlException
     {
-            
-        [TestFixtureSetUp]
-        public void FixtureSetup()
-        {
-            GenericServicesConfig.HandleSqlExceptionOnSave = null;
-        }
 
+        [SetUp]
+        public void Setup()
+        {
+            GenericServicesConfig.ClearSqlHandlerDict();
+        }
         [TestFixtureTearDown]
         public void FixtureTearDown()
         {
-            GenericServicesConfig.HandleSqlExceptionOnSave = null;
+            GenericServicesConfig.ClearSqlHandlerDict();
         }
+
 
         private ValidationResult TestExceptionCatch(SqlException ex, IEnumerable<DbEntityEntry> entitiesNotSaved)
         {         
@@ -70,10 +70,10 @@ namespace Tests.UnitTests.Group01Configuration
         //Tests
 
         [Test]
-        public void Test01ValidateTagError()
+        public void Test01ValidateTagCaughtByHandleDictError()
         {
             //SETUP
-            GenericServicesConfig.HandleSqlExceptionOnSave = TestExceptionCatch;
+            GenericServicesConfig.AddToSqlHandlerDict(2601, TestExceptionCatch);
             using (var db = new SampleWebAppDb())
             {
                 var existingTag = db.Tags.First();
@@ -91,10 +91,10 @@ namespace Tests.UnitTests.Group01Configuration
         }
 
         [Test]
-        public void Test02ValidateTagErrorWithOtherData()
+        public void Test02ValidateTagCaughtByHandleDictErrorWithOtherData()
         {
             //SETUP
-            GenericServicesConfig.HandleSqlExceptionOnSave = TestExceptionCatch;
+            GenericServicesConfig.AddToSqlHandlerDict(2601, TestExceptionCatch);
             using (var db = new SampleWebAppDb())
             {
                 var existingTag = db.Tags.First();
@@ -116,7 +116,7 @@ namespace Tests.UnitTests.Group01Configuration
         public void Test10ValidateTagCaughtBySqlDict()
         {
             //SETUP
-            GenericServicesConfig.HandleSqlExceptionOnSave = TestExceptionNoCatch;
+            GenericServicesConfig.AddToSqlHandlerDict(2601, TestExceptionNoCatch);
             using (var db = new SampleWebAppDb())
             {
                 var existingTag = db.Tags.First();
@@ -131,6 +131,38 @@ namespace Tests.UnitTests.Group01Configuration
                 status.Errors.Count.ShouldEqual(1);
                 status.Errors[0].ErrorMessage.ShouldEqual("One of the properties is marked as Unique index and there is already an entry with that value.");
             }
+        }
+
+        //-----------------------------
+        //Adding to dict
+
+        [Test]
+        public void Test20AddTwiceToErrorHandleDictBad()
+        {
+            //SETUP
+            GenericServicesConfig.AddToSqlHandlerDict(2601, TestExceptionNoCatch);
+
+            //ATTEMPT
+            var ex =
+                Assert.Throws<InvalidOperationException>(
+                    () => GenericServicesConfig.AddToSqlHandlerDict(2601, TestExceptionCatch));
+
+            //VERIFY
+            ex.Message.ShouldEqual("You tried to add an exception handler for sql error 2601 but a handler called TestExceptionNoCatch was already there.");
+        }
+
+        [Test]
+        public void Test21AddTwiceToErrorHandleDictOk()
+        {
+            //SETUP
+            GenericServicesConfig.AddToSqlHandlerDict(2601, TestExceptionNoCatch);
+
+            //ATTEMPT
+            GenericServicesConfig.AddToSqlHandlerDict(2601, TestExceptionCatch, false);
+
+            //VERIFY
+            GenericServicesConfig.SqlHandlerDict.Keys.Count().ShouldEqual(1);
+            GenericServicesConfig.SqlHandlerDict[2601].Method.Name.ShouldEqual("TestExceptionCatch");
         }
     }
 }

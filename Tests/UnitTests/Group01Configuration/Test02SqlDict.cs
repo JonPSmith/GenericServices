@@ -40,7 +40,6 @@ namespace Tests.UnitTests.Group01Configuration
 
         private List<KeyValuePair<int, string>> _rememberDefaultSqlErrorTextDict ;
             
-            
         [TestFixtureSetUp]
         public void FixtureSetup()
         {
@@ -48,7 +47,7 @@ namespace Tests.UnitTests.Group01Configuration
             _rememberDefaultSqlErrorTextDict =
                 GenericServicesConfig.SqlErrorDict.Select(x => new KeyValuePair<int, string>(x.Key, x.Value))
                     .ToList();
-            GenericServicesConfig.HandleSqlExceptionOnSave = null;
+            GenericServicesConfig.ClearSqlHandlerDict();
         }
 
         [TestFixtureTearDown]
