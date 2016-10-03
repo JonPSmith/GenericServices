@@ -48,6 +48,13 @@ namespace Tests.UnitTests.Group01Configuration
                 GenericServicesConfig.SqlErrorDict.Select(x => new KeyValuePair<int, string>(x.Key, x.Value))
                     .ToList();
             GenericServicesConfig.ClearSqlHandlerDict();
+
+            using (var db = new SampleWebAppDb())
+            {
+                DataLayerInitialise.InitialiseThis();
+                var filepath = TestFileHelpers.GetTestFileFilePath("DbContentSimple.xml");
+                DataLayerInitialise.ResetDatabaseToTestData(db, filepath);
+            }
         }
 
         [TestFixtureTearDown]

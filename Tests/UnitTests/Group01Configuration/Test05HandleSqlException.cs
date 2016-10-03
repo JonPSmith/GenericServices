@@ -41,6 +41,16 @@ namespace Tests.UnitTests.Group01Configuration
 {
     class Test05HandleSqlException
     {
+        [TestFixtureSetUp]
+        public void FixtureSetup()
+        {
+            using (var db = new SampleWebAppDb())
+            {
+                DataLayerInitialise.InitialiseThis();
+                var filepath = TestFileHelpers.GetTestFileFilePath("DbContentSimple.xml");
+                DataLayerInitialise.ResetDatabaseToTestData(db, filepath);
+            }
+        }
 
         [SetUp]
         public void Setup()
